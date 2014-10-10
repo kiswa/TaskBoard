@@ -36,9 +36,11 @@ Installing TaskBoard is as easy as 1, 2, 3!
 
         git clone https://github.com/kiswa/TaskBoard.git
 
-2. Open `taskboard/build/` in a terminal and run `./build-all`.
+2. Open `TaskBoard/build/` in a terminal and run `./build-all`.
 
 3. Visit the site and log in with the username and password `admin` (and don't forget to change the password once you're in!).
+
+**Note:** Ensure `TaskBoard/api/` is writable so the back end can do its job!
 
 ##Features
 
