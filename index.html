@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" data-ng-app="TaskBoard">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Matthew Ross">
+        <meta name="description" content="A Kanban-inspired app for keeping track of things that need to get done.">
+
+        <title>TaskBoard {{ display.smallText }}</title>
+
+        <link rel="stylesheet" href="lib/css/bootstrap.min.css">
+        <link rel="stylesheet" href="lib/css/font-awesome.min.css">
+        <link rel="stylesheet" href="lib/css/jquery-ui.min.css">
+        <link rel="stylesheet" href="lib/css/jquery-ui.structure.min.css">
+        <link rel="stylesheet" href="lib/css/spectrum.css">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Pontano+Sans|Raleway:500">
+        <link rel="stylesheet" href="css/styles.css">
+
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div id="wrapper" data-ng-view data-ng-cloak>
+        </div>
+        <script src="lib/jquery-1.11.1.min.js"></script>
+        <script src="lib/jquery-ui.min.js"></script>
+        <script src="lib/jquery.noty.min.js"></script>
+        <script src="lib/bootstrap.min.js"></script>
+        <script src="lib/angular.js"></script>
+        <script src="lib/angular-route.js"></script>
+        <script src="lib/angular-sanitize.js"></script>
+        <script src="lib/ng-context-menu.min.js"></script>
+        <script src="lib/marked.min.js"></script>
+        <script src="lib/prefixfree.min.js"></script>
+        <script src="lib/spectrum.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/controllers/boards.js"></script>
+        <script src="js/controllers/boardsItemForm.js"></script>
+        <script src="js/controllers/boardsItemView.js"></script>
+        <script src="js/controllers/files.js"></script>
+        <script src="js/controllers/settings.js"></script>
+        <script src="js/controllers/settingsUser.js"></script>
+        <script src="js/controllers/settingsUserForm.js"></script>
+        <script src="js/controllers/settingsBoard.js"></script>
+        <script src="js/controllers/settingsBoardForm.js"></script>
+        <script src="js/controllers/login.js"></script>
+        <script src="js/controllers/header.js"></script>
+        <script src="js/services/token.js"></script>
+        <script src="js/services/user.js"></script>
+        <script src="js/services/board.js"></script>
+        <script src="js/services/auth.js"></script>
+        <script src="js/services/alerts.js"></script>
+        <script src="js/directives/includeReplace.js"></script>
+        <script src="js/directives/clickToEdit.js"></script>
+        <script src="js/directives/onLoadCallback.js"></script>
+        <script src="js/directives/fileUpload.js"></script>
+    </body>
+</html>

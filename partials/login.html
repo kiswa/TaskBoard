@@ -1,0 +1,15 @@
+<div id="login" class="login-container" data-ng-controller="LoginCtrl">
+    <div class="bg-danger text-danger login-error" data-ng-repeat="error in errors"><p>{{ error }}</p></div>
+    <form class="form-signin" role="form" data-ng-submit="logIn(formdata)" novalidate>
+        <h2 class="form-signin-heading">TaskBoard - Sign in</h2>
+        <fieldset data-ng-disabled="isSaving">
+        <input type="text" class="form-control" placeholder="Username" required autofocus data-ng-model="formdata.username">
+        <input type="password" class="form-control" placeholder="Password" required data-ng-model="formdata.password">
+        <label class="checkbox">
+            <input type="checkbox" data-ng-model="formdata.rememberme"> Remember me
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </fieldset>
+    </form>
+</div>
+<div data-on-load-callback="clear"></div>

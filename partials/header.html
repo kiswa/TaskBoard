@@ -1,0 +1,8 @@
+<div id="header" data-ng-controller="HeaderCtrl" role="navigation">
+    <ul class="nav nav-pills pull-right">
+        <li data-ng-class="{ active: page.boards }"><a id="nav-boards" href="#/boards">Boards</a></li>
+        <li data-ng-class="{ active: page.settings }"><a id="nav-settings" href="#/settings">Settings</a></li>
+        <li><a id="nav-logout" href="#/" data-ng-click="logout()">Logout {{ display.username }}</a></li>
+    </ul>
+    <h2>TaskBoard<small>{{ display.smallText }}</small></h2>
+</div>

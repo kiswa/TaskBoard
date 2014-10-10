@@ -1,0 +1,22 @@
+#!/bin/bash
+echo Cleaning...
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR
+
+echo ' Cleaning CSS files...'
+rm -f ../lib/css/combined.min.css
+rm -f ../css/styles.min.css
+
+echo ' Cleaning JS files...'
+rm -f ../js/app.min.js
+rm -f ../lib/libs.min.js
+
+echo ' Restoring index.html...'
+cd ../
+if [ -f indexDev.html ]; then
+    mv index.html indexProd.html
+    mv indexDev.html index.html
+fi
+cd build/
+
+echo Clean Complete

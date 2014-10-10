@@ -1,0 +1,3 @@
+#!/bin/bash
+cd ../js/
+java -jar ../build/compiler.jar -W QUIET --js app.js controllers/*.js services/*.js directives/*.js --js_output_file app.min.js

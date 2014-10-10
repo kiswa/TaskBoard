@@ -1,0 +1,30 @@
+<div include-replace="partials/header.html"></div>
+<div class="content">
+    <div id="widget-container">
+        <div class="col-md-8 col-md-offset-2 min-padding">
+            <div class="files-widget">
+                <h3 data-ng-if="!file.loading && !file.error" class="widget-header">
+                    Attachment: {{ file.data.name }}
+                    <span class="small pull-right">
+                        <a href="{{ file.data.filename }}" download="{{ file.data.name }}">download</a>
+                    </span>
+                </h3>
+                <h3 data-ng-show="file.loading" class="widget-header">Loading Attachment...</h3>
+                <h3 data-ng-show="file.error" class="widget-header">Error!</h3>
+                <div class="widget-content">
+                    <div id="iframe-wrapper" data-ng-hide="file.loading">
+                        <iframe data-ng-hide="file.error" seamless src="{{ file.data.filename }}"></iframe>
+                        <p data-ng-hide="file.error">Uploaded by {{ file.data.username }} on {{ file.data.date }}</p>
+                        <p data-ng-show="file.error" class="text-danger text-center">
+                            Something went wrong while trying to locate the file!
+                        </p>
+                        <p data-ng-show="file.error" class="text-center">
+                            You can refresh the page to try again now. Or close it and try again later.<br>
+                            It's also possible the attachment has been deleted. Refresh the item to verify.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

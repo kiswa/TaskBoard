@@ -1,0 +1,10 @@
+ExpiresActive Off
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI}::$1 ^(.*?/)(.*)::\2$
+RewriteRule ^(.*)$ - [E=BASE:%1]
+
+RewriteRule ^taskboard.db$ %{ENV:BASE}api.php [QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ %{ENV:BASE}api.php [QSA,L]

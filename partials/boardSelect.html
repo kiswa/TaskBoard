@@ -1,0 +1,38 @@
+<div include-replace="partials/header.html"></div>
+
+<div class="content">
+    <div id="board">
+        <div id="boardColumns" class="text-center">
+            <h3 data-ng-if="!boardsLoaded">
+                <span class="fa fa-refresh fa-spin"></span>
+                Loading...
+            </h3>
+            <div class="col-md-6 col-md-offset-3 settings-widget text-center" data-ng-if="boardsLoaded && userLoaded">
+                <div data-ng-if="!currentUser.defaultBoard && boards.length">
+                    <h3 class="text-center">No Default Board</h3>
+                    <p>
+                        You have not selected a default board.
+                        You may select a default board in your <a href="#/settings">Settings</a>.
+                    </p>
+                </div>
+                <div data-ng-if="!boards.length">
+                    <h3 class="text-center">No Boards</h3>
+                    <p data-ng-if="currentUser.isAdmin == 0">
+                        You are not assigned to any boards. Contact an admin user to be added to a board.
+                    </p>
+                    <p data-ng-if="currentUser.isAdmin == 1">
+                        Go to <a href="#/settings">Settings</a> to create a board.
+                    </p>
+                </div>
+                <div data-ng-if="boards.length">
+                    <p>Until then, select from the list of available boards below.</p>
+                    <p class="list-group h4">
+                        <a class="list-group-item" data-ng-repeat="board in boardNames" href="#/boards/{{board.id}}">
+                            {{ board.name }}
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+<div include-replace="partials/header.html"></div>
+<div id="board-nav">
+    <p class="pull-left form-group form-inline" data-ng-if="!currentBoard.loading">
+        Select Board:
+        <select class="form-control" data-ng-model="boardNames.current" data-ng-change="selectBoard()"
+                data-ng-options="board.id as board.name for board in boardNames">
+        </select>
+    </p>
+    <p class="pull-right form-group form-inline" data-ng-if="!currentBoard.loading">
+        User Filter:
+        <select class="form-control" data-ng-model="filter.user" data-ng-change="filterChanged()"
+                data-ng-options="user.id as user.username for user in currentBoard.sharedUser">
+            <option value="">Any</option>
+        </select>
+        <span data-ng-if="currentBoard.ownCategory">Category Filter:
+            <select class="form-control" data-ng-model="filter.category" data-ng-change="filterChanged()"
+                    data-ng-options="cat.id as cat.name for cat in currentBoard.ownCategory">
+                <option value="">Any</option>
+            </select>
+        </span>
+    </p>
+</div>
+<div data-include-replace="partials/boardItemModal.html"></div>
+<div data-include-replace="partials/boardItemViewModal.html"></div>
+<div class="content">
+    <div id="board">
+        <div id="boardColumns">
+            <div class="col-md-6 col-md-offset-3 settings-widget text-center" data-ng-if="currentBoard.loading">
+                <h3 data-ng-if="!currentBoard.error">
+                    <span class="fa fa-refresh fa-spin"></span> Loading Board...
+                </h3>
+                <span data-ng-if="currentBoard.error">
+                    <h3><span class="fa fa-exclamation-triangle"></span> Error Loading Board</h3>
+                    <p>Maybe it doesn't exist anymore. Maybe you've been removed from it.</p>
+                    <p>Try using the board list above, or checking your <a href="#/settings">Settings</a>.</p>
+                </span>
+            </div>
+            <div class="boardColumn" data-ng-repeat="lane in currentBoard.ownLane | orderBy:'position':false"
+                 data-ng-class="{'collapsed': lane.collapsed}" data-lane-id="{{ lane.id }}"
+                 data-context-menu="onContextMenu(lane.id)" data-target="laneMenu">
+                <h3>{{ lane.name }}
+                    <span class="badge" title="Lane Items" data-ng-if="lane.collapsed">
+                        {{ lane.ownItem.length || 0 }}
+                    </span>
+                    <span class="fa fa-angle-double-down small shrink" title="Collapse Lane"
+                          data-ng-click="toggleLane(lane)"></span>
+                    <span class="fa fa-angle-double-up small expand" title="Expand Lane"
+                          data-ng-click="toggleLane(lane)"></span>
+                </h3>
+                <div class="itemContainer">
+                    <div><!-- Needed to fix sortable behavior when there are no items in a lane. --></div>
+                    <div class="boardItem clearfix" data-ng-class="{'filtered': item.filtered}"
+                         data-ng-repeat="item in lane.ownItem | orderBy:'position':false"
+                         data-ng-dblclick="openItem(item)"
+                         style="background-color: {{ item.color }}"
+                         data-item-id="{{ item.id }}"
+                         data-context-menu="onContextMenu(lane.id, item)" data-target="itemMenu">
+                        <div class="itemHeader">
+                            <h4>{{ item.title }}</h4>
+                            <span class="badge" title="Points">{{ item.points }}</span>
+                        </div>
+                        <div class="description" data-ng-bind-html="marked(item.description)"></div>
+                        <p class="assignee">
+                            <span data-ng-if="userNames[item.assignee]">Assigned To: </span>
+                            {{ userNames[item.assignee] }}
+                            <span class="pull-right">
+                                <span data-ng-if="item.ownComment" class="fa fa-comments-o"
+                                      title="{{ item.ownComment.length }} Comments"></span>
+                                <span data-ng-if="item.ownAttachment" class="fa fa-paperclip"
+                                      title="{{ item.ownAttachment.length }} Attachments"></span>
+                                <span data-ng-if="item.due_date" data-ng-class="{'dateNear': item.dateNear, 'datePast': item.datePast}">
+                                    Due: {{ item.due_date }}
+                                </span>
+                                <br data-ng-if="item.due_date">
+                                <span class="category" title="Category">{{ categories[item.category] }}</span>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="addItem">
+                        <a role="button" class="btn btn-default fa fa-plus" data-toggle="modal"
+                           data-target=".itemModal" data-ng-click="itemFormData.reset(lane.id)" title="Add Item"></a>
+                    </div>
+                    <span data-on-load-callback="updateSortables"></span>
+                </div>
+            </div>
+            <div id="itemMenu" class="dropdown" style="position: fixed;">
+                <ul class="dropdown-menu" role"menu">
+                    <li role="presentation">
+                        <a role="menuitem" style="cursor: default" data-ng-click="openItem(contextItem)">
+                            View Item
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem" style="cursor: default" data-ng-click="openEditItem()">
+                            Edit Item
+                        </a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation">
+                        <a role="menuitem" style="cursor: default" data-ng-click="openAddItem()">
+                            Add New Item
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div id="laneMenu" class="dropdown" style="position: fixed;">
+                <ul class="dropdown-menu" role"menu">
+                    <li role="presentation">
+                        <a role="menuitem" style="cursor: default" data-ng-click="openAddItem()">
+                            Add New Item
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

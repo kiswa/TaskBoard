@@ -1,0 +1,82 @@
+<div class="modal fade itemModal" tabindex="-1" role="dialog" aria-labelledby="itemLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="addEdit" data-ng-controller="ItemFormBoardCtrl">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true" class="fa fa-times"></span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h3 class="modal-title" id="itemLabel" data-ng-if="itemFormData.isAdd">Add Item</h3>
+                <h3 class="modal-title" id="itemLabel" data-ng-if="!itemFormData.isAdd">Edit Item</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" data-ng-class="{ 'has-error': itemFormData.titleError }">
+                    <h5>Title</h5>
+                    <input class="form-control" type="text" placeholder="Item Title"
+                     data-ng-model="itemFormData.title" data-ng-disabled="itemFormData.isSaving"
+                     data-ng-class="{ 'has-error': itemFormData.titleError }">
+                </div>
+                <div class="form-group">
+                    <h5>Description
+                        <span style="cursor:pointer;" class="fa fa-question-circle popover-dismiss"
+                              data-toggle="popover" data-placement="top"
+                              data-content='Use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#table-of-contents" target="markdownTab">Markdown</a> for more detailed formatting.'
+                              data-ng-model="itemFormData.description">
+                        </span>
+                    </h5>
+                    <textarea rows="5" class="form-control" placeholder="What needs to get done?"
+                              data-ng-disabled="itemFormData.isSaving"
+                              data-ng-model="itemFormData.description"></textarea>
+                </div>
+                <div class="form-group col-md-4">
+                    <h5>Assigned To</h5>
+                    <select class="form-control" data-ng-model="itemFormData.assignee"
+                            data-ng-disabled="itemFormData.isSaving"
+                            data-ng-options="user.id as user.username for user in currentBoard.sharedUser">
+                    </select>
+                </div>
+                <div class="form-group col-md-4" data-ng-if="currentBoard.ownCategory.length">
+                    <h5>Category</h5>
+                    <select class="form-control" data-ng-model="itemFormData.category"
+                            data-ng-disabled="itemFormData.isSaving"
+                            data-ng-options="cat.id as cat.name for cat in currentBoard.ownCategory">
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <h5>Lane</h5>
+                    <select class="form-control" data-ng-model="itemFormData.lane"
+                            data-ng-disabled="itemFormData.isSaving"
+                            data-ng-options="lane.id as lane.name for lane in currentBoard.ownLane | orderBy:'position':false">
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <h5>Color</h5>
+                    <input class="form-control" type="text" id="spectrum" data-ng-model="itemFormData.color"
+                           data-on-load-callback="itemFormData.spectrum">
+                </div>
+                <div class="form-group col-md-4">
+                    <h5>Date Due</h5>
+                    <input class="form-control" type="text" id="datepicker" data-ng-model="itemFormData.dueDate"
+                           data-ng-disabled="itemFormData.isSaving"
+                           data-on-load-callback="itemFormData.datePicker">
+                </div>
+                <div class="form-group col-md-4" data-ng-class="{ 'has-error': itemFormData.pointsError }">
+                    <h5>Points</h5>
+                    <input class="form-control" type="number" min="0" data-ng-model="itemFormData.points"
+                           data-ng-disabled="itemFormData.isSaving">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-info"
+                 data-ng-click="submitItem(itemFormData)"
+                 data-ng-disabled="itemFormData.isSaving">
+                 <span data-ng-if="itemFormData.isAdd">Add</span>
+                 <span data-ng-if="!itemFormData.isAdd">Edit</span>
+                  Item</button>
+                <a class="btn btn-default" data-ng-click="itemFormData.cancel()"
+                 data-ng-disabled="itemFormData.isSaving">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
