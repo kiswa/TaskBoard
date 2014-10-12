@@ -35,6 +35,22 @@ function($http) {
             return $http.post('api/lanes/' + laneId + '/toggle');
         },
 
+        getAutoActions: function() {
+            return $http.get('api/actions/');
+        },
+
+        addAutoAction:  function(action) {
+            return  $http.post('api/actions/', {
+                boardId: action.board,
+                trigger: action.trigger,
+                secondary: action.secondary,
+                action: action.action,
+                color: action.color,
+                category: action.category,
+                assignee: action.assignee
+            });
+        },
+
         addItem: function(itemData, boardId) {
             return $http.post('api/boards/' + boardId + '/items', {
                 title: itemData.title,

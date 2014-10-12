@@ -1,6 +1,6 @@
 taskBoardControllers.controller('AutomaticActionsCtrl',
-['$scope', '$interval',
-function ($scope, $interval) {
+['$scope', '$interval', 'BoardService',
+function ($scope, $interval, BoardService) {
     $scope.loadingActions = false; // Change to true once loading is implemented
     $scope.actions = [];
 
@@ -49,8 +49,29 @@ function ($scope, $interval) {
         ]
     };
 
+    $scope.updateActions = function() {
+        BoardService.getAutoActions()
+        .success(function(data) {
+            $scope.actions = data.data;
+        });
+    };
+    $scope.updateActions();
+
     $scope.addAction = function() {
-        // TBD
+        if ($scope.actionData.secondary === null ||
+            ($scope.actionData.action !== 3 &&
+             ($scope.actionData.color === null && $scope.actionData.category === null && $scope.actionData.assignee === null))) {
+            $scope.alerts.showAlert({ type: 'error', text: 'One or more required fields are not entered. Automatic Action not added.' });
+            return;
+        }
+
+        BoardService.addAutoAction($scope.actionData)
+        .success(function(data) {
+            $scope.alerts.showAlerts(data.alerts);
+            if (data.alerts[0].type == 'success') {
+                $scope.updateActions();
+            }
+        });
     };
 
     $scope.secondarySelection = [];
