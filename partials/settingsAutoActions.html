@@ -1,7 +1,7 @@
 <div class="widget-content">
     <h4>Current Actions</h4>
     <div class="table-responsive">
-        <table class="table tabe-striped">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Board</th><th>Trigger</th><th>Action</th><th>Remove</th>
@@ -17,8 +17,11 @@
                     <td data-ng-if="!currentUser.isAdmin" colspan="4" align="center">
                         There are no automatic actions. Contact an admin user to create one.
                     </td>
-                    <td data-ng-if="currentUser.isAdmin" colspan="4" align="center">
+                    <td data-ng-if="currentUser.isAdmin && boards.length" colspan="4" align="center">
                         There are no current automatic actions. Use the <strong>Add Action</strong> form below to add one.
+                    </td>
+                    <td data-ng-if="currentUser.isAdmin && !boards.length" colspan="4" align="center">
+                        There are no current boards. Use the <strong>Add Board</strong> button above to add one.
                     </td>
                 </tr>
                 <tr data-ng-repeat="action in actions">
@@ -34,7 +37,7 @@
             </tbody>
         </table>
     </div>
-    <div data-ng-if="currentUser.isAdmin">
+    <div data-ng-if="currentUser.isAdmin && boards.length">
         <h4>Add Action</h4>
         <fieldset data-ng-disabled="actionData.isSaving || loadingActions || currentBoard.loading">
             <div class="form-group col-md-4">
@@ -88,7 +91,7 @@
             <div class="col-md-12">
                 <p>
                     <a role="button" id="addAction" class="btn btn-info pull-right"
-                       data-ng-click="addAction()" title="Add Action">
+                       data-ng-click="addAction()" data-ng-disabled="null === actionData.board" title="Add Action">
                         Add Action <span class="fa fa-plus"></span>
                     </a>
                 </p>
