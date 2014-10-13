@@ -40,7 +40,7 @@ function($http) {
         },
 
         addAutoAction:  function(action) {
-            return  $http.post('api/autoactions', {
+            return $http.post('api/autoactions', {
                 boardId: action.board,
                 triggerId: action.trigger,
                 secondaryId: action.secondary,
@@ -48,6 +48,12 @@ function($http) {
                 color: action.color,
                 categoryId: action.category,
                 assigneeId: action.assignee
+            });
+        },
+
+        removeAutoAction: function(actionId) {
+            return $http.post('api/autoactions/remove', {
+                actionId: actionId
             });
         },
 

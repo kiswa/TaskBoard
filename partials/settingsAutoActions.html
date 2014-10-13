@@ -29,9 +29,10 @@
                     <td>{{ action.trigger }}</td>
                     <td>{{ action.action }}</td>
                     <td>
-                        <span class="links">
+                        <span class="links" data-ng-if="!actionDeleting[action.id]">
                             <a class="fa fa-trash-o" title="Remove Action" data-ng-click="removeAction(action.id)"></a>
                         </span>
+                        <span data-ng-if="actionDeleting[action.id]" class="fa fa-refresh fa-spin"></span>
                     </td>
                 </tr>
             </tbody>

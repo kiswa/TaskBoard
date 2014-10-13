@@ -103,6 +103,23 @@ $app->get('/autoactions', function() use($app, $jsonResponse) {
     $app->response->setBody($jsonResponse->asJson());
 });
 
+$app->post('/autoactions/remove', function() use($app, $jsonResponse) {
+    $data = json_decode($app->environment['slim.input']);
+
+    if (validateToken()) {
+        $user = getUser();
+        if ($user->isAdmin) {
+            $autoAction = R::load('autoaction', $data->actionId);
+            R::trash($autoAction);
+
+            $actions = R::findAll('autoaction');
+            $jsonResponse->addBeans($actions);
+            $jsonResponse->addAlert('success', 'Automatic action removed.');
+        }
+    }
+    $app->response->setBody($jsonResponse->asJson());
+});
+
 // Toggle the expand/collapse state of a lane for the current user.
 $app->post('/lanes/:laneId/toggle', function($laneId) use($app, $jsonResponse) {
     if (validateToken()) {

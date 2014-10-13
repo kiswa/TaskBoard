@@ -15,6 +15,7 @@ function ($scope, $interval, BoardService) {
         category: null,
         assignee: null
     };
+    $scope.actionDeleting = [];
 
     $scope.actionOptions = {
         triggers: [
@@ -125,6 +126,7 @@ function ($scope, $interval, BoardService) {
 
         actions.forEach(function(action) {
             mappedActions.push({
+                id: action.id,
                 board: $scope.boardLookup[action.board_id],
                 trigger: $scope.actionOptions.triggers[action.trigger_id].trigger + getSecondaryText(action),
                 action: $scope.actionOptions.triggers[0].actions[action.action_id].action + getActionText(action)
@@ -165,6 +167,16 @@ function ($scope, $interval, BoardService) {
             if (data.alerts[0].type == 'success') {
                 $scope.updateActions(data.data);
             }
+        });
+    };
+
+    $scope.removeAction = function(actionId) {
+        $scope.actionDeleting[actionId] = true;
+
+        BoardService.removeAutoAction(actionId)
+        .success(function(data) {
+            $scope.alerts.showAlerts(data.alerts);
+            $scope.updateActions(data.data);
         });
     };
 
