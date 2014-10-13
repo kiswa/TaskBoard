@@ -69,6 +69,39 @@ $app->post('/boards/remove', function() use($app, $jsonResponse) {
     $app->response->setBody($jsonResponse->asJson());
 });
 
+$app->post('/autoactions', function() use($app, $jsonResponse) {
+    $data = json_decode($app->environment['slim.input']);
+
+    if (validateToken()) {
+        $board = R::load('board', $data->boardId);
+        if ($board->id) {
+            $autoAction = R::dispense('auto_action');
+            $autoAction->triggerId = $data->triggerId;
+            $autoAction->secondaryId = $data->secondaryId;
+            $autoAction->actionId = $data->actionId;
+            $autoAction->color = $data->color;
+            $autoAction->categoryId = $data->categoryId;
+            $autoAction->assigneeId = $data->assigneeId;
+        }
+        $board->ownAutoAction[] = $autoAction;
+        R::store($board);
+        $jsonResponse->addBeans(getAutomaticActions($data->boardId));
+    }
+    $app->response->setBody($jsonResponse->asJson());
+});
+
+$app->get('/autoactions', function() use($app, $jsonResponse) {
+    if (validateToken()) {
+        $actions = [];
+        $boards = R::findAll('board');
+        foreach($boards as $board) {
+            $actions.push(getAutomaticActions($board->id));
+        }
+        $jsonResponse->addBeans($actions);
+    }
+    $app->response->setBody($jsonResponse->asJson());
+});
+
 // Toggle the expand/collapse state of a lane for the current user.
 $app->post('/lanes/:laneId/toggle', function($laneId) use($app, $jsonResponse) {
     if (validateToken()) {

@@ -36,18 +36,18 @@ function($http) {
         },
 
         getAutoActions: function() {
-            return $http.get('api/actions/');
+            return $http.get('api/autoactions');
         },
 
         addAutoAction:  function(action) {
-            return  $http.post('api/actions/', {
+            return  $http.post('api/autoactions', {
                 boardId: action.board,
-                trigger: action.trigger,
-                secondary: action.secondary,
-                action: action.action,
+                triggerId: action.trigger,
+                secondaryId: action.secondary,
+                actionId: action.action,
                 color: action.color,
-                category: action.category,
-                assignee: action.assignee
+                categoryId: action.category,
+                assigneeId: action.assignee
             });
         },
 
