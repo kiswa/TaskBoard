@@ -75,7 +75,7 @@ $app->post('/autoactions', function() use($app, $jsonResponse) {
     if (validateToken()) {
         $board = R::load('board', $data->boardId);
         if ($board->id) {
-            $autoAction = R::dispense('auto_action');
+            $autoAction = R::dispense('autoaction');
             $autoAction->triggerId = $data->triggerId;
             $autoAction->secondaryId = $data->secondaryId;
             $autoAction->actionId = $data->actionId;
@@ -83,21 +83,22 @@ $app->post('/autoactions', function() use($app, $jsonResponse) {
             $autoAction->categoryId = $data->categoryId;
             $autoAction->assigneeId = $data->assigneeId;
         }
-        $board->ownAutoAction[] = $autoAction;
+        $board->ownAutoaction[] = $autoAction;
         R::store($board);
-        $jsonResponse->addBeans(getAutomaticActions($data->boardId));
+        $jsonResponse->addAlert('success', 'Automatic action created.');
+        $actions = R::findAll('autoaction');
+        $jsonResponse->addBeans($actions);
     }
     $app->response->setBody($jsonResponse->asJson());
 });
 
 $app->get('/autoactions', function() use($app, $jsonResponse) {
     if (validateToken()) {
-        $actions = [];
-        $boards = R::findAll('board');
-        foreach($boards as $board) {
-            $actions.push(getAutomaticActions($board->id));
+        $user = getUser();
+        if ($user->isAdmin) {
+            $actions = R::findAll('autoaction');
+            $jsonResponse->addBeans($actions);
         }
-        $jsonResponse->addBeans($actions);
     }
     $app->response->setBody($jsonResponse->asJson());
 });

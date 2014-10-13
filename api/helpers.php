@@ -305,12 +305,3 @@ function getNextItemPosition($laneId) {
 
     return $retVal;
 }
-
-function getAutomaticActions($boardId) {
-    $board = R::load('board', $boardId);
-    if ($board->id) {
-        return $board->ownAction;
-    }
-
-    return null;
-}

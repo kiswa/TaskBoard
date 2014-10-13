@@ -1,7 +1,7 @@
 taskBoardControllers.controller('AutomaticActionsCtrl',
 ['$scope', '$interval', 'BoardService',
 function ($scope, $interval, BoardService) {
-    $scope.loadingActions = false; // Change to true once loading is implemented
+    $scope.loadingActions = true;
     $scope.actions = [];
 
     $scope.actionData = {
@@ -49,13 +49,105 @@ function ($scope, $interval, BoardService) {
         ]
     };
 
-    $scope.updateActions = function() {
+    var getBoardData = function(boardId) {
+        if (null === boardId || undefined === boardId)
+        {
+            return;
+        }
+
+        var boardData;
+        $scope.boards.forEach(function(board) {
+            if (board.id === boardId) {
+                boardData = board;
+            }
+        });
+
+        return boardData;
+    },
+
+        getSecondaryText = function(action) {
+            var text = ': ',
+                actionBoard = getBoardData(action.board_id);
+
+            switch(parseInt(action.trigger_id)) {
+                case 0: // Lane
+                    actionBoard.ownLane.forEach(function(lane) {
+                        if (lane.id === action.secondary_id) {
+                            text += lane.name;
+                        }
+                    });
+                    break;
+                case 1: // User
+                    actionBoard.sharedUser.forEach(function(user) {
+                        if (user.id === action.secondary_id) {
+                            text += user.username;
+                        }
+                    });
+                    break;
+                case 2: // Category
+                    actionBoard.ownCategory.forEach(function(category) {
+                        if (category.id === action.secondary_id) {
+                            text += category.name;
+                        }
+                    });
+                    break;
+            }
+            return text;
+        },
+
+        getActionText = function(action) {
+            var text = '',
+                actionBoard = getBoardData(action.board_id);
+            switch(parseInt(action.action_id)) {
+                case 0: // Color
+                    text = ': ' + action.color;
+                    break;
+                case 1: // Category
+                    actionBoard.ownCategory.forEach(function(category) {
+                        if (category.id === action.category_id) {
+                            text = ': ' + category.name;
+                        }
+                    });
+                    break;
+                case 2: // Assignee
+                    actionBoard.sharedUser.forEach(function(user) {
+                        if (user.id === action.assignee_id) {
+                            text = ': ' + user.username;
+                        }
+                    });
+                    break;
+            }
+            return text;
+        };
+
+    $scope.updateActions = function(actions) {
+        var mappedActions = [];
+
+        actions.forEach(function(action) {
+            mappedActions.push({
+                board: $scope.boardLookup[action.board_id],
+                trigger: $scope.actionOptions.triggers[action.trigger_id].trigger + getSecondaryText(action),
+                action: $scope.actionOptions.triggers[0].actions[action.action_id].action + getActionText(action)
+            });
+        });
+
+        $scope.actions = mappedActions;
+    };
+
+    $scope.loadActions = function() {
         BoardService.getAutoActions()
         .success(function(data) {
-            $scope.actions = data.data;
+            $scope.updateActions(data.data);
+            $scope.loadingActions = false;
         });
     };
-    $scope.updateActions();
+
+    // Wait until boards are loaded to load the actions.
+    $scope.$watchCollection('boards', function() {
+        if (!$scope.loadingBoards) {
+            $scope.loadActions();
+        }
+    });
 
     $scope.addAction = function() {
         if ($scope.actionData.secondary === null ||
@@ -65,11 +157,13 @@ function ($scope, $interval, BoardService) {
             return;
         }
 
+        $scope.actionData.isSaving = true;
         BoardService.addAutoAction($scope.actionData)
         .success(function(data) {
+            $scope.actionData.isSaving = false;
             $scope.alerts.showAlerts(data.alerts);
             if (data.alerts[0].type == 'success') {
-                $scope.updateActions();
+                $scope.updateActions(data.data);
             }
         });
     };
@@ -79,17 +173,14 @@ function ($scope, $interval, BoardService) {
         $scope.secondarySelection = [];
         $scope.actionData.secondary = null;
         $scope.actionData.action = 0;
-        var boardData = null;
 
-        $scope.boards.forEach(function(board) {
-            if (board.id === $scope.actionData.board) {
-                boardData = board;
-                $scope.boardCategories = board.ownCategory;
-                $scope.userList = board.sharedUser;
-            }
-        });
+        var boardData = getBoardData($scope.actionData.board);
+        if (boardData) {
+            $scope.boardCategories = boardData.ownCategory;
+            $scope.userList = boardData.sharedUser;
+        }
 
-        if (null !== boardData) {
+        if (boardData) {
             switch($scope.actionData.trigger) {
                 case 0:
                     $scope.secondarySelection = boardData.ownLane;
