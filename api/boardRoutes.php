@@ -16,7 +16,7 @@ $app->post('/boards', function() use($app, $jsonResponse) {
         loadBoardData($board, $data);
 
         $actor = getUser();
-        logAction($actor->username . ' added board ' . $board->name, null, $board->exportAll());
+        logAction($actor->username . ' added board ' . $board->name, null, $board->export());
         $jsonResponse->addBeans(getBoards());
         $jsonResponse->addAlert('success', 'New board ' . $board->name . ' created.');
     }
@@ -30,11 +30,11 @@ $app->post('/boards/update', function() use($app, $jsonResponse) {
     if (validateToken()) {
         $board = R::load('board', $data->boardId);
         if ($board->id) {
-            $before = $board->exportAll();
+            $before = $board->export();
             loadBoardData($board, $data);
             $jsonResponse->addAlert('success', 'Board ' . $board->name . ' edited.');
             $actor = getUser();
-            logAction($actor->username . ' updated board ' . $board->name, $before, $board->exportAll());
+            logAction($actor->username . ' updated board ' . $board->name, $before, $board->export());
         }
         $jsonResponse->addBeans(getBoards());
     }
@@ -48,7 +48,7 @@ $app->post('/boards/remove', function() use($app, $jsonResponse) {
     if (validateToken()) {
         $board = R::load('board', $data->boardId);
         if ($board->id == $data->boardId) {
-            $before = $board->exportAll();
+            $before = $board->export();
             foreach($board->sharedUser as $user) {
                 if ($user->defaultBoard == $data->boardId) {
                     $user->defaultBoard = null;
