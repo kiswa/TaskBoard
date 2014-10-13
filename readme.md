@@ -97,11 +97,11 @@ Count was done from parent directory of TaskBoard as `./cloc-1.62.pl TaskBoard -
 
 Language           | Files  | Blank Lines  | Comments | Code
 -------------------|-------:|-------------:|---------:|---------:
-Javascript         | 22     | 164          | 34       | 1694
-HTML               | 17     | 7            | 8        | 927
-PHP                | 6      | 130          | 54       | 738
-CSS                | 1      | 12           | 33       | 608
+Javascript         | 22     | 181          | 34       | 1823
+HTML               | 17     | 7            | 8        | 931
+PHP                | 6      | 136          | 54       | 783
+CSS                | 1      | 12           | 33       | 609
 Bourne Again Shell | 4      | 10           | 0        | 53
-__SUM:__           | __50__ | __323__      | __129__  | __4020__
+__SUM:__           | __50__ | __346__      | __129__  | __4199__
 
 Counts Last Updated: Oct. 10, 2014
