@@ -48,8 +48,6 @@ function ($scope, BoardService) {
         convertDates($scope.viewItem.ownActivity);
         $scope.fileReset = true;
 
-        console.log($scope.viewItem);
-
         $('.itemViewModal').modal({ show: true, keyboard:false });
     };
     $scope.$parent.openItem = $scope.openItem;
