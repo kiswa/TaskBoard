@@ -305,3 +305,46 @@ function getNextItemPosition($laneId) {
 
     return $retVal;
 }
+
+function runAutoActions(&$item) {
+    $lane = R::load('lane', $item->laneId);
+    $board = R::load('board', $lane->boardId);
+
+    foreach($board->ownAutoaction as $action) {
+        switch($action->triggerId) {
+            case 0: // Item moves to lane
+            if ($item->laneId == $action->secondaryId) {
+                updateItemFromAction($item, $action);
+            }
+            break;
+            case 1: // Item assigned to user
+            if ($item->assignee == $action->secondaryId) {
+                updateItemFromAction($item, $action);
+            }
+            break;
+            case 2: // Item assigned to category
+            if ($item->category == $action->secondaryId) {
+                updateItemFromAction($item, $action);
+            }
+            break;
+        }
+    }
+}
+
+function updateItemFromAction(&$item, $action) {
+    switch($action->actionId) {
+        case 0: // Set item color
+        $item->color = $action->color;
+        break;
+        case 1: // Set item category
+        $item->category = $action->categoryId;
+        break;
+        case 2: // Set item assignee
+        $item->assignee = $action->assigneeId;
+        break;
+        case 3: // Clear item due date
+        $item->dueDate = null;
+        break;
+    }
+    R::store($item);
+}
