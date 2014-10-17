@@ -32,7 +32,7 @@ function ($scope, UserService, AlertService) {
         }
 
         $scope.loadingBoards = false;
-        if (undefined === data || null === data) {
+        if (null === data) {
             $scope.boards = [];
             return;
         }

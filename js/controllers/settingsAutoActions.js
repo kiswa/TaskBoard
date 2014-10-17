@@ -148,7 +148,7 @@ function ($scope, $interval, BoardService) {
     };
 
     // Wait until boards are loaded to load the actions.
-    $scope.$watchCollection('boards', function() {
+    $scope.$watch('loadingBoards', function() {
         if (!$scope.loadingBoards) {
             $scope.loadActions();
         }
