@@ -246,10 +246,12 @@ function ($scope, $interval, BoardService) {
     };
     $scope.updateColorpicker = function() {
         if (null !== $scope.actionData.board) {
-            $('#spectrum').spectrum("enable");
+            $('#spectrum').spectrum('enable');
+            $scope.actionData.color = $('#spectrum').spectrum('option', 'color');
             return;
         }
-        $('#spectrum').spectrum("disable");
+        $('#spectrum').spectrum('disable');
+        $scope.actionData.color = null;
     };
 
     // Check every 250ms to see if a board has been chosen.
