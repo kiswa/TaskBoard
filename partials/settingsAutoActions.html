@@ -14,13 +14,13 @@
                     </td>
                 </tr>
                 <tr data-ng-if="!loadingActions && !actions.length">
-                    <td data-ng-if="!currentUser.isAdmin" colspan="4" align="center">
+                    <td data-ng-if="currentUser.isAdmin == '0'" colspan="4" align="center">
                         There are no automatic actions. Contact an admin user to create one.
                     </td>
-                    <td data-ng-if="currentUser.isAdmin && boards.length" colspan="4" align="center">
+                    <td data-ng-if="currentUser.isAdmin == '1' && boards.length" colspan="4" align="center">
                         There are no current automatic actions. Use the <strong>Add Action</strong> form below to add one.
                     </td>
-                    <td data-ng-if="currentUser.isAdmin && !boards.length" colspan="4" align="center">
+                    <td data-ng-if="currentUser.isAdmin == '1' && !boards.length" colspan="4" align="center">
                         There are no current boards. Use the <strong>Add Board</strong> button above to add one.
                     </td>
                 </tr>
@@ -38,7 +38,7 @@
             </tbody>
         </table>
     </div>
-    <div data-ng-if="currentUser.isAdmin && boards.length">
+    <div data-ng-if="currentUser.isAdmin == '1' && boards.length">
         <h4>Add Action</h4>
         <fieldset data-ng-disabled="actionData.isSaving || loadingActions || currentBoard.loading">
             <div class="form-group col-md-4">

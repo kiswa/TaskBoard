@@ -93,7 +93,7 @@ $app->post('/autoactions', function() use($app, $jsonResponse) {
 });
 
 $app->get('/autoactions', function() use($app, $jsonResponse) {
-    if (validateToken(true)) {
+    if (validateToken()) {
         $actions = R::findAll('autoaction');
         $jsonResponse->addBeans($actions);
     }

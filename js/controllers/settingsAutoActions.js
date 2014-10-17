@@ -121,7 +121,7 @@ function ($scope, $interval, BoardService) {
             return text;
         };
 
-    $scope.updateActions = function(actions) {
+    $scope.updateAutoActions = function(actions) {
         if (!actions) {
             return;
         }
@@ -142,7 +142,7 @@ function ($scope, $interval, BoardService) {
     $scope.loadActions = function() {
         BoardService.getAutoActions()
         .success(function(data) {
-            $scope.updateActions(data.data);
+            $scope.updateAutoActions(data.data);
             $scope.loadingActions = false;
         });
     };
@@ -168,7 +168,7 @@ function ($scope, $interval, BoardService) {
             $scope.actionData.isSaving = false;
             $scope.alerts.showAlerts(data.alerts);
             if (data.alerts[0].type == 'success') {
-                $scope.updateActions(data.data);
+                $scope.updateAutoActions(data.data);
             }
         });
     };
@@ -179,7 +179,7 @@ function ($scope, $interval, BoardService) {
         BoardService.removeAutoAction(actionId)
         .success(function(data) {
             $scope.alerts.showAlerts(data.alerts);
-            $scope.updateActions(data.data);
+            $scope.updateAutoActions(data.data);
         });
     };
 
