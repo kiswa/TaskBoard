@@ -11,7 +11,7 @@ $app->get('/boards', function() use($app, $jsonResponse) {
 $app->post('/boards', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
-    if (validateToken()) {
+    if (validateToken(true)) {
         $board = R::dispense('board');
         loadBoardData($board, $data);
 
@@ -27,7 +27,7 @@ $app->post('/boards', function() use($app, $jsonResponse) {
 $app->post('/boards/update', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
-    if (validateToken()) {
+    if (validateToken(true)) {
         $board = R::load('board', $data->boardId);
         if ($board->id) {
             $before = $board->export();
@@ -45,7 +45,7 @@ $app->post('/boards/update', function() use($app, $jsonResponse) {
 $app->post('/boards/remove', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
-    if (validateToken()) {
+    if (validateToken(true)) {
         $board = R::load('board', $data->boardId);
         if ($board->id == $data->boardId) {
             $before = $board->export();
@@ -72,7 +72,7 @@ $app->post('/boards/remove', function() use($app, $jsonResponse) {
 $app->post('/autoactions', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
-    if (validateToken()) {
+    if (validateToken(true)) {
         $board = R::load('board', $data->boardId);
         if ($board->id) {
             $autoAction = R::dispense('autoaction');
@@ -93,12 +93,9 @@ $app->post('/autoactions', function() use($app, $jsonResponse) {
 });
 
 $app->get('/autoactions', function() use($app, $jsonResponse) {
-    if (validateToken()) {
-        $user = getUser();
-        if ($user->isAdmin) {
-            $actions = R::findAll('autoaction');
-            $jsonResponse->addBeans($actions);
-        }
+    if (validateToken(true)) {
+        $actions = R::findAll('autoaction');
+        $jsonResponse->addBeans($actions);
     }
     $app->response->setBody($jsonResponse->asJson());
 });
@@ -106,16 +103,13 @@ $app->get('/autoactions', function() use($app, $jsonResponse) {
 $app->post('/autoactions/remove', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
-    if (validateToken()) {
-        $user = getUser();
-        if ($user->isAdmin) {
-            $autoAction = R::load('autoaction', $data->actionId);
-            R::trash($autoAction);
+    if (validateToken(true)) {
+        $autoAction = R::load('autoaction', $data->actionId);
+        R::trash($autoAction);
 
-            $actions = R::findAll('autoaction');
-            $jsonResponse->addBeans($actions);
-            $jsonResponse->addAlert('success', 'Automatic action removed.');
-        }
+        $actions = R::findAll('autoaction');
+        $jsonResponse->addBeans($actions);
+        $jsonResponse->addAlert('success', 'Automatic action removed.');
     }
     $app->response->setBody($jsonResponse->asJson());
 });

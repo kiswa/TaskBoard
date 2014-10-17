@@ -110,7 +110,7 @@ $app->post('/updateboard', function() use($app, $jsonResponse) {
 
 // Get all user actions
 $app->get('/actions', function() use($app, $jsonResponse) {
-    if (validateToken()) {
+    if (validateToken(true)) {
         $actions = R::findAll('activity', ' order by timestamp desc ');
         $jsonResponse->addBeans($actions);
     }
@@ -147,7 +147,7 @@ $app->get('/users', function() use($app, $jsonResponse) {
 $app->post('/users', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
-    if (validateToken()) {
+    if (validateToken(true)) {
         $nameTaken = R::findOne('user', ' username = ?', [$data->username]);
 
         if (null != $nameTaken) {
@@ -177,7 +177,7 @@ $app->post('/users', function() use($app, $jsonResponse) {
 $app->post('/users/update', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
-    if (validateToken()) {
+    if (validateToken(true)) {
         $user = R::load('user', $data->userId);
         $actor = getUser();
         if ($user->id && $actor->isAdmin) {
@@ -207,7 +207,7 @@ $app->post('/users/update', function() use($app, $jsonResponse) {
 $app->post('/users/remove', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
-    if (validateToken()) {
+    if (validateToken(true)) {
         $user = R::load('user', $data->userId);
         $actor = getUser();
         if ($user->id == $data->userId && $actor->isAdmin) {

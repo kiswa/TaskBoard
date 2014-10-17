@@ -218,7 +218,7 @@ function updateUsername($user, $data) {
 }
 
 // Validate a provided JWT.
-function validateToken() {
+function validateToken($requireAdmin = false) {
     global $jsonResponse, $app;
     $retVal = false;
 
@@ -229,6 +229,16 @@ function validateToken() {
         $jsonResponse->message = 'Invalid token.';
         $app->response->setStatus(401);
     }
+
+    if ($retVal && $requireAdmin) {
+        $user = getUser();
+        if (!$user->isAdmin) {
+            clearDbToken();
+            $jsonResponse->message = 'Insufficient user privileges.';
+            $app->response->setStatus(401);
+        }
+    }
+
     return $retVal;
 }
 
