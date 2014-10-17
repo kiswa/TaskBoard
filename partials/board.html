@@ -95,6 +95,11 @@
                             Edit Item
                         </a>
                     </li>
+                    <li role="presentation" data-ng-if="currentUser.isAdmin">
+                        <a role="menuitem" style="cursor: default" data-ng-click="removeItem()">
+                            Delete Item
+                        </a>
+                    </li>
                     <li role="presentation" class="divider"></li>
                     <li role="presentation">
                         <a role="menuitem" style="cursor: default" data-ng-click="openAddItem()">

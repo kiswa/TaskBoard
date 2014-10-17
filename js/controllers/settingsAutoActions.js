@@ -122,6 +122,9 @@ function ($scope, $interval, BoardService) {
         };
 
     $scope.updateActions = function(actions) {
+        if (!actions) {
+            return;
+        }
         var mappedActions = [];
 
         actions.forEach(function(action) {

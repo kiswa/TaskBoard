@@ -32,7 +32,10 @@ function ($scope, BoardService) {
             $scope.viewItem.laneName = $scope.laneNames[item.lane_id];
         };
 
-    $scope.openItem = function(item) {
+    $scope.openItem = function(item, openModal) {
+        if (undefined === openModal) {
+            openModal = true;
+        }
         updateItem(item);
         $scope.viewItem.disabled = false;
 
@@ -48,7 +51,9 @@ function ($scope, BoardService) {
         convertDates($scope.viewItem.ownActivity);
         $scope.fileReset = true;
 
-        $('.itemViewModal').modal({ show: true, keyboard:false });
+        if (openModal) {
+            $('.itemViewModal').modal({ show: true, keyboard:false });
+        }
     };
     $scope.$parent.openItem = $scope.openItem;
 
@@ -92,6 +97,7 @@ function ($scope, BoardService) {
             ]
         });
     };
+    $scope.$parent.deleteItem = $scope.deleteItem;
 
     $scope.deleteComment = function(commentId) {
         noty({

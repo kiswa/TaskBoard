@@ -65,6 +65,11 @@ function ($scope, $routeParams, $location, $interval, $window,
         $('.itemModal').modal('show');
     };
 
+    $scope.removeItem = function() {
+        $scope.openItem($scope.contextItem, false);
+        $scope.deleteItem();
+    };
+
     $scope.contextItem = {}; // Needs to exist prior to onContextMenu call.
     $scope.onContextMenu = function(laneId, item) {
         $scope.contextItem = item;
