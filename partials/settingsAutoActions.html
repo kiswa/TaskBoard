@@ -1,0 +1,102 @@
+<div class="widget-content">
+    <h4>Current Actions</h4>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Board</th><th>Trigger</th><th>Action</th><th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-if="loadingActions">
+                    <td colspan="4" align="center">
+                        <span class="fa fa-refresh fa-spin"></span> Loading Board Actions...
+                    </td>
+                </tr>
+                <tr data-ng-if="!loadingActions && !actions.length">
+                    <td data-ng-if="currentUser.isAdmin == '0'" colspan="4" align="center">
+                        There are no automatic actions. Contact an admin user to create one.
+                    </td>
+                    <td data-ng-if="currentUser.isAdmin == '1' && boards.length" colspan="4" align="center">
+                        There are no current automatic actions. Use the <strong>Add Action</strong> form below to add one.
+                    </td>
+                    <td data-ng-if="currentUser.isAdmin == '1' && !boards.length" colspan="4" align="center">
+                        There are no current boards. Use the <strong>Add Board</strong> button above to add one.
+                    </td>
+                </tr>
+                <tr data-ng-repeat="action in actions">
+                    <td>{{ action.board }}</td>
+                    <td>{{ action.trigger }}</td>
+                    <td>{{ action.action }}</td>
+                    <td>
+                        <span class="links" data-ng-if="!actionDeleting[action.id]">
+                            <a class="fa fa-trash-o" title="Remove Action" data-ng-click="removeAction(action.id)"></a>
+                        </span>
+                        <span data-ng-if="actionDeleting[action.id]" class="fa fa-refresh fa-spin"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div data-ng-if="currentUser.isAdmin == '1' && boards.length">
+        <h4>Add Action</h4>
+        <fieldset data-ng-disabled="actionData.isSaving || loadingActions || currentBoard.loading">
+            <div class="form-group col-md-4">
+                <label for="boards">Select Board:</label>
+                <select class="form-control" id="boards" data-ng-model="actionData.board"
+                        data-ng-options="board.id as board.name for board in boardNames"
+                        data-ng-change="updateColorpicker()">
+                    <option value="">Select Board...<option>
+                    </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="triggerSelect">Select Trigger:</label>
+                <select class="form-control" id="triggerSelect" data-ng-model="actionData.trigger"
+                        data-ng-options="trigger.id as trigger.trigger for trigger in actionOptions.triggers"
+                        data-ng-disabled="null === actionData.board"
+                        data-ng-change="getTriggerWord()">
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="triggerSelect">Select Action:</label>
+                <select class="form-control" id="triggerSelect" data-ng-model="actionData.action"
+                        data-ng-options="action.id as action.action for action in actionOptions.triggers[actionData.trigger].actions"
+                        data-ng-disabled="null === actionData.board"
+                        data-ng-change="resetActionSecondary()">
+                </select>
+            </div>
+            <div class="form-group col-md-4 col-md-offset-4">
+                <select class="form-control" data-ng-model="actionData.secondary"
+                        data-ng-options="select.id as select.name for select in secondarySelection"
+                        data-ng-disabled="null === actionData.board">
+                    <option value="">Select {{ actionData.triggerWord }}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4 disabled">
+                <input class="form-control" type="text" id="spectrum" data-ng-model="actionData.color"
+                       data-on-load-callback="spectrum"
+                       data-ng-if="actionData.action === 0">
+                <select class="form-control" data-ng-model="actionData.category"
+                        data-ng-options="cat.id as cat.name for cat in boardCategories"
+                        data-ng-disabled="null === actionData.board"
+                        data-ng-if="actionData.action === 1">
+                    <option value="">Select Category</option>
+                </select>
+                <select class="form-control" data-ng-model="actionData.assignee"
+                        data-ng-options="user.id as user.username for user in userList"
+                        data-ng-disabled="null === actionData.board"
+                        data-ng-if="actionData.action === 2">
+                    <option value="">Select Assignee</option>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <p>
+                    <a role="button" id="addAction" class="btn btn-info pull-right"
+                       data-ng-click="addAction()" data-ng-disabled="null === actionData.board" title="Add Action">
+                        Add Action <span class="fa fa-plus"></span>
+                    </a>
+                </p>
+            </div>
+        </fieldset>
+    </div>
+</div>

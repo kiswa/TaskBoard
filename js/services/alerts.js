@@ -12,13 +12,13 @@ function() {
 
     return {
         showAlert: function(alert) {
-            if (undefined === alert) {
+            if (undefined === alert || null === alert) {
                 return;
             }
             showNotyAlert(alert);
         },
         showAlerts: function(alerts) {
-            if (undefined === alerts || !alerts.length) {
+            if (undefined === alerts || null === alerts || !alerts.length) {
                 return;
             }
             alerts.forEach(function(alert) {

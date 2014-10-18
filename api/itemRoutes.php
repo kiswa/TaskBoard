@@ -18,6 +18,8 @@ $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
 
             $board->xownLane[$data->lane]->xownItem[] = $item;
             R::store($board);
+            runAutoActions($item);
+
             if ($item->id) {
                 $actor = getUser();
                 logAction($actor->username . ' added item ' . $item->title . ' to board ' . $board->name,
@@ -55,6 +57,7 @@ $app->post('/items/:itemId', function($itemId) use ($app, $jsonResponse) {
                 $item->position = $data->position;
             }
 
+            runAutoActions($item);
             R::store($item);
             logAction($user->username . ' updated item ' . $item->title, $before, $item->export(), $itemId);
             $jsonResponse->addAlert('success', 'Updated item ' . $item->title . '.');
@@ -85,6 +88,8 @@ $app->post('/items/positions', function() use ($app, $jsonResponse) {
                 $afterItem = $item->export();
             }
             $item->position = $posItem->position;
+
+            runAutoActions($item);
             R::store($item);
         }
         R::commit();
@@ -175,6 +180,7 @@ $app->post('/items/:itemId/upload', function($itemId) use ($app, $jsonResponse) 
     $app->response->setBody($jsonResponse->asJson());
 })->conditions(['itemId' => '\d+']);
 
+// Get an item attachment's information.
 $app->get('/items/:itemId/upload/:attachmentId', function($itemId, $attachmentId) use ($app, $jsonResponse) {
     if (validateToken()) {
         $file = R::load('attachment', $attachmentId);
@@ -221,7 +227,7 @@ $app->post('/items/:itemId/upload/remove', function($itemId) use ($app, $jsonRes
 $app->post('/items/remove', function() use ($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
-    if (validateToken()) {
+    if (validateToken(true)) {
         $item = R::load('item', $data->itemId);
         if ($item->id) {
             $before = $item->export();

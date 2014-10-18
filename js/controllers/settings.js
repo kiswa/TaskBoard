@@ -32,7 +32,7 @@ function ($scope, UserService, AlertService) {
         }
 
         $scope.loadingBoards = false;
-        if (undefined === data || null === data) {
+        if (null === data) {
             $scope.boards = [];
             return;
         }
@@ -63,6 +63,9 @@ function ($scope, UserService, AlertService) {
     $scope.actions = [];
     $scope.actionsLoading = true;
     $scope.updateActions = function() {
+        if ('1' !== $scope.currentUser.isAdmin) {
+            return;
+        }
         UserService.actions()
         .success(function(data) {
             $scope.actions = data.data;
