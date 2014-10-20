@@ -15,8 +15,16 @@ $app->response->headers->set('Content-Type', 'application/json');
 $jsonResponse = new JsonResponse();
 require_once('helpers.php'); // Must come after $jsonResponse exists.
 
-R::setup('sqlite:taskboard.db');
-createInitialUser();
+// Catch Exception if connection to DB failed
+try {
+    R::setup('sqlite:taskboard.db');
+    createInitialUser();
+} catch(Exception $e) {
+    $app->response->setStatus(503);
+    $jsonResponse->message = 'Connection to Database failed.';
+
+    $app->response->setBody($jsonResponse->asJson());
+}
 
 $app->notFound(function() use ($app, $jsonResponse) {
     $app->response->setStatus(404);
