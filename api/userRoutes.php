@@ -6,34 +6,29 @@ $app->post('/login', function() use ($app, $jsonResponse) {
     $expires = ($data->rememberme)
         ? (2 * 7 * 24 * 60 * 60) /* Two weeks */
         : (1.5 * 60 * 60) /* One and a half hours */;
-    try {
-        $lookup = R::findOne('user', ' username = ? ', [$data->username]);
 
-        $jsonResponse->message = 'Invalid username or password.';
-        $app->response->setStatus(401);
+    $lookup = R::findOne('user', ' username = ? ', [$data->username]);
 
-        if (null != $lookup) {
-            $hash = password_hash($data->password, PASSWORD_BCRYPT, array('salt' => $lookup->salt));
-            if ($lookup->password == $hash) {
-                if ($lookup->logins == 0 && $lookup->username == 'admin') {
-                    $jsonResponse->addAlert('warning', "This is your first login, don't forget to change your password.");
-                    $jsonResponse->addAlert('success', 'Go to Settings to add your first board.');
-                }
-                setUserToken($lookup, $expires);
-                $lookup->logins = $lookup->logins + 1;
-                $lookup->lastLogin = time();
-                R::store($lookup);
+    $jsonResponse->message = 'Invalid username or password.';
+    $app->response->setStatus(401);
 
-                logAction($lookup->username . ' logged in.', null, null);
-                $jsonResponse->message = 'Login successful.';
-                $jsonResponse->data = $lookup->token;
-                $app->response->setStatus(200);
+    if (null != $lookup) {
+        $hash = password_hash($data->password, PASSWORD_BCRYPT, array('salt' => $lookup->salt));
+        if ($lookup->password == $hash) {
+            if ($lookup->logins == 0 && $lookup->username == 'admin') {
+                $jsonResponse->addAlert('warning', "This is your first login, don't forget to change your password.");
+                $jsonResponse->addAlert('success', 'Go to Settings to add your first board.');
             }
+            setUserToken($lookup, $expires);
+            $lookup->logins = $lookup->logins + 1;
+            $lookup->lastLogin = time();
+            R::store($lookup);
+
+            logAction($lookup->username . ' logged in.', null, null);
+            $jsonResponse->message = 'Login successful.';
+            $jsonResponse->data = $lookup->token;
+            $app->response->setStatus(200);
         }
-    } catch (Exception $ex) {
-    }
-    if (!is_writable('taskboard.db')) {
-        $jsonResponse->message = 'The api directory is not writable.';
     }
     $app->response->setBody($jsonResponse->asJson());
 });

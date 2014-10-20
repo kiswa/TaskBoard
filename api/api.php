@@ -18,10 +18,10 @@ require_once('helpers.php'); // Must come after $jsonResponse exists.
 // Catch Exception if connection to DB failed
 try {
     R::setup('sqlite:taskboard.db');
-    createInitialUser();
+    createInitialUser();  
 } catch(Exception $e) {
     $app->response->setStatus(503);
-    $jsonResponse->message = 'Connection to Database failed.';
+    $jsonResponse->message = 'Connection to Database failed. Ensure api is writable.';
 
     $app->response->setBody($jsonResponse->asJson());
 }
