@@ -21,7 +21,7 @@ try {
     createInitialUser();  
 } catch(Exception $e) {
     $app->response->setStatus(503);
-    $jsonResponse->message = 'Connection to Database failed. Ensure api is writable.';
+    $jsonResponse->message = 'Connection to database failed. Ensure api is writable.';
 
     $app->response->setBody($jsonResponse->asJson());
 }
