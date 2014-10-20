@@ -1,4 +1,20 @@
 <?php
+
+// Patch for when using nginx instead of apache, source: http://php.net/manual/en/function.getallheaders.php#84262
+if (!function_exists('getallheaders')) { 
+    function getallheaders() \{ 
+        $headers = ''; 
+        
+        foreach ($_SERVER as $name => $value) { 
+            if (substr($name, 0, 5) == 'HTTP_') { 
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value; 
+            } 
+        } 
+        
+        return $headers; 
+    } 
+} 
+
 // Log an action. If $itemId is set, it is an item action.
 function logAction($comment, $oldValue, $newValue, $itemId=null) {
     $activity = R::dispense('activity');
@@ -27,8 +43,8 @@ function setUserToken($user, $expires) {
 function getUser() {
     global $jsonResponse;
 
-    if (isset(apache_request_headers()['Authorization'])) {
-        $hash = apache_request_headers()['Authorization'];
+    if (isset(getallheaders()['Authorization'])) {
+        $hash = getallheaders()['Authorization'];
         try {
             $payload = JWT::decode($hash, getJwtKey());
             $user = R::load('user', $payload->uid);
@@ -46,7 +62,7 @@ function getUser() {
 // Get all users.
 function getUsers($sanitize = true) {
     try {
-        $hash = apache_request_headers()['Authorization'];
+        $hash = getallheaders()['Authorization'];
         $payload = JWT::decode($hash, getJwtKey());
 
         $users = R::findAll('user');
@@ -246,8 +262,8 @@ function validateToken($requireAdmin = false) {
 function checkDbToken() {
     $user = getUser();
     if (null != $user) {
-        if (isset(apache_request_headers()['Authorization'])) {
-            $hash = apache_request_headers()['Authorization'];
+        if (isset(getallheaders()['Authorization'])) {
+            $hash = getallheaders()['Authorization'];
             return $hash == $user->token;
         }
     }
@@ -259,7 +275,7 @@ function clearDbToken() {
     $payload = null;
 
     try {
-        $payload = JWT::decode(apache_request_headers()['Authorization'], getJwtKey());
+        $payload = JWT::decode(getallheaders()['Authorization'], getJwtKey());
     } catch (Exception $e) {}
 
     if (null != $payload) {
@@ -358,3 +374,5 @@ function updateItemFromAction(&$item, $action) {
     }
     R::store($item);
 }
+
+
