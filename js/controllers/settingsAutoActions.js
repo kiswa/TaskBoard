@@ -31,7 +31,7 @@ function ($scope, $interval, BoardService) {
         triggers: [
             {
                 id: 0,
-                trigger: 'Item moves to lane'
+                trigger: 'Item moves to column'
             },
             {
                 id: 1,

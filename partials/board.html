@@ -39,16 +39,16 @@
                  data-ng-class="{'collapsed': lane.collapsed}" data-lane-id="{{ lane.id }}"
                  data-context-menu="onContextMenu(lane.id)" data-target="laneMenu">
                 <h3>{{ lane.name }}
-                    <span class="badge" title="Lane Items" data-ng-if="lane.collapsed">
+                    <span class="badge" title="Column Items" data-ng-if="lane.collapsed">
                         {{ lane.ownItem.length || 0 }}
                     </span>
-                    <span class="fa fa-angle-double-down small shrink" title="Collapse Lane"
+                    <span class="fa fa-angle-double-down small shrink" title="Collapse Column"
                           data-ng-click="toggleLane(lane)"></span>
-                    <span class="fa fa-angle-double-up small expand" title="Expand Lane"
+                    <span class="fa fa-angle-double-up small expand" title="Expand Column"
                           data-ng-click="toggleLane(lane)"></span>
                 </h3>
                 <div class="itemContainer">
-                    <div><!-- Needed to fix sortable behavior when there are no items in a lane. --></div>
+                    <div><!-- Needed to fix sortable behavior when there are no items in a column. --></div>
                     <div class="boardItem clearfix" data-ng-class="{'filtered': item.filtered}"
                          data-ng-repeat="item in lane.ownItem | orderBy:'position':false"
                          data-ng-dblclick="openItem(item)"
