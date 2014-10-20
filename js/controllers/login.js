@@ -28,10 +28,9 @@ function ($rootScope, $scope, $location, $window, UserService, AuthenticationSer
             $location.path('/boards');
         }).error(function(data, status) {
             $scope.isSaving = false;
-            if (status === 401) {
-                $scope.errors.push(data.message);
-            } else {
-                $scope.errors.push('Something went wrong. Please try again.');
+            $scope.errors.push(data.message);
+            if (status === 503) {
+                $scope.errors[0] = $scope.errors[0] + ' Ensure api directory is writable.';
             }
         });
     };

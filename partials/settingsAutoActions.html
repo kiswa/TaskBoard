@@ -60,7 +60,7 @@
             <div class="form-group col-md-4">
                 <label for="triggerSelect">Select Action:</label>
                 <select class="form-control" id="triggerSelect" data-ng-model="actionData.action"
-                        data-ng-options="action.id as action.action for action in actionOptions.triggers[actionData.trigger].actions"
+                        data-ng-options="action.id as action.action for action in actionTypes"
                         data-ng-disabled="null === actionData.board"
                         data-ng-change="resetActionSecondary()">
                 </select>
@@ -83,7 +83,7 @@
                     <option value="">Select Category</option>
                 </select>
                 <select class="form-control" data-ng-model="actionData.assignee"
-                        data-ng-options="user.id as user.username for user in userList"
+                        data-ng-options="user.id as user.name for user in userList"
                         data-ng-disabled="null === actionData.board"
                         data-ng-if="actionData.action === 2">
                     <option value="">Select Assignee</option>

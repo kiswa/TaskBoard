@@ -1,19 +1,20 @@
 <?php
-
 // Patch for when using nginx instead of apache, source: http://php.net/manual/en/function.getallheaders.php#84262
-if (!function_exists('getallheaders')) { 
-    function getallheaders() { 
-        $headers = ''; 
-        
-        foreach ($_SERVER as $name => $value) { 
-            if (substr($name, 0, 5) == 'HTTP_') { 
-                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value; 
-            } 
-        } 
-        
-        return $headers; 
-    } 
-} 
+if (!function_exists('getallheaders')) {
+    function getallheaders() {
+        $headers = '';
+
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(
+                    str_replace('_', ' ', substr($name, 5))
+                )))] = $value;
+            }
+        }
+
+        return $headers;
+    }
+}
 
 // Log an action. If $itemId is set, it is an item action.
 function logAction($comment, $oldValue, $newValue, $itemId=null) {
@@ -344,12 +345,14 @@ function runAutoActions(&$item) {
             }
             break;
             case 1: // Item assigned to user
-            if ($item->assignee == $action->secondaryId) {
+            if ($item->assignee == $action->secondaryId ||
+                ($action->secondaryId == 0 && $item->assignee == null)) {
                 updateItemFromAction($item, $action);
             }
             break;
             case 2: // Item assigned to category
-            if ($item->category == $action->secondaryId) {
+            if ($item->category == $action->secondaryId ||
+                ($action->secondaryId == 0 && $item->category == null)) {
                 updateItemFromAction($item, $action);
             }
             break;

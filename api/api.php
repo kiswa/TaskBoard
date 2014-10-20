@@ -15,6 +15,14 @@ $app->response->headers->set('Content-Type', 'application/json');
 $jsonResponse = new JsonResponse();
 require_once('helpers.php'); // Must come after $jsonResponse exists.
 
+// Catch Exception if connection to DB failed
+function exceptionHandler($exception) {
+    header('Content-Type: application/json');
+    http_response_code(503);
+    echo '{"message": "API Error."}';
+};
+set_exception_handler('exceptionHandler');
+
 R::setup('sqlite:taskboard.db');
 createInitialUser();
 

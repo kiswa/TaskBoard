@@ -4,6 +4,10 @@ function ($scope, $interval, BoardService) {
     $scope.loadingActions = true;
     $scope.actions = [];
 
+    $scope.secondarySelection = [];
+    $scope.boardCategories = [{ id: 0, name: 'Uncategorized' }];
+    $scope.userList = [{ id: 0, name: 'Unassigned', username: 'Unassigned' }];
+
     $scope.actionData = {
         isSaving: false,
         board: null,
@@ -17,58 +21,72 @@ function ($scope, $interval, BoardService) {
     };
     $scope.actionDeleting = [];
 
+    $scope.actionTypes = [
+        { id: 0, action: 'Set item color' },
+        { id: 1, action: 'Set item category'},
+        { id: 2, action: 'Set item assignee' },
+        { id: 3, action: 'Clear item due date' }
+    ];
     $scope.actionOptions = {
         triggers: [
             {
                 id: 0,
-                trigger: 'Item moves to lane',
-                actions: [
-                    { id: 0, action: 'Set item color' },
-                    { id: 1, action: 'Set item category'},
-                    { id: 2, action: 'Set item assignee' },
-                    { id: 3, action: 'Clear item due date' }
-                ]
+                trigger: 'Item moves to column'
             },
             {
                 id: 1,
-                trigger: 'Item assigned to user',
-                actions: [
-                    { id: 0, action: 'Set item color' },
-                    { id: 1, action: 'Set item category'},
-                    { id: 3, action: 'Clear item due date' }
-                ]
+                trigger: 'Item assigned to user'
             },
             {
                 id: 2,
-                trigger: 'Item set to category',
-                actions: [
-                    { id: 0, action: 'Set item color' },
-                    { id: 2, action: 'Set item assignee' },
-                    { id: 3, action: 'Clear item due date' }
-                ]
+                trigger: 'Item set to category'
             }
         ]
     };
 
     var getBoardData = function(boardId) {
-        if (null === boardId || undefined === boardId)
-        {
-            return;
-        }
-
-        var boardData;
-        $scope.boards.forEach(function(board) {
-            if (board.id === boardId) {
-                boardData = board;
+            if (null === boardId || undefined === boardId)
+            {
+                return;
             }
-        });
 
-        return boardData;
-    },
+            var boardData;
+            $scope.boards.forEach(function(board) {
+                if (board.id === boardId) {
+                    boardData = board;
+                }
+            });
+
+            return boardData;
+        },
+
+        getCategories = function(boardData) {
+            var categories = [{ id: '0', name: 'Uncategorized' }];
+
+            if (boardData) {
+                boardData.ownCategory.forEach(function(category) {
+                    categories.push(category);
+                });
+            }
+            return categories;
+        },
+
+        getUsers = function(boardData) {
+            var userList = [{ id: '0', name: 'Unassigned', username: 'Unassigned' }];
+
+            if (boardData) {
+                boardData.sharedUser.forEach(function(user) {
+                    userList.push({ id: user.id, name: user.username });
+                });
+            }
+            return userList;
+        },
 
         getSecondaryText = function(action) {
             var text = ': ',
-                actionBoard = getBoardData(action.board_id);
+                actionBoard = getBoardData(action.board_id),
+                boardCategories = getBoardData(actionBoard),
+                userList = getUsers(actionBoard);
 
             switch(parseInt(action.trigger_id)) {
                 case 0: // Lane
@@ -79,14 +97,14 @@ function ($scope, $interval, BoardService) {
                     });
                     break;
                 case 1: // User
-                    actionBoard.sharedUser.forEach(function(user) {
+                    userList.forEach(function(user) {
                         if (user.id === action.secondary_id) {
-                            text += user.username;
+                            text += user.name;
                         }
                     });
                     break;
                 case 2: // Category
-                    actionBoard.ownCategory.forEach(function(category) {
+                    boardCategories.forEach(function(category) {
                         if (category.id === action.secondary_id) {
                             text += category.name;
                         }
@@ -98,41 +116,44 @@ function ($scope, $interval, BoardService) {
 
         getActionText = function(action) {
             var text = '',
-                actionBoard = getBoardData(action.board_id);
+                actionBoard = getBoardData(action.board_id),
+                boardCategories = getCategories(actionBoard),
+                userList = getUsers(actionBoard);
+
             switch(parseInt(action.action_id)) {
                 case 0: // Color
                     text = ': ' + action.color;
                     break;
                 case 1: // Category
-                    actionBoard.ownCategory.forEach(function(category) {
+                    boardCategories.forEach(function(category) {
                         if (category.id === action.category_id) {
                             text = ': ' + category.name;
                         }
                     });
                     break;
                 case 2: // Assignee
-                    actionBoard.sharedUser.forEach(function(user) {
+                    userList.forEach(function(user) {
                         if (user.id === action.assignee_id) {
-                            text = ': ' + user.username;
+                            text = ': ' + user.name;
                         }
                     });
                     break;
             }
             return text;
-        };
+        },
 
-    $scope.updateAutoActions = function(actions) {
+        updateAutoActions = function(actions) {
         if (!actions) {
             return;
         }
-        var mappedActions = [];
 
+        var mappedActions = [];
         actions.forEach(function(action) {
             mappedActions.push({
                 id: action.id,
                 board: $scope.boardLookup[action.board_id],
                 trigger: $scope.actionOptions.triggers[action.trigger_id].trigger + getSecondaryText(action),
-                action: $scope.actionOptions.triggers[0].actions[action.action_id].action + getActionText(action)
+                action: $scope.actionTypes[action.action_id].action + getActionText(action)
             });
         });
 
@@ -142,8 +163,9 @@ function ($scope, $interval, BoardService) {
     $scope.loadActions = function() {
         BoardService.getAutoActions()
         .success(function(data) {
-            $scope.updateAutoActions(data.data);
+            updateAutoActions(data.data);
             $scope.loadingActions = false;
+            $scope.loadActions();
         });
     };
 
@@ -157,8 +179,12 @@ function ($scope, $interval, BoardService) {
     $scope.addAction = function() {
         if ($scope.actionData.secondary === null ||
             ($scope.actionData.action !== 3 &&
-             ($scope.actionData.color === null && $scope.actionData.category === null && $scope.actionData.assignee === null))) {
-            $scope.alerts.showAlert({ type: 'error', text: 'One or more required fields are not entered. Automatic Action not added.' });
+             ($scope.actionData.color === null && $scope.actionData.category === null &&
+              $scope.actionData.assignee === null))) {
+            $scope.alerts.showAlert({
+                type: 'error',
+                text: 'One or more required fields are not entered. Automatic Action not added.'
+            });
             return;
         }
 
@@ -183,17 +209,14 @@ function ($scope, $interval, BoardService) {
         });
     };
 
-    $scope.secondarySelection = [];
     $scope.updateSecondary = function() {
         $scope.secondarySelection = [];
         $scope.actionData.secondary = null;
         $scope.actionData.action = 0;
 
         var boardData = getBoardData($scope.actionData.board);
-        if (boardData) {
-            $scope.boardCategories = boardData.ownCategory;
-            $scope.userList = boardData.sharedUser;
-        }
+        $scope.boardCategories = getCategories(boardData);
+        $scope.userList = getUsers(boardData);
 
         if (boardData) {
             switch($scope.actionData.trigger) {
@@ -201,13 +224,10 @@ function ($scope, $interval, BoardService) {
                     $scope.secondarySelection = boardData.ownLane;
                     break;
                 case 1:
-                    $scope.secondarySelection = boardData.sharedUser;
-                    $scope.secondarySelection.forEach(function(user) {
-                        user.name = user.username;
-                    });
+                    $scope.secondarySelection = $scope.userList;
                     break;
                 case 2:
-                    $scope.secondarySelection = boardData.ownCategory;
+                    $scope.secondarySelection = $scope.boardCategories;
                     break;
             }
         }

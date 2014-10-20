@@ -17,7 +17,7 @@
                 </div>
                 <div class="form-group half-width" data-ng-class="{ 'has-error': boardFormData.lanesError }">
                     <form role="form" class="form form-inline" data-ng-submit="boardFormData.addLane()">
-                        <h5>Lanes</h5>
+                        <h5>Columns</h5>
                         <ul class="list-group lanes">
                             <li class="list-group-item small" data-ng-class="{ disabled: boardFormData.isSaving }"
                                 data-ng-repeat="lane in boardFormData.lanes | orderBy:'position':false">
@@ -32,7 +32,7 @@
                                 </span>
                             </li>
                         </ul>
-                        <input class="form-control" style="width: 85%;" type="text" placeholder="Lane Name"
+                        <input class="form-control" style="width: 85%;" type="text" placeholder="Column Name"
                                data-ng-model="boardFormData.laneName" data-ng-disabled="boardFormData.isSaving">
                         <button type="submit" id="modalAddLane" class="btn btn-default fa fa-plus"
                                 data-ng-disabled="boardFormData.isSaving"></button>

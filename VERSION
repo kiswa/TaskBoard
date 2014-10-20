@@ -1,1 +1,11 @@
-v0.2.0
+v0.2.1
+
+Changelog
+
+ * Supports nginx (@alex3305)
+ * Supports use in Docker (Ubuntu Trusty & nginx - @alex3305)
+ * Build scripts executable by default (@niedzielski)
+ * Automatic Actions now allow "Unassigned" and "Uncategorized" for changing assignee or category (Issue #5)
+ * Links in item descriptions open in new tab (Issue #18)
+ * Lanes are now Columns to match common Kanban terminology (Issue #4)
+ * Any exception in API is handled and returns a 503 (inspired by @amalfra)
