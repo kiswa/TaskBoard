@@ -33,7 +33,9 @@ function ($scope, $window, $location, UserService, AuthenticationService, AlertS
         $scope.display.smallText = ' - File Viewer';
     }
 
-    $.noty.closeAll(); // Clear any alerts on page load.
+    try {
+        $.noty.closeAll(); // Clear any alerts on page load.
+    } catch(e) {}
 
     $scope.logout = function() {
         UserService.logOut()
