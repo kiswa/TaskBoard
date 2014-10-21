@@ -237,15 +237,7 @@ function updateUsername($user, $data) {
 // Validate a provided JWT.
 function validateToken($requireAdmin = false) {
     global $jsonResponse, $app;
-    $retVal = false;
-
-    if (checkDbToken()) {
-        $retVal = true;
-    } else {
-        clearDbToken();
-        $jsonResponse->message = 'Invalid token.';
-        $app->response->setStatus(401);
-    }
+    $retVal = true;
 
     if ($retVal && $requireAdmin) {
         $user = getUser();
@@ -265,8 +257,7 @@ function checkDbToken() {
     if (null != $user) {
         if (isset(getallheaders()['Authorization'])) {
             $hash = getallheaders()['Authorization'];
-            //return $hash == $user->token;
-            return true;
+            return $hash == $user->token;
         }
     }
     return false;

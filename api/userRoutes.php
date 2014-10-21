@@ -22,7 +22,7 @@ $app->post('/login', function() use ($app, $jsonResponse) {
             setUserToken($lookup, $expires);
             $lookup->logins = $lookup->logins + 1;
             $lookup->lastLogin = time();
-            R::store($lookup);
+            //R::store($lookup);
 
             logAction($lookup->username . ' logged in.', null, null);
             $jsonResponse->message = 'Login successful.';
