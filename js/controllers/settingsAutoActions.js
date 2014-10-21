@@ -194,7 +194,7 @@ function ($scope, $interval, BoardService) {
             $scope.actionData.isSaving = false;
             $scope.alerts.showAlerts(data.alerts);
             if (data.alerts[0].type == 'success') {
-                $scope.updateAutoActions(data.data);
+                updateAutoActions(data.data);
             }
         });
     };
@@ -205,7 +205,7 @@ function ($scope, $interval, BoardService) {
         BoardService.removeAutoAction(actionId)
         .success(function(data) {
             $scope.alerts.showAlerts(data.alerts);
-            $scope.updateAutoActions(data.data);
+            updateAutoActions(data.data);
         });
     };
 
