@@ -85,7 +85,7 @@ function ($scope, $interval, BoardService) {
         getSecondaryText = function(action) {
             var text = ': ',
                 actionBoard = getBoardData(action.board_id),
-                boardCategories = getBoardData(actionBoard),
+                boardCategories = getCategories(actionBoard),
                 userList = getUsers(actionBoard);
 
             switch(parseInt(action.trigger_id)) {

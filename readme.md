@@ -52,7 +52,7 @@ Admin users have the same, with the additional abilities of adding/editing users
 ![Settings Image](http://taskboard.matthewross.me/docs/images/settings-standard.png)
 
 ###Boards
-Each board may have as many lanes as needed. For example, a software project might have lanes like:
+Each board may have as many columns as needed. For example, a software project might have columns like:
 
  * Proposed
  * Backlog
@@ -67,7 +67,7 @@ Or maybe you want to track a simple todo list with just:
  * Doing
  * Done
 
-It's all up to you! However many lanes you have, each lane may have tasks added to it, and tasks can be dragged to other lanes as they progress (or edited and assigned to a new lane).
+It's all up to you! However many columns you have, each column may have tasks added to it, and tasks can be dragged to other columns as they progress (or edited and assigned to a new column).
 
 Boards may also have categories for additional organization, *e.g.* `Bug`, `Enhancement`, `New Feature`.
 
