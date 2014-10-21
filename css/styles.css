@@ -12,6 +12,8 @@
     #3rdParty - Styles for 3rd party widgets (noty, calendar, etc.)
 */
 
+@import url(http://fonts.googleapis.com/css?family=Pontano+Sans|Raleway:500);
+
 /* #General */
 html, body {
     height: 100%;width: 100%;
