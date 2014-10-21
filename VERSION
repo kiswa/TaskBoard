@@ -1,5 +1,5 @@
-v0.2.2
+v0.2.3
 
 Changelog
 
- * Emergency bugfix for automatic actions error in v0.2.1
+ * Bugfix for automatic actions typo error in v0.2.2 (@alex3305)
