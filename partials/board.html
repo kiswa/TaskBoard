@@ -37,7 +37,7 @@
             </div>
             <div class="boardColumn" data-ng-repeat="lane in currentBoard.ownLane | orderBy:'position':false"
                  data-ng-class="{'collapsed': lane.collapsed}" data-lane-id="{{ lane.id }}"
-                 data-context-menu="onContextMenu(lane.id)" data-target="laneMenu">
+                 data-context-menu="onContextMenu(lane.id)" data-target="laneMenu" data-keep-scroll-pos>
                 <h3>{{ lane.name }}
                     <span class="badge" title="Column Items" data-ng-if="lane.collapsed">
                         {{ lane.ownItem.length || 0 }}
@@ -59,7 +59,7 @@
                             <h4>{{ item.title }}</h4>
                             <span class="badge" title="Points">{{ item.points }}</span>
                         </div>
-                        <div class="description" data-ng-bind-html="marked(item.description)"></div>
+                        <div class="description" data-ng-bind-html="marked(item.description)" data-keep-scroll-pos></div>
                         <p class="assignee">
                             <span data-ng-if="userNames[item.assignee]">Assigned To: </span>
                             {{ userNames[item.assignee] }}
