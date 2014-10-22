@@ -83,7 +83,7 @@ function ($scope, $routeParams, $location, $interval, $window,
         if ($scope.boardId) {
             $interval.cancel($scope.interval);
         }
-        if ($scope.boardsLoaded && !$scope.boardId && $scope.currentUser && parseInt($scope.currentUser.defaultBoard)) {
+        if ($scope.boardsLoaded && !$scope.boardId && parseInt($scope.currentUser.defaultBoard)) {
             $interval.cancel($scope.interval);
             $location.path('boards/' + $scope.currentUser.defaultBoard);
         }
