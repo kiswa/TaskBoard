@@ -19,7 +19,10 @@ require_once('helpers.php'); // Must come after $jsonResponse exists.
 function exceptionHandler($exception) {
     header('Content-Type: application/json');
     http_response_code(503);
-    echo '{"message": "API Error."}';
+    $resp = array(
+	'message' => "API Error : ".$exception->getMessage()
+    );
+    echo json_encode($resp);
 };
 set_exception_handler('exceptionHandler');
 
