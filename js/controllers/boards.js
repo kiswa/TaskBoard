@@ -155,6 +155,8 @@ function ($scope, $routeParams, $location, $interval, $window,
                                 } else if (diff < (1000 * 60 * 60 * 24 * 3)) { // Three days
                                     item.dateNear = true;
                                 }
+
+                                item.position = parseInt(item.position);
                             });
                         }
                     });
