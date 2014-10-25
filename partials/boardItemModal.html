@@ -71,8 +71,8 @@
                 <button type="submit" class="btn btn-info"
                  data-ng-click="submitItem(itemFormData)"
                  data-ng-disabled="itemFormData.isSaving">
-                 <span data-ng-if="itemFormData.isAdd">Add</span>
-                 <span data-ng-if="!itemFormData.isAdd">Save</span>
+                 <span data-ng-if="itemFormData.isAdd"><span class="fa fa-plus"></span> Add</span>
+                 <span data-ng-if="!itemFormData.isAdd"><span class="fa fa-save"></span> Save</span>
                   Item</button>
                 <a class="btn btn-default" data-ng-click="itemFormData.cancel()"
                  data-ng-disabled="itemFormData.isSaving">Cancel</a>

@@ -68,9 +68,9 @@
                         <input type="file" name="file" class="form-control"
                                data-file-upload="itemUpload" data-reset-flag="fileReset"
                                data-ng-disabled="viewItem.disabled">
-                        <button type="submit" id="upload-attachment" class="btn btn-primary"
+                        <button type="submit" id="upload-attachment" class="btn btn-info"
                                 data-ng-class="{'disabled': viewItem.disabled}"
-                                data-ng-click="addItemAttachment()">Upload</button>
+                                data-ng-click="addItemAttachment()"><span class="fa fa-upload"></span> Upload</button>
                     </div>
                 </div>
                 <div class="view-item-comments" data-ng-if="viewItem.ownComment.length">
@@ -100,9 +100,9 @@
                     <h4>Add Comment</h4>
                     <div class="form-group">
                         <textarea id="itemComment" class="form-control" rows="4" data-ng-model="comment.text"></textarea>
-                        <button type="submit" id="add-comment" class="btn btn-primary pull-right"
+                        <button type="submit" id="add-comment" class="btn btn-info pull-right"
                                 data-ng-class="{ 'disabled': viewItem.disabled }"
-                                data-ng-click="addItemComment(comment.text)">Submit Comment</button>
+                                data-ng-click="addItemComment(comment.text)"><span class="fa fa-comment-o"></span> Submit Comment</button>
                     </div>
                 </div>
             </div>
