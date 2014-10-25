@@ -76,9 +76,15 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="modalAddBoard" class="btn btn-info" data-ng-click="addBoard(boardFormData)"
-                            data-ng-if="boardFormData.isAdd" data-ng-disabled="boardFormData.isSaving">Add Board</button>
+                            data-ng-if="boardFormData.isAdd" data-ng-disabled="boardFormData.isSaving">
+                        <span class="fa fa-plus"></span>
+                        Add Board
+                    </button>
                     <button type="submit" id="modalEditBoard" class="btn btn-info" data-ng-click="editBoard(boardFormData)"
-                            data-ng-if="!boardFormData.isAdd" data-ng-disabled="boardFormData.isSaving">Edit Board</button>
+                            data-ng-if="!boardFormData.isAdd" data-ng-disabled="boardFormData.isSaving">
+                        <span class="fa fa-save"></span>
+                        Save Board
+                    </button>
                     <a class="btn btn-default" data-ng-click="boardFormData.cancel()"
                        data-ng-disabled="boardFormData.isSaving">Cancel</a>
                 </div>

@@ -1,5 +1,10 @@
-v0.2.3
+v0.2.4
 
 Changelog
 
- * Bugfix for automatic actions typo error in v0.2.2 (@alex3305)
+ * Bugfix for attachments downloading with hash instead of file name (#41).
+ * Bugfix for item positions (#37).
+ * noty errors are ignored now.
+ * Favicons added.
+ * API Error now returns exception message in JSON data.
+
