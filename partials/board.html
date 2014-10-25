@@ -47,7 +47,7 @@
                     <span class="fa fa-angle-double-up small expand" title="Expand Column"
                           data-ng-click="toggleLane(lane)"></span>
                 </h3>
-                <div class="itemContainer">
+                <div class="itemContainer"> 
                     <div><!-- Needed to fix sortable behavior when there are no items in a column. --></div>
                     <div class="boardItem clearfix" data-ng-class="{'filtered': item.filtered}"
                          data-ng-repeat="item in lane.ownItem | orderBy:'position':false"

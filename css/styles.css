@@ -311,8 +311,8 @@ a:hover.fa {
     border-radius: 5px;
     margin: 5px;
 }
-a > span.fa-plus {
-    margin-left: 5px;
+span.fa {
+    margin-right: 5px;
 }
 .lane-placeholder {
     width: 100%;

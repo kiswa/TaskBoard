@@ -17,9 +17,14 @@ require_once('helpers.php'); // Must come after $jsonResponse exists.
 
 // Catch Exception if connection to DB failed
 function exceptionHandler($exception) {
+    global $jsonResponse;
+
     header('Content-Type: application/json');
     http_response_code(503);
-    echo '{"message": "API Error."}';
+
+    $jsonResponse->message = 'API Error.';
+    $jsonResponse->data = $exception->getMessage();
+    echo $jsonResponse->asJson();
 };
 set_exception_handler('exceptionHandler');
 
