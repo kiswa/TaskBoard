@@ -24,7 +24,7 @@
 <div data-include-replace="partials/boardItemViewModal.html"></div>
 <div class="content">
     <div id="board">
-        <div id="boardColumns" data-keep-scroll-pos>
+        <div id="boardColumns">
             <div class="col-md-6 col-md-offset-3 settings-widget text-center" data-ng-if="currentBoard.loading">
                 <h3 data-ng-if="!currentBoard.error">
                     <span class="fa fa-refresh fa-spin"></span> Loading Board...
@@ -37,7 +37,7 @@
             </div>
             <div class="boardColumn" data-ng-repeat="lane in currentBoard.ownLane | orderBy:'position':false"
                  data-ng-class="{'collapsed': lane.collapsed}" data-lane-id="{{ lane.id }}"
-                 data-context-menu="onContextMenu(lane.id)" data-target="laneMenu" data-keep-scroll-pos>
+                 data-context-menu="onContextMenu(lane.id)" data-target="laneMenu">
                 <h3>{{ lane.name }}
                     <span class="badge" title="Column Items" data-ng-if="lane.collapsed">
                         {{ lane.ownItem.length || 0 }}
@@ -47,7 +47,7 @@
                     <span class="fa fa-angle-double-up small expand" title="Expand Column"
                           data-ng-click="toggleLane(lane)"></span>
                 </h3>
-                <div class="itemContainer">
+                <div class="itemContainer"> 
                     <div><!-- Needed to fix sortable behavior when there are no items in a column. --></div>
                     <div class="boardItem clearfix" data-ng-class="{'filtered': item.filtered}"
                          data-ng-repeat="item in lane.ownItem | orderBy:'position':false"
@@ -59,8 +59,7 @@
                             <h4>{{ item.title }}</h4>
                             <span class="badge" title="Points">{{ item.points }}</span>
                         </div>
-                        <div class="description" data-ng-bind-html="marked(item.description)"
-                            data-keep-scroll-pos></div>
+                        <div class="description" data-ng-bind-html="marked(item.description)"></div>
                         <p class="assignee">
                             <span data-ng-if="userNames[item.assignee]">Assigned To: </span>
                             {{ userNames[item.assignee] }}
