@@ -157,6 +157,10 @@ a:hover.fa {
 #board-nav :last-child.form-control {
     margin-right: 0;
 }
+.version {
+    margin-top: 5px;
+    font-size: small !important;
+}
 /* #SiteNav*/
 .nav {
     margin-top: -.7em;
