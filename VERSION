@@ -1,10 +1,8 @@
-v0.2.4
+v0.2.5
 
 Changelog
 
- * Bugfix for attachments downloading with hash instead of file name (#41).
- * Bugfix for item positions (#37).
- * noty errors are ignored now.
- * Favicons added.
- * API Error now returns exception message in JSON data.
+ * Markdown support in comments
+ * Cursor on default input field
+ * Show app version
 

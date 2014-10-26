@@ -51,7 +51,7 @@ function($routeProvider, $httpProvider) {
 }]);
 
 // Custom handlers for route authentication and rejection of invalid board id
-taskBoard.run(['$rootScope', '$location', '$window', 'AuthenticationService',     
+taskBoard.run(['$rootScope', '$location', '$window', 'AuthenticationService',
 function($rootScope, $location, $window, AuthenticationService) {
     $rootScope.version = 'v0.2.5';
 
