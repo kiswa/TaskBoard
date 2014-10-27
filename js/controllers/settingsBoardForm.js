@@ -2,6 +2,7 @@ taskBoardControllers.controller('BoardFormSettingsCtrl',
 ['$scope', 'BoardService',
 function ($scope, BoardService) {
     $scope.boardFormData = {
+        setFocus: false,
         boardId: 0,
         isAdd: true,
         name: '',
@@ -139,6 +140,7 @@ function ($scope, BoardService) {
             $scope.alerts.showAlert({ 'type': 'error', 'text': message });
         },
         reset: function() {
+            this.setFocus = true;
             this.boardId = 0;
             this.isAdd = true;
             this.name = '';
