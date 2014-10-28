@@ -1,6 +1,6 @@
 taskBoardControllers.controller('ItemViewBoardCtrl',
-['$scope', 'BoardService',
-function ($scope, BoardService) {
+['$scope', '$window', 'BoardService',
+function ($scope, $window, BoardService) {
     $scope.viewItem = {};
     $scope.toggle = {
         sidebar: false
@@ -13,6 +13,14 @@ function ($scope, BoardService) {
             {id: 1, text: 'Newest First'}
         ],
         sorting: 0
+    };
+
+    $scope.markedComment = function(text) {
+        if (text) {
+            return $window.marked(text);
+        } else {
+            return "<p>No text</p>";
+        }
     };
 
     // Takes an array of timestamps and converts them to display dates.
