@@ -4,6 +4,7 @@ function ($scope, BoardService) {
     var defaultColor = '#ffffe0';
 
     $scope.itemFormData = {
+        setFocus: false,
         isSaving: false,
         isAdd: true,
         itemId: 0,
@@ -19,6 +20,7 @@ function ($scope, BoardService) {
         pointsError: false,
         reset: function(laneId) {
             $('.popover-dismiss').popover({html:true});
+            this.setFocus = true;
             this.isSaving = false;
             this.isAdd = true;
             this.itemId = 0;

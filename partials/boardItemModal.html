@@ -14,7 +14,8 @@
                     <h5>Title</h5>
                     <input class="form-control" type="text" placeholder="Item Title"
                      data-ng-model="itemFormData.title" data-ng-disabled="itemFormData.isSaving"
-                     data-ng-class="{ 'has-error': itemFormData.titleError }">
+                     data-ng-class="{ 'has-error': itemFormData.titleError }"
+                     data-focus="itemFormData.setFocus">
                 </div>
                 <div class="form-group">
                     <h5>Description
