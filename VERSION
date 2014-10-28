@@ -1,10 +1,7 @@
-v0.2.6
+v0.2.5
 
 Changelog
 
- * Settings Updates
-   * Choose to hide items on filter
-   * Ability to turn off modal animations
-   * Choose boards when creating a user
- * Comments can be edited
- * Opening login page redirects to boards if a valid token is found
+ * Markdown support in comments
+ * Cursor on default input field
+ * Show app version
