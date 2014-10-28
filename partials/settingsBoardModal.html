@@ -13,6 +13,7 @@
                 <div class="form-group" data-ng-class="{ 'has-error': boardFormData.nameError }">
                     <h5>Board Name</h5>
                     <input class="form-control" type="text" placeholder="Board Name"
+                           data-focus="boardFormData.setFocus"
                            data-ng-model="boardFormData.name" data-ng-disabled="boardFormData.isSaving">
                 </div>
                 <div class="form-group half-width" data-ng-class="{ 'has-error': boardFormData.lanesError }">

@@ -2,6 +2,7 @@ taskBoardControllers.controller('UserFormSettingsCtrl',
 ['$scope', 'UserService',
 function ($scope, UserService) {
     $scope.userFormData = {
+        setFocus: false,
         userId: 0,
         isAdd: true,
         username: '',
@@ -23,6 +24,7 @@ function ($scope, UserService) {
         },
         reset: function() {
             $('.popover-dismiss').popover();
+            this.setFocus = true;
             this.userId = 0;
             this.isAdd = true;
             this.username = '';

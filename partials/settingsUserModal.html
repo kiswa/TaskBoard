@@ -14,7 +14,7 @@
                     <fieldset data-ng-disabled="userFormData.isSaving">
                         <div class="form-group" data-ng-class="{ 'has-error': userFormData.usernameError }">
                             <h5><span data-ng-if="!userFormData.isAdd">Change </span>Username</h5>
-                            <input class="form-control" type="text" placeholder="Username" data-ng-model="userFormData.username">
+                            <input class="form-control" type="text" placeholder="Username" data-ng-model="userFormData.username" data-focus="userFormData.setFocus">
                         </div>
                         <div class="form-group" data-ng-class="{ 'has-error': userFormData.passError }">
                             <h5><span data-ng-if="!userFormData.isAdd">Change </span>Password</h5>
