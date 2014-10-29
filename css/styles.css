@@ -46,7 +46,9 @@ a:hover.fa {
 .datePast {
     text-shadow: 0px 0px 3px rgba(255, 81, 28, 1);
 }
-
+.unbold {
+    font-weight: normal;
+}
 .fa-edit, .fa-trash-o {
     cursor: pointer;
 }
