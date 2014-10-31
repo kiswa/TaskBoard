@@ -157,6 +157,9 @@ $app->post('/users', function() use($app, $jsonResponse) {
 
             R::store($user);
             addUserToBoard($data->defaultBoard, $user);
+            foreach($data->boardAccess as $board) {
+                addUserToBoard($board, $user);
+            }
 
             $actor = getUser();
             logAction($actor->username . ' added user ' . $user->username, null,  $user->export());

@@ -54,6 +54,7 @@ function($http) {
                 username: formData.username,
                 password: formData.password,
                 defaultBoard: formData.defaultBoard,
+                boardAccess: formData.boardAccess,
                 isAdmin: formData.isAdmin
             });
         },
