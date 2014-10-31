@@ -165,9 +165,9 @@ function ($scope, $interval, BoardService) {
         .success(function(data) {
             updateAutoActions(data.data);
             $scope.loadingActions = false;
-            $scope.loadActions();
         });
     };
+    $interval($scope.loadActions, 2000);
 
     // Wait until boards are loaded to load the actions.
     $scope.$watch('loadingBoards', function() {
