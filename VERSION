@@ -7,4 +7,6 @@ Changelog
    * Ability to turn off modal animations
    * Choose boards when creating a user
  * Comments can be edited
+ * Dates show up on comments and attachments without reload
  * Opening login page redirects to boards if a valid token is found
+ * Multiple logins do not log out all instances
