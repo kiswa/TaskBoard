@@ -369,6 +369,13 @@ span.fa {
 .view-item-comment-form {
     overflow: hidden;
 }
+.edit-item-comment-form {
+    overflow: hidden;
+}
+.edit-item-comment-form button {
+    margin-left: 5px;
+    margin-top: 5px;
+}
 .detail {
     display: block;
     font-size: 80%;
@@ -382,6 +389,19 @@ p.detail {
     margin-top: -2em;
 }
 .links a {
+    margin-left: 3px;
+}
+.commentText {
+    display: inline-block;
+    width: 95%;
+    overflow: hidden;
+}
+.commentActions {
+    position: absolute;
+    top: .8em;
+    right: .4em;
+}
+.commentActions a {
     margin-left: 3px;
 }
 #add-comment {

@@ -2,6 +2,7 @@ taskBoardControllers.controller('ItemViewBoardCtrl',
 ['$scope', '$window', 'BoardService',
 function ($scope, $window, BoardService) {
     $scope.viewItem = {};
+    $scope.comment = {};
     $scope.toggle = {
         sidebar: false
     };
@@ -38,6 +39,9 @@ function ($scope, $window, BoardService) {
         updateItem = function(item) {
             $scope.viewItem = item;
             $scope.viewItem.laneName = $scope.laneNames[item.lane_id];
+            convertDates($scope.viewItem.ownComment);
+            convertDates($scope.viewItem.ownAttachment);
+            convertDates($scope.viewItem.ownActivity);
         };
 
     $scope.openItem = function(item, openModal) {
@@ -54,9 +58,6 @@ function ($scope, $window, BoardService) {
             $scope.viewItem.ownAttachment = [];
         }
 
-        convertDates($scope.viewItem.ownComment);
-        convertDates($scope.viewItem.ownAttachment);
-        convertDates($scope.viewItem.ownActivity);
         $scope.fileReset = true;
 
         if (openModal) {
@@ -179,7 +180,7 @@ function ($scope, $window, BoardService) {
 
     $scope.addItemComment = function(comment) {
         if (comment === "" || undefined === comment) {
-            $scope.alerts.showAlert({ type: 'error', text:'Comment cannot be empty.' });
+            $scope.alerts.showAlert({ type: 'error', text: 'Comment cannot be empty.' });
             return;
         }
 
@@ -192,6 +193,28 @@ function ($scope, $window, BoardService) {
         });
         // Reset input
         $scope.comment.text = "";
+    };
+
+    $scope.beginEditComment = function(commentId, comment) {
+        $scope.comment.isEdit = true;
+        $scope.comment.editText = comment;
+        $scope.comment.id = commentId;
+    };
+
+    $scope.editComment = function(commentId, comment) {
+        $scope.comment.isEdit = false;
+        if (comment === '' || undefined === comment) {
+            $scope.alerts.showAlert({ type: 'error', text: 'Comment cannot be empty.' });
+            return;
+        }
+
+        $scope.viewItem.disabled = true;
+        BoardService.updateItemComment(commentId, comment)
+        .success(function(data) {
+            updateItem(data.data[0]);
+            $scope.loadBoards();
+            $scope.viewItem.disabled = false;
+        });
     };
 
     $scope.addItemAttachment = function() {

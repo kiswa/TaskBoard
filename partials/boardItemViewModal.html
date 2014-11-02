@@ -86,21 +86,41 @@
                         <div class="list-group-item"
                              data-ng-repeat="comment in viewItem.ownComment | orderBy:'timestamp':comments.sorting"
                              data-ng-class-even="'alternate'">
-                            <p class="comment">
-                                <span data-ng-bind-html="markedComment(comment.text)"></span>
-                                <a class="fa fa-trash-o pull-right"
-                                      data-ng-if="currentUser.userId == comment.user_id || currentUser.isAdmin == 1"
-                                      data-ng-click="deleteComment(comment.id)"></a>
+                            <div class="comment">
+                                <span class="commentText" data-ng-bind-html="markedComment(comment.text)"></span>
+                                <span class="commentActions">
+                                    <a class="fa fa-edit"
+                                        data-ng-if="currentUser.userId == comment.user_id || currentUser.isAdmin == 1"
+                                        data-ng-click="beginEditComment(comment.id, comment.text)"></a>
+                                    <a class="fa fa-trash-o"
+                                        data-ng-if="currentUser.userId == comment.user_id || currentUser.isAdmin == 1"
+                                        data-ng-click="deleteComment(comment.id)"></a>
+                                </span>
+                            </div>
+                            <p class="detail">
+                                <span data-ng-if="!comment.is_edited == 1">Posted</span>
+                                <span data-ng-if="comment.is_edited == 1">Edited</span>
+                                by {{ userNames[comment.user_id] }} on {{ comment.date }}
                             </p>
-                            <p class="detail">Posted by {{ userNames[comment.user_id] }} on {{ comment.date }}</p>
                         </div>
+                    </div>
+                </div>
+                <div class="edit-item-comment-form" data-ng-if="comment.isEdit">
+                    <h4>Edit Comment</h4>
+                    <div class="form-group">
+                        <textarea id="editComment" class="form-control" rows="4" data-ng-model="comment.editText"></textarea>
+                        <button id="edit-comment" class="btn btn-info pull-right"
+                                data-ng-class="{ 'disabled': viewItem.disabled }"
+                                data-ng-click="editComment(comment.id, comment.editText)"><span class="fa fa-comment-o"></span> Edit Comment</button>
+                        <button id="cancel-edit-comment" class="btn btn-default pull-right"
+                                data-ng-click="comment.isEdit = false"><span class="fa fa-times"></span> Cancel</button>
                     </div>
                 </div>
                 <div class="view-item-comment-form">
                     <h4>Add Comment</h4>
                     <div class="form-group">
                         <textarea id="itemComment" class="form-control" rows="4" data-ng-model="comment.text"></textarea>
-                        <button type="submit" id="add-comment" class="btn btn-info pull-right"
+                        <button id="add-comment" class="btn btn-info pull-right"
                                 data-ng-class="{ 'disabled': viewItem.disabled }"
                                 data-ng-click="addItemComment(comment.text)"><span class="fa fa-comment-o"></span> Submit Comment</button>
                     </div>
