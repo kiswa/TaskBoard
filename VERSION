@@ -8,4 +8,3 @@ Changelog
  * Comments can be edited
  * Dates show up on comments and attachments without reload
  * Opening login page redirects to boards if a valid token is found
-
