@@ -4,9 +4,8 @@ Changelog
 
  * Settings Updates
    * Choose to hide items on filter
-   * Ability to turn off modal animations
-   * Choose boards when creating a user
+   * Choose boards when creating/editing a user
  * Comments can be edited
  * Dates show up on comments and attachments without reload
  * Opening login page redirects to boards if a valid token is found
- * Multiple logins do not log out all instances
+
