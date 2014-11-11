@@ -47,8 +47,12 @@
                             </label>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" id="modalAddUser" class="btn btn-info" data-ng-click="addUser(userFormData)" data-ng-if="userFormData.isAdd"><span class="fa fa-plus"></span> Add User</button>
-                            <button type="submit" id="modalEditUser" class="btn btn-info" data-ng-click="editUser(userFormData)" data-ng-if="!userFormData.isAdd"><span class="fa fa-save"></span> Save User</button>
+                            <button type="submit" id="modalAddUser" class="btn btn-info" data-ng-click="addUser(userFormData)" data-ng-if="userFormData.isAdd">
+                                <span class="fa fa-plus"></span> Add User
+                            </button>
+                            <button type="submit" id="modalEditUser" class="btn btn-info" data-ng-click="editUser(userFormData)" data-ng-if="!userFormData.isAdd">
+                                <span class="fa fa-save"></span> Save User
+                            </button>
                             <a class="btn btn-default" data-ng-click="userFormData.cancel()">Cancel</a>
                         </div>
                     </fieldset>
