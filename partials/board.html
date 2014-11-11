@@ -7,6 +7,9 @@
         </select>
     </p>
     <p class="pull-right form-group form-inline" data-ng-if="!currentBoard.loading">
+        <label class="unbold">Hide Filtered Items:
+            <input type="checkbox" data-ng-model="filter.hide" data-ng-change="filterChanged()">
+        </label>
         User Filter:
         <select class="form-control" data-ng-model="filter.user" data-ng-change="filterChanged()"
                 data-ng-options="user.id as user.username for user in currentBoard.sharedUser">
@@ -47,9 +50,10 @@
                     <span class="fa fa-angle-double-up small expand" title="Expand Column"
                           data-ng-click="toggleLane(lane)"></span>
                 </h3>
-                <div class="itemContainer"> 
+                <div class="itemContainer">
                     <div><!-- Needed to fix sortable behavior when there are no items in a column. --></div>
-                    <div class="boardItem clearfix" data-ng-class="{'filtered': item.filtered}"
+                    <div class="boardItem clearfix"
+                         data-ng-class="{'filtered': item.filtered, 'hidden': item.filtered && filter.hide}"
                          data-ng-repeat="item in lane.ownItem | orderBy:'position':false"
                          data-ng-dblclick="openItem(item)"
                          style="background-color: {{ item.color }}"
@@ -120,3 +124,4 @@
         </div>
     </div>
 </div>
+

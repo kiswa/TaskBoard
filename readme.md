@@ -27,6 +27,8 @@ The goal of TaskBoard is to provide a simple and clean interface to a functional
 ###Requirements
 A web server running PHP with sqlite enabled. Developed and tested under Apache2 running PHP 5.5+.
 
+The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewrite` and `expires` Apache modules. 
+
 ###Install
 Installing TaskBoard is as easy as 1, 2, 3!
 
@@ -97,11 +99,12 @@ Count was done from parent directory of TaskBoard as `./cloc-1.62.pl TaskBoard -
 
 Language           | Files  | Blank Lines  | Comments | Code
 -------------------|-------:|-------------:|---------:|---------:
-Javascript         | 22     | 187          | 34       | 1853
-HTML               | 17     | 7            | 8        | 936
-PHP                | 6      | 150          | 57       | 849
-CSS                | 1      | 12           | 33       | 609
+Javascript         | 23     | 194          | 34       | 1915
+HTML               | 17     | 10           | 10       | 1015
+PHP                | 6      | 156          | 58       | 875
+CSS                | 1      | 11           | 33       | 636
 Bourne Again Shell | 4      | 10           | 0        | 53
-__SUM:__           | __50__ | __366__      | __132__  | __4300__
+XML                | 1      | 0            | 0        | 12
+__SUM:__           | __52__ | __381__      | __135__  | __4506__
 
-Counts Last Updated: Oct. 18, 2014
+Counts Last Updated: Nov. 10, 2014
