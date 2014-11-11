@@ -28,7 +28,8 @@ function ($scope, $routeParams, $location, $interval, $window,
     $scope.boardId = $routeParams.boardId;
     $scope.filter = {
         user: null,
-        category: null
+        category: null,
+        hide: false
     };
 
     $scope.filterChanged = function() {

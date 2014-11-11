@@ -62,6 +62,9 @@ function($rootScope, $location, $window, AuthenticationService) {
             !$window.localStorage.token) {
             $location.path('/');
         }
+        if (nextRoute !== null && nextRoute.controller === 'LoginCtrl' && $window.localStorage.token) {
+            $location.path('/boards');
+        }
     });
 
     $rootScope.$on('$routeChangeSuccess', function(event, route, previousRoute) {

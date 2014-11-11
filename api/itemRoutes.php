@@ -120,13 +120,35 @@ $app->post('/items/:itemId/comment', function($itemId) use ($app, $jsonResponse)
             $item->ownComment[] = $comment;
             R::store($item);
 
-            logAction($user->username . ' added a comment to item ' . $item->title, null, $comment, $itemId);
+            logAction($user->username . ' added a comment to item ' . $item->title, null, $comment->export(), $itemId);
             $jsonResponse->addAlert('success', 'Comment added to item ' . $item->title . '.');
             $jsonResponse->addBeans(R::load('item', $itemId));
         }
     }
     $app->response->setBody($jsonResponse->asJson());
 })->conditions(['itemId' => '\d+']);
+
+// Update an existing comment
+$app->post('/comments/:commentId', function($commentId) use ($app, $jsonResponse) {
+    $data = json_decode($app->environment['slim.input']);
+
+    if(validateToken()) {
+        $user = getUser();
+        $comment = R::load('comment', $commentId);
+        $before = $comment->export();
+
+        $comment->text = $data->text;
+        $comment->userId = $user->id;
+        $comment->timestamp = time();
+        $comment->isEdited = true;
+        R::store($comment);
+
+        logAction($user->username . ' edited comment ' . $comment->id, $before, $comment->export(), $comment->id);
+        $jsonResponse->addAlert('success', 'Comment edited.');
+        $jsonResponse->addBeans(R::load('item', $comment->item_id));
+    }
+    $app->response->setBody($jsonResponse->asJson());
+})->conditions(['commentId' => '\d+']);
 
 // Remove a comment from an item.
 $app->post('/items/:itemId/comment/remove', function($itemId) use ($app, $jsonResponse) {

@@ -102,6 +102,12 @@ function($http) {
             });
         },
 
+        updateItemComment: function(commentId, comment) {
+            return $http.post('api/comments/' + commentId, {
+                text: comment
+            });
+        },
+
         removeItemComment: function(itemId, commentId) {
             return $http.post('api/items/' + itemId + '/comment/remove', {
                 id: commentId
