@@ -2,6 +2,7 @@ v0.2.6
 
 Changelog
 
+<<<<<<< HEAD
  * Settings Updates
    * Choose to hide items on filter
    * Choose boards when creating/editing a user
@@ -9,3 +10,8 @@ Changelog
  * Dates show up on comments and attachments without reload
  * Opening login page redirects to boards if a valid token is found
 
+=======
+ * Markdown support in comments
+ * Cursor on default input field
+ * Show app version
+>>>>>>> master
