@@ -1,10 +1,11 @@
-v0.2.6
+v0.2.7
 
 Changelog
 
- * Settings Updates
-   * Choose to hide items on filter
-   * Choose boards when creating/editing a user
- * Comments can be edited
- * Dates show up on comments and attachments without reload
- * Opening login page redirects to boards if a valid token is found
+ * Additional way to dismiss Activity Log in Settings
+ * Image attachments resize to fit preview pane
+ * Uploaded files show username immediately
+ * Multiple concurrent logins are now possible
+ * Animations can be disabled per user
+ * Items can be dropped onto collapsed columns
+
