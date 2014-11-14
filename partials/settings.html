@@ -1,7 +1,9 @@
 <div data-include-replace="partials/header.html"></div>
 <div class="slide-menu" data-ng-class="{ 'slide-menu-open': slide.open }" data-ng-if="currentUser.isAdmin">
     <div class="settings-widget">
-        <h3 class="widget-header text-center">Activity Log <a class="pull-right fa fa-times" data-ng-click="slide.open = false"></a></h3>
+        <h3 class="widget-header text-center">Activity Log
+            <a class="pull-left fa fa-times small" data-ng-click="slide.open = false"></a>
+        </h3>
         <div class="widget-content">
             <p data-ng-if="actionsLoading" class="text-center">
                 <span class="fa fa-refresh fa-spin"></span> Loading...
