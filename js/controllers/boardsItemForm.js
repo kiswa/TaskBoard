@@ -68,7 +68,7 @@ function ($scope, BoardService) {
                 allowEmpty: false,
                 localStorageKey: 'taskboard.colorPalette',
                 showPalette: true,
-                palette: [[]],
+                palette: [ ['#fff', '#ececec', '#ffffe0', '#ffe0fa', '#bee7f4', '#c3f4b5', '#debee8', '#ffdea9', '#ffbaba'] ],
                 showSelectionPalette: true,
                 showButtons: false,
                 showInput: true,

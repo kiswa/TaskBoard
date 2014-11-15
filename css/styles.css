@@ -652,6 +652,11 @@ input.custom-inline {
 .sp-cf:before, .sp-cf:after {
     display: none !important;
 }
+.sp-palette-container {
+    border: none;
+    padding: 7px;
+    padding-bottom: 290px;
+}
 /* jQueryUI Datepicker */
 .ui-datepicker {
     border: 1px solid rgba(51,51,51,.5);
