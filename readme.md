@@ -29,7 +29,7 @@ A web server running PHP with sqlite enabled. Developed and tested under Apache2
 
 The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewrite` and `expires` Apache modules. 
 
-**Note:** Apache virtual host for a site should have [`AllowOverride All`](http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride) for TaskBoard root directory. Otherwise, .htaccess files will be completely ignored.
+**Note:** For Apache v2.3.9 and later, virtual host for a site should have [`AllowOverride All`](http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride) for TaskBoard root directory. Otherwise, .htaccess files will be completely ignored.
 
 ###Install
 Installing TaskBoard is as easy as 1, 2, 3!
