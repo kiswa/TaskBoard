@@ -205,15 +205,6 @@ function ($scope, $routeParams, $location, $interval, $window,
     // This is not the Angular way.
     $scope.updateSortables = function() {
         var that = this.$parent;
-        $('.columnHeader').sortable({
-            connectWith: '.itemContainer',
-            change: function() {
-                alert('change');
-            },
-            stop: function() {
-                alert('stop');
-            }
-        });
         $('.itemContainer').sortable({
             connectWith: '.itemContainer',
             placeholder: 'draggable-placeholder',
