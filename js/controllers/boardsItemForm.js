@@ -120,6 +120,7 @@ function ($scope, BoardService) {
             });
         }
     };
+    $scope.$parent.submitItem = $scope.submitItem;
 
     var isSuccess = function(data) {
         $scope.alerts.showAlerts(data.alerts);

@@ -7,5 +7,5 @@ Changelog
  * Uploaded files show username immediately
  * Multiple concurrent logins are now possible
  * Animations can be disabled per user
- * Items can be dropped onto collapsed columns
+ * Items can be moved to collapsed columns with new context menu item
 

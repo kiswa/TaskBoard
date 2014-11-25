@@ -71,6 +71,13 @@ function ($scope, $routeParams, $location, $interval, $window,
         $scope.deleteItem();
     };
 
+    $scope.changeItemLane = function() {
+        $scope.itemFormData.loadItem($scope.contextItem);
+        $scope.itemFormData.isAdd = false;
+
+        $scope.submitItem($scope.itemFormData);
+    };
+
     $scope.contextItem = {}; // Needs to exist prior to onContextMenu call.
     $scope.onContextMenu = function(laneId, item) {
         $scope.contextItem = item;
@@ -198,6 +205,15 @@ function ($scope, $routeParams, $location, $interval, $window,
     // This is not the Angular way.
     $scope.updateSortables = function() {
         var that = this.$parent;
+        $('.columnHeader').sortable({
+            connectWith: '.itemContainer',
+            change: function() {
+                alert('change');
+            },
+            stop: function() {
+                alert('stop');
+            }
+        });
         $('.itemContainer').sortable({
             connectWith: '.itemContainer',
             placeholder: 'draggable-placeholder',
