@@ -5,8 +5,8 @@ Changelog
  * Additional way to dismiss Activity Log in Settings
  * Image attachments resize to fit preview pane
  * Uploaded files show username immediately
- * Multiple concurrent logins are now possible
- * Animations can be disabled per user
  * Items can be moved to collapsed columns with new context menu item
  * Automatic actions bugfix.
  * The color picker has a pre-defined palette to choose from
+ * Edit Board Columns and Categories input box bugfix
+ 
