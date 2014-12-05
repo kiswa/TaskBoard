@@ -71,6 +71,13 @@ function ($scope, $routeParams, $location, $interval, $window,
         $scope.deleteItem();
     };
 
+    $scope.changeItemLane = function() {
+        $scope.itemFormData.loadItem($scope.contextItem);
+        $scope.itemFormData.isAdd = false;
+
+        $scope.submitItem($scope.itemFormData);
+    };
+
     $scope.contextItem = {}; // Needs to exist prior to onContextMenu call.
     $scope.onContextMenu = function(laneId, item) {
         $scope.contextItem = item;
