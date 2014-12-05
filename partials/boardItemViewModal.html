@@ -45,7 +45,7 @@
                            data-ng-repeat="attachment in viewItem.ownAttachment" data-ng-class-even="'alternate'">
                             {{ attachment.name }}
                             <span class="detail">
-                                Uploaded by {{ userNames[attachment.userId] }} on {{ attachment.date }}
+                                Uploaded by {{ userNames[attachment.user_id] }} on {{ attachment.date }}
                             </span>
                             <span class="links pull-right" data-ng-show="attachmentDeleting[attachment.id]">
                                 <span class="fa fa-refresh fa-spin"></span> Deleting...

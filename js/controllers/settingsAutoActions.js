@@ -27,20 +27,12 @@ function ($scope, $interval, BoardService) {
         { id: 2, action: 'Set item assignee' },
         { id: 3, action: 'Clear item due date' }
     ];
+
     $scope.actionOptions = {
         triggers: [
-            {
-                id: 0,
-                trigger: 'Item moves to column'
-            },
-            {
-                id: 1,
-                trigger: 'Item assigned to user'
-            },
-            {
-                id: 2,
-                trigger: 'Item set to category'
-            }
+            { id: 0, trigger: 'Item moves to column' },
+            { id: 1, trigger: 'Item assigned to user' },
+            { id: 2, trigger: 'Item set to category' }
         ]
     };
 
@@ -63,9 +55,20 @@ function ($scope, $interval, BoardService) {
         getCategories = function(boardData) {
             var categories = [{ id: '0', name: 'Uncategorized' }];
 
-            if (boardData) {
+            if (boardData && boardData.ownCategory) {
                 boardData.ownCategory.forEach(function(category) {
                     categories.push(category);
+                });
+            } else {
+                $scope.actionOptions.triggers.forEach(function(trigger, index) {
+                    if (trigger.id === 2) {
+                        $scope.actionOptions.triggers.splice(index, 1);
+                    }
+                });
+                $scope.actionTypes.forEach(function(type, index) {
+                    if (type.id === 1) {
+                        $scope.actionTypes.splice(index, 1);
+                    }
                 });
             }
             return categories;
@@ -144,16 +147,29 @@ function ($scope, $interval, BoardService) {
 
         updateAutoActions = function(actions) {
         if (!actions) {
+            $scope.actions = [];
             return;
         }
 
         var mappedActions = [];
         actions.forEach(function(action) {
+            var actionTrigger, actionType;
+            $scope.actionOptions.triggers.forEach(function(trigger) {
+                if (trigger.id === parseInt(action.trigger_id)) {
+                    actionTrigger = trigger.trigger;
+                }
+            });
+            $scope.actionTypes.forEach(function(type) {
+                if (type.id === parseInt(action.action_id)) {
+                    actionType = type.action;
+                }
+            });
+
             mappedActions.push({
                 id: action.id,
                 board: $scope.boardLookup[action.board_id],
-                trigger: $scope.actionOptions.triggers[action.trigger_id].trigger + getSecondaryText(action),
-                action: $scope.actionTypes[action.action_id].action + getActionText(action)
+                trigger: actionTrigger + getSecondaryText(action),
+                action: actionType + getActionText(action)
             });
         });
 
@@ -256,7 +272,7 @@ function ($scope, $interval, BoardService) {
             allowEmpty: false,
             localStorageKey: 'taskboard.colorPalette',
             showPalette: true,
-            palette: [[]],
+            palette: [ ['#fff', '#ececec', '#ffffe0', '#ffe0fa', '#bee7f4', '#c3f4b5', '#debee8', '#ffdea9', '#ffbaba'] ],
             showSelectionPalette: true,
             showButtons: false,
             showInput: true,
@@ -274,13 +290,13 @@ function ($scope, $interval, BoardService) {
         $scope.actionData.color = null;
     };
 
-    // Check every 250ms to see if a board has been chosen.
+    // Check every 500ms to see if a board has been chosen.
     var updateIfBoardChosen = function() {
         if ($scope.actionData.board !== null) {
-            $interval.cancel($scope.interval); // Stop checking once it has.
+            $interval.cancel($scope.interval);
             $scope.getTriggerWord();
         }
     };
-    $scope.interval = $interval(updateIfBoardChosen, 250);
+    $scope.interval = $interval(updateIfBoardChosen, 500);
     $scope.$on('$destroy', function () { $interval.cancel($scope.interval); });
 }]);

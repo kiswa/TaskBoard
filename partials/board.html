@@ -106,6 +106,15 @@
                     </li>
                     <li role="presentation" class="divider"></li>
                     <li role="presentation">
+                        Move to Column:<br />
+                        <select class="form-control"
+                            data-ng-model="contextItem.lane_id"
+                            data-ng-change="changeItemLane()"
+                            data-ng-options="lane.id as lane.name for lane in currentBoard.ownLane | orderBy:'position':false">
+                        </select>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation">
                         <a role="menuitem" style="cursor: default" data-ng-click="openAddItem()">
                             Add New Item
                         </a>
