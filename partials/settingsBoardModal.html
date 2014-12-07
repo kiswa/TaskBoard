@@ -21,7 +21,7 @@
                         <h5>Columns</h5>
                         <ul class="list-group lanes">
                             <li class="list-group-item small" data-ng-class="{ disabled: boardFormData.isSaving }"
-                                data-ng-repeat="lane in boardFormData.lanes | orderBy:'position':false">
+                                data-ng-repeat="lane in boardFormData.lanes track by lane.position | orderBy:'position':false">
                                 <span class="fa fa-arrows-v"></span>
                                 <span class="hidden" data-ng-if="!boardFormData.isAdd">{{ lane.id }}</span>
                                 <span class="item-text">{{ lane.name }}</span>

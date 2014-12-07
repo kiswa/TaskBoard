@@ -21,7 +21,7 @@ function ($scope, BoardService) {
                 placeholder: 'lane-placeholder',
                 stop: function(event, ui) {
                     that.lanes.length = 0;
-                    $(ui.item).parent().children().each(function(index){
+                    $(ui.item).parent().children().each(function(index) {
                         that.lanes.push({
                             id: $(this).find('.hidden').text(),
                             name: $(this).find('.item-text').text(),
@@ -67,14 +67,15 @@ function ($scope, BoardService) {
         addLane: function() {
             this.lanesError = false;
             if (this.laneName === '') {
-                this.setAlert(false, true, false, 'Lane name cannot be empty.');
+                this.setAlert(false, true, false, 'Column  name cannot be empty.');
                 return;
             }
 
             var that = this;
             this.lanes.forEach(function(lane) {
                 if (that.laneName == lane.name) {
-                    this.setAlert(false, true, false, 'That lane name has already been added.');
+                    that.setAlert(false, true, false, 'That column name has already been added.');
+                    that.lanesError = true;
                 }
             });
 
