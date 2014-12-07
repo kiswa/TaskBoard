@@ -58,11 +58,13 @@ function ($scope, $routeParams, $location, $interval, $window,
 
     $scope.openEditItem = function() {
         $scope.itemFormData.loadItem($scope.contextItem);
+        $('.itemModal textarea').css('height', 'auto');
         $('.itemModal').modal('show');
     };
 
     $scope.openAddItem = function() {
         $scope.itemFormData.reset($scope.contextLaneId);
+        $('.itemModal textarea').css('height', 'auto');
         $('.itemModal').modal('show');
     };
 

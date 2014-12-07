@@ -34,6 +34,9 @@ a, button {
 a:hover.fa {
     text-decoration: none;
 }
+textarea {
+    resize: vertical;
+}
 .green {
     color: green;
 }

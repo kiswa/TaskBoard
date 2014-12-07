@@ -61,6 +61,7 @@ function ($scope, $window, BoardService) {
         $scope.fileReset = true;
 
         if (openModal) {
+            $('.itemViewModal textarea').css('height', 'auto');
             $('.itemViewModal').modal({ show: true, keyboard:false });
         }
     };
