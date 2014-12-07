@@ -1,12 +1,12 @@
-v0.2.7
+v0.3.0
 
 Changelog
 
- * Additional way to dismiss Activity Log in Settings
- * Image attachments resize to fit preview pane
- * Uploaded files show username immediately
- * Items can be moved to collapsed columns with new context menu item
- * Automatic actions bugfix.
- * The color picker has a pre-defined palette to choose from
- * Edit Board Columns and Categories input box bugfix
- 
+ * Adding a new Column to a board correctly shows it at the end of the columns.
+ * The list of boards can be sorted.
+ * Boards can be marked inactive to disallow using them without deleting.
+ * The list of boards can be filtered.
+ * Multiple logins per user are now possible.
+ * Additional setting to diable animations throughout.
+ * Expandable text inputs now expand their containers.
+
