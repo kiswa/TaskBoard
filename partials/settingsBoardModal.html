@@ -19,7 +19,7 @@
                 <div class="form-group half-width" data-ng-class="{ 'has-error': boardFormData.lanesError }">
                     <form role="form" class="form form-inline" data-ng-submit="boardFormData.addLane()">
                         <h5>Columns</h5>
-                        <ul class="list-group lanes">
+                        <ul class="list-group lanes editable">
                             <li class="list-group-item small" data-ng-class="{ disabled: boardFormData.isSaving }"
                                 data-ng-repeat="lane in boardFormData.lanes track by lane.position | orderBy:'position':false">
                                 <span class="fa fa-arrows-v"></span>
@@ -42,7 +42,7 @@
                 <div class="form-group half-width" data-ng-class="{ 'has-error': boardFormData.categoriesError }">
                     <form role="form" class="form form-inline" data-ng-submit="boardFormData.addCategory()">
                         <h5>Categories</h5>
-                        <ul class="list-group">
+                        <ul class="list-group editable">
                             <li class="list-group-item small" data-ng-class="{ disabled: boardFormData.isSaving }"
                                 data-ng-repeat="category in boardFormData.categories | orderBy:'category':false">
                                 <span class="item-text">{{ category.name }}</span>

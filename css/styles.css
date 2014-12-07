@@ -496,6 +496,9 @@ p.detail {
 .list-group-item.small {
     padding: 3px;
 }
+.list-group.editable > .list-group-item {
+    overflow: hidden;
+}
 td > .list-group {
     margin: 0;
     padding: 0;
