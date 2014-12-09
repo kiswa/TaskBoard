@@ -8,5 +8,6 @@ Changelog
  * The list of boards can be filtered.
  * Multiple logins per user are now possible.
  * Additional setting to diable animations throughout.
- * Expandable text inputs now expand their containers.
+ * Expandable text inputs expand vertically and reset size on modal open.
+ * 'Move to Column' context menu improvements.
 
