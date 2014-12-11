@@ -87,7 +87,7 @@
                     <span data-on-load-callback="updateSortables"></span>
                 </div>
             </div>
-            <div id="itemMenu" class="dropdown" style="position: fixed;">
+            <div id="itemMenu" class="dropdown fixed">
                 <ul class="dropdown-menu" role="menu">
                     <li role="presentation">
                         <a role="menuitem" style="cursor: default" data-ng-click="openItem(contextItem)">
@@ -106,12 +106,14 @@
                     </li>
                     <li role="presentation" class="divider"></li>
                     <li role="presentation">
-                        Move to Column:<br />
-                        <select class="form-control"
-                            data-ng-model="contextItem.lane_id"
-                            data-ng-change="changeItemLane()"
-                            data-ng-options="lane.id as lane.name for lane in currentBoard.ownLane | orderBy:'position':false">
-                        </select>
+                        <span class="contextItemWrap">
+                            Move to Column:<br />
+                            <select class="form-control"
+                                    data-ng-model="contextItem.lane_id"
+                                    data-ng-change="changeItemLane()"
+                                    data-ng-options="lane.id as lane.name for lane in currentBoard.ownLane | orderBy:'position':false">
+                            </select>
+                        </span>
                     </li>
                     <li role="presentation" class="divider"></li>
                     <li role="presentation">
