@@ -10,7 +10,7 @@ function ($scope, $window, BoardService) {
 
     $scope.comments = {
         options: [
-            {id: 0, text:'Oldest First'},
+            {id: 0, text: 'Oldest First'},
             {id: 1, text: 'Newest First'}
         ],
         sorting: 0

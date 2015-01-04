@@ -29,6 +29,18 @@ function ($scope, $interval, BoardService) {
     $scope.interval = $interval(loadBoards, 5000);
     $scope.$on('$destroy', function () { $interval.cancel($scope.interval); });
 
+    $scope.boardSort = {
+        options: [
+            { sort: 'id', name: 'Creation Date' },
+            { sort: 'name', name: 'Board Name' },
+        ],
+        sort: 'name'
+    };
+
+    $scope.changeSort = function() {
+        console.log($scope.boardSort);
+    };
+
     $scope.isDeleting = [];
     $scope.removeBoard = function(boardId) {
         noty({
