@@ -37,10 +37,6 @@ function ($scope, $interval, BoardService) {
         sort: 'name'
     };
 
-    $scope.changeSort = function() {
-        console.log($scope.boardSort);
-    };
-
     $scope.isDeleting = [];
     $scope.removeBoard = function(boardId) {
         noty({
