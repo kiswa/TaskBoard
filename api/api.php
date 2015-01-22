@@ -24,7 +24,6 @@ function exceptionHandler($exception) {
 
     $jsonResponse->message = 'API Error.';
     $jsonResponse->data = $exception->getMessage();
-    $jsonResponse->trace = $exception->getTrace();
     echo $jsonResponse->asJson();
 };
 set_exception_handler('exceptionHandler');
