@@ -555,6 +555,9 @@ input.custom-inline {
     right: -240px;
     transition: all 0.3s ease;
 }
+.slide-menu .fa-times {
+    cursor: pointer;
+}
 .slide-menu-open {
     right: 0;
 }
