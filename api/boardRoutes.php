@@ -136,3 +136,23 @@ $app->post('/lanes/:laneId/toggle', function($laneId) use($app, $jsonResponse) {
     }
     $app->response->setBody($jsonResponse->asJson());
 })->conditions(['laneId' => '\d+']); // Numbers only.
+
+$app->post('/boards/:boardId/toggleActive', function($boardId) use($app, $jsonResponse) {
+    if (validateToken()) {
+        $user = getUser();
+        if ($user->isAdmin) {
+            $board = R::load('board', $boardId);
+            $before = $board->export();
+            $board->active = !$board->active;
+            R::store($board);
+
+            $state = $board->active ? 'active' : 'inactive';
+            $jsonResponse->message = 'Set board ' . $board->name . ' ' . $state;
+            $jsonResponse->addBeans(getBoards());
+
+            logAction($user->username . ' changed active status of board ' . $board->name,
+                $before, $board->export());
+        }
+     }
+    $app->response->setBody($jsonResponse->asJson());
+})->conditions(['boardId' => '\d+']); // Numbers only.

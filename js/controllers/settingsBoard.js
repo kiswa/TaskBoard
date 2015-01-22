@@ -37,6 +37,34 @@ function ($scope, $interval, BoardService) {
         sort: 'name'
     };
 
+    $scope.boardFilter = {
+        options: [
+            { filter: 'all', name: 'All Boards' },
+            { filter: 'active', name: 'Active' },
+            { filter: 'inactive', name: 'Inactive' },
+        ],
+        filter: 'all'
+    };
+
+    $scope.boardsFilter = function(element) {
+        switch ($scope.boardFilter.filter) {
+            case 'all':
+                return true;
+            case 'active':
+                return element.active === '1';
+            case 'inactive':
+                return element.active === '0';
+        }
+    };
+
+    $scope.toggleActiveState = function(boardId) {
+        BoardService.toggleActiveState(boardId)
+        .success(function(data) {
+            $scope.alerts.showAlerts(data.alerts);
+            $scope.boards = data.data;
+        });
+    };
+
     $scope.isDeleting = [];
     $scope.removeBoard = function(boardId) {
         noty({
@@ -52,7 +80,7 @@ function ($scope, $interval, BoardService) {
                         $noty.close();
 
                         $scope.boards.forEach(function(board) {
-                            if (board.id  == boardId) {
+                            if (board.id === boardId) {
                                 $scope.isDeleting[boardId] = true;
                             }
                         });

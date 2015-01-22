@@ -115,6 +115,17 @@ function ($scope, $routeParams, $location, $interval, $window,
     var pendingResponse = false,
         updateCounter = 0;
 
+    $scope.isActiveFilter = function(element) {
+        var retVal = false;
+        $scope.boards.forEach(function(board) {
+            if (board.id === element.id) {
+                retVal = (board.active === '1');
+            }
+        }, this);
+
+        return retVal;
+    };
+
     $scope.loadBoards = function() {
             // Don't update the boards if an update is pending.
             if (pendingResponse || updateCounter) {
@@ -188,6 +199,13 @@ function ($scope, $routeParams, $location, $interval, $window,
         if (boardFound) {
             $scope.filterChanged(); // Make sure any filters are still applied.
             $scope.currentBoard.loading = false;
+            if ($scope.currentBoard.active === '0') {
+                $scope.currentBoard = {
+                    loading: true,
+                    name: 'Kanban Board App',
+                    error: true
+                };
+            }
         } else {
             $scope.currentBoard.error = true;
         }

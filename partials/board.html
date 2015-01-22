@@ -1,9 +1,9 @@
 <div include-replace="partials/header.html"></div>
 <div id="board-nav">
-    <p class="pull-left form-group form-inline" data-ng-if="!currentBoard.loading">
+    <p class="pull-left form-group form-inline">
         Select Board:
         <select class="form-control" data-ng-model="boardNames.current" data-ng-change="selectBoard()"
-                data-ng-options="board.id as board.name for board in boardNames">
+                                                                        data-ng-options="board.id as board.name for board in boardNames | filter: isActiveFilter">
         </select>
     </p>
     <p class="pull-right form-group form-inline" data-ng-if="!currentBoard.loading">

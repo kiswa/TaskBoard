@@ -516,6 +516,9 @@ td > .list-group {
 fieldset > .list-group {
     margin-bottom: 10px;
 }
+span.filter {
+    margin-left: 5px;
+}
 #change-password, #default-board, #change-username {
     width: 48%;
     float: left;

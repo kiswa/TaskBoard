@@ -97,10 +97,10 @@ function addUserToBoard($boardId, $user) {
     }
 }
 
-// Get all active boards.
+// Get all boards.
 function getBoards() {
     $user = getUser();
-    $boards = R::find('board', ' active = 1 ');
+    $boards = R::find('board');
 
     foreach($boards as $board) {
         foreach($board->sharedUser as $boardUser) {
