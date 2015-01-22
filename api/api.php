@@ -29,7 +29,7 @@ function exceptionHandler($exception) {
 };
 set_exception_handler('exceptionHandler');
 
-R::setup('sqlite:../taskboard.db');
+R::setup('sqlite:taskboard.db');
 createInitialUser();
 
 $app->notFound(function() use ($app, $jsonResponse) {
