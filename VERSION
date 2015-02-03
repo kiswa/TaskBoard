@@ -10,4 +10,4 @@ Changelog
  * Additional setting to diable animations throughout.
  * Expandable text inputs expand vertically and reset size on modal open.
  * 'Move to Column' context menu improvements.
-
+ * Fix for missing Authorization header on some platforms.
