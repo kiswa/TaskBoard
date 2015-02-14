@@ -31,6 +31,8 @@ The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewri
 
 **Note:** For Apache v2.3.9 and later, virtual host for a site should have [`AllowOverride All`](http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride) for TaskBoard root directory. Otherwise, .htaccess files will be completely ignored.
 
+**Optional:** to build minimized JavaScript and CSS (Install step 2) the server must have a jre installed, tested with `openjdk-7-jre`.
+
 ###Install
 Installing TaskBoard is as easy as 1, 2, 3!
 
