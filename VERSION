@@ -11,3 +11,4 @@ Changelog
  * Expandable text inputs expand vertically and reset size on modal open.
  * 'Move to Column' context menu improvements.
  * Fix for missing Authorization header on some platforms.
+ * Fix for missing Automatic Action trigger 'category change'.

@@ -221,7 +221,7 @@ function loadBoardData($board, $data) {
 // Clean a user bean for return to front-end.
 function sanitize($user) {
     $user['salt'] = null;
-    $user['ownToken'] = null;
+    $user->ownToken = [];
     $user['password'] = null;
 }
 
