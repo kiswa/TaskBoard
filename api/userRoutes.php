@@ -26,7 +26,7 @@ $app->post('/login', function() use ($app, $jsonResponse) {
 
             logAction($lookup->username . ' logged in.', null, null);
             $jsonResponse->message = 'Login successful.';
-            $jsonResponse->data = $lookup->token;
+            $jsonResponse->data = R::findOne('token', ' user_id = ? ORDER BY id DESC ', [$lookup->id])->token;
             $app->response->setStatus(200);
         }
     }

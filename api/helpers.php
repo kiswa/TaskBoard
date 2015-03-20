@@ -35,8 +35,14 @@ function setUserToken($user, $expires) {
         'uid' => $user->id
     ), getJwtKey());
 
-    // Store the valid token in the user db
-    $user->token = $token;
+    $dbToken = R::dispense('token');
+    $dbToken->token = $token;
+
+    if (null == $user->ownToken) {
+        $user->ownToken = [];
+    }
+    $user->ownToken[] = $dbToken;
+
     R::store($user);
 }
 
@@ -215,7 +221,7 @@ function loadBoardData($board, $data) {
 // Clean a user bean for return to front-end.
 function sanitize($user) {
     $user['salt'] = null;
-    $user['token'] = null;
+    $user['ownToken'] = null;
     $user['password'] = null;
 }
 
@@ -262,13 +268,21 @@ function validateToken($requireAdmin = false) {
 // Retrieve user's token from DB and compare to header token.
 function checkDbToken() {
     $user = getUser();
+    $isValid = false;
+
     if (null != $user) {
         if (isset(getallheaders()['Authorization'])) {
             $hash = getallheaders()['Authorization'];
-            return $hash == $user->token;
+
+            foreach ($user->ownToken as $token) {
+                if ($hash == $token->token) {
+                    $isValid = true;
+                }
+            }
         }
     }
-    return false;
+
+    return $isValid;
 }
 
 // Clear a user's token from the DB.
@@ -282,7 +296,14 @@ function clearDbToken() {
     if (null != $payload) {
         $user = R::load('user', $payload->uid);
         if (0 != $user->id) {
-            $user->token = null;
+            $hash = getallheaders()['Authorization'];
+
+            foreach ($user->ownToken as $token) {
+                if ($hash == $token->token) {
+                    R::trash($token);
+                }
+            }
+
             R::store($user);
         }
     }
