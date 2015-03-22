@@ -519,7 +519,7 @@ span.filter {
 .board-status {
     font-weight: normal;
     display: inline-block;
-    min-width: 50px;
+    min-width: 70px;
 }
 #change-password, #default-board, #change-username {
     width: 48%;

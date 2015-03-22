@@ -43,7 +43,8 @@ function ($scope, $interval, BoardService) {
             { filter: 'active', name: 'Active' },
             { filter: 'inactive', name: 'Inactive' },
         ],
-        filter: 'all'
+        filter: 'all',
+        userFilter: null
     };
 
     $scope.boardsFilter = function(element) {
@@ -55,6 +56,23 @@ function ($scope, $interval, BoardService) {
             case 'inactive':
                 return element.active === '0';
         }
+    };
+
+    $scope.boardsUserFilter = function(element) {
+        if (null === $scope.boardFilter.userFilter) {
+            return true;
+        }
+
+        var retVal = false;
+
+        element.sharedUser.forEach(function(user) {
+            console.log(user.id === $scope.boardFilter.userFilter);
+            if (user.id === $scope.boardFilter.userFilter) {
+                retVal = true;
+            }
+        });
+
+        return retVal;
     };
 
     $scope.toggleActiveState = function(boardId) {
