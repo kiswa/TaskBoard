@@ -52,7 +52,14 @@
                                data-ng-click="boardFormData.setBoard(board)"></a>
                             <a class="fa fa-trash-o" title="Remove Board"
                                data-ng-click="removeBoard(board.id)"></a>
-                            <input type="checkbox" data-ng-checked="board.active == 1" data-ng-click="toggleActiveState(board.id)">
+                            <label class="board-status" data-ng-show="board.active == 1">
+                                <input type="checkbox" data-ng-checked="board.active == 1" data-ng-click="toggleActiveState(board.id)" title="Active Status">
+                                Active
+                            </label>
+                            <label class="board-status" data-ng-show="board.active == 0">
+                                <input type="checkbox" data-ng-checked="board.active == 1" data-ng-click="toggleActiveState(board.id)" title="Active Status">
+                                Inactive
+                            </label>
                         </span>
                         <span data-ng-if="isDeleting[board.id]" class="fa fa-refresh fa-spin"></span>
                     </td>

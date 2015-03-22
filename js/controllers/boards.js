@@ -155,8 +155,10 @@ function ($scope, $routeParams, $location, $interval, $window,
         if ($scope.boards) {
             $scope.boardNames = [];
             $scope.boards.forEach(function(board) {
-                // Add each board's name to the list.
-                $scope.boardNames.push({id: board.id, name: board.name});
+                if (parseInt(board.active) === 1) {
+                    // Add each board's name to the list.
+                    $scope.boardNames.push({id: board.id, name: board.name});
+                }
 
                 // If the board is the current board, process and assign it.
                 if (board.id == $scope.boardId) {
