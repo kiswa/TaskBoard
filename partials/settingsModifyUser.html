@@ -22,7 +22,7 @@
         <form role="form">
             <fieldset data-ng-disabled="loadingBoards || loadingCurrentUser || updatingDefaultBoard || !boards.length">
                 <div class="form-group">
-                    <select class="form-control" id="defaultSelect" data-ng-model="currentUser.defaultBoard" data-ng-options="board.id as board.name for board in boardNames" data-ng-change="setDefaultBoard()">
+                    <select class="form-control" id="defaultSelect" data-ng-model="currentUser.defaultBoard" data-ng-options="board.id as board.name for board in boardNames | filter:{ active: 1 }" data-ng-change="setDefaultBoard()">
                         <option value="">None</option>
                     </select>
                 </div>

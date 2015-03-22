@@ -40,7 +40,7 @@ function ($scope, UserService, AlertService) {
 
         var boardNames = [];
         data.forEach(function(board) {
-            boardNames.push({ 'id': board.id, 'name':board.name });
+            boardNames.push({ 'id': board.id, 'name':board.name, 'active':board.active });
         });
         $scope.boardNames = boardNames;
 
