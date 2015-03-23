@@ -39,14 +39,9 @@ $app->notFound(function() use ($app, $jsonResponse) {
     $app->response->setBody($jsonResponse->asJson());
 });
 
-// TODO: Figure out updating token on activity.
 $app->get('/authenticate', function() use($app, $jsonResponse) {
     if (validateToken()) {
         $jsonResponse->message = 'Token is authenticated.';
-//         $user = getUser();
-//         setUserToken($user, (0.5 * 60 * 60) /* Half an hour */);
-//         R::store($user);
-//         $jsonResponse->data = $user->token;
     }
     $app->response->setBody($jsonResponse->asJson());
 });

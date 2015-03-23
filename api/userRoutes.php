@@ -154,6 +154,10 @@ $app->post('/users', function() use($app, $jsonResponse) {
             $user->defaultBoard = $data->defaultBoard;
             $user->salt = password_hash($data->username . time(), PASSWORD_BCRYPT);
             $user->password = password_hash($data->password, PASSWORD_BCRYPT, array('salt' => $user->salt));
+            $options = R::dispense('option');
+            $options->newTaskPosition = 1; // Bottom of column (0 == top of column)
+            $options->animate = true;
+            $user->ownOptions[] = $options;
 
             R::store($user);
             addUserToBoard($data->defaultBoard, $user);
