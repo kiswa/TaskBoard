@@ -3,6 +3,7 @@ require_once('lib/Slim/Slim.php');
 require_once('lib/rb.php');
 require_once('lib/password.php');
 require_once('lib/JWT.php');
+require_once('lib/PHPMailer/PHPMailerAutoload.php');
 
 require_once('jsonResponse.php');
 
@@ -50,6 +51,8 @@ $app->get('/authenticate', function() use($app, $jsonResponse) {
     }
     $app->response->setBody($jsonResponse->asJson());
 });
+
+require_once('mailFactory.php');
 
 require_once('userRoutes.php');
 require_once('boardRoutes.php');

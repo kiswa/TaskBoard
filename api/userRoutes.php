@@ -86,6 +86,24 @@ $app->post('/updateusername', function() use($app, $jsonResponse) {
     $app->response->setBody($jsonResponse->asJson());
 });
 
+// Update current user's email if not taken.
+$app->post('/updateemail', function() use($app, $jsonResponse) {
+    $data = json_decode($app->environment['slim.input']);
+
+    if (validateToken()) {
+        $user = getUser();
+        $before = $user->export();
+        $user = updateEmail($user, $data);
+        R::store($user);
+
+        if ($jsonResponse->alerts[0]['type'] == 'success') {
+            logAction($before['username'] . ' changed email to ' . $user->email, $before, $user->export());
+        }
+        $jsonResponse->addBeans(getUsers());
+    }
+    $app->response->setBody($jsonResponse->asJson());
+});
+
 // Update current user's default board.
 $app->post('/updateboard', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
@@ -123,6 +141,7 @@ $app->get('/users/current', function() use($app, $jsonResponse) {
                 'userId' => $user->id,
                 'username' => $user->username,
                 'isAdmin' => $user->isAdmin,
+                'email' => $user->email,
                 'defaultBoard' => $user->defaultBoard
             ];
         }
@@ -151,6 +170,7 @@ $app->post('/users', function() use($app, $jsonResponse) {
             $user = R::dispense('user');
             $user->username = $data->username;
             $user->isAdmin = $data->isAdmin;
+            $user->email = $data->email;
             $user->defaultBoard = $data->defaultBoard;
             $user->salt = password_hash($data->username . time(), PASSWORD_BCRYPT);
             $user->password = password_hash($data->password, PASSWORD_BCRYPT, array('salt' => $user->salt));
@@ -187,6 +207,7 @@ $app->post('/users/update', function() use($app, $jsonResponse) {
                 $user->password = password_hash($data->password, PASSWORD_BCRYPT, array('salt' => $user->salt));
             }
             $user->isAdmin = $data->isAdmin;
+            $user->email = $data->email;
             $user->defaultBoard = $data->defaultBoard;
 
             R::store($user);

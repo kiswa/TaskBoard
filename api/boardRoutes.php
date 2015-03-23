@@ -19,6 +19,15 @@ $app->post('/boards', function() use($app, $jsonResponse) {
         logAction($actor->username . ' added board ' . $board->name, null, $board->export());
         $jsonResponse->addBeans(getBoards());
         $jsonResponse->addAlert('success', 'New board ' . $board->name . ' created.');
+
+        foreach($board->sharedUser as $user) {
+            $body = getNewBoardEmailBody($board->id, $user->username, $board->name);
+            $subject = 'New board created!';
+            $recipient = $user->username;
+            $email = $user->email;
+
+            sendEmail($email, $recipient, $subject, $body);
+        }
     }
     $app->response->setBody($jsonResponse->asJson());
 });
@@ -37,6 +46,15 @@ $app->post('/boards/update', function() use($app, $jsonResponse) {
             logAction($actor->username . ' updated board ' . $board->name, $before, $board->export());
         }
         $jsonResponse->addBeans(getBoards());
+
+        foreach($board->sharedUser as $user) {
+            $body = geEditBoardEmailBody($board->id, $user->username, $board->name);
+            $subject = 'Board updated!';
+            $recipient = $user->username;
+            $email = $user->email;
+
+            sendEmail($email, $recipient, $subject, $body);
+        }
     }
     $app->response->setBody($jsonResponse->asJson());
 });
