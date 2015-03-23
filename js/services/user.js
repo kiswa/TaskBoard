@@ -35,6 +35,12 @@ function($http) {
             });
         },
 
+        changeEmail: function(newEmail) {
+            return $http.post('api/updateemail', {
+                newEmail: newEmail
+            });
+        },
+
         changeDefaultBoard: function(newDefaultBoard) {
             return $http.post('api/updateboard', {
                 defaultBoard: newDefaultBoard
@@ -53,6 +59,7 @@ function($http) {
             return $http.post('api/users', {
                 username: formData.username,
                 password: formData.password,
+                email: formData.email,
                 defaultBoard: formData.defaultBoard,
                 boardAccess: formData.boardAccess,
                 isAdmin: formData.isAdmin
@@ -64,6 +71,7 @@ function($http) {
                 userId: formData.userId,
                 newUsername: formData.username,
                 password: formData.password,
+                email: formData.email,
                 defaultBoard: formData.defaultBoard,
                 boardAccess: formData.boardAccess,
                 isAdmin: formData.isAdmin
