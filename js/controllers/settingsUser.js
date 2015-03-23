@@ -117,6 +117,40 @@ function ($scope, $interval, UserService) {
         }
     };
 
+    $scope.emailFormData = {
+        newEmail: '',
+        emailError: false,
+        isSaving: false,
+        setAlert: function(message) {
+            this.isSaving = false;
+            this.emailError = true;
+            $scope.alerts.showAlert({ 'type': 'error', 'text': message });
+        },
+        reset: function() {
+            this.newEmail = '';
+            this.emailError = false;
+            this.isSaving = false;
+        }
+    };
+    $scope.changeEmail = function(newEmailFormData) {
+        $scope.emailFormData.isSaving = true;
+
+        if (newEmailFormData.newEmail === '') {
+            newEmailFormData.setAlert('Email cannot be blank.');
+            newEmailFormData.isSaving = false;
+        } else {
+            UserService.changeEmail(newEmailFormData.newEmail)
+                .success(function(data) {
+                    $scope.alerts.showAlerts(data.alerts);
+                    $scope.updateUsers(data.data);
+                    $scope.loadCurrentUser();
+
+                    newEmailFormData.isSaving = false;
+                    newEmailFormData.newUsername = '';
+                });
+        }
+    };
+
     $scope.updatingDefaultBoard = false;
     $scope.setDefaultBoard = function() {
         $scope.updatingDefaultBoard = true;

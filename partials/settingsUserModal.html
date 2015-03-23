@@ -23,6 +23,10 @@
                         <div class="form-group" data-ng-class="{ 'has-error': userFormData.passError }">
                             <input class="form-control" type="password" placeholder="Verify Password" data-ng-model="userFormData.verifyPass">
                         </div>
+                        <div class="form-group" data-ng-class="{ 'has-error': userFormData.emailError }">
+                            <h5><span data-ng-if="!userFormData.isAdd">Change </span>Email</h5>
+                            <input class="form-control" type="text" placeholder="Email" data-ng-model="userFormData.email">
+                        </div>
                         <div class="form-group" data-ng-if="boardNames.length">
                             <h5><span data-ng-if="!userFormData.isAdd">Select </span>Default Board
                                 <span style="cursor:pointer;" class="fa fa-question-circle popover-dismiss"

@@ -3,7 +3,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>User</th><th>Admin</th><th>Default Board</th><th>Actions</th>
+                <th>User</th><th>Email</th><th>Admin</th><th>Default Board</th><th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -15,6 +15,7 @@
             </tr>
             <tr data-ng-repeat="user in users">
                 <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
                 <td data-ng-class="user.is_admin == '1' ? 'green' : 'red'">
                     <span data-ng-if="user.is_admin == '1'" class="fa fa-check" title="Yes"></span>
                     <span data-ng-if="user.is_admin == '0'" class="fa fa-times" title="No"></span>

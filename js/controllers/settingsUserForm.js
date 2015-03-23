@@ -7,11 +7,13 @@ function ($scope, UserService) {
         isAdd: true,
         username: '',
         password: '',
+        email: '',
         verifyPass: '',
         defaultBoard: null,
         isAdmin: false,
         passError: false,
         usernameError: false,
+        emailError: false,
         isSaving: false,
         setUser: function(user) {
             this.reset();
@@ -19,6 +21,7 @@ function ($scope, UserService) {
             this.isAdd = false;
             this.userId = user.id;
             this.username = user.username;
+            this.email = user.email;
             this.defaultBoard = user.default_board;
             this.isAdmin = user.is_admin == '1';
         },
@@ -29,6 +32,7 @@ function ($scope, UserService) {
             this.isAdd = true;
             this.username = '';
             this.password = '';
+            this.email = '';
             this.verifyPass = '';
             this.defaultBoard = null;
             this.isAdmin = false;
