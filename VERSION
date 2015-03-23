@@ -12,3 +12,4 @@ Changelog
  * 'Move to Column' context menu improvements.
  * Fix for missing Authorization header on some platforms.
  * Fix for missing Automatic Action trigger 'category change'.
+ * Add ability to have emails sent on several status changes.
