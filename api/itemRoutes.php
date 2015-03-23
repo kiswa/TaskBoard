@@ -44,7 +44,7 @@ $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
                     $item->points,
                     $item->position
                 );
-                $subject = 'New item created!';
+                $subject = 'TaskBoard: New item created!';
                 $recipient = $user->username;
                 $email = $user->email;
 
@@ -101,7 +101,7 @@ $app->post('/items/:itemId', function($itemId) use ($app, $jsonResponse) {
                     $item->points,
                     $item->position
                 );
-                $subject = 'Item edited';
+                $subject = 'TaskBoard: Item edited';
                 $recipient = $user->username;
                 $email = $user->email;
 
@@ -180,7 +180,7 @@ $app->post('/items/:itemId/comment', function($itemId) use ($app, $jsonResponse)
                     $item->title,
                     $comment->text
                 );
-                $subject = 'New comment';
+                $subject = 'TaskBoard: New comment';
                 $recipient = $user->username;
                 $email = $user->email;
 
@@ -222,7 +222,7 @@ $app->post('/comments/:commentId', function($commentId) use ($app, $jsonResponse
                 $item->title,
                 $comment->text
             );
-            $subject = 'Edit comment';
+            $subject = 'TaskBoard: Comment updated';
             $recipient = $user->username;
             $email = $user->email;
 

@@ -16,7 +16,7 @@ The goal of TaskBoard is to provide a simple and clean interface to a functional
 
 2. Back end
 
- * RESTful API written in PHP, using [Slim Framework](http://www.slimframework.com/) for routing and [RedBeanPHP](http://www.redbeanphp.com/) for database ORM.
+ * RESTful API written in PHP, using [Slim Framework](http://www.slimframework.com/) for routing and [RedBeanPHP](http://www.redbeanphp.com/) for database ORM. Also uses [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
 
  * Token-based authentication.
 
@@ -49,6 +49,12 @@ Installing TaskBoard is as easy as 1, 2, 3!
 **Note:** Ensure `TaskBoard/api/` is writable so the back end can do its job!
 
 ##Features
+
+###Email
+
+TaskBoard will email you (if you supply it with an email address) about changes in the following cases: Board Created, Board Updated, Item Created, Item Edited, Item Comment Created, and Item Comment Edited.
+
+For now, it emails all users assigned to the related Board. There will be further work done on this to allow more fine-grained control of emails.
 
 ###Settings
 The settings page allows normal users to see what boards they have access to and edit their user settings.
@@ -103,13 +109,12 @@ Count was done from parent directory of TaskBoard as `./cloc-1.62.pl TaskBoard -
 
 Language           | Files  | Blank Lines  | Comments | Code
 -------------------|-------:|-------------:|---------:|---------:
-Javascript         | 23     | 208          | 34       | 2004
-HTML               | 17     | 10           | 10       | 1044
-PHP                | 6      | 166          | 57       | 908
-CSS                | 1      | 13           | 34       | 673
+Javascript         | 23     | 216          | 34       | 2062
+PHP                | 8      | 217          | 54       | 1156
+HTML               | 24     | 12           | 11       | 1148
+CSS                | 1      | 13           | 31       | 686
 Bourne Again Shell | 4      | 10           | 0        | 53
 XML                | 1      | 0            | 0        | 12
-__SUM:__           | __52__ | __407__      | __135__  | __4694__
+__SUM:__           | __61__ | __468__      | __130__  | __5117__
 
-Counts Last Updated: Mar. 20, 2015
-
+Counts Last Updated: Mar. 23, 2015

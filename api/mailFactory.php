@@ -1,10 +1,17 @@
 <?php
-
 require_once('mailConfig.php');
 
+function getHostName() {
+    $headers = apache_request_headers();
+
+    foreach($headers as $header => $value) {
+        if (strtolower($header) == 'host') {
+            return $value;
+        }
+    }
+}
 
 function createMailObject() {
-
     global $MAIL_HOST, $MAIL_USERNAME, $MAIL_PASSWORD, $MAIL_SMTPSECURE, $MAIL_PORT, $MAIL_FROM, $MAIL_FROMNAME;
 
     $mail = new PHPMailer;
@@ -36,23 +43,28 @@ function sendEmail($email, $recipient, $subject, $body) {
 
 function getNewBoardEmailBody($boardid, $username, $boardname) {
     $message = file_get_contents('mail_templates/newBoard.html');
+    $message = str_replace('%hostname%', getHostName(), $message);
     $message = str_replace('%boardid%', $boardid, $message);
     $message = str_replace('%username%', $username, $message);
     $message = str_replace('%boardname%', $boardname, $message);
+
     return $message;
 }
 
 function getEditBoardEmailBody($boardid, $username, $boardname) {
     $message = file_get_contents('mail_templates/editBoard.html');
+    $message = str_replace('%hostname%', getHostName(), $message);
     $message = str_replace('%boardid%', $boardid, $message);
     $message = str_replace('%username%', $username, $message);
     $message = str_replace('%boardname%', $boardname, $message);
+
     return $message;
 }
 
 function getNewItemEmailBody($boardid, $username, $boardname, $title, $description, $assignee, $category, $dueDate, $points, $position)
 {
     $message = file_get_contents('mail_templates/newItem.html');
+    $message = str_replace('%hostname%', getHostName(), $message);
     $message = str_replace('%boardid%', $boardid, $message);
     $message = str_replace('%username%', $username, $message);
     $message = str_replace('%boardname%', $boardname, $message);
@@ -63,12 +75,14 @@ function getNewItemEmailBody($boardid, $username, $boardname, $title, $descripti
     $message = str_replace('%duedate%', $dueDate, $message);
     $message = str_replace('%points%', $points, $message);
     $message = str_replace('%position%', $position, $message);
+
     return $message;
 }
 
 function getEditItemEmailBody($boardid, $username, $boardname, $title, $description, $assignee, $category, $dueDate, $points, $position)
 {
     $message = file_get_contents('mail_templates/editItem.html');
+    $message = str_replace('%hostname%', getHostName(), $message);
     $message = str_replace('%boardid%', $boardid, $message);
     $message = str_replace('%username%', $username, $message);
     $message = str_replace('%boardname%', $boardname, $message);
@@ -79,27 +93,32 @@ function getEditItemEmailBody($boardid, $username, $boardname, $title, $descript
     $message = str_replace('%duedate%', $dueDate, $message);
     $message = str_replace('%points%', $points, $message);
     $message = str_replace('%position%', $position, $message);
+
     return $message;
 }
 
 function getNewCommentEmailBody($boardid, $username, $boardname, $title, $comment)
 {
     $message = file_get_contents('mail_templates/newComment.html');
+    $message = str_replace('%hostname%', getHostName(), $message);
     $message = str_replace('%boardid%', $boardid, $message);
     $message = str_replace('%username%', $username, $message);
     $message = str_replace('%boardname%', $boardname, $message);
     $message = str_replace('%title%', $title, $message);
     $message = str_replace('%comment%', $comment, $message);
+
     return $message;
 }
 
 function getEditCommentEmailBody($boardid, $username, $boardname, $title, $comment)
 {
     $message = file_get_contents('mail_templates/editComment.html');
+    $message = str_replace('%hostname%', getHostName(), $message);
     $message = str_replace('%boardid%', $boardid, $message);
     $message = str_replace('%username%', $username, $message);
     $message = str_replace('%boardname%', $boardname, $message);
     $message = str_replace('%title%', $title, $message);
     $message = str_replace('%comment%', $comment, $message);
+
     return $message;
 }

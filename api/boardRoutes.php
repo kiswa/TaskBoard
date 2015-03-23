@@ -22,7 +22,7 @@ $app->post('/boards', function() use($app, $jsonResponse) {
 
         foreach($board->sharedUser as $user) {
             $body = getNewBoardEmailBody($board->id, $user->username, $board->name);
-            $subject = 'New board created!';
+            $subject = 'TaskBoard: New board created!';
             $recipient = $user->username;
             $email = $user->email;
 
@@ -49,7 +49,7 @@ $app->post('/boards/update', function() use($app, $jsonResponse) {
 
         foreach($board->sharedUser as $user) {
             $body = geEditBoardEmailBody($board->id, $user->username, $board->name);
-            $subject = 'Board updated!';
+            $subject = 'TaskBoard: Board updated!';
             $recipient = $user->username;
             $email = $user->email;
 
