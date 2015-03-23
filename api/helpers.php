@@ -66,6 +66,30 @@ function getUser() {
     return null;
 }
 
+function getUserByID($id) {
+    try {
+        $user = R::load('user', $id);
+
+        if ($user->id) {
+            return $user;
+        }
+    } catch (Exception $e) {}
+
+    return null;
+}
+
+function getLaneByID($id) {
+    try {
+        $lane = R::load('lane', $id);
+
+        if ($lane->id) {
+            return $lane;
+        }
+    } catch (Exception $e) {}
+
+    return null;
+}
+
 // Get all users.
 function getUsers($sanitize = true) {
     try {
@@ -240,6 +264,21 @@ function updateUsername($user, $data) {
     return $user;
 }
 
+// Change email if available.
+function updateEmail($user, $data) {
+    global $jsonResponse;
+    $emailTaken = R::findOne('user', ' username = ?', [$data->newEmail]);
+
+    if (null != $user && null == $emailTaken) {
+        $user->email = $data->newEmail;
+        $jsonResponse->addAlert('success', 'Email updated.');
+    } else {
+        $jsonResponse->addAlert('error', 'Email already in use.');
+    }
+
+    return $user;
+}
+
 // Validate a provided JWT.
 function validateToken($requireAdmin = false) {
     global $jsonResponse, $app;
@@ -333,6 +372,7 @@ function createInitialUser() {
         $admin->defaultBoard = null;
         $admin->salt = password_hash($admin->username . time(), PASSWORD_BCRYPT);
         $admin->password = password_hash('admin', PASSWORD_BCRYPT, array('salt' => $admin->salt));
+        $admin->email = '';
 
         R::store($admin);
     }

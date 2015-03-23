@@ -41,4 +41,16 @@
             </fieldset>
         </form>
     </div>
+    <div id="change-email">
+        <h4>Change Email</h4>
+        <form role="form" novalidate data-ng-submit="changeEmail(emailFormData)">
+            <fieldset data-ng-disabled="emailFormData.isSaving || loadingCurrentUser">
+                <div class="form-group" data-ng-class="{ 'has-error': emailFormData.emailError }">
+                    <input class="form-control" placeholder="New Email" data-ng-model="emailFormData.newEmail">
+                </div>
+                <button type="submit" class="btn btn-info">Update Email</button>
+                <a class="btn btn-default" data-ng-click="emailFormData.reset()">Reset</a>
+            </fieldset>
+        </form>
+    </div>
 </div>

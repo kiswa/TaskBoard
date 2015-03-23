@@ -29,6 +29,27 @@ $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
             } else {
                 $jsonResponse->addAlert('error', 'Failed to create board item.');
             }
+
+            foreach($board->sharedUser as $user) {
+                $actor = getUser();
+                $body = getNewItemEmailBody(
+                    $board->id,
+                    $actor->username,
+                    $board->name,
+                    $item->title,
+                    $item->description,
+                    getUserByID($item->assignee)->username,
+                    $item->category,
+                    $item->dueDate,
+                    $item->points,
+                    $item->position
+                );
+                $subject = 'New item created!';
+                $recipient = $user->username;
+                $email = $user->email;
+
+                sendEmail($email, $recipient, $subject, $body);
+            }
         }
     }
     $app->response->setBody($jsonResponse->asJson());
@@ -62,6 +83,30 @@ $app->post('/items/:itemId', function($itemId) use ($app, $jsonResponse) {
             logAction($user->username . ' updated item ' . $item->title, $before, $item->export(), $itemId);
             $jsonResponse->addAlert('success', 'Updated item ' . $item->title . '.');
             $jsonResponse->addBeans(getBoards());
+
+            $lane = R::load('lane', $item->lane_id);
+            $board = R::load('board', $lane->boardId);
+
+            foreach($board->sharedUser as $user) {
+                $actor = getUser();
+                $body = getEditItemEmailBody(
+                    $board->id,
+                    $actor->username,
+                    $board->name,
+                    $item->title,
+                    $item->description,
+                    getUserByID($item->assignee)->username,
+                    $item->category,
+                    $item->dueDate,
+                    $item->points,
+                    $item->position
+                );
+                $subject = 'Item edited';
+                $recipient = $user->username;
+                $email = $user->email;
+
+                sendEmail($email, $recipient, $subject, $body);
+            }
         }
     }
     $app->response->setBody($jsonResponse->asJson());
@@ -123,6 +168,24 @@ $app->post('/items/:itemId/comment', function($itemId) use ($app, $jsonResponse)
             logAction($user->username . ' added a comment to item ' . $item->title, null, $comment->export(), $itemId);
             $jsonResponse->addAlert('success', 'Comment added to item ' . $item->title . '.');
             $jsonResponse->addBeans(R::load('item', $itemId));
+
+            $lane = R::load('lane', $item->lane_id);
+            $board = R::load('board', $lane->boardId);
+
+            foreach($board->sharedUser as $user) {
+                $body = getNewCommentEmailBody(
+                    $board->id,
+                    $user->username,
+                    $board->name,
+                    $item->title,
+                    $comment->text
+                );
+                $subject = 'New comment';
+                $recipient = $user->username;
+                $email = $user->email;
+
+                sendEmail($email, $recipient, $subject, $body);
+            }
         }
     }
     $app->response->setBody($jsonResponse->asJson());
@@ -146,6 +209,25 @@ $app->post('/comments/:commentId', function($commentId) use ($app, $jsonResponse
         logAction($user->username . ' edited comment ' . $comment->id, $before, $comment->export(), $comment->id);
         $jsonResponse->addAlert('success', 'Comment edited.');
         $jsonResponse->addBeans(R::load('item', $comment->item_id));
+
+        $item = R::load('item', $comment->item_id);
+        $lane = R::load('lane', $item->lane_id);
+        $board = R::load('board', $lane->boardId);
+
+        foreach($board->sharedUser as $user) {
+            $body = getEditCommentEmailBody(
+                $board->id,
+                $user->username,
+                $board->name,
+                $item->title,
+                $comment->text
+            );
+            $subject = 'Edit comment';
+            $recipient = $user->username;
+            $email = $user->email;
+
+            sendEmail($email, $recipient, $subject, $body);
+        }
     }
     $app->response->setBody($jsonResponse->asJson());
 })->conditions(['commentId' => '\d+']);
