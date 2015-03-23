@@ -521,14 +521,22 @@ span.filter {
     display: inline-block;
     min-width: 70px;
 }
-#change-password, #default-board, #change-username {
+#change-password, #default-board, #change-username, #change-email {
     width: 48%;
     float: left;
     margin-bottom: 1em;
 }
-#default-board, #change-username {
+#change-username, #change-email {
     margin-left: 4%;
     margin-bottom: .6em;
+}
+.board-options p {
+    width: 48%;
+    float: left;
+    margin-bottom: 1em;
+}
+#changeUserSettings hr, .board-options hr {
+    clear: both;
 }
 .badge { margin: 0 3px; }
 .half-width {
