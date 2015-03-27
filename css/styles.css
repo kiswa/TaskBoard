@@ -469,7 +469,7 @@ p.detail {
 .form-control.wide {
     width: 85%;
 }
-.form-group.short-top {
+.short-top {
     margin-top: -1em;
 }
 label.wide {
