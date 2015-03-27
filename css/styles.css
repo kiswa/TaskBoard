@@ -468,6 +468,7 @@ p.detail {
 /* #SettingsPage */
 .form-control.wide {
     width: 85%;
+    margin-bottom: 5px;
 }
 .short-top {
     margin-top: -1em;
