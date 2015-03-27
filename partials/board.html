@@ -90,17 +90,17 @@
             <div id="itemMenu" class="dropdown fixed">
                 <ul class="dropdown-menu" role="menu">
                     <li role="presentation">
-                        <a role="menuitem" style="cursor: default" data-ng-click="openItem(contextItem)">
+                        <a role="menuitem" class="default-cursor" data-ng-click="openItem(contextItem)">
                             View Item
                         </a>
                     </li>
                     <li role="presentation">
-                        <a role="menuitem" style="cursor: default" data-ng-click="openEditItem()">
+                        <a role="menuitem" class="default-cursor" data-ng-click="openEditItem()">
                             Edit Item
                         </a>
                     </li>
                     <li role="presentation" data-ng-if="currentUser.isAdmin">
-                        <a role="menuitem" style="cursor: default" data-ng-click="removeItem()">
+                        <a role="menuitem" class="default-cursor" data-ng-click="removeItem()">
                             Delete Item
                         </a>
                     </li>
@@ -117,16 +117,16 @@
                     </li>
                     <li role="presentation" class="divider"></li>
                     <li role="presentation">
-                        <a role="menuitem" style="cursor: default" data-ng-click="openAddItem()">
+                        <a role="menuitem" class="default-cursor" data-ng-click="openAddItem()">
                             Add New Item
                         </a>
                     </li>
                 </ul>
             </div>
-            <div id="laneMenu" class="dropdown" style="position: fixed;">
+            <div id="laneMenu" class="dropdown fixed">
                 <ul class="dropdown-menu" role="menu">
                     <li role="presentation">
-                        <a role="menuitem" style="cursor: default" data-ng-click="openAddItem()">
+                        <a role="menuitem" class="default-cursor" data-ng-click="openAddItem()">
                             Add New Item
                         </a>
                     </li>
