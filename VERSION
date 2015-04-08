@@ -7,9 +7,13 @@ Changelog
  * Boards can be marked inactive to disallow using them without deleting.
  * The list of boards can be filtered.
  * Multiple logins per user are now possible.
- * Additional setting to diable animations throughout.
+ * Additional setting to disable animations throughout.
  * Expandable text inputs expand vertically and reset size on modal open.
  * 'Move to Column' context menu improvements.
  * Fix for missing Authorization header on some platforms.
  * Fix for missing Automatic Action trigger 'category change'.
  * Add ability to have emails sent on several status changes.
+ * Pulled some inline styles out (two remain, but are required for coloring tasks).
+ * Add setting to make new tasks appear at top or bottom of columns.
+ * Removed "No description" text from empty tasks.
+ * Add setting to hide "Assigned To: Unassigned" on tasks.
