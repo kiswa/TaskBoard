@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.4.2
+ * @version     2.6.1
  * @package     Slim
  *
  * MIT LICENSE
@@ -60,9 +60,9 @@ class Util
         $strip = is_null($overrideStripSlashes) ? get_magic_quotes_gpc() : $overrideStripSlashes;
         if ($strip) {
             return self::stripSlashes($rawData);
-        } else {
-            return $rawData;
         }
+
+        return $rawData;
     }
 
     /**

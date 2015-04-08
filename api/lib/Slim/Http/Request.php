@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.4.2
+ * @version     2.6.1
  * @package     Slim
  *
  * MIT LICENSE
@@ -169,9 +169,9 @@ class Request
             return true;
         } elseif (isset($this->headers['X_REQUESTED_WITH']) && $this->headers['X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
