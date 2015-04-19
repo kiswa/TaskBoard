@@ -31,6 +31,14 @@ The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewri
 
 **Note:** For Apache v2.3.9 and later, virtual host for a site should have [`AllowOverride All`](http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride) for TaskBoard root directory. Otherwise, .htaccess files will be completely ignored.
 
+### Development instance
+
+You can start a simple development environment with the php internal webserver.
+
+`php -S 127.0.0.1:8080 devrouter.php`
+
+After launching the internal webserver go to http://127.0.0.1:8080/
+
 ###Install
 Installing TaskBoard is as easy as 1, 2, 3!
 
