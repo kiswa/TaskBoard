@@ -5,10 +5,8 @@ echo Building...
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
-echo ' Updating composer'
-./composer.phar self-update
-cd ..
 echo ' Installing dependencies'
+cd ..
 ./build/composer.phar install
 cd build
 
