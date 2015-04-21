@@ -35,7 +35,11 @@ The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewri
 
 ### Development instance
 
-You can start a simple development environment with the php internal webserver.
+At first you need to install the dependencies via composer to start a development instance.
+
+`./build/composer.phar install`
+
+Now you can start a simple development environment with the php internal webserver.q
 
 `php -S 127.0.0.1:8080 devrouter.php`
 
