@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Get the list of active boards
 $app->get('/boards', function() use($app, $jsonResponse) {
     if (validateToken()) {
