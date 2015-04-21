@@ -33,6 +33,14 @@ The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewri
 
 **Optional:** to build minimized JavaScript and CSS (Install step 2) you must have a jre installed, tested with `openjdk-7-jre` and `openjdk-8-jre`.
 
+### Development instance
+
+You can start a simple development environment with the php internal webserver.
+
+`php -S 127.0.0.1:8080 devrouter.php`
+
+After launching the internal webserver go to http://127.0.0.1:8080/
+
 ###Install
 Installing TaskBoard is as easy as 1, 2, 3!
 
