@@ -39,13 +39,14 @@ At first you need to install the dependencies via composer to start a developmen
 
 `./build/composer.phar install`
 
-Now you can start a simple development environment with the php internal webserver.q
+Now you can start a simple development environment with the php internal webserver.
 
 `php -S 127.0.0.1:8080 devrouter.php`
 
 After launching the internal webserver go to http://127.0.0.1:8080/
 
 ###Install
+
 Installing TaskBoard is as easy as 1, 2, 3!
 
 **Note:** You can skip step 2 if you don't care about minification of JavaScript and CSS for a production environment!
