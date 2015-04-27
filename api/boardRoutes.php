@@ -48,7 +48,7 @@ $app->post('/boards/update', function() use($app, $jsonResponse) {
         $jsonResponse->addBeans(getBoards());
 
         foreach($board->sharedUser as $user) {
-            $body = geEditBoardEmailBody($board->id, $user->username, $board->name);
+            $body = getEditBoardEmailBody($board->id, $user->username, $board->name);
             $subject = 'TaskBoard: Board updated!';
             $recipient = $user->username;
             $email = $user->email;
