@@ -22,7 +22,7 @@ $app->post('/login', function() use ($app, $jsonResponse) {
             setUserToken($lookup, $expires);
             $lookup->logins = $lookup->logins + 1;
             $lookup->lastLogin = time();
-            R::store($lookup);
+            //R::store($lookup);
 
             logAction($lookup->username . ' logged in.', null, null);
             $jsonResponse->message = 'Login successful.';
@@ -56,7 +56,7 @@ $app->post('/updatepassword', function() use($app, $jsonResponse) {
             if ($user->password == $checkPass) {
                 $before = $user->export();
                 $user->password = password_hash($data->newPass, PASSWORD_BCRYPT, array('salt' => $user->salt));
-                R::store($user);
+                //R::store($user);
 
                 logAction($user->username . ' changed their password.', $before, $user->export());
                 $jsonResponse->addAlert('success', 'Password changed.');

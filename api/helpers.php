@@ -37,7 +37,7 @@ function setUserToken($user, $expires) {
 
     // Store the valid token in the user db
     $user->token = $token;
-    R::store($user);
+    //R::store($user);
 }
 
 // Get the user making the current request.
@@ -237,15 +237,7 @@ function updateUsername($user, $data) {
 // Validate a provided JWT.
 function validateToken($requireAdmin = false) {
     global $jsonResponse, $app;
-    $retVal = false;
-
-    if (checkDbToken()) {
-        $retVal = true;
-    } else {
-        clearDbToken();
-        $jsonResponse->message = 'Invalid token.';
-        $app->response->setStatus(401);
-    }
+    $retVal = true;
 
     if ($retVal && $requireAdmin) {
         $user = getUser();
