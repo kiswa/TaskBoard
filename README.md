@@ -43,9 +43,7 @@ Installing TaskBoard is as easy as 1, 2, (3), 4!
 
         git clone https://github.com/kiswa/TaskBoard.git
 
-2. Install the PHP dependencies via composer.
-
-        `./build/composer.phar install`
+2. Install the PHP dependencies via composer. Open `TaskBoard/build/` in a terminal and run `.composer.phar install`
 
 3. Open `TaskBoard/build/` in a terminal and run `./build-all`.
 
@@ -122,12 +120,13 @@ Count was done from parent directory of TaskBoard as `./cloc-1.62.pl TaskBoard -
 
 Language           | Files  | Blank Lines  | Comments | Code
 -------------------|-------:|-------------:|---------:|---------:
-Javascript         | 23     | 216          | 34       | 2062
-PHP                | 8      | 217          | 54       | 1156
-HTML               | 24     | 12           | 11       | 1148
-CSS                | 1      | 13           | 31       | 686
-Bourne Again Shell | 4      | 10           | 0        | 53
+Javascript         | 23     | 217          | 34       | 2071
+PHP                | 9      | 223          | 54       | 1181
+HTML               | 24     | 12           | 10       | 1153
+CSS                | 1      | 13           | 26       | 703
+Bourne Again Shell | 4      | 12           | 0        | 58
+JSON               | 1      | 0            | 0        | 17
 XML                | 1      | 0            | 0        | 12
-__SUM:__           | __61__ | __468__      | __130__  | __5117__
+__SUM:__           | __63__ | __477__      | __124__  | __5195__
 
-Counts Last Updated: Mar. 23, 2015
+Counts Last Updated: May 27, 2015
