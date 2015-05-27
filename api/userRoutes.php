@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Validate a user and store token (and return in response).
 $app->post('/login', function() use ($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);

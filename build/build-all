@@ -1,7 +1,14 @@
 #!/bin/bash
+set -e
+
 echo Building...
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
+
+echo ' Installing dependencies'
+cd ..
+./build/composer.phar install
+cd build
 
 echo ' Compiling lib JS files...'
 ./minify-libs

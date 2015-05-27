@@ -32,7 +32,7 @@ function ($scope, $interval, BoardService) {
     $scope.boardSort = {
         options: [
             { sort: 'id', name: 'Creation Date' },
-            { sort: 'name', name: 'Board Name' },
+            { sort: 'name', name: 'Board Name' }
         ],
         sort: 'name'
     };
@@ -41,7 +41,7 @@ function ($scope, $interval, BoardService) {
         options: [
             { filter: 'all', name: 'All Boards' },
             { filter: 'active', name: 'Active' },
-            { filter: 'inactive', name: 'Inactive' },
+            { filter: 'inactive', name: 'Inactive' }
         ],
         filter: 'all',
         userFilter: null
