@@ -29,6 +29,16 @@ function ($scope, $interval, BoardService) {
     $scope.interval = $interval(loadBoards, 5000);
     $scope.$on('$destroy', function () { $interval.cancel($scope.interval); });
 
+    $scope.userOptions = {
+        tasksAt: [
+            { id: 0, text: 'bottom of column'},
+            { id: 1, text: 'top of column'}
+        ],
+        taskOrder: 0,
+        showAnimations: true,
+        showAssignee: true
+    };
+
     $scope.boardSort = {
         options: [
             { sort: 'id', name: 'Creation Date' },

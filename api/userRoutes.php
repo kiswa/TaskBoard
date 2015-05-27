@@ -137,12 +137,17 @@ $app->get('/users/current', function() use($app, $jsonResponse) {
     if (validateToken()) {
         $user = getUser();
         if (null != $user) {
+            $options = [];
+            foreach($user->ownOptions as $option) {
+                $options[] = $option;
+            }
             $jsonResponse->data = [
                 'userId' => $user->id,
                 'username' => $user->username,
                 'isAdmin' => $user->isAdmin,
                 'email' => $user->email,
-                'defaultBoard' => $user->defaultBoard
+                'defaultBoard' => $user->defaultBoard,
+                'options' => $options
             ];
         }
     }
@@ -175,9 +180,9 @@ $app->post('/users', function() use($app, $jsonResponse) {
             $user->salt = password_hash($data->username . time(), PASSWORD_BCRYPT);
             $user->password = password_hash($data->password, PASSWORD_BCRYPT, array('salt' => $user->salt));
             $options = R::dispense('option');
-            $options->newTaskPosition = 1; // Bottom of column (0 == top of column)
+            $options->newTaskPosition = 0; // Bottom of column (1 == top of column)
             $options->animate = true;
-            $user->ownOptions[] = $options;
+            $user->ownOptions = $options;
 
             R::store($user);
             addUserToBoard($data->defaultBoard, $user);

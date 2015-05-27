@@ -374,6 +374,13 @@ function createInitialUser() {
         $admin->password = password_hash('admin', PASSWORD_BCRYPT, array('salt' => $admin->salt));
         $admin->email = '';
 
+        $options = R::dispense('option');
+        $options->tasksOrder = 0;
+        $options->showAnimations = true;
+        $options->showAssignee = true;
+
+        $admin->ownOptions = $options;
+
         R::store($admin);
     }
 }
