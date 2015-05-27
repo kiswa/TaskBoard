@@ -33,33 +33,33 @@ The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewri
 
 **Optional:** to build minimized JavaScript and CSS (Install step 2) you must have a jre installed, tested with `openjdk-7-jre` and `openjdk-8-jre`.
 
+###Install
+
+Installing TaskBoard is as easy as 1, 2, (3), 4!
+
+**Note:** You can skip step 3 if you don't care about minification of JavaScript and CSS for a production environment!
+
+1. Clone the repository directly where you want it, or clone and copy to it's final location.
+
+        git clone https://github.com/kiswa/TaskBoard.git
+
+2. Install the PHP dependencies via composer.
+
+        `./build/composer.phar install`
+
+3. Open `TaskBoard/build/` in a terminal and run `./build-all`.
+
+4. Visit the site and log in with the username and password `admin` (and don't forget to change the password once you're in!).
+
+**Note:** Ensure `TaskBoard/api/` is writable so the back end can do its job!
+
 ### Development instance
-
-At first you need to install the dependencies via composer to start a development instance.
-
-`./build/composer.phar install`
 
 Now you can start a simple development environment with the php internal webserver.
 
 `php -S 127.0.0.1:8080 devrouter.php`
 
 After launching the internal webserver go to http://127.0.0.1:8080/
-
-###Install
-
-Installing TaskBoard is as easy as 1, 2, 3!
-
-**Note:** You can skip step 2 if you don't care about minification of JavaScript and CSS for a production environment!
-
-1. Clone the repository directly where you want it, or clone and copy to it's final location.
-
-        git clone https://github.com/kiswa/TaskBoard.git
-
-2. Open `TaskBoard/build/` in a terminal and run `./build-all`.
-
-3. Visit the site and log in with the username and password `admin` (and don't forget to change the password once you're in!).
-
-**Note:** Ensure `TaskBoard/api/` is writable so the back end can do its job!
 
 ##Features
 
