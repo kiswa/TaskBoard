@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Create new item
 $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
