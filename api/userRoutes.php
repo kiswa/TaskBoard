@@ -138,10 +138,12 @@ $app->get('/users/current', function() use($app, $jsonResponse) {
     if (validateToken()) {
         $user = getUser();
         if (null != $user) {
-            $options = [];
-            foreach($user->ownOptions as $option) {
-                $options[] = $option;
-            }
+            $userOptions = R::exportAll($user->ownOption);
+            $options = [
+                'tasksOrder' => $userOptions[0]['tasks_order'],
+                'showAssignee' => $userOptions[0]['show_assignee'],
+                'showAnimations' => $userOptions[0]['show_animations']
+            ];
             $jsonResponse->data = [
                 'userId' => $user->id,
                 'username' => $user->username,

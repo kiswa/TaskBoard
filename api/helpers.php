@@ -380,7 +380,7 @@ function createInitialUser() {
         $options->showAnimations = true;
         $options->showAssignee = true;
 
-        $admin->ownOptions = $options;
+        $admin->ownOptions[] = $options;
 
         R::store($admin);
     }

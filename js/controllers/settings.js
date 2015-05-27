@@ -22,7 +22,6 @@ function ($scope, UserService, AlertService) {
         .success(function(data) {
             $scope.currentUser = data.data;
             $scope.loadingCurrentUser = false;
-            console.log($scope.currentUser.options[0]);
         });
     };
     $scope.loadCurrentUser();
