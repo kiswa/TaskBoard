@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Patch for when using nginx instead of apache, source: http://php.net/manual/en/function.getallheaders.php#84262
 if (!function_exists('getallheaders')) {
     function getallheaders() {
