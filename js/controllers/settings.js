@@ -22,6 +22,9 @@ function ($scope, UserService, AlertService) {
         .success(function(data) {
             $scope.currentUser = data.data;
             $scope.loadingCurrentUser = false;
+            $scope.currentUser.options.tasksOrder = parseInt(data.data.options.tasksOrder);
+            $scope.currentUser.options.showAnimations = data.data.options.showAnimations === "1";
+            $scope.currentUser.options.showAssignee = data.data.options.showAssignee === "1";
         });
     };
     $scope.loadCurrentUser();

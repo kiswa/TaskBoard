@@ -1,15 +1,15 @@
 <div class="widget-content board-options">
     <h4>My Board Options</h4>
     <p class="form-group form-inline">New tasks appear at
-        <select class="form-control" data-ng-model="userOptions.taskOrder"
+        <select class="form-control" data-ng-model="currentUser.options.tasksOrder"
             data-ng-options="option.id as option.text for option in userOptions.tasksAt">
         </select>
     </p>
     <p class="form-group form-inline">
-        Show animations? <input type="checkbox" data-ng-model="userOptions.showAnimations">
+        Show animations? <input type="checkbox" data-ng-model="currentUser.options.showAnimations">
     </p>
     <p class="form-group form-inline">
-        Show Assignee on item card? <input type="checkbox" data-ng-model="userOptions.showAssignee">
+        Show Assignee on item card? <input type="checkbox" data-ng-model="currentUser.options.showAssignee">
     </p>
     <hr>
 </div>
