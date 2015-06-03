@@ -65,8 +65,10 @@
                         </div>
                         <div class="description" data-ng-bind-html="marked(item.description)"></div>
                         <p class="assignee">
-                            <span data-ng-if="userNames[item.assignee]">Assigned To: </span>
-                            {{ userNames[item.assignee] }}
+                            <span data-ng-show="currentUser.options.showAssignee === '1'">
+                                <span data-ng-if="userNames[item.assignee]">Assigned To: </span>
+                                {{ userNames[item.assignee] }}
+                            </span>
                             <span class="pull-right">
                                 <span data-ng-if="item.ownComment" class="fa fa-comments-o"
                                       title="{{ item.ownComment.length }} Comments"></span>

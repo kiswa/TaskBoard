@@ -21,13 +21,28 @@ function ($scope, UserService, AlertService) {
         UserService.currentUser()
         .success(function(data) {
             $scope.currentUser = data.data;
+            loadOptionsData(data.data);
             $scope.loadingCurrentUser = false;
-            $scope.currentUser.options.tasksOrder = parseInt(data.data.options.tasksOrder);
-            $scope.currentUser.options.showAnimations = data.data.options.showAnimations === "1";
-            $scope.currentUser.options.showAssignee = data.data.options.showAssignee === "1";
         });
     };
     $scope.loadCurrentUser();
+
+    loadOptionsData = function (data) {
+        $scope.currentUser.options.tasksOrder = parseInt(data.options.tasksOrder);
+        $scope.currentUser.options.showAnimations = typeof data.options.showAnimations === "string" ?
+            data.options.showAnimations === "1" : data.options.showAnimations;
+        $scope.currentUser.options.showAssignee = typeof data.options.showAssignee === "string" ?
+            data.options.showAssignee === "1" : data.options.showAssignee;
+    };
+
+    $scope.saveOptions = function() {
+        UserService.saveOptions($scope.currentUser.options.tasksOrder,
+            $scope.currentUser.options.showAnimations,
+            $scope.currentUser.options.showAssignee)
+        .success(function(data) {
+            loadOptionsData({options: data.data});
+        });
+    };
 
     $scope.updateBoardsList = function(data) {
         if (undefined === data) {

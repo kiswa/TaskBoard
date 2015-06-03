@@ -2,14 +2,19 @@
     <h4>My Board Options</h4>
     <p class="form-group form-inline">New tasks appear at
         <select class="form-control" data-ng-model="currentUser.options.tasksOrder"
-            data-ng-options="option.id as option.text for option in userOptions.tasksAt">
+            data-ng-options="option.id as option.text for option in userOptions.tasksAt"
+            data-ng-change="saveOptions()">
         </select>
     </p>
     <p class="form-group form-inline">
-        Show animations? <input type="checkbox" data-ng-model="currentUser.options.showAnimations">
+        Show animations?
+        <input type="checkbox" data-ng-model="currentUser.options.showAnimations"
+            data-ng-change="saveOptions()">
     </p>
     <p class="form-group form-inline">
-        Show Assignee on item card? <input type="checkbox" data-ng-model="currentUser.options.showAssignee">
+        Show Assignee on item card?
+        <input type="checkbox" data-ng-model="currentUser.options.showAssignee"
+            data-ng-change="saveOptions()">
     </p>
     <hr>
 </div>

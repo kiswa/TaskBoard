@@ -157,6 +157,22 @@ $app->get('/users/current', function() use($app, $jsonResponse) {
     $app->response->setBody($jsonResponse->asJson());
 });
 
+$app->post('/users/current/options', function() use ($app, $jsonResponse) {
+    $data = json_decode($app->environment['slim.input']);
+
+    if (validateToken()) {
+        $user = getUser();
+
+        $user->ownOption[1]->tasksOrder = $data->tasksOrder;
+        $user->ownOption[1]->showAssignee = $data->showAssignee;
+        $user->ownOption[1]->showAnimations = $data->showAnimations;
+        R::store($user);
+
+        $jsonResponse->data = $data;
+    }
+    $app->response->setBody($jsonResponse->asJson());
+});
+
 // Get all users
 $app->get('/users', function() use($app, $jsonResponse) {
     if (validateToken()) {
