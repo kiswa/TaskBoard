@@ -386,20 +386,38 @@ function createInitialUser() {
     }
 }
 
-// Gets the position for a new item in a lane.
-function getNextItemPosition($laneId) {
+// Gets the position for a new item in a column.
+function getNextItemPosition($columnId) {
     $retVal = 0;
+    $column = R::load('lane', $columnId);
 
-    $lane = R::load('lane', $laneId);
-    if ($lane->id) {
-        try {
-            $retVal = $lane->countOwn('item');
-        } catch (Exception $e) {
-            // Ignore, just means there are no items.
+    if ($column->id) {
+        $options = R::exportAll(getUser()->ownOption);
+
+        if ($options[0]['tasks_order'] == 1) {
+            // Tasks at top of column.
+            renumberItems($columnId, 0, false);
+        } else {
+            try {
+                $retVal = $column->countOwn('item');
+            } catch (Exception $e) {
+                // Ignore, just means there are no items.
+            }
         }
     }
 
     return $retVal;
+}
+
+function renumberItems($columnId, $itemPosition, $isRemoved = true) {
+    $items = R::find('item', 'lane_id = ' . $columnId);
+
+    foreach ($items as $item) {
+        if ($item->position >= $itemPosition) {
+            $item->position += $isRemoved ? -1 : 1;
+            R::store($item);
+        }
+    }
 }
 
 function runAutoActions(&$item) {

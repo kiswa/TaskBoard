@@ -348,6 +348,8 @@ $app->post('/items/remove', function() use ($app, $jsonResponse) {
             $before = $item->export();
             R::trash($item);
 
+            renumberItems($item->lane_id, $item->position);
+
             $actor = getUser();
             logAction($actor->username . ' removed item ' . $item->title, $before, null, $data->itemId);
             $jsonResponse->addAlert('success', $item->title . ' was deleted.');
