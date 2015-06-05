@@ -116,17 +116,17 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
 It's silly to use [LOC](http://en.wikipedia.org/wiki/Source_lines_of_code) as a metric, but it can be interesting to see what goes into a project.
 This is only for TaskBoard files (library code is excluded), using [CLOC](http://cloc.sourceforge.net/).
 
-Count was done from parent directory of TaskBoard as `./cloc-1.62.pl TaskBoard --exclude-dir=lib,api/lib`.
+Count was done from parent directory of TaskBoard as `./cloc-1.62.pl TaskBoard --exclude-dir=lib,vendor`.
 
 Language           | Files  | Blank Lines  | Comments | Code
 -------------------|-------:|-------------:|---------:|---------:
-Javascript         | 23     | 217          | 34       | 2071
-PHP                | 9      | 223          | 54       | 1181
-HTML               | 24     | 12           | 10       | 1153
+Javascript         | 23     | 220          | 34       | 2094
+PHP                | 9      | 229          | 54       | 1201
+HTML               | 24     | 12           | 10       | 1160
 CSS                | 1      | 13           | 26       | 703
 Bourne Again Shell | 4      | 12           | 0        | 58
 JSON               | 1      | 0            | 0        | 17
 XML                | 1      | 0            | 0        | 12
-__SUM:__           | __63__ | __477__      | __124__  | __5195__
+__SUM:__           | __63__ | __486__      | __124__  | __5245__
 
-Counts Last Updated: May 27, 2015
+Counts Last Updated: Jun 4, 2015
