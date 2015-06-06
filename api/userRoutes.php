@@ -141,8 +141,8 @@ $app->get('/users/current', function() use($app, $jsonResponse) {
             $userOptions = R::exportAll($user->ownOption);
             $options = [
                 'tasksOrder' => $userOptions[0]['tasks_order'],
-                'showAssignee' => $userOptions[0]['show_assignee'],
-                'showAnimations' => $userOptions[0]['show_animations']
+                'showAssignee' => $userOptions[0]['show_assignee'] == 1,
+                'showAnimations' => $userOptions[0]['show_animations'] == 1
             ];
             $jsonResponse->data = [
                 'userId' => $user->id,

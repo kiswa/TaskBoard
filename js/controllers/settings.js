@@ -29,10 +29,8 @@ function ($scope, UserService, AlertService) {
 
     loadOptionsData = function (data) {
         $scope.currentUser.options.tasksOrder = parseInt(data.options.tasksOrder);
-        $scope.currentUser.options.showAnimations = typeof data.options.showAnimations === "string" ?
-            data.options.showAnimations === "1" : data.options.showAnimations;
-        $scope.currentUser.options.showAssignee = typeof data.options.showAssignee === "string" ?
-            data.options.showAssignee === "1" : data.options.showAssignee;
+        $scope.currentUser.options.showAnimations = data.options.showAnimations;
+        $scope.currentUser.options.showAssignee = data.options.showAssignee;
     };
 
     $scope.saveOptions = function() {

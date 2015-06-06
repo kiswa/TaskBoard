@@ -65,14 +65,14 @@
                         </div>
                         <div class="description" data-ng-bind-html="marked(item.description)"></div>
                         <p class="assignee">
-                            <span data-ng-show="currentUser.options.showAssignee === '1'">
+                            <span data-ng-show="currentUser.options.showAssignee">
                                 <span data-ng-if="userNames[item.assignee]">Assigned To: </span>
                                 {{ userNames[item.assignee] }}
                             </span>
                             <span class="pull-right">
-                                <span data-ng-if="item.ownComment" class="fa fa-comments-o"
+                                <span data-ng-if="item.ownComment.length" class="fa fa-comments-o"
                                       title="{{ item.ownComment.length }} Comments"></span>
-                                <span data-ng-if="item.ownAttachment" class="fa fa-paperclip"
+                                <span data-ng-if="item.ownAttachment.length" class="fa fa-paperclip"
                                       title="{{ item.ownAttachment.length }} Attachments"></span>
                                 <span data-ng-if="item.due_date" data-ng-class="{'dateNear': item.dateNear, 'datePast': item.datePast}">
                                     Due: {{ item.due_date }}
