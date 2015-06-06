@@ -36,6 +36,32 @@ function ($scope, $interval, BoardService) {
         ]
     };
 
+    $scope.updateTriggers = function() {
+        var foundCategories = false;
+        $scope.actionOptions.triggers.forEach(function(trigger) {
+            if (trigger.id === 2) {
+                foundCategories = true;
+            }
+        }, this);
+
+        if (!foundCategories) {
+            $scope.actionOptions.triggers.push({ id: 2, trigger: 'Item set to category' });
+        }
+
+        if ($scope.boardCategories.length === 1) {
+            $scope.actionOptions.triggers.forEach(function(trigger, index) {
+                if (trigger.id === 2) {
+                    $scope.actionOptions.triggers.splice(index, 1);
+                }
+            });
+            $scope.actionTypes.forEach(function(type, index) {
+                if (type.id === 1) {
+                    $scope.actionTypes.splice(index, 1);
+                }
+            });
+        }
+    };
+
     var getBoardData = function(boardId) {
             if (null === boardId || undefined === boardId)
             {
@@ -58,17 +84,6 @@ function ($scope, $interval, BoardService) {
             if (boardData && boardData.ownCategory) {
                 boardData.ownCategory.forEach(function(category) {
                     categories.push(category);
-                });
-            } else {
-                $scope.actionOptions.triggers.forEach(function(trigger, index) {
-                    if (trigger.id === 2) {
-                        $scope.actionOptions.triggers.splice(index, 1);
-                    }
-                });
-                $scope.actionTypes.forEach(function(type, index) {
-                    if (type.id === 1) {
-                        $scope.actionTypes.splice(index, 1);
-                    }
                 });
             }
             return categories;
@@ -146,35 +161,35 @@ function ($scope, $interval, BoardService) {
         },
 
         updateAutoActions = function(actions) {
-        if (!actions) {
-            $scope.actions = [];
-            return;
-        }
+            if (!actions) {
+                $scope.actions = [];
+                return;
+            }
 
-        var mappedActions = [];
-        actions.forEach(function(action) {
-            var actionTrigger, actionType;
-            $scope.actionOptions.triggers.forEach(function(trigger) {
-                if (trigger.id === parseInt(action.trigger_id)) {
-                    actionTrigger = trigger.trigger;
-                }
-            });
-            $scope.actionTypes.forEach(function(type) {
-                if (type.id === parseInt(action.action_id)) {
-                    actionType = type.action;
-                }
+            var mappedActions = [];
+            actions.forEach(function(action) {
+                var actionTrigger, actionType;
+                $scope.actionOptions.triggers.forEach(function(trigger) {
+                    if (trigger.id === parseInt(action.trigger_id)) {
+                        actionTrigger = trigger.trigger;
+                    }
+                });
+                $scope.actionTypes.forEach(function(type) {
+                    if (type.id === parseInt(action.action_id)) {
+                        actionType = type.action;
+                    }
+                });
+
+                mappedActions.push({
+                    id: action.id,
+                    board: $scope.boardLookup[action.board_id],
+                    trigger: actionTrigger + getSecondaryText(action),
+                    action: actionType + getActionText(action)
+                });
             });
 
-            mappedActions.push({
-                id: action.id,
-                board: $scope.boardLookup[action.board_id],
-                trigger: actionTrigger + getSecondaryText(action),
-                action: actionType + getActionText(action)
-            });
-        });
-
-        $scope.actions = mappedActions;
-    };
+            $scope.actions = mappedActions;
+        };
 
     $scope.loadActions = function() {
         BoardService.getAutoActions()
@@ -232,6 +247,7 @@ function ($scope, $interval, BoardService) {
 
         var boardData = getBoardData($scope.actionData.board);
         $scope.boardCategories = getCategories(boardData);
+        $scope.updateTriggers();
         $scope.userList = getUsers(boardData);
 
         if (boardData) {
@@ -284,6 +300,7 @@ function ($scope, $interval, BoardService) {
         if (null !== $scope.actionData.board) {
             $('#spectrum').spectrum('enable');
             $scope.actionData.color = $('#spectrum').spectrum('option', 'color');
+            $scope.updateSecondary();
             return;
         }
         $('#spectrum').spectrum('disable');

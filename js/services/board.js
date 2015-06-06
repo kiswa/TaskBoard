@@ -35,6 +35,10 @@ function($http) {
             return $http.post('api/lanes/' + laneId + '/toggle');
         },
 
+        toggleActiveState: function(boardId) {
+            return $http.post('api/boards/' + boardId + '/toggleActive');
+        },
+
         getAutoActions: function() {
             return $http.get('api/autoactions');
         },

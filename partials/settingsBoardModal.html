@@ -1,4 +1,4 @@
-<div class="modal fade boardModal" tabindex="-1" role="dialog" aria-labelledby="boardLabel" aria-hidden="true">
+<div class="modal boardModal" data-ng-class="{ fade: currentUser.options.showAnimations }" tabindex="-1" role="dialog" aria-labelledby="boardLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" data-ng-controller="BoardFormSettingsCtrl">
             <div class="modal-header">
@@ -21,7 +21,7 @@
                         <h5>Columns</h5>
                         <ul class="list-group lanes editable">
                             <li class="list-group-item small" data-ng-class="{ disabled: boardFormData.isSaving }"
-                                data-ng-repeat="lane in boardFormData.lanes | orderBy:'position':false">
+                                data-ng-repeat="lane in boardFormData.lanes track by lane.position | orderBy:'position':false">
                                 <span class="fa fa-arrows-v"></span>
                                 <span class="hidden" data-ng-if="!boardFormData.isAdd">{{ lane.id }}</span>
                                 <span class="item-text">{{ lane.name }}</span>
@@ -33,7 +33,7 @@
                                 </span>
                             </li>
                         </ul>
-                        <input class="form-control" style="width: 85%;" type="text" placeholder="Column Name"
+                        <input class="form-control wide" type="text" placeholder="Column Name"
                                data-ng-model="boardFormData.laneName" data-ng-disabled="boardFormData.isSaving">
                         <button type="submit" id="modalAddLane" class="btn btn-default fa fa-plus"
                                 data-ng-disabled="boardFormData.isSaving"></button>
@@ -54,24 +54,24 @@
                                 </span>
                             </li>
                         </ul>
-                        <input class="form-control" style="width: 85%;" type="text" placeholder="Category Name"
+                        <input class="form-control wide" type="text" placeholder="Category Name"
                                data-ng-model="boardFormData.categoryName" data-ng-disabled="boardFormData.isSaving">
                         <button type="submit" id="modalAddCategory" class="btn btn-default fa fa-plus"
                                 data-ng-disabled="boardFormData.isSaving"></button>
                     </form>
                 </div>
                 <div class="clearfix"></div>
-                <div class="form-group" style="margin-top: -1em;">
+                <div class="form-group short-top">
                     <h5>Select Users</h5>
                     <div class="half-width" data-ng-repeat="user in users">
-                        <label style="font-weight: normal; width: 100%;">
+                        <label class="wide">
                             <input type="checkbox" data-ng-model="boardFormData.users[user.id]"
                                    data-ng-disabled="boardFormData.isSaving">
                             {{ user.username }}
                         </label>
                     </div>
                     <div class="clearfix"></div>
-                    <p  style="margin-top: -1em;" class="small clearfix">
+                    <p class="small clearfix short-top">
                         <em>Administrators have access to all projects, whether or not they are selected here.</em>
                     </p>
                 </div>

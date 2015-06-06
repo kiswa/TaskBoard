@@ -16,7 +16,7 @@ The goal of TaskBoard is to provide a simple and clean interface to a functional
 
 2. Back end
 
- * RESTful API written in PHP, using [Slim Framework](http://www.slimframework.com/) for routing and [RedBeanPHP](http://www.redbeanphp.com/) for database ORM.
+ * RESTful API written in PHP, using [Slim Framework](http://www.slimframework.com/) for routing and [RedBeanPHP](http://www.redbeanphp.com/) for database ORM. Also uses [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
 
  * Token-based authentication.
 
@@ -27,26 +27,45 @@ The goal of TaskBoard is to provide a simple and clean interface to a functional
 ###Requirements
 A web server running PHP with sqlite enabled. Developed and tested under Apache2 running PHP 5.5+.
 
-The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewrite` and `expires` Apache modules. 
+The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewrite` and `expires` Apache modules.
 
 **Note:** For Apache v2.3.9 and later, virtual host for a site should have [`AllowOverride All`](http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride) for TaskBoard root directory. Otherwise, .htaccess files will be completely ignored.
 
-###Install
-Installing TaskBoard is as easy as 1, 2, 3!
+**Optional:** to build minimized JavaScript and CSS (Install step 3) you must have a jre installed, tested with `openjdk-7-jre` and `openjdk-8-jre`.
 
-**Note:** You can skip step 2 if you don't care about minification of JavaScript and CSS for a production environment!
+###Install
+
+Installing TaskBoard is as easy as 1, 2, (3), 4!
+
+**Note:** You can skip step 3 if you don't care about minification of JavaScript and CSS for a production environment!
 
 1. Clone the repository directly where you want it, or clone and copy to it's final location.
 
         git clone https://github.com/kiswa/TaskBoard.git
 
-2. Open `TaskBoard/build/` in a terminal and run `./build-all`.
+2. Install the PHP dependencies via composer. Open `TaskBoard/build/` in a terminal and run `.composer.phar install`
 
-3. Visit the site and log in with the username and password `admin` (and don't forget to change the password once you're in!).
+3. Open `TaskBoard/build/` in a terminal and run `./build-all`.
+
+4. Visit the site and log in with the username and password `admin` (and don't forget to change the password once you're in!).
 
 **Note:** Ensure `TaskBoard/api/` is writable so the back end can do its job!
 
+### Development instance
+
+Now you can start a simple development environment with the php internal webserver.
+
+`php -S 127.0.0.1:8080 devrouter.php`
+
+After launching the internal webserver go to http://127.0.0.1:8080/
+
 ##Features
+
+###Email
+
+TaskBoard will email you (if you supply it with an email address) about changes in the following cases: Board Created, Board Updated, Item Created, Item Edited, Item Comment Created, and Item Comment Edited.
+
+For now, it emails all users assigned to the related Board. There will be further work done on this to allow more fine-grained control of emails.
 
 ###Settings
 The settings page allows normal users to see what boards they have access to and edit their user settings.
@@ -97,17 +116,17 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
 It's silly to use [LOC](http://en.wikipedia.org/wiki/Source_lines_of_code) as a metric, but it can be interesting to see what goes into a project.
 This is only for TaskBoard files (library code is excluded), using [CLOC](http://cloc.sourceforge.net/).
 
-Count was done from parent directory of TaskBoard as `./cloc-1.62.pl TaskBoard --exclude-dir=lib,api/lib`.
+Count was done from parent directory of TaskBoard as `./cloc-1.62.pl TaskBoard --exclude-dir=lib,vendor`.
 
 Language           | Files  | Blank Lines  | Comments | Code
 -------------------|-------:|-------------:|---------:|---------:
-Javascript         | 23     | 198          | 34       | 1935
-HTML               | 17     | 10           | 10       | 1030
-PHP                | 6      | 156          | 58       | 875
-CSS                | 1      | 13           | 33       | 651
-Bourne Again Shell | 4      | 10           | 0        | 53
+Javascript         | 23     | 220          | 34       | 2092
+PHP                | 9      | 233          | 55       | 1216
+HTML               | 24     | 12           | 10       | 1160
+CSS                | 1      | 13           | 26       | 703
+Bourne Again Shell | 4      | 12           | 0        | 58
+JSON               | 1      | 0            | 0        | 17
 XML                | 1      | 0            | 0        | 12
-__SUM:__           | __52__ | __387__      | __135__  | __4556__
+__SUM:__           | __63__ | __490__      | __125__  | __5258__
 
-Counts Last Updated: Dec. 4, 2014
-
+Counts Last Updated: Jun 6, 2015

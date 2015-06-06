@@ -21,10 +21,26 @@ function ($scope, UserService, AlertService) {
         UserService.currentUser()
         .success(function(data) {
             $scope.currentUser = data.data;
+            loadOptionsData(data.data);
             $scope.loadingCurrentUser = false;
         });
     };
     $scope.loadCurrentUser();
+
+    loadOptionsData = function (data) {
+        $scope.currentUser.options.tasksOrder = parseInt(data.options.tasksOrder);
+        $scope.currentUser.options.showAnimations = data.options.showAnimations;
+        $scope.currentUser.options.showAssignee = data.options.showAssignee;
+    };
+
+    $scope.saveOptions = function() {
+        UserService.saveOptions($scope.currentUser.options.tasksOrder,
+            $scope.currentUser.options.showAnimations,
+            $scope.currentUser.options.showAssignee)
+        .success(function(data) {
+            loadOptionsData({options: data.data});
+        });
+    };
 
     $scope.updateBoardsList = function(data) {
         if (undefined === data) {
@@ -40,7 +56,7 @@ function ($scope, UserService, AlertService) {
 
         var boardNames = [];
         data.forEach(function(board) {
-            boardNames.push({ 'id': board.id, 'name':board.name });
+            boardNames.push({ 'id': board.id, 'name':board.name, 'active':board.active });
         });
         $scope.boardNames = boardNames;
 

@@ -1,4 +1,4 @@
-<div class="modal fade itemModal" tabindex="-1" role="dialog" aria-labelledby="itemLabel" aria-hidden="true">
+<div class="modal itemModal" data-ng-class="{ fade: currentUser.options.showAnimations }" tabindex="-1" role="dialog" aria-labelledby="itemLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="addEdit" data-ng-controller="ItemFormBoardCtrl">
             <div class="modal-header">
@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group">
                     <h5>Description
-                        <span style="cursor:pointer;" class="fa fa-question-circle popover-dismiss"
+                        <span  class="fa fa-question-circle popover-dismiss pointer-cursor"
                               data-toggle="popover" data-placement="top"
                               data-content='Use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#table-of-contents" target="markdownTab">Markdown</a> for more detailed formatting.'
                               data-ng-model="itemFormData.description">

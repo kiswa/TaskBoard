@@ -1,3 +1,6 @@
+# Thanks to GliderPro's comment on Issue 102
+SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
+
 <IfModule mod_deflate.c>
 AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript text/javascript
 </IfModule>

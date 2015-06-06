@@ -10,7 +10,7 @@ function ($scope, $window, BoardService) {
 
     $scope.comments = {
         options: [
-            {id: 0, text:'Oldest First'},
+            {id: 0, text: 'Oldest First'},
             {id: 1, text: 'Newest First'}
         ],
         sorting: 0
@@ -61,6 +61,7 @@ function ($scope, $window, BoardService) {
         $scope.fileReset = true;
 
         if (openModal) {
+            $('.itemViewModal textarea').css('height', 'auto');
             $('.itemViewModal').modal({ show: true, keyboard:false });
         }
     };

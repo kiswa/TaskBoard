@@ -6,6 +6,14 @@ function($http) {
             return $http.get('api/users/current');
         },
 
+        saveOptions: function(tasksOrder, showAnimations, showAssignee) {
+            return $http.post('api/users/current/options', {
+                tasksOrder: tasksOrder,
+                showAnimations: showAnimations,
+                showAssignee: showAssignee
+            });
+        },
+
         logIn: function(username, password, rememberme) {
             return $http.post('api/login', {
                 username: username,
@@ -35,6 +43,12 @@ function($http) {
             });
         },
 
+        changeEmail: function(newEmail) {
+            return $http.post('api/updateemail', {
+                newEmail: newEmail
+            });
+        },
+
         changeDefaultBoard: function(newDefaultBoard) {
             return $http.post('api/updateboard', {
                 defaultBoard: newDefaultBoard
@@ -53,6 +67,7 @@ function($http) {
             return $http.post('api/users', {
                 username: formData.username,
                 password: formData.password,
+                email: formData.email,
                 defaultBoard: formData.defaultBoard,
                 boardAccess: formData.boardAccess,
                 isAdmin: formData.isAdmin
@@ -64,6 +79,7 @@ function($http) {
                 userId: formData.userId,
                 newUsername: formData.username,
                 password: formData.password,
+                email: formData.email,
                 defaultBoard: formData.defaultBoard,
                 boardAccess: formData.boardAccess,
                 isAdmin: formData.isAdmin
