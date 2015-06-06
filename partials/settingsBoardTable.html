@@ -1,5 +1,22 @@
 <div class="widget-content">
-    <h4>Current Boards</h4>
+    <h4>Current Boards
+        <span class="small pull-right form-group form-inline filter">Show By User:
+            <select class="form-control" data-ng-model="boardFilter.userFilter"
+                data-ng-options="user.id as user.username for user in users">
+                <option value="">Any User</option>
+            </select>
+        </span>
+        <span class="small pull-right form-group form-inline filter">Filter By:
+            <select class="form-control" data-ng-model="boardFilter.filter"
+                data-ng-options="option.filter as option.name for option in boardFilter.options">
+            </select>
+        </span>
+        <span class="small pull-right form-group form-inline">Sort By:
+            <select class="form-control" data-ng-model="boardSort.sort"
+                data-ng-options="option.sort as option.name for option in boardSort.options">
+            </select>
+        </span>
+    </h4>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -15,7 +32,7 @@
                     <td data-ng-if="currentUser.isAdmin == '0'" colspan="5" align="center">You are not assigned to any boards. Contact an admin user to be added to a board.</td>
                     <td data-ng-if="currentUser.isAdmin == '1'" colspan="5" align="center">There are no current boards. Use the <strong>Add Board</strong> button below to add one.</td>
                 </tr>
-                <tr data-ng-repeat="board in boards">
+                <tr data-ng-repeat="board in boards | orderBy:boardSort.sort | filter:boardsFilter | filter:boardsUserFilter">
                     <td><a title="Go To Board" href="#/boards/{{ board.id }}">{{ board.name }}</a></td>
                     <td>
                         <ul class="list-group">
@@ -41,6 +58,14 @@
                                data-ng-click="boardFormData.setBoard(board)"></a>
                             <a class="fa fa-trash-o" title="Remove Board"
                                data-ng-click="removeBoard(board.id)"></a>
+                            <label class="board-status" data-ng-show="board.active == 1">
+                                <input type="checkbox" data-ng-checked="board.active == 1" data-ng-click="toggleActiveState(board.id)" title="Active Status">
+                                Active
+                            </label>
+                            <label class="board-status" data-ng-show="board.active == 0">
+                                <input type="checkbox" data-ng-checked="board.active == 1" data-ng-click="toggleActiveState(board.id)" title="Active Status">
+                                Inactive
+                            </label>
                         </span>
                         <span data-ng-if="isDeleting[board.id]" class="fa fa-refresh fa-spin"></span>
                     </td>

@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Get the list of active boards
 $app->get('/boards', function() use($app, $jsonResponse) {
     if (validateToken()) {
@@ -19,6 +20,15 @@ $app->post('/boards', function() use($app, $jsonResponse) {
         logAction($actor->username . ' added board ' . $board->name, null, $board->export());
         $jsonResponse->addBeans(getBoards());
         $jsonResponse->addAlert('success', 'New board ' . $board->name . ' created.');
+
+        foreach($board->sharedUser as $user) {
+            $body = getNewBoardEmailBody($board->id, $user->username, $board->name);
+            $subject = 'TaskBoard: New board created!';
+            $recipient = $user->username;
+            $email = $user->email;
+
+            sendEmail($email, $recipient, $subject, $body);
+        }
     }
     $app->response->setBody($jsonResponse->asJson());
 });
@@ -37,6 +47,15 @@ $app->post('/boards/update', function() use($app, $jsonResponse) {
             logAction($actor->username . ' updated board ' . $board->name, $before, $board->export());
         }
         $jsonResponse->addBeans(getBoards());
+
+        foreach($board->sharedUser as $user) {
+            $body = getEditBoardEmailBody($board->id, $user->username, $board->name);
+            $subject = 'TaskBoard: Board updated!';
+            $recipient = $user->username;
+            $email = $user->email;
+
+            sendEmail($email, $recipient, $subject, $body);
+        }
     }
     $app->response->setBody($jsonResponse->asJson());
 });
@@ -136,3 +155,23 @@ $app->post('/lanes/:laneId/toggle', function($laneId) use($app, $jsonResponse) {
     }
     $app->response->setBody($jsonResponse->asJson());
 })->conditions(['laneId' => '\d+']); // Numbers only.
+
+$app->post('/boards/:boardId/toggleActive', function($boardId) use($app, $jsonResponse) {
+    if (validateToken()) {
+        $user = getUser();
+        if ($user->isAdmin) {
+            $board = R::load('board', $boardId);
+            $before = $board->export();
+            $board->active = !$board->active;
+            R::store($board);
+
+            $state = $board->active ? 'active' : 'inactive';
+            $jsonResponse->message = 'Set board ' . $board->name . ' ' . $state;
+            $jsonResponse->addBeans(getBoards());
+
+            logAction($user->username . ' changed active status of board ' . $board->name,
+                $before, $board->export());
+        }
+     }
+    $app->response->setBody($jsonResponse->asJson());
+})->conditions(['boardId' => '\d+']); // Numbers only.

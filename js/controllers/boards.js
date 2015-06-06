@@ -21,7 +21,7 @@ function ($scope, $routeParams, $location, $interval, $window,
         if (text) {
             return $window.marked(text);
         } else {
-            return "<p>No Description</p>";
+            return '';
         }
     };
 
@@ -58,11 +58,13 @@ function ($scope, $routeParams, $location, $interval, $window,
 
     $scope.openEditItem = function() {
         $scope.itemFormData.loadItem($scope.contextItem);
+        $('.itemModal textarea').css('height', 'auto');
         $('.itemModal').modal('show');
     };
 
     $scope.openAddItem = function() {
         $scope.itemFormData.reset($scope.contextLaneId);
+        $('.itemModal textarea').css('height', 'auto');
         $('.itemModal').modal('show');
     };
 
@@ -113,6 +115,17 @@ function ($scope, $routeParams, $location, $interval, $window,
     var pendingResponse = false,
         updateCounter = 0;
 
+    $scope.isActiveFilter = function(element) {
+        var retVal = false;
+        $scope.boards.forEach(function(board) {
+            if (board.id === element.id) {
+                retVal = (board.active === '1');
+            }
+        }, this);
+
+        return retVal;
+    };
+
     $scope.loadBoards = function() {
             // Don't update the boards if an update is pending.
             if (pendingResponse || updateCounter) {
@@ -142,8 +155,10 @@ function ($scope, $routeParams, $location, $interval, $window,
         if ($scope.boards) {
             $scope.boardNames = [];
             $scope.boards.forEach(function(board) {
-                // Add each board's name to the list.
-                $scope.boardNames.push({id: board.id, name: board.name});
+                if (parseInt(board.active) === 1) {
+                    // Add each board's name to the list.
+                    $scope.boardNames.push({id: board.id, name: board.name});
+                }
 
                 // If the board is the current board, process and assign it.
                 if (board.id == $scope.boardId) {
@@ -186,6 +201,13 @@ function ($scope, $routeParams, $location, $interval, $window,
         if (boardFound) {
             $scope.filterChanged(); // Make sure any filters are still applied.
             $scope.currentBoard.loading = false;
+            if ($scope.currentBoard.active === '0') {
+                $scope.currentBoard = {
+                    loading: true,
+                    name: 'Kanban Board App',
+                    error: true
+                };
+            }
         } else {
             $scope.currentBoard.error = true;
         }

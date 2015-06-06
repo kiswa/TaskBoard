@@ -1,2 +1,5 @@
 api/taskboard.db
 api/uploads/*
+tags
+.idea/*
+vendor/

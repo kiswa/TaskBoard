@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Patch for when using nginx instead of apache, source: http://php.net/manual/en/function.getallheaders.php#84262
 if (!function_exists('getallheaders')) {
     function getallheaders() {
@@ -35,8 +36,14 @@ function setUserToken($user, $expires) {
         'uid' => $user->id
     ), getJwtKey());
 
-    // Store the valid token in the user db
-    $user->token = $token;
+    $dbToken = R::dispense('token');
+    $dbToken->token = $token;
+
+    if (null == $user->ownToken) {
+        $user->ownToken = [];
+    }
+    $user->ownToken[] = $dbToken;
+
     R::store($user);
 }
 
@@ -57,6 +64,30 @@ function getUser() {
     }
 
     $jsonResponse->addAlert('error', 'Unable to load user. Please try again.');
+    return null;
+}
+
+function getUserByID($id) {
+    try {
+        $user = R::load('user', $id);
+
+        if ($user->id) {
+            return $user;
+        }
+    } catch (Exception $e) {}
+
+    return null;
+}
+
+function getLaneByID($id) {
+    try {
+        $lane = R::load('lane', $id);
+
+        if ($lane->id) {
+            return $lane;
+        }
+    } catch (Exception $e) {}
+
     return null;
 }
 
@@ -97,10 +128,10 @@ function addUserToBoard($boardId, $user) {
     }
 }
 
-// Get all active boards.
+// Get all boards.
 function getBoards() {
     $user = getUser();
-    $boards = R::find('board', ' active = 1 ');
+    $boards = R::find('board');
 
     foreach($boards as $board) {
         foreach($board->sharedUser as $boardUser) {
@@ -215,7 +246,7 @@ function loadBoardData($board, $data) {
 // Clean a user bean for return to front-end.
 function sanitize($user) {
     $user['salt'] = null;
-    $user['token'] = null;
+    $user->ownToken = [];
     $user['password'] = null;
 }
 
@@ -229,6 +260,21 @@ function updateUsername($user, $data) {
         $jsonResponse->addAlert('success', 'Username updated.');
     } else {
         $jsonResponse->addAlert('error', 'Username already in use.');
+    }
+
+    return $user;
+}
+
+// Change email if available.
+function updateEmail($user, $data) {
+    global $jsonResponse;
+    $emailTaken = R::findOne('user', ' username = ?', [$data->newEmail]);
+
+    if (null != $user && null == $emailTaken) {
+        $user->email = $data->newEmail;
+        $jsonResponse->addAlert('success', 'Email updated.');
+    } else {
+        $jsonResponse->addAlert('error', 'Email already in use.');
     }
 
     return $user;
@@ -262,13 +308,21 @@ function validateToken($requireAdmin = false) {
 // Retrieve user's token from DB and compare to header token.
 function checkDbToken() {
     $user = getUser();
+    $isValid = false;
+
     if (null != $user) {
         if (isset(getallheaders()['Authorization'])) {
             $hash = getallheaders()['Authorization'];
-            return $hash == $user->token;
+
+            foreach ($user->ownToken as $token) {
+                if ($hash == $token->token) {
+                    $isValid = true;
+                }
+            }
         }
     }
-    return false;
+
+    return $isValid;
 }
 
 // Clear a user's token from the DB.
@@ -282,7 +336,14 @@ function clearDbToken() {
     if (null != $payload) {
         $user = R::load('user', $payload->uid);
         if (0 != $user->id) {
-            $user->token = null;
+            $hash = getallheaders()['Authorization'];
+
+            foreach ($user->ownToken as $token) {
+                if ($hash == $token->token) {
+                    R::trash($token);
+                }
+            }
+
             R::store($user);
         }
     }
@@ -312,25 +373,51 @@ function createInitialUser() {
         $admin->defaultBoard = null;
         $admin->salt = password_hash($admin->username . time(), PASSWORD_BCRYPT);
         $admin->password = password_hash('admin', PASSWORD_BCRYPT, array('salt' => $admin->salt));
+        $admin->email = '';
+
+        $options = R::dispense('option');
+        $options->tasksOrder = 0;
+        $options->showAnimations = true;
+        $options->showAssignee = true;
+
+        $admin->ownOptions[] = $options;
 
         R::store($admin);
     }
 }
 
-// Gets the position for a new item in a lane.
-function getNextItemPosition($laneId) {
+// Gets the position for a new item in a column.
+function getNextItemPosition($columnId) {
     $retVal = 0;
+    $column = R::load('lane', $columnId);
 
-    $lane = R::load('lane', $laneId);
-    if ($lane->id) {
-        try {
-            $retVal = $lane->countOwn('item');
-        } catch (Exception $e) {
-            // Ignore, just means there are no items.
+    if ($column->id) {
+        $options = R::exportAll(getUser()->ownOption);
+
+        if ($options[0]['tasks_order'] == 1) {
+            // Tasks at top of column.
+            renumberItems($columnId, 0, false);
+        } else {
+            try {
+                $retVal = $column->countOwn('item');
+            } catch (Exception $e) {
+                // Ignore, just means there are no items.
+            }
         }
     }
 
     return $retVal;
+}
+
+function renumberItems($columnId, $itemPosition, $isRemoved = true) {
+    $items = R::find('item', 'lane_id = ' . $columnId);
+
+    foreach ($items as $item) {
+        if ($item->position >= $itemPosition) {
+            $item->position += $isRemoved ? -1 : 1;
+            R::store($item);
+        }
+    }
 }
 
 function runAutoActions(&$item) {

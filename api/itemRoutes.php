@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Create new item
 $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
@@ -28,6 +29,32 @@ $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
                 $jsonResponse->addBeans(getBoards());
             } else {
                 $jsonResponse->addAlert('error', 'Failed to create board item.');
+            }
+
+            foreach($board->sharedUser as $user) {
+                $actor = getUser();
+                $assignee = 'Unassigned';
+                if ($item->assignee > 0) {
+                    $assignee = getUserByID($item->assignee)->username;
+                }
+
+                $body = getNewItemEmailBody(
+                    $board->id,
+                    $actor->username,
+                    $board->name,
+                    $item->title,
+                    $item->description,
+                    $assignee,
+                    $item->category,
+                    $item->dueDate,
+                    $item->points,
+                    $item->position
+                );
+                $subject = 'TaskBoard: New item created!';
+                $recipient = $user->username;
+                $email = $user->email;
+
+                sendEmail($email, $recipient, $subject, $body);
             }
         }
     }
@@ -62,6 +89,35 @@ $app->post('/items/:itemId', function($itemId) use ($app, $jsonResponse) {
             logAction($user->username . ' updated item ' . $item->title, $before, $item->export(), $itemId);
             $jsonResponse->addAlert('success', 'Updated item ' . $item->title . '.');
             $jsonResponse->addBeans(getBoards());
+
+            $lane = R::load('lane', $item->lane_id);
+            $board = R::load('board', $lane->boardId);
+
+            foreach($board->sharedUser as $user) {
+                $actor = getUser();
+                $assignee = 'Unassigned';
+                if ($item->assignee > 0) {
+                    $assignee = getUserByID($item->assignee)->username;
+                }
+
+                $body = getEditItemEmailBody(
+                    $board->id,
+                    $actor->username,
+                    $board->name,
+                    $item->title,
+                    $item->description,
+                    $assignee,
+                    $item->category,
+                    $item->dueDate,
+                    $item->points,
+                    $item->position
+                );
+                $subject = 'TaskBoard: Item edited';
+                $recipient = $user->username;
+                $email = $user->email;
+
+                sendEmail($email, $recipient, $subject, $body);
+            }
         }
     }
     $app->response->setBody($jsonResponse->asJson());
@@ -123,6 +179,24 @@ $app->post('/items/:itemId/comment', function($itemId) use ($app, $jsonResponse)
             logAction($user->username . ' added a comment to item ' . $item->title, null, $comment->export(), $itemId);
             $jsonResponse->addAlert('success', 'Comment added to item ' . $item->title . '.');
             $jsonResponse->addBeans(R::load('item', $itemId));
+
+            $lane = R::load('lane', $item->lane_id);
+            $board = R::load('board', $lane->boardId);
+
+            foreach($board->sharedUser as $user) {
+                $body = getNewCommentEmailBody(
+                    $board->id,
+                    $user->username,
+                    $board->name,
+                    $item->title,
+                    $comment->text
+                );
+                $subject = 'TaskBoard: New comment';
+                $recipient = $user->username;
+                $email = $user->email;
+
+                sendEmail($email, $recipient, $subject, $body);
+            }
         }
     }
     $app->response->setBody($jsonResponse->asJson());
@@ -146,6 +220,25 @@ $app->post('/comments/:commentId', function($commentId) use ($app, $jsonResponse
         logAction($user->username . ' edited comment ' . $comment->id, $before, $comment->export(), $comment->id);
         $jsonResponse->addAlert('success', 'Comment edited.');
         $jsonResponse->addBeans(R::load('item', $comment->item_id));
+
+        $item = R::load('item', $comment->item_id);
+        $lane = R::load('lane', $item->lane_id);
+        $board = R::load('board', $lane->boardId);
+
+        foreach($board->sharedUser as $user) {
+            $body = getEditCommentEmailBody(
+                $board->id,
+                $user->username,
+                $board->name,
+                $item->title,
+                $comment->text
+            );
+            $subject = 'TaskBoard: Comment updated';
+            $recipient = $user->username;
+            $email = $user->email;
+
+            sendEmail($email, $recipient, $subject, $body);
+        }
     }
     $app->response->setBody($jsonResponse->asJson());
 })->conditions(['commentId' => '\d+']);
@@ -254,6 +347,8 @@ $app->post('/items/remove', function() use ($app, $jsonResponse) {
         if ($item->id) {
             $before = $item->export();
             R::trash($item);
+
+            renumberItems($item->lane_id, $item->position);
 
             $actor = getUser();
             logAction($actor->username . ' removed item ' . $item->title, $before, null, $data->itemId);

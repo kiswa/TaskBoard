@@ -1,9 +1,9 @@
 <div include-replace="partials/header.html"></div>
 <div id="board-nav">
-    <p class="pull-left form-group form-inline" data-ng-if="!currentBoard.loading">
+    <p class="pull-left form-group form-inline">
         Select Board:
         <select class="form-control" data-ng-model="boardNames.current" data-ng-change="selectBoard()"
-                data-ng-options="board.id as board.name for board in boardNames">
+                                                                        data-ng-options="board.id as board.name for board in boardNames | filter: isActiveFilter">
         </select>
     </p>
     <p class="pull-right form-group form-inline" data-ng-if="!currentBoard.loading">
@@ -65,12 +65,14 @@
                         </div>
                         <div class="description" data-ng-bind-html="marked(item.description)"></div>
                         <p class="assignee">
-                            <span data-ng-if="userNames[item.assignee]">Assigned To: </span>
-                            {{ userNames[item.assignee] }}
+                            <span data-ng-show="currentUser.options.showAssignee">
+                                <span data-ng-if="userNames[item.assignee]">Assigned To: </span>
+                                {{ userNames[item.assignee] }}
+                            </span>
                             <span class="pull-right">
-                                <span data-ng-if="item.ownComment" class="fa fa-comments-o"
+                                <span data-ng-if="item.ownComment.length" class="fa fa-comments-o"
                                       title="{{ item.ownComment.length }} Comments"></span>
-                                <span data-ng-if="item.ownAttachment" class="fa fa-paperclip"
+                                <span data-ng-if="item.ownAttachment.length" class="fa fa-paperclip"
                                       title="{{ item.ownAttachment.length }} Attachments"></span>
                                 <span data-ng-if="item.due_date" data-ng-class="{'dateNear': item.dateNear, 'datePast': item.datePast}">
                                     Due: {{ item.due_date }}
@@ -87,44 +89,46 @@
                     <span data-on-load-callback="updateSortables"></span>
                 </div>
             </div>
-            <div id="itemMenu" class="dropdown" style="position: fixed;">
+            <div id="itemMenu" class="dropdown fixed">
                 <ul class="dropdown-menu" role="menu">
                     <li role="presentation">
-                        <a role="menuitem" style="cursor: default" data-ng-click="openItem(contextItem)">
+                        <a role="menuitem" class="default-cursor" data-ng-click="openItem(contextItem)">
                             View Item
                         </a>
                     </li>
                     <li role="presentation">
-                        <a role="menuitem" style="cursor: default" data-ng-click="openEditItem()">
+                        <a role="menuitem" class="default-cursor" data-ng-click="openEditItem()">
                             Edit Item
                         </a>
                     </li>
                     <li role="presentation" data-ng-if="currentUser.isAdmin">
-                        <a role="menuitem" style="cursor: default" data-ng-click="removeItem()">
+                        <a role="menuitem" class="default-cursor" data-ng-click="removeItem()">
                             Delete Item
                         </a>
                     </li>
                     <li role="presentation" class="divider"></li>
                     <li role="presentation">
-                        Move to Column:<br />
-                        <select class="form-control"
-                            data-ng-model="contextItem.lane_id"
-                            data-ng-change="changeItemLane()"
-                            data-ng-options="lane.id as lane.name for lane in currentBoard.ownLane | orderBy:'position':false">
-                        </select>
+                        <span class="contextItemWrap">
+                            Move to Column:<br />
+                            <select class="form-control"
+                                    data-ng-model="contextItem.lane_id"
+                                    data-ng-change="changeItemLane()"
+                                    data-ng-options="lane.id as lane.name for lane in currentBoard.ownLane | orderBy:'position':false">
+                            </select>
+                        </span>
                     </li>
                     <li role="presentation" class="divider"></li>
                     <li role="presentation">
-                        <a role="menuitem" style="cursor: default" data-ng-click="openAddItem()">
+                        <a role="menuitem" class="default-cursor" data-ng-click="openAddItem()">
                             Add New Item
                         </a>
                     </li>
                 </ul>
             </div>
-            <div id="laneMenu" class="dropdown" style="position: fixed;">
+            <div id="laneMenu" class="dropdown fixed">
                 <ul class="dropdown-menu" role="menu">
                     <li role="presentation">
-                        <a role="menuitem" style="cursor: default" data-ng-click="openAddItem()">
+                        <a role="menuitem" class="default-cursor" data-ng-click="openAddItem()">
                             Add New Item
                         </a>
                     </li>

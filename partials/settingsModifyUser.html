@@ -17,18 +17,6 @@
             </fieldset>
         </form>
     </div>
-    <div id="default-board">
-        <h4>Select Default Board</h4>
-        <form role="form">
-            <fieldset data-ng-disabled="loadingBoards || loadingCurrentUser || updatingDefaultBoard || !boards.length">
-                <div class="form-group">
-                    <select class="form-control" id="defaultSelect" data-ng-model="currentUser.defaultBoard" data-ng-options="board.id as board.name for board in boardNames" data-ng-change="setDefaultBoard()">
-                        <option value="">None</option>
-                    </select>
-                </div>
-            </fieldset>
-        </form>
-    </div>
     <div id="change-username">
         <h4>Change Username</h4>
         <form role="form" novalidate data-ng-submit="changeUsername(usernameFormData)">
@@ -41,4 +29,29 @@
             </fieldset>
         </form>
     </div>
+    <div id="change-email">
+        <h4>Change Email</h4>
+        <form role="form" novalidate data-ng-submit="changeEmail(emailFormData)">
+            <fieldset data-ng-disabled="emailFormData.isSaving || loadingCurrentUser">
+                <div class="form-group" data-ng-class="{ 'has-error': emailFormData.emailError }">
+                    <input class="form-control" placeholder="New Email" data-ng-model="emailFormData.newEmail">
+                </div>
+                <button type="submit" class="btn btn-info">Update Email</button>
+                <a class="btn btn-default" data-ng-click="emailFormData.reset()">Reset</a>
+            </fieldset>
+        </form>
+    </div>
+    <div id="default-board">
+        <h4>Select Default Board</h4>
+        <form role="form">
+            <fieldset data-ng-disabled="loadingBoards || loadingCurrentUser || updatingDefaultBoard || !boards.length">
+                <div class="form-group">
+                    <select class="form-control" id="defaultSelect" data-ng-model="currentUser.defaultBoard" data-ng-options="board.id as board.name for board in boardNames | filter:{ active: 1 }" data-ng-change="setDefaultBoard()">
+                        <option value="">None</option>
+                    </select>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <hr>
 </div>
