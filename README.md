@@ -43,7 +43,7 @@ Installing TaskBoard is as easy as 1, 2, (3), 4!
 
         git clone https://github.com/kiswa/TaskBoard.git
 
-2. Install the PHP dependencies via composer. Open `TaskBoard/build/` in a terminal and run `.composer.phar install`
+2. Install the PHP dependencies via composer. Open `TaskBoard/build/` in a terminal and run `./composer.phar install`
 
 3. Open `TaskBoard/build/` in a terminal and run `./build-all`.
 
