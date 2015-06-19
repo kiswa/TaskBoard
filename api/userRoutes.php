@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Validate a user and store token (and return in response).
 $app->post('/login', function() use ($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
@@ -137,14 +138,37 @@ $app->get('/users/current', function() use($app, $jsonResponse) {
     if (validateToken()) {
         $user = getUser();
         if (null != $user) {
+            $userOptions = R::exportAll($user->ownOption);
+            $options = [
+                'tasksOrder' => $userOptions[0]['tasks_order'],
+                'showAssignee' => $userOptions[0]['show_assignee'] == 1,
+                'showAnimations' => $userOptions[0]['show_animations'] == 1
+            ];
             $jsonResponse->data = [
                 'userId' => $user->id,
                 'username' => $user->username,
                 'isAdmin' => $user->isAdmin,
                 'email' => $user->email,
-                'defaultBoard' => $user->defaultBoard
+                'defaultBoard' => $user->defaultBoard,
+                'options' => $options
             ];
         }
+    }
+    $app->response->setBody($jsonResponse->asJson());
+});
+
+$app->post('/users/current/options', function() use ($app, $jsonResponse) {
+    $data = json_decode($app->environment['slim.input']);
+
+    if (validateToken()) {
+        $user = getUser();
+
+        $user->ownOption[1]->tasksOrder = $data->tasksOrder;
+        $user->ownOption[1]->showAssignee = $data->showAssignee;
+        $user->ownOption[1]->showAnimations = $data->showAnimations;
+        R::store($user);
+
+        $jsonResponse->data = $data;
     }
     $app->response->setBody($jsonResponse->asJson());
 });
@@ -175,9 +199,9 @@ $app->post('/users', function() use($app, $jsonResponse) {
             $user->salt = password_hash($data->username . time(), PASSWORD_BCRYPT);
             $user->password = password_hash($data->password, PASSWORD_BCRYPT, array('salt' => $user->salt));
             $options = R::dispense('option');
-            $options->newTaskPosition = 1; // Bottom of column (0 == top of column)
+            $options->newTaskPosition = 0; // Bottom of column (1 == top of column)
             $options->animate = true;
-            $user->ownOptions[] = $options;
+            $user->ownOptions = $options;
 
             R::store($user);
             addUserToBoard($data->defaultBoard, $user);

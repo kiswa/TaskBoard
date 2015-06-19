@@ -6,6 +6,14 @@ function($http) {
             return $http.get('api/users/current');
         },
 
+        saveOptions: function(tasksOrder, showAnimations, showAssignee) {
+            return $http.post('api/users/current/options', {
+                tasksOrder: tasksOrder,
+                showAnimations: showAnimations,
+                showAssignee: showAssignee
+            });
+        },
+
         logIn: function(username, password, rememberme) {
             return $http.post('api/login', {
                 username: username,

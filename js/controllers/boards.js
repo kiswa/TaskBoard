@@ -21,7 +21,7 @@ function ($scope, $routeParams, $location, $interval, $window,
         if (text) {
             return $window.marked(text);
         } else {
-            return "<p>No Description</p>";
+            return '';
         }
     };
 

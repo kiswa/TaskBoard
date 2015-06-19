@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Create new item
 $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
@@ -32,13 +33,18 @@ $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
 
             foreach($board->sharedUser as $user) {
                 $actor = getUser();
+                $assignee = 'Unassigned';
+                if ($item->assignee > 0) {
+                    $assignee = getUserByID($item->assignee)->username;
+                }
+
                 $body = getNewItemEmailBody(
                     $board->id,
                     $actor->username,
                     $board->name,
                     $item->title,
                     $item->description,
-                    getUserByID($item->assignee)->username,
+                    $assignee,
                     $item->category,
                     $item->dueDate,
                     $item->points,
@@ -89,13 +95,18 @@ $app->post('/items/:itemId', function($itemId) use ($app, $jsonResponse) {
 
             foreach($board->sharedUser as $user) {
                 $actor = getUser();
+                $assignee = 'Unassigned';
+                if ($item->assignee > 0) {
+                    $assignee = getUserByID($item->assignee)->username;
+                }
+
                 $body = getEditItemEmailBody(
                     $board->id,
                     $actor->username,
                     $board->name,
                     $item->title,
                     $item->description,
-                    getUserByID($item->assignee)->username,
+                    $assignee,
                     $item->category,
                     $item->dueDate,
                     $item->points,
@@ -336,6 +347,8 @@ $app->post('/items/remove', function() use ($app, $jsonResponse) {
         if ($item->id) {
             $before = $item->export();
             R::trash($item);
+
+            renumberItems($item->lane_id, $item->position);
 
             $actor = getUser();
             logAction($actor->username . ' removed item ' . $item->title, $before, null, $data->itemId);

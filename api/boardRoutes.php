@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Get the list of active boards
 $app->get('/boards', function() use($app, $jsonResponse) {
     if (validateToken()) {
@@ -48,7 +49,7 @@ $app->post('/boards/update', function() use($app, $jsonResponse) {
         $jsonResponse->addBeans(getBoards());
 
         foreach($board->sharedUser as $user) {
-            $body = geEditBoardEmailBody($board->id, $user->username, $board->name);
+            $body = getEditBoardEmailBody($board->id, $user->username, $board->name);
             $subject = 'TaskBoard: Board updated!';
             $recipient = $user->username;
             $email = $user->email;

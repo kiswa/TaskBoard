@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 // Provides default structure and JSON encoded response for the API.
 class JsonResponse {
     var $message;

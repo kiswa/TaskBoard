@@ -1,14 +1,9 @@
 <?php
-require_once('lib/Slim/Slim.php');
-require_once('lib/rb.php');
-require_once('lib/password.php');
-require_once('lib/JWT.php');
-require_once('lib/PHPMailer/PHPMailerAutoload.php');
-
 require_once('jsonResponse.php');
+require_once(__DIR__.'/../vendor/autoload.php');
 
 use Slim\Slim;
-Slim::registerAutoloader();
+use RedBeanPHP\R;
 
 $app = new Slim();
 $app->response->headers->set('Content-Type', 'application/json');
@@ -30,7 +25,7 @@ function exceptionHandler($exception) {
 };
 set_exception_handler('exceptionHandler');
 
-R::setup('sqlite:taskboard.db');
+R::setup('sqlite:'.__DIR__.'/taskboard.db');
 createInitialUser();
 
 $app->notFound(function() use ($app, $jsonResponse) {
