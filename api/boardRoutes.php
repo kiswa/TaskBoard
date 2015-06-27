@@ -76,6 +76,7 @@ $app->post('/boards/remove', function() use($app, $jsonResponse) {
             }
             R::trashAll($board->xownLane);
             R::trashAll($board->xownCategory);
+            R::trashAll($board->xownAutoaction);
             R::trash($board);
             R::exec('DELETE from board_user WHERE board_id = ?', [$data->boardId]);
             $jsonResponse->addAlert('success', 'Removed board ' . $board->name . '.');
