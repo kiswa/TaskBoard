@@ -82,8 +82,9 @@
                             </span>
                         </p>
                     </div>
-                    <div class="addItem">
-                        <a role="button" class="btn btn-default fa fa-plus" data-toggle="modal"
+                    <div class="addItem form-inline">
+                        <input class="form-control" type="text" data-ng-model="quickAdd.title[lane.id]" placeholder="Quick Add Item Title - Leave Blank for Dialog">
+                        <a role="button" class="btn btn-default fa fa-plus form-control" data-toggle="modal"
                            data-target=".itemModal" data-ng-click="itemFormData.reset(lane.id)" title="Add Item"></a>
                     </div>
                     <span data-on-load-callback="updateSortables"></span>
