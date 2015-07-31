@@ -44,18 +44,23 @@
                         <h5>Categories</h5>
                         <ul class="list-group editable">
                             <li class="list-group-item small" data-ng-class="{ disabled: boardFormData.isSaving }"
-                                data-ng-repeat="category in boardFormData.categories | orderBy:'category':false">
+                                data-ng-repeat="category in boardFormData.categories | orderBy:'category':false"
+								style="background-color: {{ category.color }}">
                                 <span class="item-text">{{ category.name }}</span>
                                 <span class="links">
                                     <a class="fa fa-trash-o pull-right" title="Remove"
                                        data-ng-click="boardFormData.removeCategory(category)"></a>
                                     <span data-click-to-edit="category.name"
+                                          data-ng-click="editColor(category)"
+                                          data-ng-keydown="storeColor($event)"
                                           data-ng-disabled="boardFormData.isSaving"></span>
                                 </span>
                             </li>
                         </ul>
-                        <input class="form-control wide" type="text" placeholder="Category Name"
+                        <input class="form-control half-width" style="width: 85%;" type="text" placeholder="Category Name"
                                data-ng-model="boardFormData.categoryName" data-ng-disabled="boardFormData.isSaving">
+						<input class="form-control half-width" type="text" id="spectrum" data-ng-model="boardFormData.color"
+							   data-on-load-callback="spectrum">
                         <button type="submit" id="modalAddCategory" class="btn btn-default fa fa-plus"
                                 data-ng-disabled="boardFormData.isSaving"></button>
                     </form>

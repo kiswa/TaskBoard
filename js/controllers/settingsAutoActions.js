@@ -1,11 +1,12 @@
 taskBoardControllers.controller('AutomaticActionsCtrl',
 ['$scope', '$interval', 'BoardService',
 function ($scope, $interval, BoardService) {
+    var defaultColor = '#ffffe0';
     $scope.loadingActions = true;
     $scope.actions = [];
 
     $scope.secondarySelection = [];
-    $scope.boardCategories = [{ id: 0, name: 'Uncategorized' }];
+    $scope.boardCategories = [{ id: 0, name: 'Uncategorized', color: defaultColor }];
     $scope.userList = [{ id: 0, name: 'Unassigned', username: 'Unassigned' }];
 
     $scope.actionData = {
@@ -79,7 +80,7 @@ function ($scope, $interval, BoardService) {
         },
 
         getCategories = function(boardData) {
-            var categories = [{ id: '0', name: 'Uncategorized' }];
+            var categories = [{ id: '0', name: 'Uncategorized', color: defaultColor }];
 
             if (boardData && boardData.ownCategory) {
                 boardData.ownCategory.forEach(function(category) {
