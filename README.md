@@ -45,7 +45,7 @@ Installing TaskBoard is as easy as 1, 2, (3), 4!
 
 2. Install the PHP dependencies via composer. Open `TaskBoard/` in a terminal and run `./build/composer.phar install`
 
-3. Open `TaskBoard/build/` in a terminal and run `./build-all`.
+3. (Optional) Open `TaskBoard/build/` in a terminal and run `./build-all`.
 
 4. Visit the site and log in with the username and password `admin` (and don't forget to change the password once you're in!).
 
