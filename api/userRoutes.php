@@ -8,7 +8,7 @@ $app->post('/login', function() use ($app, $jsonResponse) {
         ? (2 * 7 * 24 * 60 * 60) /* Two weeks */
         : (1.5 * 60 * 60) /* One and a half hours */;
 
-    $lookup = R::findOne('user', ' username = ? ', [$data->username]);
+    $lookup = R::findOne('user', ' username = ? ', array($data->username));
 
     $jsonResponse->message = 'Invalid username or password.';
     $app->response->setStatus(401);
@@ -27,7 +27,7 @@ $app->post('/login', function() use ($app, $jsonResponse) {
 
             logAction($lookup->username . ' logged in.', null, null);
             $jsonResponse->message = 'Login successful.';
-            $jsonResponse->data = R::findOne('token', ' user_id = ? ORDER BY id DESC ', [$lookup->id])->token;
+            $jsonResponse->data = R::findOne('token', ' user_id = ? ORDER BY id DESC ', array($lookup->id))->token;
             $app->response->setStatus(200);
         }
     }
@@ -139,19 +139,19 @@ $app->get('/users/current', function() use($app, $jsonResponse) {
         $user = getUser();
         if (null != $user) {
             $userOptions = R::exportAll($user->ownOption);
-            $options = [
+            $options = array(
                 'tasksOrder' => $userOptions[0]['tasks_order'],
                 'showAssignee' => $userOptions[0]['show_assignee'] == 1,
                 'showAnimations' => $userOptions[0]['show_animations'] == 1
-            ];
-            $jsonResponse->data = [
+            );
+            $jsonResponse->data = array(
                 'userId' => $user->id,
                 'username' => $user->username,
                 'isAdmin' => $user->isAdmin,
                 'email' => $user->email,
                 'defaultBoard' => $user->defaultBoard,
                 'options' => $options
-            ];
+            );
         }
     }
     $app->response->setBody($jsonResponse->asJson());
@@ -186,7 +186,7 @@ $app->post('/users', function() use($app, $jsonResponse) {
     $data = json_decode($app->environment['slim.input']);
 
     if (validateToken(true)) {
-        $nameTaken = R::findOne('user', ' username = ?', [$data->username]);
+        $nameTaken = R::findOne('user', ' username = ?', array($data->username));
 
         if (null != $nameTaken) {
             $jsonResponse->addAlert('error', 'Username already in use.');
@@ -263,7 +263,7 @@ $app->post('/users/remove', function() use($app, $jsonResponse) {
         if ($user->id == $data->userId && $actor->isAdmin) {
             $before = $user->export();
             R::trash($user);
-            R::exec('DELETE from board_user WHERE user_id = ?', [$data->userId]);
+            R::exec('DELETE from board_user WHERE user_id = ?', array($data->userId));
 
             logAction($actor->username . ' removed user ' . $before['username'], $before, null);
             $jsonResponse->addAlert('success', 'Removed user ' . $user->username . '.');
