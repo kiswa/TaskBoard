@@ -17,6 +17,6 @@ class JsonResponse {
     }
 
     function addAlert($type, $text) {
-        $this->alerts[] = ['type' => $type, 'text' => $text];
+        $this->alerts[] = array('type' => $type, 'text' => $text);
     }
 }
