@@ -31,7 +31,7 @@ The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewri
 
 **Note:** For Apache v2.3.9 and later, virtual host for a site should have [`AllowOverride All`](http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride) for TaskBoard root directory. Otherwise, .htaccess files will be completely ignored.
 
-**Optional:** to build minimized JavaScript and CSS (Install step 3) you must have a jre installed, tested with `openjdk-7-jre` and `openjdk-8-jre`.
+**Optional:** to build minimized JavaScript and CSS (Install step 3) you must have curl and a jre installed, tested with `openjdk-7-jre` and `openjdk-8-jre`.
 
 ###Install
 
