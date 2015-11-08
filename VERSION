@@ -6,3 +6,4 @@ Changelog
  * Fix new user default board bug.
  * Fix boards button bug.
  * Fix modal display bug.
+ * Allow email to be reset to nothing.
