@@ -205,8 +205,10 @@ $app->post('/users', function() use($app, $jsonResponse) {
 
             R::store($user);
             addUserToBoard($data->defaultBoard, $user);
-            foreach($data->boardAccess as $board) {
-                addUserToBoard($board, $user);
+            if (property_exists($data, 'boardAccess') && is_array($data->boardAccess)) {
+                foreach($data->boardAccess as $board) {
+                    addUserToBoard($board, $user);
+                }
             }
 
             $actor = getUser();
