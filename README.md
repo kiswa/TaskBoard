@@ -116,7 +116,7 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
 It's silly to use [LOC](http://en.wikipedia.org/wiki/Source_lines_of_code) as a metric, but it can be interesting to see what goes into a project.
 This is only for TaskBoard files (library code is excluded), using [CLOC](http://cloc.sourceforge.net/).
 
-Count was done from parent directory of TaskBoard as `./cloc-1.62.pl TaskBoard --exclude-dir=lib,vendor`.
+Count was done from parent directory of TaskBoard as `cloc TaskBoard --exclude-dir=lib,vendor`.
 
 Language           | Files  | Blank Lines  | Comments | Code
 -------------------|-------:|-------------:|---------:|---------:
