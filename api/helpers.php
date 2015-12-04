@@ -372,7 +372,7 @@ function createInitialUser() {
         $options->showAnimations = true;
         $options->showAssignee = true;
 
-        $admin->ownOptions[] = $options;
+        $admin->xownOptionList[] = $options;
 
         R::store($admin);
     }
