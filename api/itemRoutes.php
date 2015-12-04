@@ -145,6 +145,7 @@ $app->post('/items/positions', function() use ($app, $jsonResponse) {
             }
             $item->position = $posItem->position;
 
+            R::store($item);
             runAutoActions($item);
             R::store($item);
         }

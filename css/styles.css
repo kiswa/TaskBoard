@@ -550,6 +550,9 @@ span.filter {
     float: left;
     margin-bottom: 1em;
 }
+.board-options label {
+    font-weight: normal;
+}
 #changeUserSettings hr, .board-options hr {
     clear: both;
 }

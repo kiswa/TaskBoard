@@ -26,6 +26,7 @@ function exceptionHandler($exception) {
 set_exception_handler('exceptionHandler');
 
 R::setup('sqlite:'.__DIR__.'/taskboard.db');
+R::setAutoResolve(TRUE);
 createInitialUser();
 
 $app->notFound(function() use ($app, $jsonResponse) {

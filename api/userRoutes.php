@@ -138,7 +138,7 @@ $app->get('/users/current', function() use($app, $jsonResponse) {
     if (validateToken()) {
         $user = getUser();
         if (null != $user) {
-            $userOptions = R::exportAll($user->ownOption);
+            $userOptions = R::exportAll($user->xownOptionList);
             $options = array(
                 'tasksOrder' => $userOptions[0]['tasks_order'],
                 'showAssignee' => $userOptions[0]['show_assignee'] == 1,
@@ -163,9 +163,9 @@ $app->post('/users/current/options', function() use ($app, $jsonResponse) {
     if (validateToken()) {
         $user = getUser();
 
-        $user->ownOption[1]->tasksOrder = $data->tasksOrder;
-        $user->ownOption[1]->showAssignee = $data->showAssignee;
-        $user->ownOption[1]->showAnimations = $data->showAnimations;
+        $user->xownOptionList[0]->tasksOrder = $data->tasksOrder;
+        $user->xownOptionList[0]->showAssignee = $data->showAssignee;
+        $user->xownOptionList[0]->showAnimations = $data->showAnimations;
         R::store($user);
 
         $jsonResponse->data = $data;
@@ -198,15 +198,20 @@ $app->post('/users', function() use($app, $jsonResponse) {
             $user->defaultBoard = $data->defaultBoard;
             $user->salt = password_hash($data->username . time(), PASSWORD_BCRYPT);
             $user->password = password_hash($data->password, PASSWORD_BCRYPT, array('salt' => $user->salt));
+
             $options = R::dispense('option');
-            $options->newTaskPosition = 0; // Bottom of column (1 == top of column)
-            $options->animate = true;
-            $user->ownOptions = $options;
+            $options->tasksOrder = 0; // Bottom of column (1 == top of column)
+            $options->showAnimations = true;
+            $options->showAssignee = true;
+            $user->xownOptionList[] = $options;
 
             R::store($user);
             addUserToBoard($data->defaultBoard, $user);
-            foreach($data->boardAccess as $board) {
-                addUserToBoard($board, $user);
+
+            if (property_exists($data, 'boardAccess') && is_array($data->boardAccess)) {
+                foreach($data->boardAccess as $board) {
+                    addUserToBoard($board, $user);
+                }
             }
 
             $actor = getUser();
