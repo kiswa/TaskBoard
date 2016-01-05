@@ -76,8 +76,9 @@ $app->post('/boards/remove', function() use($app, $jsonResponse) {
             }
             R::trashAll($board->xownLane);
             R::trashAll($board->xownCategory);
+            R::trashAll($board->xownAutoaction);
             R::trash($board);
-            R::exec('DELETE from board_user WHERE board_id = ?', [$data->boardId]);
+            R::exec('DELETE from board_user WHERE board_id = ?', array($data->boardId));
             $jsonResponse->addAlert('success', 'Removed board ' . $board->name . '.');
             $actor = getUser();
             logAction($actor->username . ' removed board ' . $board->name, $before, null);
@@ -138,7 +139,7 @@ $app->post('/lanes/:laneId/toggle', function($laneId) use($app, $jsonResponse) {
     if (validateToken()) {
         $user = getUser();
         $lane = R::load('lane', $laneId);
-        $collapsed = R::findOne('collapsed', ' user_id = ? AND lane_id = ? ', [$user->id, $laneId]);
+        $collapsed = R::findOne('collapsed', ' user_id = ? AND lane_id = ? ', array($user->id, $laneId));
 
         if (null != $collapsed) {
             R::trash($collapsed);
@@ -154,7 +155,7 @@ $app->post('/lanes/:laneId/toggle', function($laneId) use($app, $jsonResponse) {
         $jsonResponse->addBeans(getBoards());
     }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['laneId' => '\d+']); // Numbers only.
+})->conditions(array('laneId' => '\d+')); // Numbers only.
 
 $app->post('/boards/:boardId/toggleActive', function($boardId) use($app, $jsonResponse) {
     if (validateToken()) {
@@ -174,4 +175,4 @@ $app->post('/boards/:boardId/toggleActive', function($boardId) use($app, $jsonRe
         }
      }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['boardId' => '\d+']); // Numbers only.
+})->conditions(array('boardId' => '\d+')); // Numbers only.

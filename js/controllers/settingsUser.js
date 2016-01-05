@@ -135,20 +135,15 @@ function ($scope, $interval, UserService) {
     $scope.changeEmail = function(newEmailFormData) {
         $scope.emailFormData.isSaving = true;
 
-        if (newEmailFormData.newEmail === '') {
-            newEmailFormData.setAlert('Email cannot be blank.');
-            newEmailFormData.isSaving = false;
-        } else {
-            UserService.changeEmail(newEmailFormData.newEmail)
-                .success(function(data) {
-                    $scope.alerts.showAlerts(data.alerts);
-                    $scope.updateUsers(data.data);
-                    $scope.loadCurrentUser();
+        UserService.changeEmail(newEmailFormData.newEmail)
+            .success(function(data) {
+                $scope.alerts.showAlerts(data.alerts);
+                $scope.updateUsers(data.data);
+                $scope.loadCurrentUser();
 
-                    newEmailFormData.isSaving = false;
-                    newEmailFormData.newUsername = '';
-                });
-        }
+                newEmailFormData.isSaving = false;
+                newEmailFormData.newUsername = '';
+            });
     };
 
     $scope.updatingDefaultBoard = false;

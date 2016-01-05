@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bcd0d77c65d6fda9ece3a2600d80347c",
+    "hash": "00b50e5ebd2d03b90ef653c95854ecc3",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -52,16 +52,16 @@
         },
         {
             "name": "gabordemooij/redbean",
-            "version": "v4.2.0",
+            "version": "v4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gabordemooij/redbean.git",
-                "reference": "840a2e0d856042e75a701453f37896c597c6fbc2"
+                "reference": "13610146620d7c0a66215dcaf0c8796bb03a04aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/840a2e0d856042e75a701453f37896c597c6fbc2",
-                "reference": "840a2e0d856042e75a701453f37896c597c6fbc2",
+                "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/13610146620d7c0a66215dcaf0c8796bb03a04aa",
+                "reference": "13610146620d7c0a66215dcaf0c8796bb03a04aa",
                 "shasum": ""
             },
             "require": {
@@ -89,7 +89,7 @@
             "keywords": [
                 "orm"
             ],
-            "time": "2015-04-01 19:03:42"
+            "time": "2015-05-09 12:22:47"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -135,16 +135,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v5.2.9",
+            "version": "v5.2.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "73b61679809615850706f1dbf88e6df2ddc05745"
+                "reference": "e774bc9152de85547336e22b8926189e582ece95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/73b61679809615850706f1dbf88e6df2ddc05745",
-                "reference": "73b61679809615850706f1dbf88e6df2ddc05745",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/e774bc9152de85547336e22b8926189e582ece95",
+                "reference": "e774bc9152de85547336e22b8926189e582ece95",
                 "shasum": ""
             },
             "require": {
@@ -152,14 +152,22 @@
             },
             "require-dev": {
                 "phpdocumentor/phpdocumentor": "*",
-                "phpunit/phpunit": "4.1.*"
+                "phpunit/phpunit": "4.7.*"
+            },
+            "suggest": {
+                "league/oauth2-client": "Needed for XOAUTH2 authentication",
+                "league/oauth2-google": "Needed for Gmail XOAUTH2"
             },
             "type": "library",
             "autoload": {
                 "classmap": [
                     "class.phpmailer.php",
+                    "class.phpmaileroauth.php",
+                    "class.phpmaileroauthgoogle.php",
+                    "class.smtp.php",
                     "class.pop3.php",
-                    "class.smtp.php"
+                    "extras/EasyPeasyICS.php",
+                    "extras/ntlm_sasl_client.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -184,20 +192,20 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2014-09-26 18:33:30"
+            "time": "2015-11-01 10:15:28"
         },
         {
             "name": "slim/slim",
-            "version": "2.6.1",
+            "version": "2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "365dbfa0c02a31e76888eaec693dacd9dca1c82a"
+                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/365dbfa0c02a31e76888eaec693dacd9dca1c82a",
-                "reference": "365dbfa0c02a31e76888eaec693dacd9dca1c82a",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/20a02782f76830b67ae56a5c08eb1f563c351a37",
+                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37",
                 "shasum": ""
             },
             "require": {
@@ -230,7 +238,7 @@
                 "rest",
                 "router"
             ],
-            "time": "2015-03-02 19:09:48"
+            "time": "2015-03-08 18:41:17"
         }
     ],
     "packages-dev": [],

@@ -16,6 +16,10 @@ function ($scope, $routeParams, $location, $interval, $window,
         $location.path(path);
     }
 
+    $scope.quickAdd = {
+        title: []
+    };
+
     $scope.alerts = AlertService;
     $scope.marked = function(text) {
         if (text) {

@@ -40,7 +40,7 @@ function setUserToken($user, $expires) {
     $dbToken->token = $token;
 
     if (null == $user->ownToken) {
-        $user->ownToken = [];
+        $user->ownToken = array();
     }
     $user->ownToken[] = $dbToken;
 
@@ -50,9 +50,9 @@ function setUserToken($user, $expires) {
 // Get the user making the current request.
 function getUser() {
     global $jsonResponse;
-
-    if (isset(getallheaders()['Authorization'])) {
-        $hash = getallheaders()['Authorization'];
+    $gah = getallheaders();
+    if (isset($gah['Authorization'])) {
+        $hash = $gah['Authorization'];
         try {
             $payload = JWT::decode($hash, getJwtKey());
             $user = R::load('user', $payload->uid);
@@ -94,7 +94,8 @@ function getLaneByID($id) {
 // Get all users.
 function getUsers($sanitize = true) {
     try {
-        $hash = getallheaders()['Authorization'];
+        $gah = getallheaders();
+        $hash = $gah['Authorization'];
         $payload = JWT::decode($hash, getJwtKey());
 
         $users = R::findAll('user');
@@ -153,7 +154,7 @@ function getBoards() {
     if ($user->isAdmin) {
         return $boards;
     } else {
-        $filteredBoards = [];
+        $filteredBoards = array();
         foreach($boards as $board) {
             foreach($board->sharedUser as $boardUser) {
                 if ($user->username == $boardUser->username) {
@@ -167,7 +168,7 @@ function getBoards() {
 
 // Finds the removed IDs for updating a board.
 function getIdsToRemove($boardList, $dataList) {
-    $retVal = [];
+    $retVal = array();
     foreach($boardList as $item) {
         $remove = true;
         foreach($dataList as $newItem) {
@@ -199,7 +200,7 @@ function loadBoardData($board, $data) {
         $lane->position = intval($item->position);
 
         if (null == $lane->ownItems) {
-            $lane->ownItems = [];
+            $lane->ownItems = array();
         }
         // New lane, add it to the board
         if (!$lane->id) {
@@ -247,14 +248,14 @@ function loadBoardData($board, $data) {
 // Clean a user bean for return to front-end.
 function sanitize($user) {
     $user['salt'] = null;
-    $user->ownToken = [];
+    $user->ownToken = array();
     $user['password'] = null;
 }
 
 // Change username if available.
 function updateUsername($user, $data) {
     global $jsonResponse;
-    $nameTaken = R::findOne('user', ' username = ?', [$data->newUsername]);
+    $nameTaken = R::findOne('user', ' username = ?', array($data->newUsername));
 
     if (null != $user && null == $nameTaken) {
         $user->username = $data->newUsername;
@@ -269,7 +270,7 @@ function updateUsername($user, $data) {
 // Change email if available.
 function updateEmail($user, $data) {
     global $jsonResponse;
-    $emailTaken = R::findOne('user', ' username = ?', [$data->newEmail]);
+    $emailTaken = R::findOne('user', ' username = ?', array($data->newEmail));
 
     if (null != $user && null == $emailTaken) {
         $user->email = $data->newEmail;
@@ -312,8 +313,9 @@ function checkDbToken() {
     $isValid = false;
 
     if (null != $user) {
-        if (isset(getallheaders()['Authorization'])) {
-            $hash = getallheaders()['Authorization'];
+        $gah = getallheaders();
+        if (isset($gah['Authorization'])) {
+            $hash = $gah['Authorization'];
 
             foreach ($user->ownToken as $token) {
                 if ($hash == $token->token) {
@@ -329,15 +331,16 @@ function checkDbToken() {
 // Clear a user's token from the DB.
 function clearDbToken() {
     $payload = null;
-
+    $gah = getallheaders();
     try {
-        $payload = JWT::decode(getallheaders()['Authorization'], getJwtKey());
+
+        $payload = JWT::decode($gah['Authorization'], getJwtKey());
     } catch (Exception $e) {}
 
     if (null != $payload) {
         $user = R::load('user', $payload->uid);
         if (0 != $user->id) {
-            $hash = getallheaders()['Authorization'];
+            $hash = $gah['Authorization'];
 
             foreach ($user->ownToken as $token) {
                 if ($hash == $token->token) {
@@ -381,7 +384,7 @@ function createInitialUser() {
         $options->showAnimations = true;
         $options->showAssignee = true;
 
-        $admin->ownOptions[] = $options;
+        $admin->xownOptionList[] = $options;
 
         R::store($admin);
     }

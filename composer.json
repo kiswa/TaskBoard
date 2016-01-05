@@ -1,10 +1,10 @@
 {
     "name": "kiswa/taskboard",
     "require": {
-        "slim/slim": "=2.6.1",
-        "firebase/php-jwt": "=1.0.0",
+        "slim/slim": "~2.6.1",
+        "firebase/php-jwt": "~1.0.0",
         "ircmaxell/password-compat": "~1.0.3",
-        "gabordemooij/redbean": "=4.2.0",
+        "gabordemooij/redbean": "~4.2.0",
         "phpmailer/phpmailer": "~5.2.9"
     },
     "license": "MIT",

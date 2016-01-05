@@ -315,6 +315,9 @@ textarea {
     margin: 5px;
     text-align: right;
 }
+.addItem input {
+    width: 80% !important;
+}
 .draggable-placeholder {
     height: 80px;
     box-shadow: inset 0px 0px 10px 0px rgba(51,51,51,.25);
@@ -546,6 +549,9 @@ span.filter {
     width: 48%;
     float: left;
     margin-bottom: 1em;
+}
+.board-options label {
+    font-weight: normal;
 }
 #changeUserSettings hr, .board-options hr {
     clear: both;
