@@ -1,9 +1,0 @@
-<span>
-    <a class="fa fa-edit pull-right" title="Edit"
-       data-ng-if="!boardFormData.isAdd"
-       data-ng-hide="view.editorEnabled" data-ng-click="enableEditor()"></a>
-    <span class="pull-right" data-ng-show="view.editorEnabled">
-        <input class="form-control custom-inline"
-               data-ng-keydown="checkKeypress($event)" data-ng-model="view.editableValue">
-    </span>
-</span>
