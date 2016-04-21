@@ -1,6 +1,6 @@
-#TaskBoard
+# TaskBoard
 
-[![Join the chat at https://gitter.im/kiswa/TaskBoard](https://badges.gitter.im/kiswa/TaskBoard.svg)](https://gitter.im/kiswa/TaskBoard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+ [![Build Status](https://travis-ci.org/kiswa/TaskBoard.svg)](https://travis-ci.org/kiswa/TaskBoard) [![Join the chat at https://gitter.im/kiswa/TaskBoard](https://badges.gitter.im/kiswa/TaskBoard.svg)](https://gitter.im/kiswa/TaskBoard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 A [Kanban](http://en.wikipedia.org/wiki/Kanban_board)-inspired app for keeping track of things that need to get done.
 
@@ -29,7 +29,7 @@ Installing TaskBoard is as easy as 1, 2, 3!
 Developing on TaskBoard is pretty simple too.
 
  1. Clone the repository
- 2. Run `npm i` to install dependencies
+ 2. Run `npm i` to install dependencies (Linting the SCSS requires Ruby and running `gem install scss-lint`)
  3. Run `git checkout dev` to work on the `dev` branch
 
 ### How It's Made
@@ -78,9 +78,9 @@ TaskBoard uses a [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdow
 
 Once an item has been entered, it may have Comments or Attachments added to it by viewing the task detail. There is a link to edit the item, which takes you to a modal much like the original add item dialog. For admin users, there is also a link to delete the item. This view also shows the task's activity log on the right side of the screen, displaying the complete history of events related to the item.
 
-##Feedback
+## Feedback
 
-Constructive feedback is appreciated! If you have ideas for improvement, please [add an issue](https://github.com/kiswa/TaskBoard/issues) or submit a pull request.
+Constructive feedback is appreciated! If you have ideas for improvement, please [add an issue](https://github.com/kiswa/TaskBoard/issues) or implement it and submit a pull request.
 
 If you find a bug, please post it on the [Issue Tracker](https://github.com/kiswa/TaskBoard/issues).
 
