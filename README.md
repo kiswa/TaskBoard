@@ -36,7 +36,7 @@ Developing on TaskBoard is pretty simple too.
 
 1. Front end
 
- * [Angular](https://angular.io/) single-page app
+ * [Angular 2](https://angular.io/) single-page app
  * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
  * [marked](https://github.com/chjj/marked) Markdown parser
 
