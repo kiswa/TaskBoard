@@ -14,6 +14,8 @@ A web server running PHP with sqlite enabled. Developed and tested under Apache2
 
 The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewrite` Apache module.
 
+If you're comfortable changing code, you can use any database [supported by RedBeanPHP](http://www.redbeanphp.com/index.php?p=/connection).
+
 ### Install
 
 Installing TaskBoard is as easy as 1, 2, 3!
