@@ -6,21 +6,6 @@ A [Kanban](http://en.wikipedia.org/wiki/Kanban_board)-inspired app for keeping t
 
 The goal of TaskBoard is to provide a simple and clean interface to a functional and minimal application for keeping track of tasks. **It's not trying to be the next Trello or LeanKit.**
 
-### How It's Made
-
-1. Front end
-
- * [Angular](https://angular.io/) single-page app
- * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
- * [marked](https://github.com/chjj/marked) Markdown parser
-
-2. Back end
-
- * [Slim Framework](http://www.slimframework.com/) and [RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
- * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
- * [JWT](https://jwt.io/) authentication
- * SQLite database
-
 ## Installation
 
 ### Prerequisites
@@ -44,6 +29,21 @@ Developing on TaskBoard is pretty simple too.
  1. Clone the repository
  2. Run `npm i` to install dependencies
  3. Run `git checkout dev` to work on the `dev` branch
+
+### How It's Made
+
+1. Front end
+
+ * [Angular](https://angular.io/) single-page app
+ * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
+ * [marked](https://github.com/chjj/marked) Markdown parser
+
+2. Back end
+
+ * [Slim Framework](http://www.slimframework.com/) and [RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
+ * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
+ * [JWT](https://jwt.io/) authentication
+ * SQLite database
 
 ## Features
 
