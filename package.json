@@ -1,0 +1,59 @@
+{
+  "name": "taskboard",
+  "version": "1.0.0",
+  "description": "A Kanban-inspired app for keeping track of things that need to get done.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "gulp test",
+    "postinstall": "gulp composer"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://kiswa@github.com/kiswa/TaskBoard.git"
+  },
+  "keywords": [
+    "Kanban",
+    "board",
+    "kanban",
+    "board",
+    "task",
+    "task",
+    "board",
+    "taskboard"
+  ],
+  "author": "Matthew Ross <root@matthewross.me> (https://matthewross.me)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kiswa/TaskBoard/issues"
+  },
+  "homepage": "https://github.com/kiswa/TaskBoard#readme",
+  "devDependencies": {
+    "angular2": "^2.0.0-beta.15",
+    "bourbon": "^4.2.7",
+    "bourbon-neat": "^1.7.4",
+    "chai": "^3.5.0",
+    "del": "^2.2.0",
+    "es6-shim": "^0.35.0",
+    "fb-flo": "^0.5.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-chmod": "^1.3.0",
+    "gulp-composer": "^0.4.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-coverage": "^0.3.38",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-imagemin": "^2.4.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-sass": "^2.2.0",
+    "gulp-scss-lint": "^0.3.9",
+    "gulp-typescript": "^2.13.0",
+    "gulp-uglify": "^1.5.3",
+    "merge-stream": "^1.0.0",
+    "reflect-metadata": "^0.1.2",
+    "rxjs": "^5.0.0-beta.2",
+    "scss-base": "^1.0.0",
+    "systemjs": "^0.19.26",
+    "zone.js": "^0.6.12"
+  }
+}

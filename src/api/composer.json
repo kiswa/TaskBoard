@@ -1,0 +1,10 @@
+{
+    "require": {
+        "monolog/monolog": "^1.18",
+        "gabordemooij/redbean": "^4.3",
+        "slim/slim": "^3.3"
+    },
+    "autoload": {
+        "classmap": [ "controllers", "models" ]
+    }
+}
