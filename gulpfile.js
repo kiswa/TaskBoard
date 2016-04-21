@@ -23,7 +23,7 @@ let gulp = require('gulp'),
         scss_base: 'node_modules/scss-base/src',
         tsconfig: 'src/app/tsconfig.json',
         ts: 'src/app/**/*.ts',
-        tests: 'test/**/*.spec.js',
+        tests: 'test/app/**/*.spec.js',
         html: [
             'src/**/*.html',
             'src/.htaccess'
@@ -120,13 +120,13 @@ gulp.task('api', () => {
         .pipe(gulp.dest('dist/api/'));
 });
 
-gulp.task('test', ['tsc', 'vendor'], () => {
-    return gulp.src('test/**/*.spec.js')
+gulp.task('test-app', ['tsc', 'vendor'], () => {
+    return gulp.src(paths.tests)
         .pipe(mocha());
 });
 
 gulp.task('coverage', ['tsc', 'vendor'], () => {
-    return gulp.src('test/**/*.spec.js')
+    return gulp.src(paths.tests)
         .pipe(coverage.instrument({
             pattern: ['dist/app/**/*.js']
         }))
@@ -134,6 +134,9 @@ gulp.task('coverage', ['tsc', 'vendor'], () => {
         .pipe(coverage.gather())
         .pipe(coverage.format())
         .pipe(gulp.dest('./'));
+});
+
+gulp.task('test-api', () => {
 });
 
 gulp.task('watch', () => {
