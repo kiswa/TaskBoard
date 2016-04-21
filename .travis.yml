@@ -3,7 +3,7 @@ php:
   - '5.5'
   - '5.6'
   - '7.0'
-before-script:
+before_script:
   - npm i -g gulp
   - npm i
 script:
