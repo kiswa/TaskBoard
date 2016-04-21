@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "gulp test",
+    "test": "gulp test-api && gulp test-app",
     "postinstall": "gulp composer"
   },
   "repository": {
