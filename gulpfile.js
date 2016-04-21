@@ -10,6 +10,7 @@ let gulp = require('gulp'),
     jsMinify = require('gulp-uglify'),
     mocha = require('gulp-mocha'),
     coverage = require('gulp-coverage'),
+    phpunit = require('gulp-phpunit'),
     scsslint = require('gulp-scss-lint'),
     sass = require('gulp-sass'),
     cssPrefixer = require('gulp-autoprefixer'),
@@ -23,7 +24,8 @@ let gulp = require('gulp'),
         scss_base: 'node_modules/scss-base/src',
         tsconfig: 'src/app/tsconfig.json',
         ts: 'src/app/**/*.ts',
-        tests: 'test/app/**/*.spec.js',
+        tests_app: 'test/app/**/*.spec.js',
+        tests_api: 'test/api/**/*.php',
         html: [
             'src/**/*.html',
             'src/.htaccess'
@@ -121,12 +123,12 @@ gulp.task('api', () => {
 });
 
 gulp.task('test-app', ['tsc', 'vendor'], () => {
-    return gulp.src(paths.tests)
+    return gulp.src(paths.tests_app)
         .pipe(mocha());
 });
 
 gulp.task('coverage', ['tsc', 'vendor'], () => {
-    return gulp.src(paths.tests)
+    return gulp.src(paths.tests_app)
         .pipe(coverage.instrument({
             pattern: ['dist/app/**/*.js']
         }))
@@ -137,6 +139,8 @@ gulp.task('coverage', ['tsc', 'vendor'], () => {
 });
 
 gulp.task('test-api', () => {
+    return gulp.src('')
+        .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit test/api/*Test.php'));
 });
 
 gulp.task('watch', () => {
@@ -158,8 +162,8 @@ gulp.task('watch', () => {
 });
 
 gulp.task('watchtests', () => {
-    let watchTests =gulp.watch(paths.tests, ['test']),
-        watchTs = gulp.watch(paths.ts, ['test']),
+    let watchTests = gulp.watch(paths.tests_app, ['test-app']),
+        watchTs = gulp.watch(paths.ts, ['test-app']),
 
         onChanged = (event) => {
             console.log('File ' + event.path + ' was ' + event.type + '. Running tasks...');
