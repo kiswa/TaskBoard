@@ -1,5 +1,3 @@
-# TaskBoard Changelog
-
 ## v1.0.0
 
 ### New Features
@@ -8,5 +6,9 @@
 
 ### Updates
 
+ * N/A
+
 ### Bug Fixes
+
+ * N/A
 
