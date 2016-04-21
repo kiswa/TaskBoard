@@ -45,7 +45,7 @@ Developing on TaskBoard is pretty simple too.
  * [Slim Framework](http://www.slimframework.com/) and [RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
  * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
  * [JWT](https://jwt.io/) authentication
- * SQLite database
+ * [SQLite](https://www.sqlite.org/) database
 
 ## Features
 
