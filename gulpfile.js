@@ -136,17 +136,6 @@ gulp.task('coverage', ['tsc', 'vendor'], () => {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('fb-flo', () => {
-    if (node) {
-        node.kill();
-    }
-
-    node = spawn('node', ['flo.js'], { stdio: 'inherit' });
-    node.on('close', () => {
-        console.log('Exiting fb-flo.');
-    });
-});
-
 gulp.task('watch', () => {
     let watchTs = gulp.watch(paths.ts, ['tsc']),
         watchScss = gulp.watch(paths.scss, ['lintScss', 'styles']),
@@ -157,8 +146,6 @@ gulp.task('watch', () => {
         onChanged = (event) => {
             console.log('File ' + event.path + ' was ' + event.type + '. Running tasks...');
         };
-
-    gulp.start('fb-flo');
 
     watchTs.on('change', onChanged);
     watchScss.on('change', onChanged);
