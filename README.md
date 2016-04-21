@@ -20,7 +20,7 @@ If you're comfortable changing code, you can use any database [supported by RedB
 
 Installing TaskBoard is as easy as 1, 2, 3!
 
- 1. Download the latest release (or whatever version you want)
+ 1. Download [the latest release](#) (or whatever version you want)
  2. Extract it to your webserver
  3. Verify the `api` directory is writable
 
@@ -31,21 +31,6 @@ Developing on TaskBoard is pretty simple too.
  1. Clone the repository
  2. Run `npm i` to install dependencies (Linting the SCSS requires Ruby and running `gem install scss-lint`)
  3. Run `git checkout dev` to work on the `dev` branch
-
-### How It's Made
-
-1. Front end
-
- * [Angular 2](https://angular.io/) single-page app
- * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
- * [marked](https://github.com/chjj/marked) Markdown parser
-
-2. Back end
-
- * [Slim Framework](http://www.slimframework.com/) and [RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
- * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
- * [JWT](https://jwt.io/) authentication
- * [SQLite](https://www.sqlite.org/) database
 
 ## Features
 
@@ -77,6 +62,27 @@ An item (task) only has to have a Title to be added to a board, but there is muc
 TaskBoard uses a [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#table-of-contents) parser for the Description, allowing for better display of details (like this readme).
 
 Once an item has been entered, it may have Comments or Attachments added to it by viewing the task detail. There is a link to edit the item, which takes you to a modal much like the original add item dialog. For admin users, there is also a link to delete the item. This view also shows the task's activity log on the right side of the screen, displaying the complete history of events related to the item.
+
+## How It's Made
+
+1. Front end
+
+ * [Angular 2](https://angular.io/) single-page app
+ * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
+ * [marked](https://github.com/chjj/marked) Markdown parser
+
+2. Back end
+
+ * [Slim Framework](http://www.slimframework.com/) and [RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
+ * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
+ * [JWT](https://jwt.io/) authentication
+ * [SQLite](https://www.sqlite.org/) database
+
+## Contributing
+
+Fork the repository and make your changes on the `dev` branch.
+
+Create a pull request against the `dev` branch to merge your changes with the main repository.
 
 ## Feedback
 
