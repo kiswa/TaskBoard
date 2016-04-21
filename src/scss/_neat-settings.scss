@@ -1,0 +1,16 @@
+@import 'neat-helpers';
+
+//$visual-grid: true;
+$visual-grid-color: #f00;
+$visual-grid-index: front;
+$visual-grid-opacity: .1;
+
+$max-width: em(1000);
+
+$first-break: em(490);
+$second-break: em(700);
+
+$small: new-breakpoint(max-width $first-break 6);
+$medium: new-breakpoint(min-width $first-break max-width $second-break 12);
+$large: new-breakpoint(min-width $second-break 18);
+
