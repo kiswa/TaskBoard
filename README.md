@@ -69,6 +69,7 @@ Once an item has been entered, it may have Comments or Attachments added to it b
 
  * [Angular 2](https://angular.io/) single-page app
  * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
+ * [scss-base](https://www.npmjs.com/package/scss-base) base styles
  * [marked](https://github.com/chjj/marked) Markdown parser
 
 2. Back end
