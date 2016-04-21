@@ -9,5 +9,4 @@ before_script:
   - npm i -g gulp
   - npm i
 script:
-  - gulp test-api
-  - gulp test-app
+  - gulp test

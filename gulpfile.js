@@ -122,6 +122,8 @@ gulp.task('api', () => {
         .pipe(gulp.dest('dist/api/'));
 });
 
+gulp.task('test', ['test-app', 'test-api']);
+
 gulp.task('test-app', ['tsc', 'vendor'], () => {
     return gulp.src(paths.tests_app)
         .pipe(mocha());
