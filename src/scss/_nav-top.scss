@@ -1,0 +1,27 @@
+.nav-top {
+    border-bottom: 1px solid lighten($color-border, 10%);
+    padding: .5em;
+
+    h1 {
+        margin-top: 3px;
+    }
+
+    .dark {
+        color: $color-text;
+    }
+
+    .buttons {
+        float: right;
+        margin-top: -2.2em;
+
+        .flat {
+            color: $color-primary;
+        }
+
+        .active {
+            background: $color-primary;
+            color: $color-text-button;
+        }
+    }
+}
+
