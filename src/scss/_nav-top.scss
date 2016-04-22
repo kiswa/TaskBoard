@@ -15,11 +15,12 @@
         margin-top: -2.2em;
 
         .flat {
+            background-color: lighten($color-background, 3%);
             color: $color-primary;
         }
 
         .active {
-            background: $color-primary;
+            background-color: $color-primary;
             color: $color-text-button;
         }
     }
