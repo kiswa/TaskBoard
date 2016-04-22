@@ -2,7 +2,7 @@
 require './vendor/autoload.php';
 
 use RedBeanPHP\R;
-R::setup('sqlite:taskboard');
+R::setup('sqlite:taskboard.sqlite');
 
 $app = new Slim\App();
 require 'app-setup.php';
@@ -46,8 +46,8 @@ $app->post('/users/{id}', 'Users:updateUser');
 $app->delete('/users/{id}', 'Users:removeUser');
 
 $app->post('/authenticate', 'Users:authenticate');
-$app->post('/users/login', 'Users:login');
-$app->post('/users/logout', 'Users:logout');
+$app->post('/login', 'Users:login');
+$app->post('/logout', 'Users:logout');
 */
 $app->run();
 R::close();
