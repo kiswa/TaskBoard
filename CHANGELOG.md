@@ -3,6 +3,7 @@
 ### New Features
 
  * Complete re-write
+ * Conversion script for migrating to new database format (sqlite only)
 
 ### Updates
 
