@@ -5,10 +5,7 @@ abstract class BaseModel {
     protected $logger;
     protected $bean;
 
-    public function __construct($type, $id) {
-        global $app;
-        $container = $app->getContainer();
-
+    public function __construct($type, $id, $container) {
         $this->logger = $container->get('logger');
         $this->bean = R::load($type, $id);
     }

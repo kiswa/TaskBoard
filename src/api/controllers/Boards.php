@@ -20,5 +20,32 @@ class Boards extends BaseController {
         return $this->jsonResponse($response);
     }
 
+    public function getBoard($request, $response, $args) {
+        $board = new Board($this->container, (int)$args['id']);
+
+        if ($board->id === 0) {
+            $this->logger->addError('Attempt to load board ' . $args['id'] .
+                ' failed.');
+            $this->apiJson->addAlert('error', 'No board found for ID ' .
+                $args['id'] . '.');
+
+            return $this->jsonResponse($response);
+        }
+
+        $this->apiJson->setSuccess();
+        $this->apiJson->addData($board);
+
+        return $this->jsonResponse($response);
+    }
+
+    public function addBoard($request, $response, $args) {
+    }
+
+    public function updateBoard($request, $response, $args) {
+    }
+
+    public function removeBoard($request, $response, $args) {
+    }
+
 }
 

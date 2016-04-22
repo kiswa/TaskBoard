@@ -1,5 +1,14 @@
 <?php
 
+class AppMock {
+
+    public function getContainer() {
+        return new ContainerMock();
+    }
+}
+
+$app = new AppMock();
+
 class LoggerMock {
 
     public function addInfo() {
@@ -10,7 +19,7 @@ class LoggerMock {
 
 }
 
-class ControllerMock {
+class ContainerMock {
 
     public function get() {
         return new LoggerMock();
