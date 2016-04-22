@@ -4,28 +4,33 @@ let gulp = require('gulp'),
     fs = require('fs'),
     del = require('del'),
     merge = require('merge-stream'),
-    concat = require('gulp-concat'),
+
     composer = require('gulp-composer'),
     tsc = require('gulp-typescript'),
     jsMinify = require('gulp-uglify'),
+
     mocha = require('gulp-mocha'),
     coverage = require('gulp-coverage'),
     phpunit = require('gulp-phpunit'),
+
     scsslint = require('gulp-scss-lint'),
     sass = require('gulp-sass'),
+
+    concat = require('gulp-concat'),
     cssPrefixer = require('gulp-autoprefixer'),
     cssMinify = require('gulp-cssnano'),
     imageMin = require('gulp-imagemin'),
-    node,
-    spawn = require('child_process').spawn,
+
     paths = {
         bourbon: 'node_modules/bourbon/app/assets/stylesheets',
         neat: 'node_modules/bourbon-neat/app/assets/stylesheets',
         scss_base: 'node_modules/scss-base/src',
         tsconfig: 'src/app/tsconfig.json',
-        ts: 'src/app/**/*.ts',
+
         tests_app: 'test/app/**/*.spec.js',
         tests_api: 'test/api/**/*.php',
+
+        ts: 'src/app/**/*.ts',
         html: [
             'src/**/*.html',
             'src/.htaccess'
@@ -178,3 +183,4 @@ gulp.task('watchtests', () => {
 gulp.task('default', ['tsc', 'vendor', 'html', 'images', 'lintScss', 'styles', 'api'], () => {
     fs.chmod('dist/api', '0777');
 });
+

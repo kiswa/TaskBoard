@@ -32,6 +32,12 @@ Developing on TaskBoard is pretty simple too.
  2. Run `npm i` to install dependencies (Linting the SCSS requires Ruby and running `gem install scss-lint`)
  3. Run `git checkout dev` to work on the `dev` branch
 
+#### Unit Tests
+
+Both the API and App are unit tested. To run all tests, use the command `gulp test`. For only one set, run `gulp test-api` or `gulp test-app`.
+
+These tests are run by [Travis CI](https://travis-ci.org/) on PRs and commits.
+
 ## Features
 
 ### Boards
@@ -84,6 +90,8 @@ Once an item has been entered, it may have Comments or Attachments added to it b
 Fork the repository and make your changes on the `dev` branch.
 
 Create a pull request against the `dev` branch to merge your changes with the main repository.
+
+Make sure to include/update unit tests.
 
 ## Feedback
 
