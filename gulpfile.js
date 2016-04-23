@@ -55,13 +55,7 @@ let gulp = require('gulp'),
     };
 
 gulp.task('clean', () => {
-    fs.stat('dist/api/logs/api.log', function(err, stat) {
-        if(err === null) {
-            console.log('  Run `sudo gulp clean` to remove server-generated files.');
-        } else {
-            return del('dist');
-        }
-    });
+    return del('dist');
 });
 
 gulp.task('html', () => {
