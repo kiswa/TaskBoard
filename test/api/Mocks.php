@@ -27,6 +27,14 @@ class ContainerMock {
 
 }
 
+class RequestMock {
+
+    public function getBody() {
+        return '{}';
+    }
+
+}
+
 class ResponseMock {
 
     public function withJson($apiJson) {

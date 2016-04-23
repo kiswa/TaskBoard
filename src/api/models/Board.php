@@ -22,10 +22,20 @@ class Board extends BaseModel {
         return $instance;
     }
 
+    public static function fromJson($container, $json) {
+        $instance = new self($container, 0, true);
+        $instance->loadFromJson($json);
+
+        return $instance;
+    }
+
     public function updateBean() {
     }
 
     public function loadFromBean($bean) {
+    }
+
+    public function loadFromJson($json) {
     }
 
 }

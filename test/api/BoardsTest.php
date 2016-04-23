@@ -2,6 +2,7 @@
 require_once 'Mocks.php';
 
 class BoardsTest extends PHPUnit_Framework_TestCase {
+    private $boards;
 
     public static function setupBeforeClass() {
         try {
@@ -15,19 +16,19 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         }
     }
 
-    public function testGetAllBoards() {
-        $boards = new Boards(new ContainerMock());
+    public function setup() {
+        $this->boards = new Boards(new ContainerMock());
+    }
 
+    public function testGetAllBoards() {
         $expected = new ApiJson();
         $expected->addAlert('info', 'No boards in database.');
 
         $this->assertEquals($expected,
-            $boards->getAllBoards(null, new ResponseMock(), null));
+            $this->boards->getAllBoards(null, new ResponseMock(), null));
     }
 
     public function testGetBoard() {
-        $boards = new Boards(new ContainerMock());
-
         $expected = new ApiJson();
         $expected->addAlert('error', 'No board found for ID 1.');
 
@@ -35,7 +36,29 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $args['id'] = '1';
 
         $this->assertEquals($expected,
-            $boards->getBoard(null, new ResponseMock(), $args));
+            $this->boards->getBoard(null, new ResponseMock(), $args));
+    }
+
+    public function testAddBoard() {
+        $expected = new ApiJson();
+        $expected->addAlert('error', 'Error adding board. ' .
+            'Please check your entries and try again.');
+
+        $this->assertEquals($expected,
+            $this->boards->addBoard(new RequestMock(),
+                new ResponseMock(), null));
+    }
+
+    public function testRemoveBoard() {
+        $expected = new ApiJson();
+        $expected->addAlert('error', 'Error removing board. ' .
+            'No board found for ID 1.');
+
+        $args = [];
+        $args['id'] = '1';
+
+        $this->assertEquals($expected,
+            $this->boards->removeBoard(null, new ResponseMock(), $args));
     }
 
 }

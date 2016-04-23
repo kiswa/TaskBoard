@@ -15,8 +15,13 @@ abstract class BaseModel {
 
     public function save() {
         $this->updateBean();
-        R::store($this->bean);
-        $this->loadFromBean($this->bean);
+
+        try {
+            R::store($this->bean);
+            $this->loadFromBean($this->bean);
+        } catch (Exception $ex) {
+            $this->logger->addError('Save Error: ', [$this->bean]);
+        }
     }
 
     public function delete() {
