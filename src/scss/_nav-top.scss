@@ -17,6 +17,11 @@
         .flat {
             background-color: lighten($color-background, 3%);
             color: $color-primary;
+            transition: background-color 0.5s;
+
+            &:hover {
+                background-color: lighten($color-background, 7%);
+            }
         }
 
         .active {
