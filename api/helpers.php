@@ -225,6 +225,22 @@ function loadBoardData($board, $data) {
         R::store($category);
     }
 
+    $removeIds = getIdsToRemove($board->xownTracker, $data->trackers);
+    foreach($removeIds as $id) {
+        unset($board->xownTracker[$id]);
+    }
+    foreach($data->trackers as $item) {
+        $tracker = R::load('tracker', $item->id);
+        $tracker->name = $item->name;
+        $tracker->bugexpr = $item->bugexpr;
+
+        // New issue tracker, add it to the board.
+        if (!$tracker->id) {
+            $board->xownTracker[] = $tracker;
+        }
+        R::store($tracker);
+    }
+
     // Add or remove users as selected.
     for($i = 1; $i < count($data->users); $i++) {
         $user = R::load('user', $i);

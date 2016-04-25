@@ -17,6 +17,10 @@ function ($scope, BoardService) {
         nameError: false,
         lanesError: false,
         categoriesError: false,
+        trackers: [],
+        trackerName: '',
+        bugexpr: '',
+        trackersError: false,
         isSaving: false,
         updateLanesSorting: function() {
             var that = this;
@@ -60,6 +64,15 @@ function ($scope, BoardService) {
                     });
                 });
             }
+            if (undefined !== board.ownTracker) {
+                board.ownTracker.forEach(function(trac) {
+                    that.trackers.push({
+                        id: trac.id,
+                        name: trac.name,
+                        bugexpr: trac.bugexpr
+                    });
+                });
+            }
             if (undefined !== board.sharedUser) {
                 board.sharedUser.forEach(function(user) {
                     that.users[user.id] = true;
@@ -71,14 +84,14 @@ function ($scope, BoardService) {
         addLane: function() {
             this.lanesError = false;
             if (this.laneName === '') {
-                this.setAlert(false, true, false, 'Column  name cannot be empty.');
+                this.setAlert(false, true, false, false, 'Column  name cannot be empty.');
                 return;
             }
 
             var that = this;
             this.lanes.forEach(function(lane) {
                 if (that.laneName == lane.name) {
-                    that.setAlert(false, true, false, 'That column name has already been added.');
+                    that.setAlert(false, true, false, false, 'That column name has already been added.');
                     that.lanesError = true;
                 }
             });
@@ -107,14 +120,14 @@ function ($scope, BoardService) {
         addCategory: function() {
             this.categoriesError = false;
             if (this.categoryName === '') {
-                this.setAlert(false, false, true, 'Category name cannot be empty.');
+                this.setAlert(false, false, true, false, 'Category name cannot be empty.');
                 return;
             }
 
             var that = this;
             this.categories.forEach(function(category) {
                 if (that.categoryName == category) {
-                    this.setAlert(false, false, true, 'That category name has already been added.');
+                    this.setAlert(false, false, true, false, 'That category name has already been added.');
                 }
             });
 
@@ -132,16 +145,50 @@ function ($scope, BoardService) {
             if (this.isSaving) { return; }
             this.categories.splice(this.categories.indexOf(category), 1);
         },
+        addTracker: function() {
+            this.trackersError = false;
+            if (this.trackerName === '') {
+                this.setAlert(false, false, false, true, 'Issue Tracker URL cannot be empty.');
+                return;
+            }
+            if (this.bugexpr === '') {
+                this.setAlert(false, false, false, true, 'Bug ID regular expression cannot be empty.');
+                return;
+            }
+            var that = this;
+            this.trackers.forEach(function(tracker) {
+                if (that.trackerName == tracker) {
+                    this.setAlert(false, false, false, true, 'That Issue Tracker URL has already been added.');
+                }
+            });
+
+            // Add the new issue tracker (if no error) and reset the input.
+            if (!this.trackersError) {
+                this.trackers.push({
+                    id: 0,
+                    name: this.trackerName,
+                    bugexpr: this.bugexpr
+                });
+            }
+            this.trackerName = '';
+            this.bugexpr = '';
+        },
+        removeTracker: function(tracker) {
+            if (this.isSaving) { return; }
+            this.trackers.splice(this.trackers.indexOf(tracker), 1);
+        },
         setForSaving: function() {
             this.nameError = false;
             this.lanesError = false;
             this.categoriesError = false;
+            this.trackersError = false;
             this.isSaving = true;
         },
-        setAlert: function(name, lane, cat, message) {
+        setAlert: function(name, lane, cat, trac, message) {
             this.nameError = name;
             this.lanesError = lane;
             this.categoriesError = cat;
+            this.trackersError = trac;
             this.isSaving = false;
             $scope.alerts.showAlert({ 'type': 'error', 'text': message });
         },
@@ -161,6 +208,10 @@ function ($scope, BoardService) {
             this.nameError = false;
             this.lanesError = false;
             this.categoriesError = false;
+            this.trackers = [];
+            this.trackerName = '';
+            this.bugexpr = '';
+            this.trackersError = false;
             this.isSaving = false;
         },
         // Uses jQuery to close modal and reset form data.
@@ -266,12 +317,12 @@ function ($scope, BoardService) {
 
     var checkFormInputs = function(boardFormData) {
         if ('' === boardFormData.name) {
-            boardFormData.setAlert(true, false, false, 'Board name cannot be empty.');
+            boardFormData.setAlert(true, false, false, false, 'Board name cannot be empty.');
             return false;
         }
 
         if (0 === boardFormData.lanes.length) {
-            boardFormData.setAlert(false, true, false, 'At least one lane is required.');
+            boardFormData.setAlert(false, true, false, false, 'At least one lane is required.');
             return false;
         }
 
