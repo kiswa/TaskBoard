@@ -11,7 +11,7 @@ abstract class BaseModel {
     }
 
     public abstract function updateBean();
-    public abstract function loadFromBean($bean);
+    public abstract function loadFromBean($container, $bean);
 
     public function save() {
         $this->updateBean();

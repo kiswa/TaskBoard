@@ -15,7 +15,7 @@ class Activity extends BaseModel {
 
     public static function fromBean($container, $bean) {
         $instance = new self($container, 0);
-        $instance->loadFromBean($bean);
+        $instance->loadFromBean($container, $bean);
 
         return $instance;
     }
@@ -23,7 +23,7 @@ class Activity extends BaseModel {
     public function updateBean() {
     }
 
-    public function loadFromBean($bean) {
+    public function loadFromBean($container, $bean) {
     }
 }
 
