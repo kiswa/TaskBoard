@@ -4,10 +4,19 @@
 
     h1 {
         margin-top: 3px;
+
+        span {
+            padding: 0;
+        }
     }
 
     .dark {
         color: $color-text;
+    }
+
+    .small {
+        font-size: .655555em;
+        font-weight: 500;
     }
 
     .buttons {
@@ -17,7 +26,7 @@
         .flat {
             background-color: lighten($color-background, 3%);
             color: $color-primary;
-            transition: background-color 0.5s;
+            transition: background-color .5s;
 
             &:hover {
                 background-color: lighten($color-background, 7%);
