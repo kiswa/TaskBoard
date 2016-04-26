@@ -23,7 +23,10 @@ class Activity extends BaseModel {
     public function updateBean() {
     }
 
-    public function loadFromBean($container, $bean) {
+    public abstract function loadFromBean($container, $bean) {
+    }
+
+    public abstract function loadFromJson($container, $obj) {
     }
 }
 

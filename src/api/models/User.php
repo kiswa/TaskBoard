@@ -10,7 +10,10 @@ class User extends BaseModel {
     public function updateBean() {
     }
 
-    public function loadFromBean($bean) {
+    public abstract function loadFromBean($container, $bean) {
+    }
+
+    public abstract function loadFromJson($container, $obj) {
     }
 
 }

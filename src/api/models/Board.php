@@ -40,14 +40,11 @@ class Board extends BaseModel {
             return;
         }
 
-        $this->id = $bean->id;
-        $this->name = $bean->name;
-        $this->is_active = $bean->is_active;
+        $this->loadPropertiesFrom($bean);
 
         $this->updateBean();
     }
 
-    // TODO: Determine if all models should have loadFromJson method
     public function loadFromJson($container, $json) {
         $obj = json_decode($json);
 
@@ -55,21 +52,21 @@ class Board extends BaseModel {
             return;
         }
 
-        $this->id = $obj->id;
-        $this->name = $obj->name;
-        $this->is_active = $obj->is_active;
-
-        foreach($obj->columns as $col) {
-            if ($col->id) {
-                $this->columns[] = new Column($container, $col->id);
-            } else {
-                // TODO: Determine if all models should have fromObject method
-                $this->columns[] = Column::fromObject($col);
-            }
-        }
+        $this->loadPropertiesFrom($obj);
 
         $this->updateBean();
     }
 
+    private function loadPropertiesFrom($obj) {
+        $this->id = $obj->id;
+        $this->name = $obj->name;
+        $this->is_active = $obj->is_active;
+    }
+
+    private function loadColumnsFrom($cols) {
+        foreach($cols as $col) {
+            $this->columns[] = Column::fromObject($col);
+        }
+    }
 }
 
