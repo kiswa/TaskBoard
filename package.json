@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/kiswa/TaskBoard#readme",
   "devDependencies": {
-    "angular2": "^2.0.0-beta.15",
+    "angular2": "^2.0.0-beta.16",
     "bourbon": "^4.2.7",
     "bourbon-neat": "^1.7.4",
     "chai": "^3.5.0",
