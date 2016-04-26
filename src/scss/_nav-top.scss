@@ -23,19 +23,17 @@
         float: right;
         margin-top: -2.2em;
 
+        button {
+            transition: background-color .3s;
+        }
+
         .flat {
             background-color: lighten($color-background, 3%);
             color: $color-primary;
-            transition: background-color .5s;
 
             &:hover {
-                background-color: lighten($color-background, 7%);
+                background-color: lighten($color-background, 9%);
             }
-        }
-
-        .active {
-            background-color: $color-primary;
-            color: $color-text-button;
         }
     }
 }
