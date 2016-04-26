@@ -10,3 +10,4 @@
         <log type="coverage-html" target="api-coverage/" />
     </logging>
 </phpunit>
+
