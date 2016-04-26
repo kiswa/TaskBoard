@@ -1,0 +1,12 @@
+<phpunit>
+    <filter>
+        <blacklist>
+            <directory>
+                src/api/vendor
+            </directory>
+        </blacklist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="api-coverage/" />
+    </logging>
+</phpunit>
