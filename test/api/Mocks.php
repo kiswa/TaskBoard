@@ -5,6 +5,7 @@ class AppMock {
     public function getContainer() {
         return new ContainerMock();
     }
+
 }
 
 $app = new AppMock();
