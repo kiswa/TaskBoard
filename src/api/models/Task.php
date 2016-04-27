@@ -1,9 +1,16 @@
 <?php
-class Column extends BaseModel {
+class Task extends BaseModel {
     public $id = 0;
-    public $name = '';
+    public $title = '';
+    public $description = '';
+    public $assignee = null;  // User model
+    public $category = null;  // Category model
+    public $color = '';
+    public $due_date = null;  // Date or null if not set
+    public $points = null;    // Integer or null if not set
     public $position = 0;
-    public $tasks = []; // Task model array
+    public $attachments = []; // Attachment model array
+    public $comments = [];    // Comment model array
 
     public function __construct($container, $id = 0, $internal = false) {
         parent::__construct('column', $id, $container);

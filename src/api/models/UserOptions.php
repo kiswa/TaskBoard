@@ -1,13 +1,11 @@
 <?php
-class Attachment extends BaseModel {
-    public $filename = '';
-    public $name = '';
-    public $type = '';
-    public $user_id = 0;
-    public $timestamp = null;
+class UserOptions extends BaseModel {
+    public $task_order = 0;
+    public $show_animations = true;
+    public $show_assignee = true;
 
     public function __construct($container, $id = 0) {
-        parent::__construct('attachment', $id, $container);
+        parent::__construct('user', $id, $container);
 
         $this->loadFromBean($this->bean);
     }

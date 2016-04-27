@@ -2,10 +2,10 @@
 
 class Activity extends BaseModel {
     public $id = 0;
-    public $user_id = '';
+    public $user_id = 0;
     public $log_text ='';
-    public $before = '';
-    public $after = '';
+    public $before = null;
+    public $after = null;
     public $item_type = '';
     public $item_id = 0;
 

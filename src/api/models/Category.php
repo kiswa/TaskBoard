@@ -1,9 +1,7 @@
 <?php
-class Column extends BaseModel {
+class Category extends BaseModel {
     public $id = 0;
-    public $name = '';
-    public $position = 0;
-    public $tasks = []; // Task model array
+    public $title = '';
 
     public function __construct($container, $id = 0, $internal = false) {
         parent::__construct('column', $id, $container);

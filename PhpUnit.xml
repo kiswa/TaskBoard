@@ -7,7 +7,8 @@
         </blacklist>
     </filter>
     <logging>
-        <log type="coverage-html" target="api-coverage/" />
+        <log type="coverage-html" target="api-coverage/"
+            lowUpperBound="30" highLowerBound="70" />
     </logging>
 </phpunit>
 

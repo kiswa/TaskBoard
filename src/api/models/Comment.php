@@ -1,5 +1,7 @@
 <?php
 class Comment extends BaseModel {
+    public $id = 0;
+    public $text = '';
 
     public function __construct($container, $id = 0) {
         parent::__construct('comment', $id, $container);
@@ -15,6 +17,5 @@ class Comment extends BaseModel {
 
     public function loadFromJson($container, $obj) {
     }
-
 }
 
