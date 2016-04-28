@@ -6,38 +6,6 @@ A [Kanban](http://en.wikipedia.org/wiki/Kanban_board)-inspired app for keeping t
 
 The goal of TaskBoard is to provide a simple and clean interface to a functional and minimal application for keeping track of tasks. **It's not trying to be the next Trello or LeanKit.**
 
-## Installation
-
-### Prerequisites
-
-A web server running PHP 5.5, 5.6, or 7.0 with sqlite enabled.
-
-The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewrite` Apache module.
-
-If you're comfortable changing code, you can use any database [supported by RedBeanPHP](http://www.redbeanphp.com/index.php?p=/connection).
-
-### Install
-
-Installing TaskBoard is as easy as 1, 2, 3!
-
- 1. Download [the latest release](#) (or whatever version you want)
- 2. Extract it to your webserver
- 3. Verify the `api` directory is writable
-
-### Development
-
-Developing on TaskBoard is pretty simple too.
-
- 1. Clone the repository
- 2. Run `npm i` to install dependencies (Linting the SCSS requires Ruby and running `gem install scss-lint`)
- 3. Run `git checkout dev` to work on the `dev` branch
-
-#### Unit Tests
-
-Both the API and App are unit tested. To run all tests, use the command `gulp test`. For only one set, run `gulp test-api` or `gulp test-app`.
-
-These tests are run by [Travis CI](https://travis-ci.org/) on PRs and commits.
-
 ## Features
 
 ### Boards
@@ -61,13 +29,45 @@ It's all up to you! However many columns you have, each column may have tasks ad
 
 Boards may also have categories for additional organization, *e.g.* `Bug`, `Enhancement`, `New Feature`.
 
-### Items
+### Tasks
 
-An item (task) only has to have a Title to be added to a board, but there is much more available. Items may be assigned to any user on the board (or left Unassigned), and include options for Due Date, Color, Points (an optional difficulty rating), and Category.
+A task only has to have a Title to be added to a board, but there is much more available. Tasks may be assigned to any user on the board (or left Unassigned), and include options for Due Date, Color, Points (an optional difficulty rating), and Category.
 
 TaskBoard uses a [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#table-of-contents) parser for the Description, allowing for better display of details (like this readme).
 
-Once an item has been entered, it may have Comments or Attachments added to it by viewing the task detail. There is a link to edit the item, which takes you to a modal much like the original add item dialog. For admin users, there is also a link to delete the item. This view also shows the task's activity log on the right side of the screen, displaying the complete history of events related to the item.
+Once a task has been entered, it may have Comments or Attachments added to it by viewing the task detail. There is a link to edit the task, which takes you to a modal much like the original add task dialog. For admin users, there is also a link to delete the task. This view also shows the task's activity log on the side of the screen, displaying the complete history of events related to the task.
+
+## Installation
+
+### Prerequisites
+
+A web server running PHP 5.5, 5.6, or 7.0 with sqlite enabled.
+
+The server must have `sqlite` and `php5-sqlite` (or `php7-sqlite`) installed, as well as the `rewrite` Apache module.
+
+If you're comfortable changing code, you can use any database [supported by RedBeanPHP](http://www.redbeanphp.com/index.php?p=/connection).
+
+### Install
+
+Installing TaskBoard is as easy as 1, 2, 3!
+
+ 1. Download [the latest release](#) (or whatever version you want)
+ 2. Extract it to your webserver
+ 3. Verify the `api` directory is writable
+
+### Development
+
+Developing on TaskBoard is pretty simple too.
+
+ 1. Clone the repository
+ 2. Run `npm i` to install dependencies (Linting the SCSS requires Ruby and running `gem install scss-lint`)
+ 3. Run `git checkout dev` to work on the `dev` branch
+
+#### Unit Tests
+
+Both the API and App are unit tested. To run all tests, use the command `gulp test`. For only one set, run `gulp test-api` or `gulp test-app`.
+
+These tests are run by [Travis CI](https://travis-ci.org/) on PRs and commits. A PR with failing or missing tests will not be merged.
 
 ## How It's Made
 
