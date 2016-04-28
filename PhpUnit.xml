@@ -8,7 +8,7 @@
     </filter>
     <logging>
         <log type="coverage-html" target="api-coverage/"
-            lowUpperBound="30" highLowerBound="70" />
+            lowUpperBound="35" highLowerBound="75" />
     </logging>
 </phpunit>
 

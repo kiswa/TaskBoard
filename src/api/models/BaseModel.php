@@ -10,9 +10,10 @@ abstract class BaseModel {
         $this->bean = R::load($type, $id);
     }
 
-    public abstract function updateBean();
     public abstract function loadFromBean($container, $bean);
     public abstract function loadFromJson($container, $obj);
+
+    public abstract function updateBean();
 
     public function save() {
         $this->updateBean();

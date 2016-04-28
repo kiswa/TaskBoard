@@ -15,6 +15,13 @@ class Column extends BaseModel {
         $this->loadFromBean($this->bean);
     }
 
+    public static function fromBean($container, $bean) {
+        $instance = new self($container, 0, true);
+        $instance->loadFromBean($container, $bean);
+
+        return $instance;
+    }
+
     public static function fromJson($container, $json) {
         $instance = new self($container, 0, true);
         $instance->loadFromJson($container, $json);

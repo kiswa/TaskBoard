@@ -8,11 +8,8 @@ class Board extends BaseModel {
     public $auto_actions = [];
     public $users = [];
 
-    private $container;
-
     public function __construct($container, $id = 0, $internal = false) {
         parent::__construct('board', $id, $container);
-        $this->container = $container;
 
         if ($internal) {
             return;
@@ -45,6 +42,30 @@ class Board extends BaseModel {
 
         $this->loadPropertiesFrom($bean);
 
+        if (isset($bean->columns)) {
+            foreach($bean->columns as $item) {
+                $this->columns[] = Column::fromBean($container, $item);
+            }
+        }
+
+        if (isset($bean->categories)) {
+            foreach($bean->categories as $item) {
+                $this->categories[] = Category::fromBean($container, $item);
+            }
+        }
+
+        if (isset($bean->auto_actions)) {
+            foreach($bean->auto_actions as $item) {
+                $this->auto_actions[] = AutoAction::fromBean($container, $item);
+            }
+        }
+
+        if (isset($bean->users)) {
+            foreach($bean->users as $item) {
+                $this->users[] = User::fromBean($container, $item);
+            }
+        }
+
         $this->updateBean();
     }
 
@@ -59,29 +80,29 @@ class Board extends BaseModel {
 
         if (isset($obj->columns)) {
             foreach($obj->columns as $item) {
-                $this->columns[] = Column::fromJson($this->container,
-                    json_encode($item));
+                $this->columns[] =
+                    Column::fromJson($container, json_encode($item));
             }
         }
 
         if (isset($obj->categories)) {
             foreach($obj->categories as $item) {
-                $this->categories[] = Category::fromJson($this->container,
-                    json_encode($item));
+                $this->categories[] =
+                    Category::fromJson($container, json_encode($item));
             }
         }
 
         if (isset($obj->auto_actions)) {
             foreach($obj->auto_actions as $item) {
-                $this->auto_actions[] = AutoAction::fromJson($this->container,
-                    json_encode($item));
+                $this->auto_actions[] =
+                    AutoAction::fromJson($container, json_encode($item));
             }
         }
 
         if (isset($obj->users)) {
             foreach($obj->users as $item) {
-                $this->users[] = User::fromJson($this->container,
-                    json_encode($item));
+                $this->users[] =
+                    User::fromJson($container, json_encode($item));
             }
         }
 
@@ -89,9 +110,9 @@ class Board extends BaseModel {
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = $obj->id;
+        $this->id = (int) $obj->id;
         $this->name = $obj->name;
-        $this->is_active = $obj->is_active;
+        $this->is_active = (bool) $obj->is_active;
     }
 }
 

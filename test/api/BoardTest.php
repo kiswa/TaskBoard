@@ -3,6 +3,7 @@ require_once 'Mocks.php';
 
 class BoardTest extends PHPUnit_Framework_TestCase {
     private $json = '';
+    private $bean;
 
     public static function setupBeforeClass() {
         try {
@@ -21,38 +22,9 @@ class BoardTest extends PHPUnit_Framework_TestCase {
             return;
         }
 
-        $board = new stdClass();
-        $board->id = 1;
-        $board->name = 'test';
-        $board->is_active = true;
-        $board->columns = [];
-
-        $column = new stdClass();
-        $column->id = 1;
-        $column->name = 'col1';
-
-        $category = new stdClass();
-        $category->id = 1;
-        $category->name = 'cat1';
-
-        $auto_action = new stdClass();
-        $auto_action->id = 1;
-        $auto_action->trigger = ActionTrigger::MoveToColumn;
-        $auto_action->trigger_id = 1;
-        $auto_action->type = ActionType::SetColor;
-        $auto_action->color = '#ffffff';
-
-        $user = new stdClass();
-        $user->id = 1;
-        $user->security_level = 1;
-        $user->username = 'tester';
-
-        $board->columns[] = $column;
-        $board->categories[] = $category;
-        $board->auto_actions[] = $auto_action;
-        $board->users[] = $user;
-
+        $board = DataMock::getBoard();
         $this->json = json_encode($board);
+        $this->bean = $board;
     }
 
     // Just to get the complete code coverage
@@ -80,6 +52,8 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($board->name === '');
         $this->assertTrue($board->is_active === true);
         $this->assertArraySubset($board->columns, []);
+
+        $board = Board::fromBean(new ContainerMock(), $this->bean);
     }
 
     public function testCreateFromJson() {
@@ -97,5 +71,18 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($board->is_active === true);
     }
 
+    public function testSaveAndDelete() {
+        $board = Board::fromJson(new ContainerMock(),
+            json_encode(DataMock::getBoard()));
+        $board->save();
+
+        $board = new Board(new ContainerMock(), 1);
+        $this->assertTrue($board->id === 1);
+
+        $board->delete();
+
+        $board = new Board(new ContainerMock(), $board->id);
+        $this->assertTrue($board->id === 0);
+    }
 }
 
