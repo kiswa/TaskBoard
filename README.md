@@ -1,6 +1,6 @@
 # TaskBoard
 
- [![Build Status](https://travis-ci.org/kiswa/TaskBoard.svg)](https://travis-ci.org/kiswa/TaskBoard) [![Join the chat at https://gitter.im/kiswa/TaskBoard](https://badges.gitter.im/kiswa/TaskBoard.svg)](https://gitter.im/kiswa/TaskBoard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join the chat at https://reddit.com/r/TaskBoard](https://raw.githubusercontent.com/kiswa/TaskBoard/re-write/reddit.svg)](https://reddit.com/r/TaskBoard)
+ [![Build Status](https://travis-ci.org/kiswa/TaskBoard.svg)](https://travis-ci.org/kiswa/TaskBoard) [![Join the chat at https://gitter.im/kiswa/TaskBoard](https://badges.gitter.im/kiswa/TaskBoard.svg)](https://gitter.im/kiswa/TaskBoard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join the chat at https://reddit.com/r/TaskBoard](https://camo.githubusercontent.com/578c86d2bf2e6db2f310615e03b017b3309c18da/68747470733a2f2f6261646765732e6769747465722e696d2f6b697377612f5461736b426f6172642e737667)](https://reddit.com/r/TaskBoard)
 
 A [Kanban](http://en.wikipedia.org/wiki/Kanban_board)-inspired app for keeping track of things that need to get done.
 
