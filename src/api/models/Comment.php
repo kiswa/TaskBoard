@@ -10,12 +10,33 @@ class Comment extends BaseModel {
     }
 
     public function updateBean() {
+        $bean = $this->bean;
+
+        $bean->id = $this->id;
+        $bean->text = $this->text;
     }
 
-    public function loadFromBean($container, $bean) {
+    public function loadFromBean($bean) {
+        if (!isset($bean->id) || $bean->id === 0) {
+            return;
+        }
+
+        $this->loadPropertiesFrom($bean);
     }
 
-    public function loadFromJson($container, $obj) {
+    public function loadFromJson($json) {
+        $obj = json_decode($json);
+
+        if (!isset($obj->id) || $obj->id === 0) {
+            return;
+        }
+
+        $this->loadPropertiesFrom($obj);
+    }
+
+    private function loadPropertiesFrom($obj) {
+        $this->id = (int) $obj->id;
+        $this->text = $obj->text;
     }
 }
 

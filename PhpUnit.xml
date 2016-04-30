@@ -1,14 +1,13 @@
 <phpunit>
     <filter>
-        <blacklist>
-            <directory>
-                src/api/vendor
-            </directory>
-        </blacklist>
+        <whitelist>
+            <directory>src/api/controllers</directory>
+            <directory>src/api/models</directory>
+        </whitelist>
     </filter>
     <logging>
         <log type="coverage-html" target="api-coverage/"
-            lowUpperBound="35" highLowerBound="75" />
+            lowUpperBound="40" highLowerBound="80" />
     </logging>
 </phpunit>
 

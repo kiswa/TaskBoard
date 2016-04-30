@@ -19,44 +19,48 @@ class AutoAction extends BaseModel {
     public $trigger = ActionTrigger::MoveToColumn;
     public $trigger_id = 0; // ID of the column etc. which triggers the action
     public $type = ActionType::SetColor;
-    // These are the target change to make when the action
-    // is performed. Only one will be set in an action.
-    // TODO: Consider other ways to do this.
-    public $color = '';
-    public $category_id = 0;
-    public $assignee_id = 0;
+    public $change_to = ''; // Whatever the target of the action changes to
 
-    public function __construct($container, $id = 0, $internal = false) {
+    public function __construct($container, $id = 0) {
         parent::__construct('auto_action', $id, $container);
-
-        if ($internal) {
-            return;
-        }
 
         $this->loadFromBean($this->bean);
     }
 
-    public static function fromBean($container, $bean) {
-        $instance = new self($container, 0, true);
-        $instance->loadFromBean($container, $bean);
-
-        return $instance;
-    }
-
-    public static function fromJson($container, $json) {
-        $instance = new self($container, 0, true);
-        $instance->loadFromJson($container, $json);
-
-        return $instance;
-    }
-
     public function updateBean() {
+        $bean = $this->bean;
+
+        $bean->id = $this->id;
+        $bean->trigger = $this->trigger;
+        $bean->trigger_id = $this->trigger_id;
+        $bean->type = $this->type;
+        $bean->change_to = $this->change_to;
     }
 
-    public function loadFromBean($container, $bean) {
+    public function loadFromBean($bean) {
+        if (!isset($bean->id) || $bean->id === 0) {
+            return;
+        }
+
+        $this->loadPropertiesFrom($bean);
     }
 
-    public function loadFromJson($container, $obj) {
+    public function loadFromJson($json) {
+        $obj = json_decode($json);
+
+        if (!isset($obj->id) || $obj->id === 0) {
+            return;
+        }
+
+        $this->loadPropertiesFrom($obj);
+    }
+
+    private function loadPropertiesFrom($obj) {
+        $this->id = (int) $obj->id;
+        $this->trigger = new ActionTrigger((int) $obj->trigger);
+        $this->trigger_id = (int) $obj->trigger_id;
+        $this->type = new ActionType((int) $obj->type);
+        $this->change_to = $obj->change_to;
     }
 }
 

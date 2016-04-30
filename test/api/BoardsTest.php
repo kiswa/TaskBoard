@@ -10,13 +10,9 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         } catch (Exception $ex) { }
     }
 
-    public static function tearDownAfterClass() {
-        if (file_exists('tests.db')) {
-            unlink('tests.db');
-        }
-    }
+    public function setUp() {
+        RedBeanPHP\R::nuke();
 
-    public function setup() {
         $this->boards = new Boards(new ContainerMock());
     }
 
@@ -39,26 +35,24 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
             $this->boards->getBoard(null, new ResponseMock(), $args));
     }
 
-    public function testAddBoard() {
+    public function testAddRemoveBoard() {
         $expected = new ApiJson();
-        $expected->addAlert('error', 'Error adding board. ' .
-            'Please check your entries and try again.');
+        $expected->setSuccess();
+        $expected->addAlert('success', 'Board  added.');
 
-        $this->assertEquals($expected,
-            $this->boards->addBoard(new RequestMock(),
-                new ResponseMock(), null));
-    }
+        $actual = $this->boards->addBoard(new RequestMock(),
+            new ResponseMock(), null);
 
-    public function testRemoveBoard() {
-        $expected = new ApiJson();
-        $expected->addAlert('error', 'Error removing board. ' .
-            'No board found for ID 1.');
+        $this->assertEquals($expected, $actual);
+
+        $expected->addAlert('success', 'Board  removed.');
 
         $args = [];
         $args['id'] = '1';
 
-        $this->assertEquals($expected,
-            $this->boards->removeBoard(null, new ResponseMock(), $args));
+        $actual = $this->boards->removeBoard(null, new ResponseMock(), $args);
+
+        $this->assertEquals($expected, $actual);
     }
 
 }

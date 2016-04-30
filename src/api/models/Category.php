@@ -15,14 +15,14 @@ class Category extends BaseModel {
 
     public static function fromBean($container, $bean) {
         $instance = new self($container, 0, true);
-        $instance->loadFromBean($container, $bean);
+        $instance->loadFromBean($bean);
 
         return $instance;
     }
 
     public static function fromJson($container, $json) {
         $instance = new self($container, 0, true);
-        $instance->loadFromJson($container, $json);
+        $instance->loadFromJson($json);
 
         return $instance;
     }
@@ -30,10 +30,10 @@ class Category extends BaseModel {
     public function updateBean() {
     }
 
-    public function loadFromBean($container, $bean) {
+    public function loadFromBean($bean) {
     }
 
-    public function loadFromJson($container, $json) {
+    public function loadFromJson($json) {
     }
 }
 

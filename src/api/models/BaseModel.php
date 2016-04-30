@@ -4,25 +4,37 @@ use RedBeanPHP\R;
 abstract class BaseModel {
     protected $logger;
     protected $bean;
+    protected $container;
 
     public function __construct($type, $id, $container) {
-        $this->logger = $container->get('logger');
+        $this->container = $container;
+
+        $this->logger = $this->container->get('logger');
         $this->bean = R::load($type, $id);
     }
 
-    public abstract function loadFromBean($container, $bean);
-    public abstract function loadFromJson($container, $obj);
-
     public abstract function updateBean();
+
+    public abstract function loadFromBean($bean);
+    public abstract function loadFromJson($json);
+
+    public function getBean() {
+        return $this->bean;
+    }
 
     public function save() {
         $this->updateBean();
 
         try {
-            R::store($this->bean);
+            $id = R::store($this->bean);
+            assert($id === $this->id);
             $this->loadFromBean($this->bean);
         } catch (Exception $ex) {
-            $this->logger->addError('Save Error: ', [$this->bean]);
+            $this->logger->addError('Save Error: ', [
+                $this->bean,
+                $ex->getMessage(),
+                $ex->getTrace()
+            ]);
         }
     }
 

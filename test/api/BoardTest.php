@@ -11,13 +11,9 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         } catch (Exception $ex) { }
     }
 
-    public static function tearDownAfterClass() {
-        if (file_exists('tests.db')) {
-            unlink('tests.db');
-        }
-    }
-
     protected function setUp() {
+        RedBeanPHP\R::nuke();
+
         if ($this->json !== '') {
             return;
         }
@@ -25,6 +21,21 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $board = DataMock::getBoard();
         $this->json = json_encode($board);
         $this->bean = $board;
+        // Convert to bean format
+        $this->bean->xownColumnList = $board->columns;
+        $this->bean->xownCategoryList = $board->categories;
+        $this->bean->xownAutoActionList = $board->auto_actions;
+        $this->bean->ownUserList = $board->users;
+    }
+
+    private function assertDefaultProperties($board) {
+        $this->assertTrue($board->id === 0);
+        $this->assertTrue($board->name === '');
+        $this->assertTrue($board->is_active === true);
+        $this->assertArraySubset($board->columns, []);
+        $this->assertArraySubset($board->categories, []);
+        $this->assertArraySubset($board->auto_actions, []);
+        $this->assertArraySubset($board->users, []);
     }
 
     // Just to get the complete code coverage
@@ -39,30 +50,25 @@ class BoardTest extends PHPUnit_Framework_TestCase {
     public function testCreateNewBoard() {
         $board = new Board(new ContainerMock());
 
-        $this->assertTrue($board->id === 0);
-        $this->assertTrue($board->name === '');
-        $this->assertTrue($board->is_active === true);
-        $this->assertArraySubset($board->columns, []);
+        $this->assertDefaultProperties($board);
     }
 
     public function testCreateFromBean() {
         $board = Board::fromBean(new ContainerMock(), null);
 
-        $this->assertTrue($board->id === 0);
-        $this->assertTrue($board->name === '');
-        $this->assertTrue($board->is_active === true);
-        $this->assertArraySubset($board->columns, []);
+        $this->assertDefaultProperties($board);
 
         $board = Board::fromBean(new ContainerMock(), $this->bean);
+
+        $this->assertTrue($board->id === 1);
+        $this->assertTrue($board->name === 'test');
+        $this->assertTrue($board->is_active === true);
     }
 
     public function testCreateFromJson() {
         $board = Board::fromJson(new ContainerMock(), null);
 
-        $this->assertTrue($board->id === 0);
-        $this->assertTrue($board->name === '');
-        $this->assertTrue($board->is_active === true);
-        $this->assertArraySubset($board->columns, []);
+        $this->assertDefaultProperties($board);
 
         $board = Board::fromJson(new ContainerMock(), $this->json);
 
@@ -71,18 +77,33 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($board->is_active === true);
     }
 
-    public function testSaveAndDelete() {
-        $board = Board::fromJson(new ContainerMock(),
-            json_encode(DataMock::getBoard()));
+    public function testSaveLoadDelete() {
+        $board = Board::fromJson(new ContainerMock(), $this->json);
+
         $board->save();
+        $this->assertTrue($board->id === 1);
 
         $board = new Board(new ContainerMock(), 1);
         $this->assertTrue($board->id === 1);
 
         $board->delete();
 
-        $board = new Board(new ContainerMock(), $board->id);
+        $board = new Board(new ContainerMock(), 1);
         $this->assertTrue($board->id === 0);
+    }
+
+    public function testGetBean() {
+        $board = new Board(new ContainerMock());
+        $bean = $board->getBean();
+
+        // Make sure bean properties exist
+        $this->assertTrue($bean->id === 0);
+        $this->assertArraySubset($bean->xownColumnList, []);
+
+        $board->save();
+        $bean = $board->getBean();
+
+        $this->assertTrue((int)$bean->id === 1);
     }
 }
 

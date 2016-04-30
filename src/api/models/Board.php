@@ -15,61 +15,91 @@ class Board extends BaseModel {
             return;
         }
 
-        $this->loadFromBean($container, $this->bean);
+        $this->loadFromBean($this->bean);
     }
 
     public static function fromBean($container, $bean) {
         $instance = new self($container, 0, true);
-        $instance->loadFromBean($container, $bean);
+        $instance->loadFromBean($bean);
 
         return $instance;
     }
 
     public static function fromJson($container, $json) {
         $instance = new self($container, 0, true);
-        $instance->loadFromJson($container, $json);
+        $instance->loadFromJson($json);
 
         return $instance;
     }
 
     public function updateBean() {
+        $bean = $this->bean;
+
+        $bean->name = $this->name;
+        $bean->is_active = $this->is_active;
+
+        $bean->xownColumnList = [];
+        $bean->xownCategoryList = [];
+        $bean->xownAutoActionList = [];
+        $bean->ownUserList = [];
+
+        foreach($this->columns as $col) {
+            $col->updateBean();
+            $this->bean->xownColumnList[] = $col->bean;
+        }
+
+        foreach($this->categories as $cat) {
+            $cat->updateBean();
+            $this->bean->xownCategoryList[] = $cat->bean;
+        }
+
+        foreach($this->auto_actions as $act) {
+            $act->updateBean();
+            $this->bean->xownAutoActionList[] = $act->bean;
+        }
+
+        foreach($this->users as $user) {
+            $user->updateBean();
+            $this->bean->ownUserList[] = $user->bean;
+        }
     }
 
-    public function loadFromBean($container, $bean) {
+    public function loadFromBean($bean) {
         if (!isset($bean->id) || $bean->id === 0) {
             return;
         }
 
         $this->loadPropertiesFrom($bean);
+        $this->resetArrays();
 
-        if (isset($bean->columns)) {
-            foreach($bean->columns as $item) {
-                $this->columns[] = Column::fromBean($container, $item);
+        if (isset($bean->xownColumnList)) {
+            foreach($bean->xownColumnList as $item) {
+                $this->columns[] = new Column($this->container, $item->id);
             }
         }
 
-        if (isset($bean->categories)) {
-            foreach($bean->categories as $item) {
-                $this->categories[] = Category::fromBean($container, $item);
+        if (isset($bean->xownCategoryList)) {
+            foreach($bean->xownCategoryList as $item) {
+                $this->categories[] =
+                    new Category($this->container, $item->id);
             }
         }
 
-        if (isset($bean->auto_actions)) {
-            foreach($bean->auto_actions as $item) {
-                $this->auto_actions[] = AutoAction::fromBean($container, $item);
+        if (isset($bean->xownAutoActionList)) {
+            foreach($bean->xownAutoActionList as $item) {
+                $this->auto_actions[] =
+                    new AutoAction($this->container, $item->id);
             }
         }
 
-        if (isset($bean->users)) {
-            foreach($bean->users as $item) {
-                $this->users[] = User::fromBean($container, $item);
+        if (isset($bean->ownUserList)) {
+            foreach($bean->ownUserList as $item) {
+                $this->users[] = new User($this->container, $item->id);
             }
         }
-
-        $this->updateBean();
     }
 
-    public function loadFromJson($container, $json) {
+    public function loadFromJson($json) {
         $obj = json_decode($json);
 
         if (!isset($obj->id) || $obj->id === 0) {
@@ -77,42 +107,46 @@ class Board extends BaseModel {
         }
 
         $this->loadPropertiesFrom($obj);
+        $this->resetArrays();
 
         if (isset($obj->columns)) {
             foreach($obj->columns as $item) {
-                $this->columns[] =
-                    Column::fromJson($container, json_encode($item));
+                $this->columns[] = new Column($this->container, $item->id);
             }
         }
 
         if (isset($obj->categories)) {
             foreach($obj->categories as $item) {
                 $this->categories[] =
-                    Category::fromJson($container, json_encode($item));
+                    new Category($this->container, $item->id);
             }
         }
 
         if (isset($obj->auto_actions)) {
             foreach($obj->auto_actions as $item) {
                 $this->auto_actions[] =
-                    AutoAction::fromJson($container, json_encode($item));
+                    new AutoAction($this->container, $item->id);
             }
         }
 
         if (isset($obj->users)) {
             foreach($obj->users as $item) {
-                $this->users[] =
-                    User::fromJson($container, json_encode($item));
+                $this->users[] = new User($this->container, $item->id);
             }
         }
-
-        $this->updateBean();
     }
 
     private function loadPropertiesFrom($obj) {
         $this->id = (int) $obj->id;
         $this->name = $obj->name;
         $this->is_active = (bool) $obj->is_active;
+    }
+
+    private function resetArrays() {
+        $this->columns = [];
+        $this->categories = [];
+        $this->auto_actions = [];
+        $this->users = [];
     }
 }
 

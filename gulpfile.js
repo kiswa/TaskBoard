@@ -151,6 +151,13 @@ gulp.task('test-api', () => {
             '--configuration PhpUnit.xml test/api/'));
 });
 
+gulp.task('test-api-single', () => {
+    return gulp.src('')
+        .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit ' +
+            '--configuration PhpUnit.xml ' +
+            '--group single --no-coverage test/api/'))
+});
+
 gulp.task('watch', () => {
     let watchTs = gulp.watch(paths.ts, ['tsc']),
         watchScss = gulp.watch(paths.scss, ['lintScss', 'styles']),
@@ -159,7 +166,8 @@ gulp.task('watch', () => {
         watchApi = gulp.watch(paths.api, ['api']),
 
         onChanged = (event) => {
-            console.log('File ' + event.path + ' was ' + event.type + '. Running tasks...');
+            console.log('File ' + event.path + ' was ' + event.type +
+            '. Running tasks...');
         };
 
     watchTs.on('change', onChanged);

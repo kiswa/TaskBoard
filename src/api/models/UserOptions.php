@@ -13,10 +13,10 @@ class UserOptions extends BaseModel {
     public function updateBean() {
     }
 
-    public function loadFromBean($container, $bean) {
+    public function loadFromBean($bean) {
     }
 
-    public function loadFromJson($container, $obj) {
+    public function loadFromJson($obj) {
     }
 }
 

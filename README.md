@@ -67,6 +67,14 @@ Developing on TaskBoard is pretty simple too.
 
 Both the API and App are unit tested. To run all tests, use the command `gulp test`. For only one set, run `gulp test-api` or `gulp test-app`.
 
+If you want to run a single API test, add the following comment block before the test function and use the command `gulp test-api-single`.
+
+``` php
+/**
+ * @group single
+ */
+```
+
 These tests are run by [Travis CI](https://travis-ci.org/) on PRs and commits. A PR with failing or missing tests will not be merged.
 
 ## How It's Made

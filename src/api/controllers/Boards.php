@@ -108,7 +108,7 @@ class Boards extends BaseController {
 
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
-            'Board ' . $before->name . ' updated.');
+            'Board ' . $before->name . ' removed.');
 
         return $this->jsonResponse($response);
     }
