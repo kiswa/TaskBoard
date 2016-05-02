@@ -28,6 +28,8 @@ class DataMock {
         $column = new stdClass();
         $column->id = 1;
         $column->name = 'col1';
+        $column->position = 1;
+        $column->tasks[] = DataMock::getTask();
 
         return $column;
     }
@@ -54,8 +56,13 @@ class DataMock {
     public static function getUser() {
         $user = new stdClass();
         $user->id = 1;
-        $user->security_level = 1;
+        $user->security_level = SecurityLevel::BoardAdmin;
         $user->username = 'tester';
+        $user->salt = 'salty1234';
+        $user->password_hash = 'hashpass1234';
+        $user->email = 'user@example.com';
+        $user->default_board_id = 1;
+        $user->options[] = DataMock::getUserOptions();
 
         return $user;
     }
@@ -109,6 +116,17 @@ class DataMock {
         $task->comments[] = DataMock::getComment();
 
         return $task;
+    }
+
+    public static function getUserOptions() {
+        $options = new stdClass();
+        $options->id = 1;
+        $options->new_tasks_at_bottom = false;
+        $options->show_animations = false;
+        $options->show_assignee = false;
+        $options->multiple_tasks_per_row = true;
+
+        return $options;
     }
 }
 
