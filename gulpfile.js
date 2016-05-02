@@ -147,8 +147,7 @@ gulp.task('coverage', ['tsc', 'vendor'], () => {
 
 gulp.task('test-api', () => {
     return gulp.src('PhpUnit.xml')
-        .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit',
-            { dryRun: true}));
+        .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit'));
 });
 
 gulp.task('test-api-single', () => {
