@@ -37,15 +37,16 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
     public function testAddRemoveBoard() {
         $expected = new ApiJson();
-        $expected->setSuccess();
-        $expected->addAlert('success', 'Board  added.');
 
         $actual = $this->boards->addBoard(new RequestMock(),
             new ResponseMock(), null);
 
+        $expected->setSuccess();
+        $expected->addAlert('success', 'Board test added.');
+
         $this->assertEquals($expected, $actual);
 
-        $expected->addAlert('success', 'Board  removed.');
+        $expected->addAlert('success', 'Board test removed.');
 
         $args = [];
         $args['id'] = '1';

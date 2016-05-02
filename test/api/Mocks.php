@@ -105,8 +105,8 @@ class DataMock {
         $task->due_date = 1234567890;
         $task->points = 3;
         $task->position = 1;
-        $task->attachments = DataMock::getAttachment();
-        $task->comments = DataMock::getComment();
+        $task->attachments[] = DataMock::getAttachment();
+        $task->comments[] = DataMock::getComment();
 
         return $task;
     }
@@ -143,7 +143,7 @@ class ContainerMock {
 class RequestMock {
 
     public function getBody() {
-        return '{ "id": 1 }';
+        return json_encode(DataMock::getBoard());
     }
 
 }

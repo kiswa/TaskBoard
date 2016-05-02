@@ -146,16 +146,15 @@ gulp.task('coverage', ['tsc', 'vendor'], () => {
 });
 
 gulp.task('test-api', () => {
-    return gulp.src('')
-        .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit ' +
-            '--configuration PhpUnit.xml test/api/'));
+    return gulp.src('PhpUnit.xml')
+        .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit',
+            { dryRun: true}));
 });
 
 gulp.task('test-api-single', () => {
-    return gulp.src('')
-        .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit ' +
-            '--configuration PhpUnit.xml ' +
-            '--group single --no-coverage test/api/'))
+    return gulp.src('PhpUnit.xml')
+        .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit',
+            { group: 'single' }));
 });
 
 gulp.task('watch', () => {

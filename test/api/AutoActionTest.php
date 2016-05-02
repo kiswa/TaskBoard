@@ -46,7 +46,7 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testUpdateBean() {
-        $action = new Attachment(new ContainerMock());
+        $action = new AutoAction(new ContainerMock());
         $action->loadFromBean($this->bean);
 
         $action->updateBean();
