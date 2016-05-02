@@ -1,4 +1,9 @@
 <phpunit>
+    <testsuites>
+        <testsuite>
+            <directory>test/api/</directory>
+        </testsuite>
+    </testsuites>
     <filter>
         <whitelist>
             <directory>src/api/controllers</directory>

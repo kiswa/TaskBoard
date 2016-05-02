@@ -11,6 +11,6 @@ before_script:
   - touch tests.db
   - chmod a+w tests.db
 script:
-  - phpunit -c PhpUnit.xml
+  - ./src/api/vendor/phpunit/phpunit/phpunit -c phpunit.xml
   - gulp test-app
 
