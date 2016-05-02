@@ -146,12 +146,12 @@ gulp.task('coverage', ['tsc', 'vendor'], () => {
 });
 
 gulp.task('test-api', () => {
-    return gulp.src('PhpUnit.xml')
+    return gulp.src('phpunit.xml')
         .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit'));
 });
 
 gulp.task('test-api-single', () => {
-    return gulp.src('PhpUnit.xml')
+    return gulp.src('phpunit.xml')
         .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit',
             { group: 'single' }));
 });
