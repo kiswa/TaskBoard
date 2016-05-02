@@ -8,7 +8,9 @@ before_script:
   - nvm use 4
   - npm i -g gulp
   - npm i
+  - touch tests.db
+  - chmod a+w tests.db
 script:
-  - gulp test-api
+  - ./src/api/vendor/phpunit/phpunit/phpunit --colors=always -c "PhpUnit.xml"
   - gulp test-app
 
