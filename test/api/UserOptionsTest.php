@@ -20,7 +20,7 @@ class UserOptionsTest extends PHPUnit_Framework_TestCase {
 
         $options = DataMock::getUserOptions();
         $this->json = json_encode($options);
-        $this->bean = $user;
+        $this->bean = $options;
     }
 
     public function testCreateUserOptions() {
@@ -52,27 +52,29 @@ class UserOptionsTest extends PHPUnit_Framework_TestCase {
         $options->updateBean();
         $bean = $options->getBean();
 
-        $this->assertTrue($bean->id === $user->id);
-        $this->assertTrue($bean->new_tasks_at_bottom === $user->new_tasks_at_bottom);
-        $this->assertTrue($bean->show_animations === $user->show_animations);
-        $this->assertTrue($bean->show_assignee === $user->show_assignee);
-        $this->assertTrue($bean->multiple_tasks_per_row === $user->multiple_tasks_per_row);
+        $this->assertTrue($bean->id === $options->id);
+        $this->assertTrue((bool) $bean->new_tasks_at_bottom ===
+            $options->new_tasks_at_bottom);
+        $this->assertTrue((bool) $bean->show_animations === $options->show_animations);
+        $this->assertTrue((bool) $bean->show_assignee === $options->show_assignee);
+        $this->assertTrue((bool) $bean->multiple_tasks_per_row ===
+            $options->multiple_tasks_per_row);
     }
 
-    private function assertDefaultProperties($user) {
-        $this->assertTrue($user->id === 0);
-        $this->assertTrue($user->security_level == SecurityLevel::User);
-        $this->assertTrue($user->username === '');
-        $this->assertTrue($user->salt === '');
-        $this->assertTrue($user->password_hash === '');
+    private function assertDefaultProperties($options) {
+        $this->assertTrue($options->id === 0);
+        $this->assertTrue($options->new_tasks_at_bottom === true);
+        $this->assertTrue($options->show_animations === true);
+        $this->assertTrue($options->show_assignee === true);
+        $this->assertTrue($options->multiple_tasks_per_row === false);
     }
 
-    private function assertMockProperties($user) {
-        $this->assertTrue($user->id === 1);
-        $this->assertTrue($user->salt === 'salty1234');
-        $this->assertTrue($user->password_hash === 'hashpass1234');
-        $this->assertTrue($user->email === 'user@example.com');
-        $this->assertTrue($user->default_board_id === 1);
+    private function assertMockProperties($options) {
+        $this->assertTrue($options->id === 1);
+        $this->assertTrue($options->new_tasks_at_bottom === false);
+        $this->assertTrue($options->show_animations === false);
+        $this->assertTrue($options->show_assignee === false);
+        $this->assertTrue($options->multiple_tasks_per_row === true);
     }
 }
 

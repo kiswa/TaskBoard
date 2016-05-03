@@ -1,6 +1,6 @@
 <?php
 class UserOptions extends BaseModel {
-    public $id;
+    public $id = 0;
     public $new_tasks_at_bottom = true;
     public $show_animations = true;
     public $show_assignee = true;
@@ -30,7 +30,7 @@ class UserOptions extends BaseModel {
         $this->loadPropertiesFrom($bean);
     }
 
-    public function loadFromJson($obj) {
+    public function loadFromJson($json) {
         $obj = json_decode($json);
 
         if (!isset($obj->id) || $obj->id === 0) {
