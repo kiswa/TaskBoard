@@ -1,9 +1,10 @@
-.sass-cache
-.coverrun
 .coverdata
-node_modules
-dist
-src/api/vendor
+.coverrun
 api-coverage
+build
 coverage.html
+dist
+node_modules
+src/api/vendor
+typings
 
