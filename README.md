@@ -6,6 +6,24 @@ A [Kanban](http://en.wikipedia.org/wiki/Kanban_board)-inspired app for keeping t
 
 The goal of TaskBoard is to provide a simple and clean interface to a functional and minimal application for keeping track of tasks. **It's not trying to be the next Trello or LeanKit.**
 
+## Installation
+
+### Prerequisites
+
+A web server running PHP 5.5, 5.6, or 7.0 with sqlite enabled.
+
+The server must have `sqlite3` and `php5-sqlite` (or `php7-sqlite`) installed, as well as the `rewrite` Apache module.
+
+If you're comfortable changing code, you can use any database [supported by RedBeanPHP](http://www.redbeanphp.com/index.php?p=/connection).
+
+### Install
+
+Installing TaskBoard is as easy as 1, 2, 3!
+
+ 1. Download [the latest release](#) (or whatever version you want)
+ 2. Extract it to your webserver
+ 3. Verify the `api` directory is writable
+
 ## Features
 
 ### Boards
@@ -37,25 +55,7 @@ TaskBoard uses a [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdow
 
 Once a task has been entered, it may have Comments or Attachments added to it by viewing the task detail. There is a link to edit the task, which takes you to a modal much like the original add task dialog. For admin users, there is also a link to delete the task. This view also shows the task's activity log on the side of the screen, displaying the complete history of events related to the task.
 
-## Installation
-
-### Prerequisites
-
-A web server running PHP 5.5, 5.6, or 7.0 with sqlite enabled.
-
-The server must have `sqlite` and `php5-sqlite` (or `php7-sqlite`) installed, as well as the `rewrite` Apache module.
-
-If you're comfortable changing code, you can use any database [supported by RedBeanPHP](http://www.redbeanphp.com/index.php?p=/connection).
-
-### Install
-
-Installing TaskBoard is as easy as 1, 2, 3!
-
- 1. Download [the latest release](#) (or whatever version you want)
- 2. Extract it to your webserver
- 3. Verify the `api` directory is writable
-
-### Development
+## Development
 
 Developing on TaskBoard is pretty simple too.
 
@@ -77,22 +77,6 @@ If you want to run a single API test, add the following comment block before the
 
 These tests are run by [Travis CI](https://travis-ci.org/) on PRs and commits. A PR with failing or missing tests will not be merged.
 
-## How It's Made
-
-1. Front end
-
- * [Angular 2](https://angular.io/) single-page app
- * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
- * [scss-base](https://www.npmjs.com/package/scss-base) base styles
- * [marked](https://github.com/chjj/marked) Markdown parser
-
-2. Back end
-
- * [Slim Framework](http://www.slimframework.com/) and [RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
- * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
- * [JWT](https://jwt.io/) authentication
- * [SQLite](https://www.sqlite.org/) database
-
 ## Contributing
 
 Fork the repository and make your changes on the `dev` branch.
@@ -106,4 +90,20 @@ Make sure to include/update unit tests.
 Constructive feedback is appreciated! If you have ideas for improvement, please [add an issue](https://github.com/kiswa/TaskBoard/issues) or implement it and submit a pull request.
 
 If you find a bug, please post it on the [Issue Tracker](https://github.com/kiswa/TaskBoard/issues).
+
+## How It's Made
+
+##### Front End
+
+ * [Angular 2](https://angular.io/) single-page app
+ * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
+ * [scss-base](https://www.npmjs.com/package/scss-base) base styles
+ * [marked](https://github.com/chjj/marked) Markdown parser
+
+##### Back End
+
+ * [Slim Framework](http://www.slimframework.com/) and [RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
+ * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
+ * [JWT](https://jwt.io/) authentication
+ * [SQLite](https://www.sqlite.org/) database
 
