@@ -3,6 +3,7 @@
 let gulp = require('gulp'),
     fs = require('fs'),
     del = require('del'),
+    touch = require('touch'),
     merge = require('merge-stream'),
     SystemBuilder = require('systemjs-builder'),
 
@@ -147,12 +148,18 @@ gulp.task('coverage', ['tsc'], () => {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('test-api', () => {
+gulp.task('api-test-db', () => {
+    del('tests.db');
+    touch('tests.db');
+    fs.chmod('tests.db', '0666');
+});
+
+gulp.task('test-api', ['api-test-db'], () => {
     return gulp.src('phpunit.xml')
         .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit'));
 });
 
-gulp.task('test-api-single', () => {
+gulp.task('test-api-single', ['api-test-db'], () => {
     return gulp.src('phpunit.xml')
         .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit',
             { group: 'single' }));
@@ -182,7 +189,8 @@ gulp.task('watchtests', () => {
         watchTs = gulp.watch(paths.ts, ['test-app']),
 
         onChanged = (event) => {
-            console.log('File ' + event.path + ' was ' + event.type + '. Running tasks...');
+            console.log('File ' + event.path + ' was ' + event.type +
+                '. Running tasks...');
         };
 
     watchTests.on('change', onChanged);

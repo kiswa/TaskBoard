@@ -62,6 +62,7 @@
     "scss-base": "^1.1.0",
     "systemjs": "^0.19.27",
     "systemjs-builder": "^0.15.16",
+    "touch": "^1.0.0",
     "typings": "^0.8.1",
     "zone.js": "^0.6.12"
   }

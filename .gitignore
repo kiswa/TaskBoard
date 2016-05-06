@@ -6,5 +6,6 @@ coverage.html
 dist
 node_modules
 src/api/vendor
+tests.db
 typings
 
