@@ -1,13 +1,13 @@
 <phpunit>
     <testsuites>
         <testsuite>
-            <directory>test/api/</directory>
+            <directory>./</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory>src/api/controllers</directory>
-            <directory>src/api/models</directory>
+            <directory>../../src/api/controllers</directory>
+            <directory>../../src/api/models</directory>
         </whitelist>
     </filter>
     <logging>
