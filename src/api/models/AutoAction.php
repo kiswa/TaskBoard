@@ -16,14 +16,16 @@ class ActionType extends Enum {
 
 class AutoAction extends BaseModel {
     public $id = 0;
-    public $trigger = ActionTrigger::MoveToColumn;
-    public $trigger_id = 0; // ID of the column etc. which triggers the action
-    public $type = ActionType::SetColor;
+    public $trigger;
+    public $source_id = 0; // ID of the column etc. which triggers the action
+    public $type;
     public $change_to = ''; // Whatever the target of the action changes to
 
     public function __construct($container, $id = 0) {
         parent::__construct('auto_action', $id, $container);
 
+        $this->trigger = new ActionTrigger(ActionTrigger::MoveToColumn);
+        $this->type = new ActionType(ActionType::SetColor);
         $this->loadFromBean($this->bean);
     }
 
@@ -31,9 +33,9 @@ class AutoAction extends BaseModel {
         $bean = $this->bean;
 
         $bean->id = $this->id;
-        $bean->trigger = $this->trigger;
-        $bean->trigger_id = $this->trigger_id;
-        $bean->type = $this->type;
+        $bean->trigger = $this->trigger->getValue();
+        $bean->source_id = $this->source_id;
+        $bean->type = $this->type->getValue();
         $bean->change_to = $this->change_to;
     }
 
@@ -58,7 +60,7 @@ class AutoAction extends BaseModel {
     private function loadPropertiesFrom($obj) {
         $this->id = (int) $obj->id;
         $this->trigger = new ActionTrigger((int) $obj->trigger);
-        $this->trigger_id = (int) $obj->trigger_id;
+        $this->source_id = (int) $obj->source_id;
         $this->type = new ActionType((int) $obj->type);
         $this->change_to = $obj->change_to;
     }

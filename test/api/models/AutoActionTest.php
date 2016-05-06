@@ -1,5 +1,5 @@
 <?php
-require_once 'Mocks.php';
+require_once __DIR__ . '/../Mocks.php';
 
 class AutoActionTest extends PHPUnit_Framework_TestCase {
     private $json = '';
@@ -53,9 +53,9 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
         $bean = $action->getBean();
 
         $this->assertTrue($bean->id === $action->id);
-        $this->assertTrue($bean->trigger === $action->trigger);
-        $this->assertTrue($bean->trigger_id === $action->trigger_id);
-        $this->assertTrue($bean->type === $action->type);
+        $this->assertTrue($bean->trigger === $action->trigger->getValue());
+        $this->assertTrue($bean->source_id === $action->source_id);
+        $this->assertTrue($bean->type === $action->type->getValue());
         $this->assertTrue($bean->change_to === $action->change_to);
     }
 
@@ -66,7 +66,7 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($attachment->id === 1);
         $this->assertTrue($attachment->trigger->getValue() ===
             $trigger->getValue());
-        $this->assertTrue($attachment->trigger_id === 1);
+        $this->assertTrue($attachment->source_id === 1);
         $this->assertTrue($attachment->type->getValue() ===
             $type->getValue());
         $this->assertTrue($attachment->change_to === 'null');
@@ -74,10 +74,11 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
 
     private function assertDefaultProperties($attachment) {
         $this->assertTrue($attachment->id === 0);
-        $this->assertTrue($attachment->trigger ==
+        $this->assertTrue($attachment->trigger->getValue() ===
             ActionTrigger::MoveToColumn);
-        $this->assertTrue($attachment->trigger_id === 0);
-        $this->assertTrue($attachment->type == ActionType::SetColor);
+        $this->assertTrue($attachment->source_id === 0);
+        $this->assertTrue($attachment->type->getValue() ===
+            ActionType::SetColor);
         $this->assertTrue($attachment->change_to === '');
 
     }

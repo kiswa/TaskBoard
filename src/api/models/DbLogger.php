@@ -1,5 +1,4 @@
 <?php
-
 class DbLogger {
     public static function logChange($container, $user_id, $log_text, $before,
             $after, $item_type, $item_id) {

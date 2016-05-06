@@ -1,5 +1,5 @@
 <?php
-require_once 'Mocks.php';
+require_once __DIR__ . '/../Mocks.php';
 
 class UserTest extends PHPUnit_Framework_TestCase {
     private $json = '';

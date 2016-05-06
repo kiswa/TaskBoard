@@ -35,7 +35,11 @@ abstract class BaseModel {
                 $ex->getMessage(),
                 $ex->getTrace()
             ]);
+
+            return false;
         }
+
+        return true;
     }
 
     public function delete() {

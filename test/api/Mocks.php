@@ -46,7 +46,7 @@ class DataMock {
         $auto_action = new stdClass();
         $auto_action->id = 1;
         $auto_action->trigger = ActionTrigger::SetToCategory;
-        $auto_action->trigger_id = 1;
+        $auto_action->source_id = 1;
         $auto_action->type = ActionType::ClearDueDate;
         $auto_action->change_to = 'null';
 
@@ -159,9 +159,22 @@ class ContainerMock {
 }
 
 class RequestMock {
+    public $board;
 
     public function getBody() {
+        if ($this->board) {
+            return json_encode($this->board);
+        }
+
         return json_encode(DataMock::getBoard());
+    }
+
+}
+
+class BadRequestMock {
+
+    public function getBody() {
+        return '{}';
     }
 
 }

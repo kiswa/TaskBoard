@@ -40,9 +40,8 @@ class Boards extends BaseController {
 
     public function addBoard($request, $response, $args) {
         $board = Board::fromJson($this->container, $request->getBody());
-        $board->save();
 
-        if ($board->id === 0) {
+        if (!$board->save()) {
             $this->logger->addError('Add Board: ', [$board]);
             $this->apiJson->addAlert('error', 'Error adding board. ' .
                 'Please check your entries and try again.');
@@ -63,7 +62,7 @@ class Boards extends BaseController {
 
     public function updateBoard($request, $response, $args) {
         $board = new Board($this->container, (int)$args['id']);
-        $update = Board::fromJson($request->getBody());
+        $update = Board::fromJson($this->container, $request->getBody());
 
         if ($board->id !== $update->id) {
             $this->logger->addError('Update Board: ', [$board, $update]);
