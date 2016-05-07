@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'top-nav',
+    selector: 'tb-top-nav',
     templateUrl: 'app/top-nav/top-nav.template.html'
 })
 export class TopNav {
