@@ -5,6 +5,7 @@ class ActionTrigger extends Enum {
     const MoveToColumn = 1;
     const AssignedToUser = 2;
     const SetToCategory = 3;
+    const PointsChanged = 4;
 }
 
 class ActionType extends Enum {
@@ -12,6 +13,7 @@ class ActionType extends Enum {
     const SetCategory = 2;
     const SetAssignee = 3;
     const ClearDueDate = 4;
+    const UseBaseColor = 5;
 }
 
 class AutoAction extends BaseModel {
@@ -21,12 +23,24 @@ class AutoAction extends BaseModel {
     public $type;
     public $change_to = ''; // Whatever the target of the action changes to
 
-    public function __construct($container, $id = 0) {
+    public function __construct($container, $id = 0, $internal = false) {
         parent::__construct('auto_action', $id, $container);
 
         $this->trigger = new ActionTrigger(ActionTrigger::MoveToColumn);
         $this->type = new ActionType(ActionType::SetColor);
+
+        if ($internal) {
+            return;
+        }
+
         $this->loadFromBean($this->bean);
+    }
+
+    public static function fromBean($container, $bean) {
+        $instance = new self($container, 0, true);
+        $instance->loadFromBean($bean);
+
+        return $instance;
     }
 
     public function updateBean() {

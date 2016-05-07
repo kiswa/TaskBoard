@@ -23,9 +23,19 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
         $this->bean = $action;
     }
 
-    public function testCreateAttachment() {
+    public function testCreateNewAutoAction() {
         $action = new AutoAction(new ContainerMock());
         $this->assertDefaultProperties($action);
+    }
+
+    public function testCreateFromBean() {
+        $action = AutoAction::fromBean(new ContainerMock, null);
+
+        $this->assertDefaultProperties($action);
+
+        $action = AutoAction::fromBean(new ContainerMock(), $this->bean);
+
+        $this->assertTrue($action->id === 1);
     }
 
     public function testLoadFromJson() {

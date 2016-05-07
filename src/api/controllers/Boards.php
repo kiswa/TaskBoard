@@ -10,7 +10,8 @@ class Boards extends BaseController {
             $this->apiJson->setSuccess();
 
             foreach($boardBeans as $bean) {
-                $this->apiJson->addData(Board::fromBean($this->container, $bean));
+                $this->apiJson->addData(
+                    Board::fromBean($this->container, $bean));
             }
         } else {
             $this->logger->addInfo('No boards in database.');

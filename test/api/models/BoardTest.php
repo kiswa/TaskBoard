@@ -49,7 +49,6 @@ class BoardTest extends PHPUnit_Framework_TestCase {
 
     public function testCreateNewBoard() {
         $board = new Board(new ContainerMock());
-
         $this->assertDefaultProperties($board);
     }
 
