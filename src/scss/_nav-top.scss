@@ -28,12 +28,8 @@
         }
 
         .flat {
-            background-color: lighten($color-background, 3%);
+            background-color: lighten($color-background, 10%);
             color: $color-primary;
-
-            &:hover {
-                background-color: lighten($color-background, 9%);
-            }
         }
     }
 }
