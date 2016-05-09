@@ -27,7 +27,7 @@ class AutoActions extends BaseController {
         $action->loadFromJson($request->getBody());
 
         if (!$action->save()) {
-            $this->logger->addError('Add Action: ', [$board]);
+            $this->logger->addError('Add Action: ', [$action]);
             $this->apiJson->addAlert('error',
                 'Error adding automatic action. ' .
                 'Please check your entries and try again.');
