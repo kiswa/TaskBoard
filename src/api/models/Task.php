@@ -46,10 +46,17 @@ class Task extends BaseModel {
     }
 
     public function loadFromBean($bean) {
-        if (!isset($bean->id) || $bean->id === 0) {
+        if (!isset($bean->id)) {
+            $this->is_valid = false;
+
             return;
         }
 
+        if ($bean->id === 0) {
+            return;
+        }
+
+        $this->is_valid = true;
         $this->loadPropertiesFrom($bean);
 
         $this->attachments = [];
@@ -72,10 +79,17 @@ class Task extends BaseModel {
     public function loadFromJson($json) {
         $obj = json_decode($json);
 
-        if (!isset($obj->id) || $obj->id === 0) {
+        if (!isset($obj->id)) {
+            $this->is_valid = false;
+
             return;
         }
 
+        if ($obj->id === 0) {
+            return;
+        }
+
+        $this->is_valid = true;
         $this->loadPropertiesFrom($obj);
 
         $this->attachments = [];

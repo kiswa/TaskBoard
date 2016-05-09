@@ -5,6 +5,7 @@ abstract class BaseModel {
     protected $logger;
     protected $bean;
     protected $container;
+    protected $is_valid = true;
 
     public function __construct($type, $id, $container) {
         $this->container = $container;
@@ -23,6 +24,10 @@ abstract class BaseModel {
     }
 
     public function save() {
+        if (!$this->is_valid) {
+            return false;
+        }
+
         $this->updateBean();
 
         try {

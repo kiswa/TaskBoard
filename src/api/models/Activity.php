@@ -4,8 +4,8 @@ class Activity extends BaseModel {
     public $id = 0;
     public $user_id = 0;
     public $log_text ='';
-    public $before = null;
-    public $after = null;
+    public $before = '';
+    public $after = '';
     public $item_type = '';
     public $item_id = 0;
 
@@ -38,20 +38,34 @@ class Activity extends BaseModel {
     }
 
     public function loadFromBean($bean) {
-        if (!isset($bean->id) || $bean->id === 0) {
+        if (!isset($bean->id)) {
+            $this->is_valid = false;
+
             return;
         }
 
+        if ($bean->id === 0) {
+            return;
+        }
+
+        $this->is_valid = true;
         $this->loadPropertiesFrom($bean);
     }
 
     public function loadFromJson($json) {
         $obj = json_decode($json);
 
-        if (!isset($obj->id) || $obj->id === 0) {
+        if (!isset($obj->id)) {
+            $this->is_valid = false;
+
             return;
         }
 
+        if ($obj->id === 0) {
+            return;
+        }
+
+        $this->is_valid = true;
         $this->loadPropertiesFrom($obj);
     }
 

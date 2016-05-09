@@ -110,7 +110,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
     private function createBoard() {
         $response = $this->boards->addBoard(new RequestMock(),
-            new ResponseMock(), DataMock::getBoard());
+            new ResponseMock(), null);
         $this->assertTrue($response->status === 'success');
 
         return $response;

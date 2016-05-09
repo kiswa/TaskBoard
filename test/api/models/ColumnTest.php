@@ -33,6 +33,9 @@ class ColumnTest extends PHPUnit_Framework_TestCase {
     public function testLoadFromBean() {
         $column = new Column(new ContainerMock());
 
+        $column->loadFromBean(null);
+        $this->assertDefaultProperties($column);
+
         $column->loadFromBean($this->bean);
         $this->assertMockProperties($column);
     }
@@ -41,6 +44,9 @@ class ColumnTest extends PHPUnit_Framework_TestCase {
         $column = new Column(new ContainerMock());
 
         $column->loadFromJson('');
+        $this->assertDefaultProperties($column);
+
+        $column->loadFromJson('{"id":0}');
         $this->assertDefaultProperties($column);
 
         $column->loadFromJson($this->json);

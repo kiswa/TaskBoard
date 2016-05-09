@@ -31,6 +31,9 @@ class CommentTest extends PHPUnit_Framework_TestCase {
     public function testLoadFromBean() {
         $comment = new Comment(new ContainerMock());
 
+        $comment->loadFromBean(null);
+        $this->assertDefaultProperties($comment);
+
         $comment->loadFromBean($this->bean);
         $this->assertMockProperties($comment);
     }
@@ -39,6 +42,9 @@ class CommentTest extends PHPUnit_Framework_TestCase {
         $comment = new Comment(new ContainerMock());
 
         $comment->loadFromJson('');
+        $this->assertDefaultProperties($comment);
+
+        $comment->loadFromJson('{"id":0}');
         $this->assertDefaultProperties($comment);
 
         $comment->loadFromJson($this->json);

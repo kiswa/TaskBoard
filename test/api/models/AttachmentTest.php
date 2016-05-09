@@ -34,12 +34,18 @@ class AttachmentTest extends PHPUnit_Framework_TestCase {
         $attachment->loadFromJson('');
         $this->assertDefaultProperties($attachment);
 
+        $attachment->loadFromJson('{"id":0}');
+        $this->assertDefaultProperties($attachment);
+
         $attachment->loadFromJson($this->json);
         $this->assertMockProperties($attachment);
     }
 
     public function testLoadFromBean() {
         $attachment = new Attachment(new ContainerMock());
+
+        $attachment->loadFromBean(null);
+        $this->assertDefaultProperties($attachment);
 
         $attachment->loadFromBean($this->bean);
         $this->assertMockProperties($attachment);

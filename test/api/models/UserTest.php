@@ -33,6 +33,9 @@ class UserTest extends PHPUnit_Framework_TestCase {
     public function testLoadFromBean() {
         $user = new User(new ContainerMock());
 
+        $user->loadFromBean(null);
+        $this->assertDefaultProperties($user);
+
         $user->loadFromBean($this->bean);
         $this->assertMockProperties($user);
     }
@@ -41,6 +44,9 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $user = new User(new ContainerMock());
 
         $user->loadFromJson('');
+        $this->assertDefaultProperties($user);
+
+        $user->loadFromJson('{"id":0}');
         $this->assertDefaultProperties($user);
 
         $user->loadFromJson($this->json);

@@ -34,6 +34,9 @@ class TaskTest extends PHPUnit_Framework_TestCase {
     public function testLoadFromBean() {
         $task = new Task(new ContainerMock());
 
+        $task->loadFromBean(null);
+        $this->assertDefaultProperties($task);
+
         $task->loadFromBean($this->bean);
         $this->assertMockProperties($task);
     }
@@ -42,6 +45,9 @@ class TaskTest extends PHPUnit_Framework_TestCase {
         $task = new Task(new ContainerMock());
 
         $task->loadFromJson('');
+        $this->assertDefaultProperties($task);
+
+        $task->loadFromJson('{"id":0}');
         $this->assertDefaultProperties($task);
 
         $task->loadFromJson($this->json);

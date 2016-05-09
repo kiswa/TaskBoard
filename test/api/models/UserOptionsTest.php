@@ -31,6 +31,9 @@ class UserOptionsTest extends PHPUnit_Framework_TestCase {
     public function testLoadFromBean() {
         $options = new UserOptions(new ContainerMock());
 
+        $options->loadFromBean(null);
+        $this->assertDefaultProperties($options);
+
         $options->loadFromBean($this->bean);
         $this->assertMockProperties($options);
     }
@@ -39,6 +42,9 @@ class UserOptionsTest extends PHPUnit_Framework_TestCase {
         $options = new UserOptions(new ContainerMock());
 
         $options->loadFromJson('');
+        $this->assertDefaultProperties($options);
+
+        $options->loadFromJson('{"id":0}');
         $this->assertDefaultProperties($options);
 
         $options->loadFromJson($this->json);

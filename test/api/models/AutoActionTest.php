@@ -44,6 +44,9 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
         $action->loadFromJson('');
         $this->assertDefaultProperties($action);
 
+        $action->loadFromJson('{"id":0}');
+        $this->assertDefaultProperties($action);
+
         $action->loadFromJson($this->json);
         $this->assertMockProperties($action);
     }

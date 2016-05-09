@@ -33,10 +33,6 @@ class Board extends BaseModel {
     }
 
     public function updateBean() {
-        if ($this->bean === null) {
-            return;
-        }
-
         $bean = $this->bean;
 
         $bean->name = $this->name;
@@ -69,10 +65,17 @@ class Board extends BaseModel {
     }
 
     public function loadFromBean($bean) {
-        if (!isset($bean->id) || $bean->id === 0) {
-            $this->bean = null;
+        if (!isset($bean->id)) {
+            $this->is_valid = false;
+
             return;
         }
+
+        if($bean->id === 0) {
+            return;
+        }
+
+        $this->is_valid = true;
 
         $this->loadPropertiesFrom($bean);
         $this->resetArrays();
@@ -107,10 +110,17 @@ class Board extends BaseModel {
     public function loadFromJson($json) {
         $obj = json_decode($json);
 
-        if (!isset($obj->id) || $obj->id === 0) {
-            $this->bean = null;
+        if (!isset($obj->id)) {
+            $this->is_valid = false;
+
             return;
         }
+
+        if ($obj->id === 0) {
+            return;
+        }
+
+        $this->is_valid = true;
 
         $this->loadPropertiesFrom($obj);
         $this->resetArrays();

@@ -31,6 +31,9 @@ class CategoryTest extends PHPUnit_Framework_TestCase {
     public function testLoadFromBean() {
         $category = new Category(new ContainerMock());
 
+        $category->loadFromBean(null);
+        $this->assertDefaultProperties($category);
+
         $category->loadFromBean($this->bean);
         $this->assertMockProperties($category);
     }
@@ -39,6 +42,9 @@ class CategoryTest extends PHPUnit_Framework_TestCase {
         $category = new Category(new ContainerMock());
 
         $category->loadFromJson('');
+        $this->assertDefaultProperties($category);
+
+        $category->loadFromJson('{"id":0}');
         $this->assertDefaultProperties($category);
 
         $category->loadFromJson($this->json);

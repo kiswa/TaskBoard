@@ -14,11 +14,12 @@ $app->get   ('/boards/{id}', 'Boards:getBoard');
 $app->post  ('/boards',      'Boards:addBoard');
 $app->post  ('/boards/{id}', 'Boards:updateBoard');
 $app->delete('/boards/{id}', 'Boards:removeBoard');
-/*
+
 $app->get   ('/autoactions',      'AutoActions:getAllActions');
 $app->post  ('/autoactions',      'AutoActions:addAction');
 $app->delete('/autoactions/{id}', 'AutoActions:removeAction');
 
+/*
 $app->get   ('/columns/{id}', 'Columns:getColumn');
 $app->post  ('/columns',      'Columns:addColumn');
 $app->post  ('/columns/{id}', 'Columns:updateColumn');

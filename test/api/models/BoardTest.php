@@ -66,7 +66,9 @@ class BoardTest extends PHPUnit_Framework_TestCase {
 
     public function testCreateFromJson() {
         $board = Board::fromJson(new ContainerMock(), null);
+        $this->assertDefaultProperties($board);
 
+        $board = Board::fromJson(new ContainerMock(), '{"id":0}');
         $this->assertDefaultProperties($board);
 
         $board = Board::fromJson(new ContainerMock(), $this->json);

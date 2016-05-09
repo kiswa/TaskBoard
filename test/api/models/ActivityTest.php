@@ -42,6 +42,9 @@ class ActivityTest extends PHPUnit_Framework_TestCase {
         $activity->loadFromJson('');
         $this->assertDefaultProperties($activity);
 
+        $activity->loadFromJson('{"id":0}');
+        $this->assertDefaultProperties($activity);
+
         $activity->loadFromJson($this->json);
         $this->assertMockProperties($activity);
     }
@@ -50,8 +53,8 @@ class ActivityTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($activity->id === 1);
         $this->assertTrue($activity->user_id === 1);
         $this->assertTrue($activity->log_text === 'Log test.');
-        $this->assertTrue($activity->before === null);
-        $this->assertTrue($activity->after === null);
+        $this->assertTrue($activity->before === '');
+        $this->assertTrue($activity->after === '');
         $this->assertTrue($activity->item_type === 'test');
         $this->assertTrue($activity->item_id === 1);
     }
@@ -60,8 +63,8 @@ class ActivityTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($activity->id === 0);
         $this->assertTrue($activity->user_id === 0);
         $this->assertTrue($activity->log_text === '');
-        $this->assertTrue($activity->before === null);
-        $this->assertTrue($activity->after === null);
+        $this->assertTrue($activity->before === '');
+        $this->assertTrue($activity->after === '');
         $this->assertTrue($activity->item_type === '');
         $this->assertTrue($activity->item_id === 0);
     }

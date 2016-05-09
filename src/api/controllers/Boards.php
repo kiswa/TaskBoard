@@ -52,7 +52,8 @@ class Boards extends BaseController {
 
         // TODO: Get existing user to log user_id and name
         $this->dbLogger->logChange($this->container, 0,
-            ' added board ' . $board->name, '', $board, 'board', $board->id);
+            '$user->name added board ' . $board->name . '.',
+            '', json_encode($board), 'board', $board->id);
 
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
@@ -77,7 +78,8 @@ class Boards extends BaseController {
 
         // TODO: Get existing user to log user_id and name
         $this->dbLogger->logChange($this->container, 0,
-            ' updated board ' . $update->name, $board, $update,
+            '$user->name updated board ' . $update->name,
+            json_encode($board), json_encode($update),
             'board', $board->id);
 
         $this->apiJson->setSuccess();
@@ -104,7 +106,8 @@ class Boards extends BaseController {
 
         // TODO: Get existing user to log user_id and name
         $this->dbLogger->logChange($this->container, 0,
-            ' removed board ' . $before->name, $before, '', 'board', $id);
+            '$user->name removed board ' . $before->name,
+            json_encode($before), '', 'board', $id);
 
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',

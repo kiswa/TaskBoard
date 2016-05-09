@@ -72,8 +72,8 @@ class DataMock {
         $activity->id = 1;
         $activity->user_id = 1;
         $activity->log_text = 'Log test.';
-        $activity->before = null;
-        $activity->after = null;
+        $activity->before = '';
+        $activity->after = '';
         $activity->item_type = 'test';
         $activity->item_id = 1;
 
@@ -160,10 +160,15 @@ class ContainerMock {
 
 class RequestMock {
     public $invalidPayload = false;
+    public $payload = null;
 
     public function getBody() {
         if ($this->invalidPayload) {
             return '{}';
+        }
+
+        if ($this->payload) {
+            return json_encode($this->payload);
         }
 
         return json_encode(DataMock::getBoard());
