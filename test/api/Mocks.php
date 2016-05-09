@@ -159,24 +159,15 @@ class ContainerMock {
 }
 
 class RequestMock {
-    public $board;
+    public $invalidPayload = false;
 
     public function getBody() {
-        if ($this->board) {
-            return json_encode($this->board);
+        if ($this->invalidPayload) {
+            return '{}';
         }
 
         return json_encode(DataMock::getBoard());
     }
-
-}
-
-class BadRequestMock {
-
-    public function getBody() {
-        return '{}';
-    }
-
 }
 
 class ResponseMock {

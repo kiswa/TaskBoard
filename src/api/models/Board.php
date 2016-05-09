@@ -33,6 +33,10 @@ class Board extends BaseModel {
     }
 
     public function updateBean() {
+        if ($this->bean === null) {
+            return;
+        }
+
         $bean = $this->bean;
 
         $bean->name = $this->name;
@@ -66,6 +70,7 @@ class Board extends BaseModel {
 
     public function loadFromBean($bean) {
         if (!isset($bean->id) || $bean->id === 0) {
+            $this->bean = null;
             return;
         }
 
@@ -103,6 +108,7 @@ class Board extends BaseModel {
         $obj = json_decode($json);
 
         if (!isset($obj->id) || $obj->id === 0) {
+            $this->bean = null;
             return;
         }
 

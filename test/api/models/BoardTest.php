@@ -99,7 +99,7 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($bean->id === 0);
         $this->assertArraySubset($bean->xownColumnList, []);
 
-        $board->save();
+        $this->assertTrue($board->save());
         $bean = $board->getBean();
 
         $this->assertTrue((int)$bean->id === 1);

@@ -67,7 +67,10 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testAddBadBoard() {
-        $response = $this->boards->addBoard(new BadRequestMock(),
+        $request = new RequestMock();
+        $request->invalidPayload = true;
+
+        $response = $this->boards->addBoard($request,
             new ResponseMock(), null);
 
         $this->assertTrue($response->status === 'failure');
@@ -93,13 +96,13 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $args['id'] = $board->id;
 
         $request = new RequestMock();
-        $request->board = $board;
+        $request->payload = $board;
 
         $response = $this->boards->updateBoard($request,
             new ResponseMock(), $args);
         $this->assertTrue($response->status === 'success');
 
-        $request->board = new stdClass();
+        $request->payload = new stdClass();
         $response = $this->boards->updateBoard($request,
             new ResponseMock(), $args);
         $this->assertTrue($response->alerts[2]['type'] === 'error');

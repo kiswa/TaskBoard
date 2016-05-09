@@ -27,7 +27,6 @@ abstract class BaseModel {
 
         try {
             $id = R::store($this->bean);
-            assert($id === $this->id);
             $this->loadFromBean($this->bean);
         } catch (Exception $ex) {
             $this->logger->addError('Save Error: ', [
