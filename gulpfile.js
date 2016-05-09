@@ -66,7 +66,7 @@ gulp.task('lintScss', () => {
         .pipe(scsslint({ config: 'lint.yml' }));
 });
 
-gulp.task('styles', () => {
+gulp.task('scss', () => {
     return gulp.src(paths.scssMain)
         .pipe(sass({
             precision: 10,
@@ -167,7 +167,7 @@ gulp.task('test-api-single', ['api-test-db'], () => {
 
 gulp.task('watch', () => {
     let watchTs = gulp.watch(paths.ts, ['system-build']),
-        watchScss = gulp.watch(paths.scss, ['lintScss', 'styles']),
+        watchScss = gulp.watch(paths.scss, ['lintScss', 'scss']),
         watchHtml = gulp.watch(paths.html, ['html']),
         watchImages = gulp.watch(paths.images, ['images']),
         watchApi = gulp.watch(paths.api, ['api']),
@@ -203,7 +203,7 @@ gulp.task('default', [
     'html',
     'images',
     'lintScss',
-    'styles',
+    'scss',
     'api'
 ], () => {
     fs.chmod('dist/api', '0777');
