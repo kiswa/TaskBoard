@@ -77,20 +77,20 @@ class AutoAction extends BaseModel {
             return;
         }
 
-        if ($obj->id === 0) {
-            return;
-        }
-
         $this->is_valid = true;
         $this->loadPropertiesFrom($obj);
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = (int) $obj->id;
-        $this->trigger = new ActionTrigger((int) $obj->trigger);
-        $this->source_id = (int) $obj->source_id;
-        $this->type = new ActionType((int) $obj->type);
-        $this->change_to = $obj->change_to;
+        try {
+            $this->id = (int) $obj->id;
+            $this->trigger = new ActionTrigger((int) $obj->trigger);
+            $this->source_id = (int) $obj->source_id;
+            $this->type = new ActionType((int) $obj->type);
+            $this->change_to = $obj->change_to;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 }
 

@@ -61,22 +61,22 @@ class Activity extends BaseModel {
             return;
         }
 
-        if ($obj->id === 0) {
-            return;
-        }
-
         $this->is_valid = true;
         $this->loadPropertiesFrom($obj);
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = (int) $obj->id;
-        $this->user_id = (int) $obj->user_id;
-        $this->log_text = $obj->log_text;
-        $this->before = $obj->before;
-        $this->after = $obj->after;
-        $this->item_type = $obj->item_type;
-        $this->item_id = (int) $obj->item_id;
+        try {
+            $this->id = (int) $obj->id;
+            $this->user_id = (int) $obj->user_id;
+            $this->log_text = $obj->log_text;
+            $this->before = $obj->before;
+            $this->after = $obj->after;
+            $this->item_type = $obj->item_type;
+            $this->item_id = (int) $obj->item_id;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 }
 

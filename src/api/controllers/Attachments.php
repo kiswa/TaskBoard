@@ -4,9 +4,9 @@ use RedBeanPHP\R;
 class Attachments extends BaseController {
 
     public function getAttachment($request, $response, $args) {
-        $attachment =new Attachment($this->container, (int)$args['id']);
+        $attachment = new Attachment($this->container, (int)$args['id']);
 
-        if ($board->id === 0) {
+        if ($attachment->id === 0) {
             $this->logger->addError('Attempt to load attachment ' .
                 $args['id'] . ' failed.');
             $this->apiJson->addAlert('error', 'No attachment found for ID ' .

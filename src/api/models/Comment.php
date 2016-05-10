@@ -40,10 +40,6 @@ class Comment extends BaseModel {
             return;
         }
 
-        if ($obj->id === 0) {
-            return;
-        }
-
         $this->is_valid = true;
         $this->loadPropertiesFrom($obj);
     }

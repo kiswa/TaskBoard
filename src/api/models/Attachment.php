@@ -4,7 +4,7 @@ class Attachment extends BaseModel {
     public $filename = '';
     public $name = '';
     public $type = '';
-    public $user_id = 0;
+    public $user = 0;
     public $timestamp = null;
 
     public function __construct($container, $id = 0) {
@@ -20,7 +20,7 @@ class Attachment extends BaseModel {
         $bean->filename = $this->filename;
         $bean->name = $this->name;
         $bean->type = $this->type;
-        $bean->user_id = $this->user_id;
+        $bean->user = $this->user;
         $bean->timestamp = $this->timestamp;
     }
 
@@ -48,21 +48,21 @@ class Attachment extends BaseModel {
             return;
         }
 
-        if ($obj->id === 0) {
-            return;
-        }
-
         $this->is_valid = true;
         $this->loadPropertiesFrom($obj);
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = (int) $obj->id;
-        $this->filename = $obj->filename;
-        $this->name = $obj->name;
-        $this->type = $obj->type;
-        $this->user_id = (int) $obj->user_id;
-        $this->timestamp = (int) $obj->timestamp;
+        try {
+            $this->id = (int) $obj->id;
+            $this->filename = $obj->filename;
+            $this->name = $obj->name;
+            $this->type = $obj->type;
+            $this->user = (int) $obj->user;
+            $this->timestamp = (int) $obj->timestamp;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 }
 
