@@ -18,7 +18,6 @@ $app->delete('/boards/{id}', 'Boards:removeBoard');
 $app->get   ('/autoactions',      'AutoActions:getAllActions');
 $app->post  ('/autoactions',      'AutoActions:addAction');
 $app->delete('/autoactions/{id}', 'AutoActions:removeAction');
-
 /*
 $app->get   ('/columns/{id}', 'Columns:getColumn');
 $app->post  ('/columns',      'Columns:addColumn');
@@ -34,12 +33,12 @@ $app->get   ('/comments/{id}', 'Comments:getComment');
 $app->post  ('/comments',      'Comments:addComment');
 $app->post  ('/comments/{id}', 'Comments:updateComment');
 $app->delete('/comments/{id}', 'Comments:removeComment');
-
+*/
 $app->get   ('/attachments/{id}', 'Attachments:getAttachment');
 $app->post  ('/attachments',      'Attachments:addAttachment');
 $app->post  ('/attachments/{id}', 'Attachments:updateAttachment');
 $app->delete('/attachments/{id}', 'Attachments:removeAttachment');
-
+/*
 $app->get   ('/users',      'Users:getAllUsers');
 $app->get   ('/users/{id}', 'Users:getUser');
 $app->post  ('/users',      'Users:addUser');
