@@ -15,7 +15,7 @@ class User extends BaseModel {
     public $password_hash = '';
     public $email = '';
     public $default_board_id = 0;
-    public $options = []; // UserOptions model
+    public $user_option_id = 0;
 
     public function __construct($container, $id = 0) {
         parent::__construct('user', $id, $container);
@@ -33,11 +33,7 @@ class User extends BaseModel {
         $bean->password_hash = $this->password_hash;
         $bean->email = $this->email;
         $bean->default_board_id = $this->default_board_id;
-        $bean->xownOptionList = [];
-
-        foreach($this->options as $option) {
-            $bean->xownOptionList[] = $option->bean;
-        }
+        $bean->user_option_id = $this->user_option_id;
     }
 
     public function loadFromBean($bean) {
@@ -53,13 +49,6 @@ class User extends BaseModel {
 
         $this->is_valid = true;
         $this->loadPropertiesFrom($bean);
-        $this->options = [];
-
-        if (isset($bean->xownOptionList)) {
-            foreach($bean->xownOptionList as $item) {
-                $this->options[] = new UserOptions($this->container, $item->id);
-            }
-        }
     }
 
     public function loadFromJson($json) {
@@ -73,23 +62,21 @@ class User extends BaseModel {
 
         $this->is_valid = true;
         $this->loadPropertiesFrom($obj);
-        $this->options = [];
-
-        if (isset($obj->options)) {
-            foreach($obj->options as $item) {
-                $this->options[] = new UserOptions($this->container, $item->id);
-            }
-        }
     }
 
     public function loadPropertiesFrom($obj) {
-        $this->id = (int) $obj->id;
-        $this->security_level = new SecurityLevel((int) $obj->security_level);
-        $this->username = $obj->username;
-        $this->salt = $obj->salt;
-        $this->password_hash = $obj->password_hash;
-        $this->email = $obj->email;
-        $this->default_board_id = (int) $obj->default_board_id;
+        try {
+            $this->id = (int) $obj->id;
+            $this->security_level = new SecurityLevel((int) $obj->security_level);
+            $this->username = $obj->username;
+            $this->salt = $obj->salt;
+            $this->password_hash = $obj->password_hash;
+            $this->email = $obj->email;
+            $this->default_board_id = (int) $obj->default_board_id;
+            $this->user_option_id = (int) $obj->user_option_id;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 }
 

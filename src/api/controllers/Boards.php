@@ -10,8 +10,10 @@ class Boards extends BaseController {
             $this->apiJson->setSuccess();
 
             foreach($boardBeans as $bean) {
-                $this->apiJson->addData(
-                    Board::fromBean($this->container, $bean));
+                $board = new Board($this->container);
+                $board->loadFromBean($bean);
+
+                $this->apiJson->addData($board);
             }
         } else {
             $this->logger->addInfo('No boards in database.');
@@ -40,7 +42,8 @@ class Boards extends BaseController {
     }
 
     public function addBoard($request, $response, $args) {
-        $board = Board::fromJson($this->container, $request->getBody());
+        $board = new Board($this->container);
+        $board->loadFromJson($request->getBody());
 
         if (!$board->save()) {
             $this->logger->addError('Add Board: ', [$board]);
@@ -64,7 +67,9 @@ class Boards extends BaseController {
 
     public function updateBoard($request, $response, $args) {
         $board = new Board($this->container, (int)$args['id']);
-        $update = Board::fromJson($this->container, $request->getBody());
+
+        $update = new Board($this->container);
+        $update->loadFromJson($request->getBody());
 
         if ($board->id !== $update->id) {
             $this->logger->addError('Update Board: ', [$board, $update]);

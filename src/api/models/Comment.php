@@ -45,8 +45,12 @@ class Comment extends BaseModel {
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = (int) $obj->id;
-        $this->text = $obj->text;
+        try {
+            $this->id = (int) $obj->id;
+            $this->text = $obj->text;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 }
 

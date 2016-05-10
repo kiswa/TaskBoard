@@ -53,11 +53,12 @@ class BoardTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCreateFromBean() {
-        $board = Board::fromBean(new ContainerMock(), null);
+        $board = new Board(new ContainerMock());
+        $board->loadFromBean(null);
 
         $this->assertDefaultProperties($board);
 
-        $board = Board::fromBean(new ContainerMock(), $this->bean);
+        $board->loadFromBean($this->bean);
 
         $this->assertTrue($board->id === 1);
         $this->assertTrue($board->name === 'test');
@@ -65,13 +66,15 @@ class BoardTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCreateFromJson() {
-        $board = Board::fromJson(new ContainerMock(), null);
+        $board = new Board(new ContainerMock());
+        $board->loadFromJson(null);
+
         $this->assertDefaultProperties($board);
 
-        $board = Board::fromJson(new ContainerMock(), '{"id":0}');
+        $board->loadFromJson('{"id":0}');
         $this->assertDefaultProperties($board);
 
-        $board = Board::fromJson(new ContainerMock(), $this->json);
+        $board->loadFromJson($this->json);
 
         $this->assertTrue($board->id === 1);
         $this->assertTrue($board->name === 'test');
@@ -79,7 +82,8 @@ class BoardTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testSaveLoadDelete() {
-        $board = Board::fromJson(new ContainerMock(), $this->json);
+        $board = new Board(new ContainerMock());
+        $board->loadFromJson($this->json);
 
         $board->save();
         $this->assertTrue($board->id === 1);

@@ -86,7 +86,7 @@ class DataMock {
         $attachment->filename = 'file';
         $attachment->name = 'file.png';
         $attachment->type = 'image';
-        $attachment->user = 1;
+        $attachment->user_id = 1;
         $attachment->timestamp = 1234567890;
 
         return $attachment;

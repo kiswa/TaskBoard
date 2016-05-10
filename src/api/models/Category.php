@@ -45,8 +45,12 @@ class Category extends BaseModel {
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = (int) $obj->id;
-        $this->name = $obj->name;
+        try {
+            $this->id = (int) $obj->id;
+            $this->name = $obj->name;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 }
 

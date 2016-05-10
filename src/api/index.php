@@ -18,12 +18,12 @@ $app->delete('/boards/{id}', 'Boards:removeBoard');
 $app->get   ('/autoactions',      'AutoActions:getAllActions');
 $app->post  ('/autoactions',      'AutoActions:addAction');
 $app->delete('/autoactions/{id}', 'AutoActions:removeAction');
-/*
+
 $app->get   ('/columns/{id}', 'Columns:getColumn');
 $app->post  ('/columns',      'Columns:addColumn');
 $app->post  ('/columns/{id}', 'Columns:updateColumn');
 $app->delete('/columns/{id}', 'Columns:removeColumn');
-
+/*
 $app->get   ('/items/{id}', 'Items:getItem');
 $app->post  ('/items',      'Items:addItem');
 $app->post  ('/items/{id}', 'Items:updateItem');

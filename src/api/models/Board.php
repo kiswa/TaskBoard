@@ -18,20 +18,6 @@ class Board extends BaseModel {
         $this->loadFromBean($this->bean);
     }
 
-    public static function fromBean($container, $bean) {
-        $instance = new self($container, 0, true);
-        $instance->loadFromBean($bean);
-
-        return $instance;
-    }
-
-    public static function fromJson($container, $json) {
-        $instance = new self($container, 0, true);
-        $instance->loadFromJson($json);
-
-        return $instance;
-    }
-
     public function updateBean() {
         $bean = $this->bean;
 
@@ -149,9 +135,13 @@ class Board extends BaseModel {
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = (int) $obj->id;
-        $this->name = $obj->name;
-        $this->is_active = (bool) $obj->is_active;
+        try {
+            $this->id = (int) $obj->id;
+            $this->name = $obj->name;
+            $this->is_active = (bool) $obj->is_active;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 
     private function resetArrays() {

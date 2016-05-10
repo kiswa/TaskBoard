@@ -67,9 +67,13 @@ class Column extends BaseModel {
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = (int) $obj->id;
-        $this->name = $obj->name;
-        $this->position = (int) $obj->position;
+        try {
+            $this->id = (int) $obj->id;
+            $this->name = $obj->name;
+            $this->position = (int) $obj->position;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 }
 

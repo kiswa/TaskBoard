@@ -35,7 +35,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $expected->addAlert('error', 'No board found for ID 1.');
 
         $args = [];
-        $args['id'] = '1';
+        $args['id'] = 1;
 
         $actual = $this->boards->getBoard(null, new ResponseMock(), $args);
         $this->assertEquals($expected, $actual);
@@ -59,7 +59,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $expected->addAlert('success', 'Board test removed.');
 
         $args = [];
-        $args['id'] = '1';
+        $args['id'] = 1;
 
         $actual = $this->boards->removeBoard(null, new ResponseMock(), $args);
 

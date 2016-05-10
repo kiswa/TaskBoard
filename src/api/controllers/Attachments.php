@@ -27,7 +27,7 @@ class Attachments extends BaseController {
 
         if (!$attachment->save()) {
             $this->logger->addError('Add Attachment: ', [$attachment]);
-            $this->apiJson->addAlert('error', 'Error adding attachment.' .
+            $this->apiJson->addAlert('error', 'Error adding attachment. ' .
                 'Please try again.');
 
             return $this->jsonResponse($response);
@@ -52,7 +52,7 @@ class Attachments extends BaseController {
         if ($attachment->id !== $update->id) {
             $this->logger->addError('Update Attachment: ',
                 [$attachment, $update]);
-            $this->apiJson->addAlert('error', 'Error update attachment. ' .
+            $this->apiJson->addAlert('error', 'Error updating attachment. ' .
                 'Please try again.');
 
             return $this->jsonResponse($response);
@@ -62,13 +62,13 @@ class Attachments extends BaseController {
 
         // TODO: Get existing user to log user_id and name
         $this->dbLogger->logChange($this->container, 0,
-            '$user->name update attachment ' . $attachment->name,
+            '$user->name updated attachment ' . $update->name,
             json_encode($attachment), json_encode($update),
-            'attachment', $attachment->id);
+            'attachment', $update->id);
 
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success', 'Attachment ' .
-            $attachment->name . ' updated.');
+            $update->name . ' updated.');
 
         return $this->jsonResponse($response);
     }

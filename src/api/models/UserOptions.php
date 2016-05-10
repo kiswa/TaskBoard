@@ -7,7 +7,7 @@ class UserOptions extends BaseModel {
     public $multiple_tasks_per_row = false;
 
     public function __construct($container, $id = 0) {
-        parent::__construct('user', $id, $container);
+        parent::__construct('user_option', $id, $container);
 
         $this->loadFromBean($this->bean);
     }
@@ -51,11 +51,15 @@ class UserOptions extends BaseModel {
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = (int) $obj->id;
-        $this->new_tasks_at_bottom = (bool) $obj->new_tasks_at_bottom;
-        $this->show_animations = (bool) $obj->show_animations;
-        $this->show_assignee = (bool) $obj->show_assignee;
-        $this->multiple_tasks_per_row = (bool) $obj->multiple_tasks_per_row;
+        try {
+            $this->id = (int) $obj->id;
+            $this->new_tasks_at_bottom = (bool) $obj->new_tasks_at_bottom;
+            $this->show_animations = (bool) $obj->show_animations;
+            $this->show_assignee = (bool) $obj->show_assignee;
+            $this->multiple_tasks_per_row = (bool) $obj->multiple_tasks_per_row;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 }
 

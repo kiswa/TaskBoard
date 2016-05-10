@@ -4,7 +4,7 @@ class Task extends BaseModel {
     public $title = '';
     public $description = '';
     public $assignee_id = 0;
-    public $category_id = 0;  // Category model
+    public $category_id = 0;
     public $color = '';
     public $due_date = null;  // Date or null if not set
     public $points = null;    // Integer or null if not set
@@ -24,14 +24,14 @@ class Task extends BaseModel {
         $bean->id = $this->id;
         $bean->title = $this->title;
         $bean->description = $this->description;
-        $bean-> assignee_id = $this->assignee_id;
-        $bean-> category_id = $this->category_id;
+        $bean->assignee_id = $this->assignee_id;
+        $bean->category_id = $this->category_id;
         $bean->color = $this->color;
         $bean->due_date = $this->due_date;
         $bean->points = $this->points;
         $bean->position = $this->position;
 
-        $bean-> xownAttachmentList = [];
+        $bean->xownAttachmentList = [];
         $bean->xownCommentList = [];
 
         foreach($this->attachments as $attachment) {
@@ -105,15 +105,19 @@ class Task extends BaseModel {
     }
 
     private function loadPropertiesFrom($obj) {
-        $this->id = $obj->id;
-        $this->title = $obj->title;
-        $this->description = $obj->description;
-        $this->assignee_id = $obj->assignee_id;
-        $this->category_id = $obj->category_id;
-        $this->color = $obj->color;
-        $this->due_date = $obj->due_date;
-        $this->points = $obj->points;
-        $this->position = $obj->position;
+        try {
+            $this->id = $obj->id;
+            $this->title = $obj->title;
+            $this->description = $obj->description;
+            $this->assignee_id = $obj->assignee_id;
+            $this->category_id = $obj->category_id;
+            $this->color = $obj->color;
+            $this->due_date = $obj->due_date;
+            $this->points = $obj->points;
+            $this->position = $obj->position;
+        } catch (Exception $ex) {
+            $this->is_valid = false;
+        }
     }
 }
 

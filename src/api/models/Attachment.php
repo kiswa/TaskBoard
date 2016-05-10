@@ -4,7 +4,7 @@ class Attachment extends BaseModel {
     public $filename = '';
     public $name = '';
     public $type = '';
-    public $user = 0;
+    public $user_id = 0;
     public $timestamp = null;
 
     public function __construct($container, $id = 0) {
@@ -20,7 +20,7 @@ class Attachment extends BaseModel {
         $bean->filename = $this->filename;
         $bean->name = $this->name;
         $bean->type = $this->type;
-        $bean->user = $this->user;
+        $bean->user_id = $this->user_id;
         $bean->timestamp = $this->timestamp;
     }
 
@@ -58,7 +58,7 @@ class Attachment extends BaseModel {
             $this->filename = $obj->filename;
             $this->name = $obj->name;
             $this->type = $obj->type;
-            $this->user = (int) $obj->user;
+            $this->user_id = (int) $obj->user_id;
             $this->timestamp = (int) $obj->timestamp;
         } catch (Exception $ex) {
             $this->is_valid = false;
