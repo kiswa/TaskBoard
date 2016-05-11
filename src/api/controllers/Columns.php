@@ -49,8 +49,7 @@ class Columns extends BaseController {
         $update->loadFromJson($request->getBody());
 
         if ($column->id !== $update->id) {
-            $this->logger->addError('Update Column: ',
-                [$column, $update]);
+            $this->logger->addError('Update Column: ', [$column, $update]);
             $this->apiJson->addAlert('error', 'Error updating column ' .
                 $update->name . '. Please try again.');
 
@@ -68,6 +67,33 @@ class Columns extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success', 'Column ' .
             $update->name . ' updated.');
+
+        return $this->jsonResponse($response);
+    }
+
+    public function removeColumn($request, $response, $args) {
+        $id = (int)$args['id'];
+        $column = new Column($this->container, $id);
+
+        if ($column->id !== $id) {
+            $this->logger->addError('Remove Column: ', [$column]);
+            $this->apiJson->addAlert('error', 'Error removing column. ' .
+                'No column found for ID ' . $id . '.');
+
+            return $this->jsonResponse($response);
+        }
+
+        $before = $column;
+        $column->delete();
+
+        // TODO: Get existing user to log user_id and name
+        $this->dbLogger->logChange($this->container, 0,
+            '$user->name removed column ' . $before->name,
+            json_encode($before), '', 'column', $id);
+
+        $this->apiJson->setSuccess();
+        $this->apiJson->addAlert('success',
+            'Column ' . $before->name . ' removed.');
 
         return $this->jsonResponse($response);
     }
