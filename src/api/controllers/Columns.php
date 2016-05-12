@@ -40,7 +40,7 @@ class Columns extends BaseController {
 
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success', 'Column ' .
-            $column->name . 'added.');
+            $column->name . ' added.');
 
         return $this->jsonResponse($response);
     }

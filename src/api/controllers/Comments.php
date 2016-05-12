@@ -6,7 +6,7 @@ class Comments extends BaseController {
     public function getComment($request, $response, $args) {
         $comment = new Comment($this->container, (int)$args['id']);
 
-        if ($comment>id === 0) {
+        if ($comment->id === 0) {
             $this->logger->addError('Attempt to load comment ' .
                 $args['id'] . ' failed.');
             $this->apiJson->addAlert('error', 'No column found for ID ' .
