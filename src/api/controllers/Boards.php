@@ -85,7 +85,7 @@ class Boards extends BaseController {
         $this->dbLogger->logChange($this->container, 0,
             '$user->name updated board ' . $update->name,
             json_encode($board), json_encode($update),
-            'board', $board->id);
+            'board', $update->id);
 
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',

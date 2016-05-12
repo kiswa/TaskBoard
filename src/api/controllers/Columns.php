@@ -29,6 +29,8 @@ class Columns extends BaseController {
             $this->logger->addError('Add Column: ', [$column]);
             $this->apiJson->addAlert('error', 'Error adding column. ' .
                 'Please try again.');
+
+            return $this->jsonResponse($response);
         }
 
         // TODO: Get existing user to log user_id and name
