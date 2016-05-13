@@ -35,7 +35,7 @@ class Tasks extends BaseController {
 
         // TODO: Get existing user to log user_id and name
         $this->dbLogger->logChange($this->container, 0,
-            '$user->name added task ' . $task.name . '.',
+            '$user->name added task ' . $task->title . '.',
             '', json_encode($task), 'task', $task->id);
 
         $this->apiJson->setSuccess();

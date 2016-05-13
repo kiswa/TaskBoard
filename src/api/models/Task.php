@@ -13,7 +13,7 @@ class Task extends BaseModel {
     public $comments = [];    // Comment model array
 
     public function __construct($container, $id = 0) {
-        parent::__construct('column', $id, $container);
+        parent::__construct('task', $id, $container);
 
         $this->loadFromBean($this->bean);
     }
@@ -36,12 +36,12 @@ class Task extends BaseModel {
 
         foreach($this->attachments as $attachment) {
             $attachment->updateBean();
-            $this->xownAttachmentList[] = $attachment->bean;
+            $bean->xownAttachmentList[] = $attachment->bean;
         }
 
         foreach($this->comments as $comment) {
             $comment->updateBean();
-            $this->xownCommentList[] = $comment->bean;
+            $bean->xownCommentList[] = $comment->bean;
         }
     }
 
@@ -106,15 +106,15 @@ class Task extends BaseModel {
 
     private function loadPropertiesFrom($obj) {
         try {
-            $this->id = $obj->id;
+            $this->id = (int)$obj->id;
             $this->title = $obj->title;
             $this->description = $obj->description;
-            $this->assignee_id = $obj->assignee_id;
-            $this->category_id = $obj->category_id;
+            $this->assignee_id = (int)$obj->assignee_id;
+            $this->category_id = (int)$obj->category_id;
             $this->color = $obj->color;
             $this->due_date = $obj->due_date;
             $this->points = $obj->points;
-            $this->position = $obj->position;
+            $this->position = (int)$obj->position;
         } catch (Exception $ex) {
             $this->is_valid = false;
         }
