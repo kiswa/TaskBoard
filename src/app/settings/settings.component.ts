@@ -5,8 +5,5 @@ import { Component } from '@angular/core';
     templateUrl: 'app/settings/settings.template.html'
 })
 export class Settings {
-    public user = {
-        isAdmin: true
-    };
 }
 

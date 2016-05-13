@@ -9,7 +9,7 @@ export class TopNav {
     version: string;
 
     constructor() {
-        this.pageName = 'Testing';
+        this.pageName = 'Settings';
         this.version = 'v1.0.0';
     }
 }
