@@ -1,5 +1,6 @@
 .nav-top {
     border-bottom: 1px solid lighten($color-border, 10%);
+    margin-bottom: 5px;
     padding: .5em;
 
     h1 {
@@ -22,10 +23,6 @@
     .buttons {
         float: right;
         margin-top: -2.2em;
-
-        button {
-            transition: background-color .3s;
-        }
 
         .flat {
             background-color: lighten($color-background, 10%);

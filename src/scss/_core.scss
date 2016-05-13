@@ -1,9 +1,5 @@
 html {
     background-color: $color-background;
-    height: 100%;
-}
-
-body {
     background-image: url('../images/bg.png');
     height: 100%;
 }
@@ -22,3 +18,13 @@ h6 {
     padding-top: 2em;
     text-align: center;
 }
+
+table {
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+button {
+    transition: background .3s;
+}
+
