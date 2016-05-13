@@ -8,12 +8,8 @@ class Board extends BaseModel {
     public $auto_actions = [];
     public $users = [];
 
-    public function __construct($container, $id = 0, $internal = false) {
+    public function __construct($container, $id = 0) {
         parent::__construct('board', $id, $container);
-
-        if ($internal) {
-            return;
-        }
 
         $this->loadFromBean($this->bean);
     }
