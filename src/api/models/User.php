@@ -9,7 +9,7 @@ class SecurityLevel extends Enum {
 
 class User extends BaseModel {
     public $id = 0;
-    public $security_level = SecurityLevel::User;
+    public $security_level;
     public $username = '';
     public $salt = '';
     public $password_hash = '';
@@ -20,6 +20,8 @@ class User extends BaseModel {
     public function __construct($container, $id = 0) {
         parent::__construct('user', $id, $container);
 
+        $this->security_level = new SecurityLevel(SecurityLevel::User);
+
         $this->loadFromBean($this->bean);
     }
 
@@ -27,7 +29,7 @@ class User extends BaseModel {
         $bean = $this->bean;
 
         $bean->id = $this->id;
-        $bean->security_level = $this->security_level;
+        $bean->security_level = $this->security_level->getValue();
         $bean->username = $this->username;
         $bean->salt = $this->salt;
         $bean->password_hash = $this->password_hash;

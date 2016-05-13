@@ -62,7 +62,7 @@ class DataMock {
         $user->password_hash = 'hashpass1234';
         $user->email = 'user@example.com';
         $user->default_board_id = 1;
-        $user->options[] = DataMock::getUserOptions();
+        $user->user_option_id = 1;
 
         return $user;
     }

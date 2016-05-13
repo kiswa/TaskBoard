@@ -21,8 +21,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $user = DataMock::getUser();
         $this->json = json_encode($user);
         $this->bean = $user;
-        // Convert to bean format
-        $this->bean->xownOptionList = $user->options;
     }
 
     public function testCreateUser() {
@@ -61,7 +59,8 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $bean = $user->getBean();
 
         $this->assertTrue($bean->id === $user->id);
-        $this->assertTrue($bean->security_level === $user->security_level);
+        $this->assertTrue($bean->security_level ===
+            $user->security_level->getValue());
         $this->assertTrue($bean->username === $user->username);
         $this->assertTrue($bean->salt === $user->salt);
         $this->assertTrue($bean->password_hash === $user->password_hash);
@@ -71,7 +70,8 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
     private function assertDefaultProperties($user) {
         $this->assertTrue($user->id === 0);
-        $this->assertTrue($user->security_level == SecurityLevel::User);
+        $this->assertTrue($user->security_level->getValue() ===
+            SecurityLevel::User);
         $this->assertTrue($user->username === '');
         $this->assertTrue($user->salt === '');
         $this->assertTrue($user->password_hash === '');

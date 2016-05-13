@@ -23,24 +23,13 @@ class AutoAction extends BaseModel {
     public $type;
     public $change_to = ''; // Whatever the target of the action changes to
 
-    public function __construct($container, $id = 0, $internal = false) {
+    public function __construct($container, $id = 0) {
         parent::__construct('auto_action', $id, $container);
 
         $this->trigger = new ActionTrigger(ActionTrigger::MoveToColumn);
         $this->type = new ActionType(ActionType::SetColor);
 
-        if ($internal) {
-            return;
-        }
-
         $this->loadFromBean($this->bean);
-    }
-
-    public static function fromBean($container, $bean) {
-        $instance = new self($container, 0, true);
-        $instance->loadFromBean($bean);
-
-        return $instance;
     }
 
     public function updateBean() {

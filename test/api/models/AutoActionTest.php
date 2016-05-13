@@ -28,16 +28,6 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
         $this->assertDefaultProperties($action);
     }
 
-    public function testCreateFromBean() {
-        $action = AutoAction::fromBean(new ContainerMock, null);
-
-        $this->assertDefaultProperties($action);
-
-        $action = AutoAction::fromBean(new ContainerMock(), $this->bean);
-
-        $this->assertTrue($action->id === 1);
-    }
-
     public function testLoadFromJson() {
         $action = new AutoAction(new ContainerMock());
 
@@ -53,6 +43,9 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
 
     public function testLoadFromBean() {
         $action = new AutoAction(new ContainerMock());
+
+        $action->loadFromBean(null);
+        $this->assertDefaultProperties($action);
 
         $action->loadFromBean($this->bean);
         $this->assertMockProperties($action);

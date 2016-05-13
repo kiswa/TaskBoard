@@ -10,8 +10,10 @@ class AutoActions extends BaseController {
             $this->apiJson->setSuccess();
 
             foreach($actionBeans as $bean) {
-                $this->apiJson->addData(
-                    AutoAction::fromBean($this->container, $bean));
+                $action = new AutoAction($this->container);
+                $action->loadFromBean($bean);
+
+                $this->apiJson->addData($action);
             }
         } else {
             $this->logger->addInfo('No automatic actions in database.');

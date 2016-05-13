@@ -109,6 +109,18 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
     }
 
     private function createBoard() {
+        $users = new Users(new ContainerMock());
+        $request = new RequestMock();
+
+        $user = DataMock::getUser();
+        $user->id = 0;
+
+        $request->payload = $user;
+
+        $response = $users->addUser($request,
+            new ResponseMock(), null);
+        $this->assertTrue($response->status === 'success');
+
         $response = $this->boards->addBoard(new RequestMock(),
             new ResponseMock(), null);
         $this->assertTrue($response->status === 'success');
