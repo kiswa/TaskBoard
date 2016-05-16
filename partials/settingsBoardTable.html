@@ -43,7 +43,7 @@
                     </td>
                     <td>
                         <ul class="list-group">
-                            <li class="list-group-item" data-ng-repeat="category in board.ownCategory | orderBy:'name':false">{{ category.name }}</li>
+                            <li class="list-group-item" data-ng-repeat="category in board.ownCategory | orderBy:'name':false" style="background-color:{{ category.color }}">{{ category.name }}</li>
                         </ul>
                     </td>
                     <td>

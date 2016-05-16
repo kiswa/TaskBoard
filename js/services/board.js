@@ -17,6 +17,7 @@ function($http) {
                 name: boardData.name,
                 lanes: boardData.lanes,
                 categories: boardData.categories,
+                trackers: boardData.trackers,
                 users: boardData.users
             });
         },
@@ -27,6 +28,7 @@ function($http) {
                 name: boardData.name,
                 lanes: boardData.lanes,
                 categories: boardData.categories,
+                trackers: boardData.trackers,
                 users: boardData.users
             });
         },

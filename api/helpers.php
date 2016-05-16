@@ -216,12 +216,29 @@ function loadBoardData($board, $data) {
     foreach($data->categories as $item) {
         $category = R::load('category', $item->id);
         $category->name = $item->name;
+        $category->color = $item->color;
 
         // New category, add it to the board.
         if (!$category->id) {
             $board->xownCategory[] = $category;
         }
         R::store($category);
+    }
+
+    $removeIds = getIdsToRemove($board->xownTracker, $data->trackers);
+    foreach($removeIds as $id) {
+        unset($board->xownTracker[$id]);
+    }
+    foreach($data->trackers as $item) {
+        $tracker = R::load('tracker', $item->id);
+        $tracker->name = $item->name;
+        $tracker->bugexpr = $item->bugexpr;
+
+        // New issue tracker, add it to the board.
+        if (!$tracker->id) {
+            $board->xownTracker[] = $tracker;
+        }
+        R::store($tracker);
     }
 
     // Add or remove users as selected.

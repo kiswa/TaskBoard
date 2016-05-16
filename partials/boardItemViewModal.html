@@ -8,7 +8,8 @@
                     <span aria-hidden="true" class="fa fa-times"></span>
                     <span class="sr-only">Close</span>
                 </button>
-                <h3 class="modal-title" id="itemViewLabel">{{ viewItem.title }}
+                <h3 class="modal-title" id="itemViewLabel">
+                    <span data-ng-bind-html="marked(viewItem.title)"></span>
                     <span data-ng-if="viewItem.points"> - {{ viewItem.points }}</span>
                 </h3>
             </div>
