@@ -16,6 +16,7 @@ class User extends BaseModel {
     public $email = '';
     public $default_board_id = 0;
     public $user_option_id = 0;
+    public $last_login = 0;
 
     public function __construct($container, $id = 0) {
         parent::__construct('user', $id, $container);
@@ -36,6 +37,7 @@ class User extends BaseModel {
         $bean->email = $this->email;
         $bean->default_board_id = $this->default_board_id;
         $bean->user_option_id = $this->user_option_id;
+        $bean->last_login = $this->last_login;
     }
 
     public function loadFromBean($bean) {
@@ -76,6 +78,7 @@ class User extends BaseModel {
             $this->email = $obj->email;
             $this->default_board_id = (int) $obj->default_board_id;
             $this->user_option_id = (int) $obj->user_option_id;
+            $this->last_login = (int) $obj->last_login;
         } catch (Exception $ex) {
             $this->is_valid = false;
         }

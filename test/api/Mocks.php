@@ -63,6 +63,7 @@ class DataMock {
         $user->email = 'user@example.com';
         $user->default_board_id = 1;
         $user->user_option_id = 1;
+        $user->last_login = 123456789;
 
         return $user;
     }

@@ -44,11 +44,11 @@ $app->get   ('/users/{id}', 'Users:getUser');
 $app->post  ('/users',      'Users:addUser');
 $app->post  ('/users/{id}', 'Users:updateUser');
 $app->delete('/users/{id}', 'Users:removeUser');
-/*
-$app->post('/authenticate', 'Users:authenticate');
-$app->post('/login',        'Users:login');
-$app->post('/logout',       'Users:logout');
-*/
+
+$app->post('/authenticate', 'Auth:authenticate');
+$app->post('/login',        'Auth:login');
+$app->post('/logout',       'Auth:logout');
+
 $app->run();
 R::close();
 

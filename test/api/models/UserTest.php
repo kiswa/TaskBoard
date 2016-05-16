@@ -66,6 +66,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($bean->password_hash === $user->password_hash);
         $this->assertTrue($bean->email === $user->email);
         $this->assertTrue($bean->default_board_id === $user->default_board_id);
+        $this->assertTrue($bean->last_login === $user->last_login);
     }
 
     private function assertDefaultProperties($user) {
@@ -77,6 +78,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($user->password_hash === '');
         $this->assertTrue($user->email === '');
         $this->assertTrue($user->default_board_id === 0);
+        $this->assertTrue($user->last_login === 0);
     }
 
     private function assertMockProperties($user) {
@@ -88,6 +90,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($user->password_hash === 'hashpass1234');
         $this->assertTrue($user->email === 'user@example.com');
         $this->assertTrue($user->default_board_id === 1);
+        $this->assertTrue($user->last_login === 123456789);
     }
 }
 
