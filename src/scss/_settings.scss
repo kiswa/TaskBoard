@@ -34,6 +34,14 @@
         border: 0;
     }
 
+    .alternating {
+        td:last-child {
+            a {
+                background-image: none;
+            }
+        }
+    }
+
     section {
         @include clearfix();
         @include shadow-low();
@@ -74,7 +82,7 @@
             .badge {
                 background-color: $color-tertiary;
                 border-radius: 33%;
-                box-shadow: inset 2px 2px rgba(0, 0, 0, .1);
+                box-shadow: inset 1px 1px rgba(0, 0, 0, .1);
                 float: right;
                 font-size: .75em;
                 font-weight: 700;
@@ -108,6 +116,7 @@
         }
 
         .autosize {
+            margin-bottom: .5em;
             width: auto;
         }
 

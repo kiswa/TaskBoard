@@ -10,13 +10,22 @@ h3,
 h4,
 h5,
 h6 {
+    font-family: Raleway;
     font-weight: 500;
     margin: 0;
+}
+
+a {
+    background-position: left 1.05em;
 }
 
 .loading {
     padding-top: 2em;
     text-align: center;
+}
+
+.small {
+    font-size: .8em;
 }
 
 table {

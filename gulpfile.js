@@ -55,6 +55,11 @@ gulp.task('html', () => {
         .pipe(gulp.dest('dist/'));
 });
 
+gulp.task('fonts', () => {
+    return gulp.src('src/fonts/*.*')
+        .pipe(gulp.dest('dist/css/fonts/'));
+});
+
 gulp.task('images', () => {
     return gulp.src(paths.images)
         .pipe(imageMin())
@@ -203,6 +208,7 @@ gulp.task('default', [
     'html',
     'images',
     'lintScss',
+    'fonts',
     'scss',
     'api'
 ], () => {

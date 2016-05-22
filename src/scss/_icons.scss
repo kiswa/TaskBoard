@@ -1,0 +1,39 @@
+@font-face {
+    font-family: 'fontello';
+    src: url('./fonts/fontello.eot');
+    src: url('./fonts/fontello.woff') format('woff'),
+         url('./fonts/fontello.ttf') format('truetype'),
+         url('./fonts/fontello.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.icon {
+    display: inline-block;
+    font-family: 'fontello';
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    line-height: 1em;
+    speak: none;
+    text-align: center;
+    text-decoration: inherit;
+    text-transform: none;
+    width: 1em;
+}
+
+.icon-trash-empty:before { content: '\e800'; }
+.icon-edit:before { content: '\e801'; }
+.icon-plus:before { content: '\e802'; }
+.icon-help-circled:before { content: '\e803'; }
+.icon-cancel:before { content: '\e804'; }
+.icon-download:before { content: '\e805'; }
+.icon-upload:before { content: '\e806'; }
+.icon-eye:before { content: '\e807'; }
+.icon-comment-empty:before { content: '\e808'; }
+.icon-chat-empty:before { content: '\e809'; }
+.icon-attach:before { content: '\e80a'; }
+.icon-angle-double-left:before { content: '\e80b'; }
+.icon-angle-double-right:before { content: '\e80c'; }
+.icon-angle-double-down:before { content: '\e80d'; }
+
