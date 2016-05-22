@@ -11,7 +11,6 @@ class User extends BaseModel {
     public $id = 0;
     public $security_level;
     public $username = '';
-    public $salt = '';
     public $password_hash = '';
     public $email = '';
     public $default_board_id = 0;
@@ -32,7 +31,6 @@ class User extends BaseModel {
         $bean->id = $this->id;
         $bean->security_level = $this->security_level->getValue();
         $bean->username = $this->username;
-        $bean->salt = $this->salt;
         $bean->password_hash = $this->password_hash;
         $bean->email = $this->email;
         $bean->default_board_id = $this->default_board_id;
@@ -73,7 +71,6 @@ class User extends BaseModel {
             $this->id = (int) $obj->id;
             $this->security_level = new SecurityLevel((int) $obj->security_level);
             $this->username = $obj->username;
-            $this->salt = $obj->salt;
             $this->password_hash = $obj->password_hash;
             $this->email = $obj->email;
             $this->default_board_id = (int) $obj->default_board_id;

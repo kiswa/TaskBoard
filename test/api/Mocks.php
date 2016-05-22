@@ -58,7 +58,6 @@ class DataMock {
         $user->id = 1;
         $user->security_level = SecurityLevel::BoardAdmin;
         $user->username = 'tester';
-        $user->salt = 'salty1234';
         $user->password_hash = 'hashpass1234';
         $user->email = 'user@example.com';
         $user->default_board_id = 1;
@@ -162,6 +161,7 @@ class ContainerMock {
 class RequestMock {
     public $invalidPayload = false;
     public $payload = null;
+    public $hasHeader = true;
 
     public function getBody() {
         if ($this->invalidPayload) {
@@ -174,12 +174,20 @@ class RequestMock {
 
         return json_encode(DataMock::getBoard());
     }
+
+    public function hasHeader() {
+        return $this->hasHeader;
+    }
 }
 
 class ResponseMock {
 
     public function withJson($apiJson) {
         return $apiJson;
+    }
+
+    public function withStatus($status) {
+        return $status;
     }
 
 }

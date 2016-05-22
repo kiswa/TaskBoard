@@ -3,17 +3,18 @@ use RedBeanPHP\R;
 use Firebase\JWT;
 
 class Auth extends BaseController {
-    public function authenticate($request, $response, $args) {
-        if (!$request->hasHeader('Authorization') {
-            $apiJson = new ApiJson();
 
+    public function authenticate($request, $response, $args) {
+        if (!$request->hasHeader('Authorization')) {
             return $response->withStatus(400); // Bad Request
         }
 
-        $jwt = $response->getHeader('Authorization');
+        $jwt = $request->getHeader('Authorization');
 
         // Validate token
         // Issue new token with extended expiration
+
+        return $response->withJson(json_encode($jwt));
     }
 
     public function login($request, $response, $args) {
@@ -26,7 +27,7 @@ class Auth extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        if ($user->password !== $this->hashPassword($data->password, $user->salt) {
+        if (!password_verify($data->password, $user->password_hash)) {
             $this->apiJson->addAlert('error', 'Invalid username or password.');
 
             return $this->jsonResponse($response);
@@ -43,16 +44,15 @@ class Auth extends BaseController {
         $key = R::load('jwt', 1);
 
         if ($key->id === 0) {
+            // Generate a JWT key by hashing the current time.
+            // This should make (effectively) every instance of TaskBoard
+            // have a unique secret key for JWTs.
             $key->token = password_hash(strval(time()), PASSWORD_BCRYPT);
+
             R::store($key);
         }
 
         return $key->token;
-    }
-
-    private function hashPassword($password, $salt) {
-        return password_hash($data->password, PASSWORD_BCRYPT,
-            array('salt' => $salt));
     }
 }
 

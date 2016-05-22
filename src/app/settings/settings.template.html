@@ -18,12 +18,13 @@
                 <button>Change Password</button>
                 <button class="flat">Reset</button>
 
-                <h3 class="tall">Select Default Board</h3>
-                <select>
-                    <option>None</option>
-                </select>
-
-                <h3>All Boards Options</h3>
+                <h3 class="tall">All Boards Options</h3>
+                <label>
+                    Select default board:
+                    <select class="autosize">
+                        <option>None</option>
+                    </select>
+                </label>
                 <label>
                     New tasks appear at column
                     <select class="autosize">
@@ -95,8 +96,8 @@
                             <td>User</td>
                             <td>None</td>
                             <td>
-                                <a href="">Edit</a>
-                                <a href="">Remove</a>
+                                <a href=""><i class="icon icon-edit"></i></a>
+                                <a href=""><i class="icon icon-trash-empty"></i></a>
                             </td>
                         </tr>
                         <tr>
@@ -105,8 +106,8 @@
                             <td>Board Administrator</td>
                             <td>None</td>
                             <td>
-                                <a href="">Edit</a>
-                                <a href="">Remove</a>
+                                <a href=""><i class="icon icon-edit"></i></a>
+                                <a href=""><i class="icon icon-trash-empty"></i></a>
                             </td>
                         </tr>
                     </tbody>
@@ -124,28 +125,30 @@
             <div class="row">
                 <h3>Current Boards</h3>
 
-                <label class="inline">
-                    Sort By:
-                    <select class="autosize">
-                        <option>Board Name</option>
-                        <option>Creation Date</option>
-                    </select>
-                </label>
-                <label class="inline">
-                    Filter By:
-                    <select class="autosize">
-                        <option>All Boards</option>
-                        <option>Active</option>
-                        <option>Inactive</option>
-                    </select>
-                </label>
-                <label class="inline">
-                    Show By User:
-                    <select class="autosize">
-                        <option>Any User</option>
-                        <option>admin</option>
-                    </select>
-                </label>
+                <div class="small right">
+                    <label class="inline">
+                        Sort By:
+                        <select class="autosize">
+                            <option>Board Name</option>
+                            <option>Creation Date</option>
+                        </select>
+                    </label>
+                    <label class="inline">
+                        Filter By:
+                        <select class="autosize">
+                            <option>All Boards</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                        </select>
+                    </label>
+                    <label class="inline">
+                        Show By User:
+                        <select class="autosize">
+                            <option>Any User</option>
+                            <option>admin</option>
+                        </select>
+                    </label>
+                </div>
 
                 <table class="alternating">
                     <thead>
@@ -169,25 +172,30 @@
                             </td>
                             <td>
                                 <ul>
-                                    <li>Cat1</li>
-                                    <li>Cat2</li>
-                                    <li>Cat3</li>
+                                    <li>Cat1<span class="badge" title="Default Color" style="background-color:#debee8">&nbsp;</span></li>
+                                    <li>Cat2<span class="badge" title="Default Color" style="background-color:#bee7f4">&nbsp;</span></li>
+                                    <li>Cat3<span class="badge" title="Default Color" style="background-color:#ffffe0">&nbsp;</span></li>
                                 </ul>
                             </td>
                             <td>
                                 <ul>
                                     <li>admin</li>
+                                    <li>other_guy</li>
                                 </ul>
                             </td>
                             <td>
-                                <a href="">Edit</a>
-                                <a href="">Remove</a>
+                                <a href=""><i class="icon icon-edit"></i></a>
+                                <a href=""><i class="icon icon-trash-empty"></i></a>
                                 <label><input type="checkbox" checked> Active</label>
                             </td>
                         </tr>
                         <tr>
                             <td><a href="boards/2">Other Board</a></td>
-                            <td></td>
+                            <td>
+                                <ul>
+                                    <li>One<span class="badge">0</span></li>
+                                </ul>
+                            </td>
                             <td></td>
                             <td>
                                 <ul>
@@ -195,8 +203,8 @@
                                 </ul>
                             </td>
                             <td>
-                                <a href="">Edit</a>
-                                <a href="">Remove</a>
+                                <a href=""><i class="icon icon-edit"></i></a>
+                                <a href=""><i class="icon icon-trash-empty"></i></a>
                                 <label><input type="checkbox" checked> Active</label>
                             </td>
                         </tr>
@@ -218,7 +226,7 @@
                         <tr>
                             <th>Board</th>
                             <th>Trigger</th>
-                            <th>Actions</th>
+                            <th>Action</th>
                             <th>Remove</th>
                         </tr>
                     </thead>
@@ -227,13 +235,13 @@
                             <td>Example Board</td>
                             <td>Item assigned to user: admin</td>
                             <td>Set item color: #debee8</td>
-                            <td><a href="#">Remove</a></td>
+                            <td><a href="#"><i class="icon icon-trash-empty"></i></a></td>
                         </tr>
                         <tr>
                             <td>Example Board</td>
                             <td>Item moved to column: Col3</td>
                             <td>Set item color: #debee8</td>
-                            <td><a href="#">Remove</a></td>
+                            <td><a href="#"><i class="icon icon-trash-empty"></i></a></td>
                         </tr>
                     </tbody>
                 </table>

@@ -62,7 +62,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($bean->security_level ===
             $user->security_level->getValue());
         $this->assertTrue($bean->username === $user->username);
-        $this->assertTrue($bean->salt === $user->salt);
         $this->assertTrue($bean->password_hash === $user->password_hash);
         $this->assertTrue($bean->email === $user->email);
         $this->assertTrue($bean->default_board_id === $user->default_board_id);
@@ -74,7 +73,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($user->security_level->getValue() ===
             SecurityLevel::User);
         $this->assertTrue($user->username === '');
-        $this->assertTrue($user->salt === '');
         $this->assertTrue($user->password_hash === '');
         $this->assertTrue($user->email === '');
         $this->assertTrue($user->default_board_id === 0);
@@ -86,7 +84,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($user->security_level->getValue() ===
             SecurityLevel::BoardAdmin);
         $this->assertTrue($user->username === 'tester');
-        $this->assertTrue($user->salt === 'salty1234');
         $this->assertTrue($user->password_hash === 'hashpass1234');
         $this->assertTrue($user->email === 'user@example.com');
         $this->assertTrue($user->default_board_id === 1);
