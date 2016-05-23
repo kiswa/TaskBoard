@@ -1,6 +1,6 @@
 <?php
 use RedBeanPHP\R;
-use Firebase\JWTi\JWT;
+use Firebase\JWT\JWT;
 
 class Auth extends BaseController {
 
@@ -13,7 +13,7 @@ class Auth extends BaseController {
         $payload = null;
 
         try {
-            $payload = JWT::decode($jwt, getJwtKey(), array('HS256'));
+            $payload = JWT::decode($jwt, $this->getJwtKey(), array('HS256'));
         } catch (Exception $ex) {
         }
 
