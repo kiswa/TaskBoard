@@ -63,6 +63,7 @@ class DataMock {
         $user->default_board_id = 1;
         $user->user_option_id = 1;
         $user->last_login = 123456789;
+        $user->active_token = '';
 
         return $user;
     }
@@ -162,6 +163,7 @@ class RequestMock {
     public $invalidPayload = false;
     public $payload = null;
     public $hasHeader = true;
+    public $header = null;
 
     public function getBody() {
         if ($this->invalidPayload) {
@@ -180,7 +182,11 @@ class RequestMock {
     }
 
     public function getHeader($header) {
-        return $header;
+        if ($this->header) {
+            return $this->header;
+        }
+
+        return (array) $header;
     }
 }
 
@@ -191,7 +197,7 @@ class ResponseMock {
     }
 
     public function withStatus($status) {
-        return $status;
+        return $this;
     }
 
 }

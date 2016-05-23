@@ -13,8 +13,8 @@ abstract class BaseController {
         $this->container = $container;
     }
 
-    public function jsonResponse($response) {
-        return $response->withJson($this->apiJson);
+    public function jsonResponse($response, $status = 200) {
+        return $response->withStatus($status)->withJson($this->apiJson);
     }
 }
 

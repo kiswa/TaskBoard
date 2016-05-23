@@ -13,7 +13,7 @@ class Users extends BaseController {
                 $user = new User($this->container);
                 $user->loadFromBean($bean);
 
-                $this->apiJson->addData($user);
+                $this->apiJson->addData($this->cleanUser($user));
             }
         } else {
             $this->logger->addInfo('No users in database.');
@@ -36,7 +36,7 @@ class Users extends BaseController {
         }
 
         $this->apiJson->setSuccess();
-        $this->apiJson->addData($user);
+        $this->apiJson->addData($this->cleanUser($user));
 
         return $this->jsonResponse($response);
     }
@@ -119,6 +119,14 @@ class Users extends BaseController {
             'User ' . $before->username . ' removed.');
 
         return $this->jsonResponse($response);
+    }
+
+    private function cleanUser($user) {
+        $user->security_level = $user->security_level->getValue();
+        unset($user->password_hash);
+        unset($user->active_token);
+
+        return $user;
     }
 }
 
