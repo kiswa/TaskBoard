@@ -178,6 +178,10 @@ class RequestMock {
     public function hasHeader() {
         return $this->hasHeader;
     }
+
+    public function getHeader($header) {
+        return $header;
+    }
 }
 
 class ResponseMock {

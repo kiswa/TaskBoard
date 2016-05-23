@@ -1,6 +1,6 @@
 <?php
 use RedBeanPHP\R;
-use Firebase\JWT;
+use Firebase\JWTi\JWT;
 
 class Auth extends BaseController {
 
@@ -10,8 +10,13 @@ class Auth extends BaseController {
         }
 
         $jwt = $request->getHeader('Authorization');
+        $payload = null;
 
-        // Validate token
+        try {
+            $payload = JWT::decode($jwt, getJwtKey(), array('HS256'));
+        } catch (Exception $ex) {
+        }
+
         // Issue new token with extended expiration
 
         return $response->withJson(json_encode($jwt));
@@ -38,6 +43,9 @@ class Auth extends BaseController {
     }
 
     public function logout($request, $response, $args) {
+    }
+
+    private function generateJwt() {
     }
 
     private function getJwtKey() {

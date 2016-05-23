@@ -26,6 +26,11 @@ class AuthTest extends PHPUnit_Framework_TestCase {
             new ResponseMock(), null);
 
         $this->assertTrue($actual === 400);
+
+        $actual = $this->auth->authenticate(new RequestMock(),
+            new ResponseMock(), null);
+
+        $this->assertTrue($actual === json_encode('Authorization'));
     }
 }
 
