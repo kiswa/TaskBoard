@@ -122,6 +122,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $args = [];
         $args['id'] = 2;
 
+        $this->jwt = DataMock::getJwt();
         $request = new RequestMock();
         $request->header = [$this->jwt];
 
