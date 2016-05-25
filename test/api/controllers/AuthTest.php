@@ -17,25 +17,21 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $this->auth = new Auth(new ContainerMock());
     }
 
-    public function testAuthenticateFailures() {
+    public function testRefreshTokenFailures() {
         $request = new RequestMock();
         $request->hasHeader = false;
 
-        $actual = $this->auth->authenticate($request,
+        $actual = Auth::RefreshToken($request, new ResponseMock(), null);
+
+        $this->assertEquals(400, $actual->status);
+
+        $actual = Auth::RefreshToken(new RequestMock(),
             new ResponseMock(), null);
 
-        $this->assertTrue($actual->status === 'failure');
-
-        $actual = $this->auth->authenticate(new RequestMock(),
-            new ResponseMock(), null);
-
-        $expected = new ApiJson();
-        $expected->addAlert('error', 'Invalid access token.');
-
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals(401, $actual->status);
     }
 
-    public function testAuthenticate() {
+    public function testRefreshToken() {
         Auth::CreateInitialAdmin(new ContainerMock());
         // Called twice to verify coverage of the check for existing admin
         Auth::CreateInitialAdmin(new ContainerMock());
@@ -55,18 +51,16 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $request = new RequestMock();
         $request->header = [$token];
 
-        $actual = $this->auth->authenticate($request,
-            new ResponseMock(), null);
-        $this->assertTrue(strlen($actual->data[0]) > 0);
-
-        $this->auth = new Auth(new ContainerMock());
+        $actual = Auth::RefreshToken($request, new ResponseMock(),
+            new ContainerMock());
+        $this->assertTrue(strlen((string) $actual->getBody()) > 0);
 
         $admin->active_token = '';
         R::store($admin);
 
-        $actual = $this->auth->authenticate($request,
-            new ResponseMock(), null);
-        $this->assertTrue($actual->status === 'failure');
+        $actual = Auth::RefreshToken($request, new ResponseMock(),
+            new ContainerMock());
+        $this->assertEquals(401, $actual->status);
     }
 
     public function testLogin() {

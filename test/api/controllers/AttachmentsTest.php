@@ -76,28 +76,6 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($response->status === 'failure');
     }
 
-    public function testUpdateAttachment() {
-        $this->createAttachment();
-
-        $attachment = DataMock::getAttachment();
-        $attachment->type = 'text';
-
-        $args = [];
-        $args['id'] = $attachment->id;
-
-        $request = new RequestMock();
-        $request->payload = $attachment;
-
-        $response = $this->attachments->updateAttachment($request,
-            new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'success');
-
-        $request->payload = new stdClass();
-        $esponse = $this->attachments->updateAttachment($request,
-            new ResponseMock(), $args);
-        $this->assertTrue($response->alerts[2]['type'] === 'error');
-    }
-
     private function createAttachment() {
         $request = new RequestMock();
         $attachment = DataMock::getAttachment();

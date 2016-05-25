@@ -2,6 +2,7 @@
 class Comment extends BaseModel {
     public $id = 0;
     public $text = '';
+    public $submitted_by = 0;
 
     public function __construct($container, $id = 0) {
         parent::__construct('comment', $id, $container);
@@ -14,6 +15,7 @@ class Comment extends BaseModel {
 
         $bean->id = $this->id;
         $bean->text = $this->text;
+        $bean->submitted_by = $this->submitted_by;
     }
 
     public function loadFromBean($bean) {
@@ -48,6 +50,7 @@ class Comment extends BaseModel {
         try {
             $this->id = (int) $obj->id;
             $this->text = $obj->text;
+            $this->submitted_by = $obj->submitted_by;
         } catch (Exception $ex) {
             $this->is_valid = false;
         }

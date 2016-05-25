@@ -11,6 +11,40 @@ class AppMock {
 $app = new AppMock();
 
 class DataMock {
+    public static function getJwt($userId = 1) {
+        Auth::CreateJwtKey();
+
+        $key = RedBeanPHP\R::load('jwt', 1);
+
+        $jwt = Firebase\JWT\JWT::encode(array(
+            'exp' => time() + (60 * 30), // 30 minutes
+            'uid' => $userId
+        ), $key->secret);
+
+        $user = RedBeanPHP\R::load('user', $userId);
+        $user->active_token = $jwt;
+        RedBeanPHP\R::store($user);
+
+        return $jwt;
+    }
+
+    public static function createUnpriviligedUser() {
+        $request = new RequestMock();
+        $user = DataMock::getUser();
+        $user->id = 0;
+        $user->username = 'badtester';
+        $user->security_level = SecurityLevel::Unprivileged;
+
+        $jwt = DataMock::getJwt();
+        $request->payload = $user;
+        $request->header = [$jwt];
+
+        $users = new Users(new ContainerMock());
+        $response = $users->addUser($request, new ResponseMock(), null);
+
+        return $response;
+    }
+
     public static function getBoard() {
         $board = new stdClass();
         $board->id = 1;
@@ -19,7 +53,9 @@ class DataMock {
         $board->columns[] = DataMock::getColumn();
         $board->categories[] = DataMock::getCategory();
         $board->auto_actions[] = DataMock::getAutoAction();
-        $board->users[] = DataMock::getUser();
+        $user = DataMock::getUser();
+        $user->id = 1;
+        $board->users[] = $user;
 
         return $board;
     }
@@ -55,7 +91,7 @@ class DataMock {
 
     public static function getUser() {
         $user = new stdClass();
-        $user->id = 1;
+        $user->id = 2;
         $user->security_level = SecurityLevel::BoardAdmin;
         $user->username = 'tester';
         $user->password_hash = 'hashpass1234';
@@ -98,6 +134,7 @@ class DataMock {
 
         $comment->id = 1;
         $comment->text = 'test comment';
+        $comment->submitted_by = 1;
 
         return $comment;
     }
@@ -164,6 +201,7 @@ class RequestMock {
     public $payload = null;
     public $hasHeader = true;
     public $header = null;
+    public $throwInHeader = false;
 
     public function getBody() {
         if ($this->invalidPayload) {
@@ -182,22 +220,55 @@ class RequestMock {
     }
 
     public function getHeader($header) {
+        if ($this->throwInHeader) {
+            throw new Exception();
+        }
+
         if ($this->header) {
             return $this->header;
         }
 
-        return (array) $header;
+        return $header;
     }
 }
 
 class ResponseMock {
+    public $status = 200;
+    public $body;
+
+    public function __construct() {
+        $this->body = new RequestBodyMock();
+    }
 
     public function withJson($apiJson) {
         return $apiJson;
     }
 
     public function withStatus($status) {
+        $this->status = $status;
+
         return $this;
+    }
+
+    public function getStatusCode() {
+        return $this->status;
+    }
+
+    public function getBody() {
+        return $this->body;
+    }
+
+}
+
+class RequestBodyMock {
+    public $data;
+
+    public function __toString() {
+        return $this->data;
+    }
+
+    public function write($string) {
+        $this->data = $string;
     }
 
 }

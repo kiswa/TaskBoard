@@ -4,6 +4,12 @@ use RedBeanPHP\R;
 class Boards extends BaseController {
 
     public function getAllBoards($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $boardBeans = R::findAll('board');
 
         if (count($boardBeans)) {
@@ -24,6 +30,12 @@ class Boards extends BaseController {
     }
 
     public function getBoard($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $board = new Board($this->container, (int)$args['id']);
 
         if ($board->id === 0) {
@@ -42,6 +54,12 @@ class Boards extends BaseController {
     }
 
     public function addBoard($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::Admin);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $board = new Board($this->container);
         $board->loadFromJson($request->getBody());
 
@@ -53,9 +71,9 @@ class Boards extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name added board ' . $board->name . '.',
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' added board ' . $board->name . '.',
             '', json_encode($board), 'board', $board->id);
 
         $this->apiJson->setSuccess();
@@ -66,6 +84,12 @@ class Boards extends BaseController {
     }
 
     public function updateBoard($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::BoardAdmin);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $board = new Board($this->container, (int)$args['id']);
 
         $update = new Board($this->container);
@@ -81,9 +105,9 @@ class Boards extends BaseController {
 
         $update->save();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name updated board ' . $update->name,
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' updated board ' . $update->name,
             json_encode($board), json_encode($update),
             'board', $update->id);
 
@@ -95,6 +119,12 @@ class Boards extends BaseController {
     }
 
     public function removeBoard($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::Admin);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $id = (int)$args['id'];
         $board = new Board($this->container, $id);
 
@@ -109,9 +139,9 @@ class Boards extends BaseController {
         $before = $board;
         $board->delete();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name removed board ' . $before->name,
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' removed board ' . $before->name,
             json_encode($before), '', 'board', $id);
 
         $this->apiJson->setSuccess();

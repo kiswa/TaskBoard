@@ -4,26 +4,36 @@ use RedBeanPHP\R;
 class Users extends BaseController {
 
     public function getAllUsers($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
+        $this->apiJson->setSuccess();
         $userBeans = R::findAll('user');
 
-        if (count($userBeans)) {
-            $this->apiJson->setSuccess();
+        // TODO: Filter returned users by requesting user's security level
+        // and board access. User and BoardAdmin should only see users on
+        // boards they have access to.
 
-            foreach($userBeans as $bean) {
-                $user = new User($this->container);
-                $user->loadFromBean($bean);
+        foreach($userBeans as $bean) {
+            $user = new User($this->container);
+            $user->loadFromBean($bean);
 
-                $this->apiJson->addData($this->cleanUser($user));
-            }
-        } else {
-            $this->logger->addInfo('No users in database.');
-            $this->apiJson->addAlert('info', 'No users in database.');
+            $this->apiJson->addData($this->cleanUser($user));
         }
 
         return $this->jsonResponse($response);
     }
 
     public function getUser($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $user = new User($this->container, (int)$args['id']);
 
         if ($user->id === 0) {
@@ -35,6 +45,10 @@ class Users extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        // TODO: Filter returned user by requesting user's security level
+        // and board access. User and BoardAdmin should only see users on
+        // boards they have access to.
+
         $this->apiJson->setSuccess();
         $this->apiJson->addData($this->cleanUser($user));
 
@@ -42,6 +56,12 @@ class Users extends BaseController {
     }
 
     public function addUser($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::Admin);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $user = new User($this->container);
         $user->loadFromJson($request->getBody());
 
@@ -53,9 +73,9 @@ class Users extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name added user ' . $user->username . '.',
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+             $actor->username . ' added user ' . $user->username . '.',
             '', json_encode($user), 'user', $user->id);
 
         $this->apiJson->setSuccess();
@@ -66,6 +86,12 @@ class Users extends BaseController {
     }
 
     public function updateUser($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::Admin);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $user = new User($this->container, (int)$args['id']);
 
         $update = new User($this->container);
@@ -81,9 +107,9 @@ class Users extends BaseController {
 
         $update->save();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name updated user ' . $update->username,
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' updated user ' . $update->username,
             json_encode($user), json_encode($update),
             'user', $update->id);
 
@@ -95,6 +121,12 @@ class Users extends BaseController {
     }
 
     public function removeUser($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::Admin);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $id = (int)$args['id'];
         $user = new User($this->container, $id);
 
@@ -109,9 +141,9 @@ class Users extends BaseController {
         $before = $user;
         $user->delete();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name removed user ' . $before->username,
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' removed user ' . $before->username,
             json_encode($before), '', 'user', $id);
 
         $this->apiJson->setSuccess();

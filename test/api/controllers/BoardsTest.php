@@ -13,68 +13,119 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
     public function setUp() {
         RedBeanPHP\R::nuke();
 
+        Auth::CreateInitialAdmin(new ContainerMock());
+
         $this->boards = new Boards(new ContainerMock());
     }
 
     public function testGetAllBoards() {
-        $expected = new ApiJson();
-        $expected->addAlert('info', 'No boards in database.');
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
 
-        $actual = $this->boards->getAllBoards(null, new ResponseMock(), null);
-        $this->assertEquals($expected, $actual);
+        $actual = $this->boards->getAllBoards($request,
+            new ResponseMock(), null);
+        $this->assertEquals('No boards in database.',
+            $actual->alerts[0]['text']);;
 
         $this->createBoard();
 
-        $boards = $this->boards->getAllBoards(null, new ResponseMock, null);
-        $this->assertTrue(count($boards->data) === 1);
-        $this->assertTrue($boards->status === 'success');
+        $request->header = [DataMock::getJwt()];
+        $this->boards = new Boards(new ContainerMock());
+
+        $boards = $this->boards->getAllBoards($request,
+            new ResponseMock, null);
+        $this->assertEquals(2, count($boards->data));
+        $this->assertEquals('success', $boards->status);
+
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $request->header = [DataMock::getJwt(2)];
+        $this->boards = new Boards(new ContainerMock());
+
+        $actual = $this->boards->getAllBoards($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
     }
 
     public function testGetBoard() {
-        $expected = new ApiJson();
-        $expected->addAlert('error', 'No board found for ID 1.');
-
         $args = [];
         $args['id'] = 1;
 
-        $actual = $this->boards->getBoard(null, new ResponseMock(), $args);
-        $this->assertEquals($expected, $actual);
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
+        $actual = $this->boards->getBoard($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('No board found for ID 1.',
+            $actual->alerts[0]['text']);
 
         $this->createBoard();
-        $actual = $this->boards->getBoard(null, new ResponseMock(), $args);
-        $this->assertTrue($actual->status === 'success');
-        $this->assertTrue(count($actual->data) === 1);
+        $this->boards = new Boards(new ContainerMock());
+        $request->header = [DataMock::getJwt()];
+
+        $actual = $this->boards->getBoard($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $actual->status);
+        $this->assertEquals(2, count($actual->data));
+
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $request->header = [DataMock::getJwt(2)];
+        $this->boards = new Boards(new ContainerMock());
+
+        $actual = $this->boards->getBoard($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
     }
 
+    /**
+     * @group single
+     */
     public function testAddRemoveBoard() {
-        $expected = new ApiJson();
-
         $actual = $this->createBoard();
 
-        $expected->setSuccess();
-        $expected->addAlert('success', 'Board test added.');
-
-        $this->assertEquals($expected, $actual);
-
-        $expected->addAlert('success', 'Board test removed.');
+        $this->assertEquals('Board test added.',
+            $actual->alerts[0]['text']);
 
         $args = [];
         $args['id'] = 1;
 
-        $actual = $this->boards->removeBoard(null, new ResponseMock(), $args);
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
 
-        $this->assertEquals($expected, $actual);
+        $this->boards = new Boards(new ContainerMock());
+        $actual = $this->boards->removeBoard($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('Board test removed.',
+            $actual->alerts[0]['text']);
+
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $request->header = [DataMock::getJwt(2)];
+        $this->boards = new Boards(new ContainerMock());
+
+        $actual = $this->boards->addBoard($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
     }
 
     public function testAddBadBoard() {
         $request = new RequestMock();
         $request->invalidPayload = true;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->boards->addBoard($request,
             new ResponseMock(), null);
 
-        $this->assertTrue($response->status === 'failure');
-        $this->assertTrue($response->alerts[0]['type'] === 'error');
+        $this->assertEquals('failure', $response->status);
+        $this->assertEquals('error', $response->alerts[0]['type']);
     }
 
     public function testRemoveBadBoard() {
@@ -82,7 +133,8 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $args['id'] = 5; // No such board
 
         $response =
-            $this->boards->removeBoard(null, new ResponseMock(), $args);
+            $this->boards->removeBoard(new RequestMock(),
+                new ResponseMock(), $args);
         $this->assertTrue($response->status === 'failure');
     }
 
@@ -109,19 +161,10 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
     }
 
     private function createBoard() {
-        $users = new Users(new ContainerMock());
         $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
 
-        $user = DataMock::getUser();
-        $user->id = 0;
-
-        $request->payload = $user;
-
-        $response = $users->addUser($request,
-            new ResponseMock(), null);
-        $this->assertTrue($response->status === 'success');
-
-        $response = $this->boards->addBoard(new RequestMock(),
+        $response = $this->boards->addBoard($request,
             new ResponseMock(), null);
         $this->assertTrue($response->status === 'success');
 

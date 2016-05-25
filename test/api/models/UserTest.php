@@ -71,7 +71,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
     private function assertDefaultProperties($user) {
         $this->assertTrue($user->id === 0);
         $this->assertTrue($user->security_level->getValue() ===
-            SecurityLevel::User);
+            SecurityLevel::Unprivileged);
         $this->assertTrue($user->username === '');
         $this->assertTrue($user->password_hash === '');
         $this->assertTrue($user->email === '');
@@ -80,7 +80,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
     }
 
     private function assertMockProperties($user) {
-        $this->assertTrue($user->id === 1);
+        $this->assertTrue($user->id === 2);
         $this->assertTrue($user->security_level->getValue() ===
             SecurityLevel::BoardAdmin);
         $this->assertTrue($user->username === 'tester');

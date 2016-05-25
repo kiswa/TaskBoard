@@ -5,6 +5,7 @@ class SecurityLevel extends Enum {
     const Admin = 1;
     const BoardAdmin = 2;
     const User = 3;
+    const Unprivileged = 4;
 }
 
 class User extends BaseModel {
@@ -21,7 +22,7 @@ class User extends BaseModel {
     public function __construct($container, $id = 0) {
         parent::__construct('user', $id, $container);
 
-        $this->security_level = new SecurityLevel(SecurityLevel::User);
+        $this->security_level = new SecurityLevel(SecurityLevel::Unprivileged);
 
         $this->loadFromBean($this->bean);
     }

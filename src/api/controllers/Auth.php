@@ -7,6 +7,7 @@ class Auth extends BaseController {
     public static function CreateInitialAdmin($container) {
         $admin = new User($container, 1);
 
+        // Don't create more than one admin
         if ($admin->id === 1) {
             return;
         }
@@ -31,41 +32,51 @@ class Auth extends BaseController {
         R::store($key);
     }
 
-    // TODO: Determine if this endpoint is needed.
-    // The new API should be varifying and updating the user's
-    // token on each call so an authentication endpoint should not
-    // be needed. The code will remain for now as an example of what
-    // to do in the future.
-    public function authenticate($request, $response, $args) {
+    public static function RefreshToken($request, $response, $container) {
         if (!$request->hasHeader('Authorization')) {
-            return $this->jsonResponse($response, 400);
+            return $response->withStatus(400);
         }
 
         $jwt = $request->getHeader('Authorization')[0];
-        $payload = $this->getJwtPayload($jwt);
+        $payload = self::getJwtPayload($jwt);
 
         if ($payload === null) {
-            return $this->jsonResponse($response, 401);
+            return $response->withStatus(401);
         }
 
-        $user = new User($this->container, (int) $payload->uid);
+        $user = new User($container, (int) $payload->uid);
         if ($user->active_token !== $jwt) {
             $user->active_token = '';
             $user->save();
 
-            $this->apiJson->addAlert('error', 'Invalid access token.');
-
-            return $this->jsonResponse($response, 401);
+            return $response->withStatus(401);
         }
 
-        $jwt = $this->createJwt($payload->uid);
+        $jwt = self::createJwt($payload->uid);
         $user->active_token = $jwt;
         $user->save();
 
-        $this->apiJson->setSuccess();
-        $this->apiJson->addData($jwt);
+        $response->getBody()->write($jwt);
 
-        return $this->jsonResponse($response);
+        return $response;
+    }
+
+    public static function GetUserId($request) {
+        $uid = -1;
+
+        try {
+            $jwt = $request->getHeader('Authorization')[0];
+        } catch (Exception $ex) {
+            return $uid;
+        }
+
+        $payload = self::getJwtPayload($jwt);
+
+        if ($payload !== null) {
+            $uid = $payload->uid;
+        }
+
+        return $uid;
     }
 
     public function login($request, $response, $args) {
@@ -84,7 +95,7 @@ class Auth extends BaseController {
             return $this->jsonResponse($response, 401);
         }
 
-        $jwt = $this->createJwt($user->id);
+        $jwt = self::createJwt($user->id);
         $user = new User($this->container, $user->id);
 
         $user->active_token = $jwt;
@@ -103,9 +114,11 @@ class Auth extends BaseController {
         }
 
         $jwt = $request->getHeader('Authorization')[0];
-        $payload = $this->getJwtPayload($jwt);
+        $payload = self::getJwtPayload($jwt);
 
         if ($payload === null) {
+            $this->apiJson->addAlert('error', 'Invalid access token.');
+
             return $this->jsonResponse($response, 401);
         }
 
@@ -122,26 +135,24 @@ class Auth extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    private function getJwtPayload($jwt) {
+    private static function getJwtPayload($jwt) {
         try {
-            $payload = JWT::decode($jwt, $this->getJwtKey(), ['HS256']);
+            $payload = JWT::decode($jwt, self::getJwtKey(), ['HS256']);
         } catch (Exception $ex) {
-            $this->apiJson->addAlert('error', 'Invalid access token.');
-
             return null;
         }
 
         return $payload;
     }
 
-    private function createJwt($userId) {
+    private static function createJwt($userId) {
         return JWT::encode(array(
                     'exp' => time() + (60 * 30), // 30 minutes
                     'uid' => $userId
-                ), $this->getJwtKey());
+                ), Auth::getJwtKey());
     }
 
-    private function getJwtKey() {
+    private static function getJwtKey() {
         self::CreateJwtKey();
         $key = R::load('jwt', 1);
 

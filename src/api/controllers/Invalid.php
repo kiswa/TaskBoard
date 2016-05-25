@@ -7,7 +7,7 @@ class Invalid extends BaseController {
 
         $apiReturn = new stdClass();
         $apiReturn->status = 'One of "success" or "failure".';
-        $apiReturn->data = 'An array of data (JSON objects and/or arrays).';
+        $apiReturn->data = 'An array of data (JSON objects and/or arrays). The first object is a new JWT for the next request.';
         $apiReturn->alerts = 'An array of alerts, with "type" of "success", "error", "warn", or "info" and a "text" message.';
 
         $this->apiJson->addData($apiReturn);

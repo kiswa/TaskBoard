@@ -44,35 +44,6 @@ class Attachments extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    public function updateAttachment($request, $response, $args) {
-        $attachment = new Attachment($this->container, (int)$args['id']);
-        $update = new Attachment($this->container);
-        $update->loadFromJson($request->getBody());
-
-        if ($attachment->id !== $update->id) {
-            $this->logger->addError('Update Attachment: ',
-                [$attachment, $update]);
-            $this->apiJson->addAlert('error', 'Error updating attachment. ' .
-                'Please try again.');
-
-            return $this->jsonResponse($response);
-        }
-
-        $update->save();
-
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name updated attachment ' . $update->name,
-            json_encode($attachment), json_encode($update),
-            'attachment', $update->id);
-
-        $this->apiJson->setSuccess();
-        $this->apiJson->addAlert('success', 'Attachment ' .
-            $update->name . ' updated.');
-
-        return $this->jsonResponse($response);
-    }
-
     public function removeAttachment($request, $response, $args) {
         $id = (int)$args['id'];
         $attachment = new Attachment($this->container, $id);
