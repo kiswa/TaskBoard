@@ -53,7 +53,7 @@ A task only has to have a Title to be added to a board, but there is much more a
 
 TaskBoard uses a [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#table-of-contents) parser for the Description, allowing for better display of details (like this readme).
 
-Once a task has been entered, it may have Comments or Attachments added to it by viewing the task detail. There is a link to edit the task, which takes you to a modal much like the original add task dialog. For admin users, there is also a link to delete the task. This view also shows the task's activity log on the side of the screen, displaying the complete history of events related to the task.
+Once a task has been entered, it may have Comments (also supporting Markdown) or Attachments added to it by viewing the task detail. There is a link to edit the task, which takes you to a modal much like the original add task dialog. For admin users, there is also a link to delete the task. This view also shows the task's activity log on the side of the screen, displaying the complete history of events related to the task.
 
 ## Development
 
