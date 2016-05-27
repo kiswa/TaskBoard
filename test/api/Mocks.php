@@ -28,6 +28,23 @@ class DataMock {
         return $jwt;
     }
 
+    public static function createStandardUser() {
+        $request = new RequestMock();
+        $user = DataMock::getUser();
+        $user->id = 0;
+        $user->username = 'standard';
+        $user->security_level = SecurityLevel::User;
+
+        $jwt = DataMock::getJwt();
+        $request->payload = $user;
+        $request->header = [$jwt];
+
+        $users = new Users(new ContainerMock());
+        $response = $users->addUser($request, new ResponseMock(), null);
+
+        return $response;
+    }
+
     public static function createUnpriviligedUser() {
         $request = new RequestMock();
         $user = DataMock::getUser();
@@ -65,6 +82,7 @@ class DataMock {
         $column->id = 1;
         $column->name = 'col1';
         $column->position = 1;
+        $column->board_id = 1;
         $column->tasks[] = DataMock::getTask();
 
         return $column;
@@ -73,6 +91,7 @@ class DataMock {
     public static function getCategory() {
         $category = new stdClass();
         $category->id = 1;
+        $category->board_id = 1;
         $category->name = 'cat1';
 
         return $category;
@@ -81,6 +100,7 @@ class DataMock {
     public static function getAutoAction() {
         $auto_action = new stdClass();
         $auto_action->id = 1;
+        $auto_action->board_id = 1;
         $auto_action->trigger = ActionTrigger::SetToCategory;
         $auto_action->source_id = 1;
         $auto_action->type = ActionType::ClearDueDate;
@@ -124,6 +144,7 @@ class DataMock {
         $attachment->name = 'file.png';
         $attachment->type = 'image';
         $attachment->user_id = 1;
+        $attachment->task_id = 1;
         $attachment->timestamp = 1234567890;
 
         return $attachment;
@@ -134,7 +155,8 @@ class DataMock {
 
         $comment->id = 1;
         $comment->text = 'test comment';
-        $comment->submitted_by = 1;
+        $comment->user_id = 1;
+        $comment->task_id = 1;
 
         return $comment;
     }
@@ -150,6 +172,7 @@ class DataMock {
         $task->due_date = 1234567890;
         $task->points = 3;
         $task->position = 1;
+        $task->column_id = 1;
         $task->attachments[] = DataMock::getAttachment();
         $task->comments[] = DataMock::getComment();
 

@@ -60,16 +60,19 @@ class CategoryTest extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue($bean->id === $category->id);
         $this->assertTrue($bean->name === $category->name);
+        $this->assertTrue($bean->board_id === $category->board_id);
     }
 
     private function assertDefaultProperties($category) {
         $this->assertTrue($category->id === 0);
         $this->assertTrue($category->name === '');
+        $this->assertTrue($category->board_id === 0);
     }
 
     private function assertMockProperties($category) {
         $this->assertTrue($category->id === 1);
         $this->assertTrue($category->name === 'cat1');
+        $this->assertTrue($category->board_id === 1);
     }
 }
 

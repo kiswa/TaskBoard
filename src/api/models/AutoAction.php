@@ -18,6 +18,7 @@ class ActionType extends Enum {
 
 class AutoAction extends BaseModel {
     public $id = 0;
+    public $board_id = 0;
     public $trigger;
     public $source_id = 0; // ID of the column etc. which triggers the action
     public $type;
@@ -36,6 +37,7 @@ class AutoAction extends BaseModel {
         $bean = $this->bean;
 
         $bean->id = $this->id;
+        $bean->board_id = $this->board_id;
         $bean->trigger = $this->trigger->getValue();
         $bean->source_id = $this->source_id;
         $bean->type = $this->type->getValue();
@@ -73,6 +75,7 @@ class AutoAction extends BaseModel {
     private function loadPropertiesFrom($obj) {
         try {
             $this->id = (int) $obj->id;
+            $this->board_id = (int) $obj->board_id;
             $this->trigger = new ActionTrigger((int) $obj->trigger);
             $this->source_id = (int) $obj->source_id;
             $this->type = new ActionType((int) $obj->type);

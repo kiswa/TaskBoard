@@ -3,6 +3,7 @@ class Column extends BaseModel {
     public $id = 0;
     public $name = '';
     public $position = 0;
+    public $board_id = 0;
     public $tasks = []; // Task model array
 
     public function __construct($container, $id = 0) {
@@ -17,6 +18,7 @@ class Column extends BaseModel {
         $bean->id = $this->id;
         $bean->name = $this->name;
         $bean->position = $this->position;
+        $bean->board_id = $this->board_id;
         $bean->xownTaskList = [];
 
         foreach($this->tasks as $task) {
@@ -71,6 +73,7 @@ class Column extends BaseModel {
             $this->id = (int) $obj->id;
             $this->name = $obj->name;
             $this->position = (int) $obj->position;
+            $this->board_id = (int) $obj->board_id;
         } catch (Exception $ex) {
             $this->is_valid = false;
         }

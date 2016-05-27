@@ -4,6 +4,12 @@ use RedBeanPHP\R;
 class Attachments extends BaseController {
 
     public function getAttachment($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $attachment = new Attachment($this->container, (int)$args['id']);
 
         if ($attachment->id === 0) {
@@ -22,6 +28,12 @@ class Attachments extends BaseController {
     }
 
     public function addAttachment($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $attachment = new Attachment($this->container);
         $attachment->loadFromJson($request->getBody());
 
@@ -33,7 +45,7 @@ class Attachments extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        // TODO: Get existing user to log user_id and name
+        $actor = new User($this->container, Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, 0,
             '$user->name added attachment.', '', json_encode($attachment),
             'attachment', $attachment->id);
@@ -45,8 +57,28 @@ class Attachments extends BaseController {
     }
 
     public function removeAttachment($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
+        $actor = new User($this->container, Auth::GetUserId($request));
+
         $id = (int)$args['id'];
         $attachment = new Attachment($this->container, $id);
+
+        // If User level, only the user that created the attachment
+        // may delete it. If higher level, delete is allowed.
+        if ($actor->security_level->getValue() === SecurityLevel::User) {
+            if ($actor->id !== $attachment->user_id) {
+                $this->apiJson->addAlert('error',
+                    'You do not have sufficient permissions ' .
+                    'to remove this attachment.');
+
+                return $this->jsonResponse($response);
+            }
+        } // @codeCoverageIgnore
 
         if ($attachment->id !== $id) {
             $this->logger->addError('Remove Attachment: ', [$attachment]);
@@ -59,9 +91,8 @@ class Attachments extends BaseController {
         $before = $attachment;
         $attachment->delete();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name removed attachment ' . $before->name,
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username .' removed attachment ' . $before->name,
             json_encode($before), '', 'attachment', $id);
 
         $this->apiJson->setSuccess();

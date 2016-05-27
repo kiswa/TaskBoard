@@ -63,6 +63,7 @@ class TaskTest extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue($bean->id === $task->id);
         $this->assertTrue($bean->title === $task->title);
+        $this->assertTrue($bean->column_id === $task->column_id);
     }
 
     private function assertDefaultProperties($task) {
@@ -71,6 +72,7 @@ class TaskTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($task->description === '');
         $this->assertTrue($task->assignee_id === 0);
         $this->assertTrue($task->category_id === 0);
+        $this->assertTrue($task->column_id === 0);
         $this->assertTrue($task->color === '');
         $this->assertTrue($task->due_date === null);
         $this->assertTrue($task->points === null);
@@ -83,6 +85,7 @@ class TaskTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($task->description === 'description');
         $this->assertTrue($task->assignee_id === 1);
         $this->assertTrue($task->category_id === 1);
+        $this->assertTrue($task->column_id === 1);
         $this->assertTrue($task->color === '#ffffff');
         $this->assertTrue($task->due_date === 1234567890);
         $this->assertTrue($task->points === 3);

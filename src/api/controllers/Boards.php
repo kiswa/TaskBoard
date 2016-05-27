@@ -16,6 +16,7 @@ class Boards extends BaseController {
             $this->apiJson->setSuccess();
 
             foreach($boardBeans as $bean) {
+                // TODO: Filter boards to those where the user is a member
                 $board = new Board($this->container);
                 $board->loadFromBean($bean);
 
@@ -37,6 +38,7 @@ class Boards extends BaseController {
         }
 
         $board = new Board($this->container, (int)$args['id']);
+        // TODO: Filter boards to those where the user is a member
 
         if ($board->id === 0) {
             $this->logger->addError('Attempt to load board ' . $args['id'] .
@@ -91,6 +93,7 @@ class Boards extends BaseController {
         }
 
         $board = new Board($this->container, (int)$args['id']);
+        // TODO: Filter boards to those where the user is a member
 
         $update = new Board($this->container);
         $update->loadFromJson($request->getBody());

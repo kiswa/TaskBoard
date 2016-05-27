@@ -82,9 +82,6 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
-    /**
-     * @group single
-     */
     public function testAddRemoveBoard() {
         $actual = $this->createBoard();
 
@@ -103,20 +100,34 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('Board test removed.',
             $actual->alerts[0]['text']);
+    }
+
+    public function testAddRemoveBoardUnpriviliged() {
+        $args = [];
+        $args['id'] = 1;
 
         $res = DataMock::createUnpriviligedUser();
         $this->assertEquals('success', $res->status);
 
+        $request = new RequestMock();
         $request->header = [DataMock::getJwt(2)];
+
         $this->boards = new Boards(new ContainerMock());
 
         $actual = $this->boards->addBoard($request,
             new ResponseMock(), $args);
         $this->assertEquals('Insufficient privileges.',
             $actual->alerts[0]['text']);
+
+        $this->boards = new Boards(new ContainerMock());
+
+        $actual = $this->boards->removeBoard($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
     }
 
-    public function testAddBadBoard() {
+    public function testAddRemoveBadBoard() {
         $request = new RequestMock();
         $request->invalidPayload = true;
         $request->header = [DataMock::getJwt()];
@@ -126,15 +137,17 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('failure', $response->status);
         $this->assertEquals('error', $response->alerts[0]['type']);
-    }
 
-    public function testRemoveBadBoard() {
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
         $args = [];
         $args['id'] = 5; // No such board
 
-        $response =
-            $this->boards->removeBoard(new RequestMock(),
-                new ResponseMock(), $args);
+        $this->boards = new Boards(new ContainerMock());
+
+        $response = $this->boards->removeBoard($request,
+            new ResponseMock(), $args);
         $this->assertTrue($response->status === 'failure');
     }
 
@@ -147,17 +160,29 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $args = [];
         $args['id'] = $board->id;
 
+        $this->boards = new Boards(new ContainerMock());
         $request = new RequestMock();
         $request->payload = $board;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->boards->updateBoard($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
 
+        $this->boards = new Boards(new ContainerMock());
         $request->payload = new stdClass();
+        $request->header = [DataMock::getJwt()];
+
         $response = $this->boards->updateBoard($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->alerts[2]['type'] === 'error');
+        $this->assertEquals('error', $response->alerts[0]['type']);
+
+        $this->boards = new Boards(new ContainerMock());
+        $request->header = null;
+
+        $response = $this->boards->updateBoard($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $response->status);
     }
 
     private function createBoard() {

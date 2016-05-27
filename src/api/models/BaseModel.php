@@ -40,7 +40,8 @@ abstract class BaseModel {
                 $ex->getTrace()
             ]);
 
-            return false;
+            return false;   // @codeCoverageIgnore
+                            // Due to false negative
         }
 
         return true;

@@ -59,6 +59,7 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
         $bean = $action->getBean();
 
         $this->assertTrue($bean->id === $action->id);
+        $this->assertTrue($bean->board_id === $action->board_id);
         $this->assertTrue($bean->trigger === $action->trigger->getValue());
         $this->assertTrue($bean->source_id === $action->source_id);
         $this->assertTrue($bean->type === $action->type->getValue());
@@ -70,6 +71,7 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
         $type = new ActionType(ActionType::ClearDueDate);
 
         $this->assertTrue($attachment->id === 1);
+        $this->assertTrue($attachment->board_id === 1);
         $this->assertTrue($attachment->trigger->getValue() ===
             $trigger->getValue());
         $this->assertTrue($attachment->source_id === 1);
@@ -80,6 +82,7 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
 
     private function assertDefaultProperties($attachment) {
         $this->assertTrue($attachment->id === 0);
+        $this->assertTrue($attachment->board_id === 0);
         $this->assertTrue($attachment->trigger->getValue() ===
             ActionTrigger::MoveToColumn);
         $this->assertTrue($attachment->source_id === 0);

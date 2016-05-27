@@ -20,9 +20,9 @@ $app->post  ('/boards',           'Boards:addBoard');               // Admin
 $app->post  ('/boards/{id}',      'Boards:updateBoard');            // BoardAdmin (with board access)
 $app->delete('/boards/{id}',      'Boards:removeBoard');            // Admin
 
-$app->get   ('/autoactions',      'AutoActions:getAllActions');     // User
-$app->post  ('/autoactions',      'AutoActions:addAction');         // BoardAdmin
-$app->delete('/autoactions/{id}', 'AutoActions:removeAction');      // BoardAdmin
+$app->get   ('/autoactions',      'AutoActions:getAllActions');     // User (by board access)
+$app->post  ('/autoactions',      'AutoActions:addAction');         // BoardAdmin (with board access)
+$app->delete('/autoactions/{id}', 'AutoActions:removeAction');      // BoardAdmin (with board access)
 
 $app->get   ('/columns/{id}',     'Columns:getColumn');             // User (with board access)
 $app->post  ('/columns',          'Columns:addColumn');             // BoardAdmin
@@ -31,8 +31,8 @@ $app->delete('/columns/{id}',     'Columns:removeColumn');          // BoardAdmi
 
 $app->get   ('/tasks/{id}',       'Tasks:getTask');                 // User
 $app->post  ('/tasks',            'Tasks:addTask');                 // User
-$app->post  ('/tasks/{id}',       'Tasks:updateTask');              // BoardAdmin or submitter
-$app->delete('/tasks/{id}',       'Tasks:removeTask');              // BoardAdmin or submitter
+$app->post  ('/tasks/{id}',       'Tasks:updateTask');              // User
+$app->delete('/tasks/{id}',       'Tasks:removeTask');              // User
 
 $app->get   ('/comments/{id}',    'Comments:getComment');           // User
 $app->post  ('/comments',         'Comments:addComment');           // User
@@ -49,8 +49,8 @@ $app->post  ('/users',            'Users:addUser');                 // Admin
 $app->post  ('/users/{id}',       'Users:updateUser');              // Admin
 $app->delete('/users/{id}',       'Users:removeUser');              // Admin
 
-$app->post('/login',              'Auth:login');                    // Unsecured
-$app->post('/logout',             'Auth:logout');                   // Unsecured
+$app->post  ('/login',            'Auth:login');                    // Unsecured
+$app->post  ('/logout',           'Auth:logout');                   // Unsecured
 
 $app->run();
 R::close();

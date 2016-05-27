@@ -63,6 +63,7 @@ class AttachmentTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($bean->name === $attachment->name);
         $this->assertTrue($bean->type === $attachment->type);
         $this->assertTrue($bean->user_id === $attachment->user_id);
+        $this->assertTrue($bean->task_id === $attachment->task_id);
         $this->assertTrue($bean->timestamp === $attachment->timestamp);
     }
 
@@ -72,6 +73,7 @@ class AttachmentTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($attachment->name === 'file.png');
         $this->assertTrue($attachment->type === 'image');
         $this->assertTrue($attachment->user_id === 1);
+        $this->assertTrue($attachment->task_id === 1);
         $this->assertTrue($attachment->timestamp === 1234567890);
     }
 
@@ -81,6 +83,7 @@ class AttachmentTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($attachment->name === '');
         $this->assertTrue($attachment->type === '');
         $this->assertTrue($attachment->user_id === 0);
+        $this->assertTrue($attachment->task_id === 0);
         $this->assertTrue($attachment->timestamp === null);
     }
 }

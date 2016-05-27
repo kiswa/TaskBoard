@@ -5,6 +5,7 @@ class Task extends BaseModel {
     public $description = '';
     public $assignee_id = 0;
     public $category_id = 0;
+    public $column_id = 0;
     public $color = '';
     public $due_date = null;  // Date or null if not set
     public $points = null;    // Integer or null if not set
@@ -26,6 +27,7 @@ class Task extends BaseModel {
         $bean->description = $this->description;
         $bean->assignee_id = $this->assignee_id;
         $bean->category_id = $this->category_id;
+        $bean->column_id = $this->column_id;
         $bean->color = $this->color;
         $bean->due_date = $this->due_date;
         $bean->points = $this->points;
@@ -111,6 +113,7 @@ class Task extends BaseModel {
             $this->description = $obj->description;
             $this->assignee_id = (int)$obj->assignee_id;
             $this->category_id = (int)$obj->category_id;
+            $this->column_id = (int)$obj->column_id;
             $this->color = $obj->color;
             $this->due_date = $obj->due_date;
             $this->points = $obj->points;

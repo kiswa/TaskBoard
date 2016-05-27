@@ -60,16 +60,22 @@ class CommentTest extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue($bean->id === $comment->id);
         $this->assertTrue($bean->text === $comment->text);
+        $this->assertTrue($bean->user_id === $comment->user_id);
+        $this->assertTrue($bean->task_id === $comment->task_id);
     }
 
     private function assertDefaultProperties($comment) {
         $this->assertTrue($comment->id === 0);
         $this->assertTrue($comment->text === '');
+        $this->assertTrue($comment->user_id === 0);
+        $this->assertTrue($comment->task_id === 0);
     }
 
     private function assertMockProperties($comment) {
         $this->assertTrue($comment->id === 1);
         $this->assertTrue($comment->text === 'test comment');
+        $this->assertTrue($comment->user_id === 1);
+        $this->assertTrue($comment->task_id === 1);
     }
 }
 

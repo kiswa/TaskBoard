@@ -7,77 +7,161 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
     public static function setupBeforeClass() {
         try {
             RedBeanPHP\R::setup('sqlite:tests.db');
-            // RedBeanPHP\R::fancyDebug(true);
         } catch (Exception $ex) { }
     }
 
     public function setUp() {
         RedBeanPHP\R::nuke();
 
+        Auth::CreateInitialAdmin(new ContainerMock());
+
         $this->attachments = new Attachments(new ContainerMock());
     }
 
     public function testGetAttachment() {
-        $expected = new ApiJson();
-        $expected->addAlert('error', 'No attachment found for ID 1.');
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
 
         $args = [];
         $args['id'] = 1;
 
-        $actual = $this->attachments->getAttachment(null,
+        $actual = $this->attachments->getAttachment($request,
             new ResponseMock(), $args);
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals('No attachment found for ID 1.',
+            $actual->alerts[0]['text']);
 
         $this->createAttachment();
-        $actual = $this->attachments->getAttachment(null,
+        $request->header = [DataMock::getJwt()];
+
+        $this->attachments = new Attachments(new ContainerMock());
+
+        $actual = $this->attachments->getAttachment($request,
             new ResponseMock(), $args);
-        $this->assertTrue($actual->status === 'success');
-        $this->assertTrue(count($actual->data) === 1);
+        $this->assertEquals('success', $actual->status);
+        $this->assertEquals(2, count($actual->data));
     }
 
     public function testAddRemoveAttachment() {
-        $expected = new ApiJson();
-
         $actual = $this->createAttachment();
 
-        $expected->setSuccess();
-        $expected->addAlert('success', 'Attachment added.');
-
-        $this->assertEquals($expected, $actual);
-
-        $expected->addAlert('success', 'Attachment file.png removed.');
+        $this->assertEquals('Attachment added.', $actual->alerts[0]['text']);
 
         $args = [];
         $args['id'] = 1;
 
-        $actual = $this->attachments->removeAttachment(null,
+        $this->attachments = new Attachments(new ContainerMock());
+        $request =new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
+        $actual = $this->attachments->removeAttachment($request,
             new ResponseMock(), $args);
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals('Attachment file.png removed.',
+            $actual->alerts[0]['text']);
     }
 
     public function testAddBadAttachment() {
         $request = new RequestMock();
         $request->invalidPayload = true;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->attachments->addAttachment($request,
             new ResponseMock(), null);
 
-        $this->assertTrue($response->status === 'failure');
-        $this->assertTrue($response->alerts[0]['type'] === 'error');
+        $this->assertEquals('failure', $response->status);
+        $this->assertEquals('error', $response->alerts[0]['type']);
+    }
+
+    public function testAddRemoveUnprivileged() {
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $this->attachments = new Attachments(new ContainerMock());
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $attachment = DataMock::getAttachment();
+        $attachment->id = 0;
+
+        $request->payload = $attachment;
+
+        $actual = $this->attachments->addAttachment($request,
+            new ResponseMock(), null);
+
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+
+        $this->createAttachment();
+        $this->attachments = new Attachments(new ContainerMock());
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $args = [];
+        $args['id'] = 1;
+
+        $actual = $this->attachments->removeAttachment($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testGetUnprivileged() {
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $this->attachments = new Attachments(new ContainerMock());
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $args = [];
+        $args['id'] = 1;
+
+        $actual = $this->attachments->getAttachment($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testRemoveAttachmentUserSecurity() {
+        $actual = $this->createAttachment();
+        $this->assertEquals('Attachment added.', $actual->alerts[0]['text']);
+
+        $res = DataMock::createStandardUser();
+        $this->assertEquals('success', $res->status);
+
+        $args = [];
+        $args['id'] = 1;
+
+        $this->attachments = new Attachments(new ContainerMock());
+        $request =new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->attachments->removeAttachment($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('You do not have sufficient permissions to ' .
+            'remove this attachment.', $actual->alerts[0]['text']);
+
     }
 
     public function testRemoveBadAttachment() {
         $args = [];
         $args['id'] = 5; // No such attachment
 
-        $response = $this->attachments->removeAttachment(null,
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->attachments->removeAttachment($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'failure');
+        $this->assertEquals('failure', $response->status);
     }
 
     private function createAttachment() {
         $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
         $attachment = DataMock::getAttachment();
         $attachment->id = 0;
 
@@ -85,7 +169,7 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
 
         $response = $this->attachments->addAttachment($request,
             new ResponseMock(), null);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
 
         return $response;
     }
