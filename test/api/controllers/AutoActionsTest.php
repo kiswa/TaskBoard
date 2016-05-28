@@ -13,67 +13,120 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
     public function setUp() {
         RedBeanPHP\R::nuke();
 
+        Auth::CreateInitialAdmin(new ContainerMock());
+
         $this->actions = new AutoActions(new ContainerMock());
     }
 
     public function testGetAllActions() {
-        $expected = new ApiJson();
-        $expected->addAlert('info', 'No automatic actions in database.');
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
 
-        $actual =
-            $this->actions->getAllActions(null, new ResponseMock(), null);
-        $this->assertEquals($expected, $actual);
+        $actual = $this->actions->getAllActions($request,
+            new ResponseMock(), null);
+        $this->assertEquals('No automatic actions in database.',
+            $actual->alerts[0]['text']);
 
         $this->createAutoAction();
+        $this->actions = new AutoActions(new ContainerMock());
 
-        $actions =
-            $this->actions->getAllActions(null, new ResponseMock(), null);
-        $this->assertTrue(count($actions->data) === 1);
-        $this->assertTrue($actions->status === 'success');
+        $request->header = [DataMock::getJwt()];
+
+        $actions = $this->actions->getAllActions($request,
+            new ResponseMock(), null);
+
+        $this->assertEquals(2, count($actions->data));
+        $this->assertEquals('success', $actions->status);
     }
 
     public function testAddRemoveAction() {
-        $expected = new ApiJson();
-
         $actual = $this->createAutoAction();
-
-        $expected->setSuccess();
-        $expected->addAlert('success', 'Automatic action added.');
-
-        $this->assertEquals($expected, $actual);
-
-        $expected->addAlert('success', 'Automatic action removed.');
+        $this->assertEquals('success', $actual->status);
 
         $args = [];
         $args['id'] = '1';
 
-        $actual = $this->actions->removeAction(null, new ResponseMock(), $args);
+        $this->actions = new AutoActions(new ContainerMock());
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
 
-        $this->assertEquals($expected, $actual);
+        $actual = $this->actions->removeAction($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('Automatic action removed.',
+            $actual->alerts[0]['text']);
     }
 
-    public function testAddBadAction() {
+    public function testGetAllActionsUnprivileged() {
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->actions->getAllActions($request,
+            new ResponseMock(), null);
+
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testAddRemoveActionUnprivileged() {
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $action = DataMock::getAutoAction();
+        $action->id = 0;
+
+        $request->payload = $action;
+
+        $actual = $this->actions->addAction($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+
+        $args = [];
+        $args['id'] = '1';
+
+        $this->actions = new AutoActions(new ContainerMock());
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->actions->removeAction($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testAddRemoveBadAction() {
         $request = new RequestMock();
         $request->invalidPayload = true;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->actions->addAction($request,
             new ResponseMock(), null);
 
-        $this->assertTrue($response->status === 'failure');
-        $this->assertTrue($response->alerts[0]['type'] === 'error');
-    }
+        $this->assertEquals('failure', $response->status);
+        $this->assertEquals('error', $response->alerts[0]['type']);
 
-    public function testRemoveBadAction() {
         $args = [];
         $args['id'] = 5; // No such action
 
-        $response = $this->actions->removeAction(null,
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->actions->removeAction($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'failure');
+        $this->assertEquals('failure', $response->status);
     }
 
     private function createAutoAction() {
         $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
         $action = DataMock::getAutoAction();
         $action->id = 0;
 
@@ -81,7 +134,7 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
 
         $response = $this->actions->addAction($request,
             new ResponseMock(), null);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
 
         return $response;
     }

@@ -120,6 +120,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
 
         $this->boards = new Boards(new ContainerMock());
+        $request->header = [DataMock::getJwt(2)];
 
         $actual = $this->boards->removeBoard($request,
             new ResponseMock(), $args);

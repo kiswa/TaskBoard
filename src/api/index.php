@@ -25,23 +25,23 @@ $app->post  ('/autoactions',      'AutoActions:addAction');         // BoardAdmi
 $app->delete('/autoactions/{id}', 'AutoActions:removeAction');      // BoardAdmin (with board access)
 
 $app->get   ('/columns/{id}',     'Columns:getColumn');             // User (with board access)
-$app->post  ('/columns',          'Columns:addColumn');             // BoardAdmin
-$app->post  ('/columns/{id}',     'Columns:updateColumn');          // BoardAdmin
-$app->delete('/columns/{id}',     'Columns:removeColumn');          // BoardAdmin
+$app->post  ('/columns',          'Columns:addColumn');             // BoardAdmin (with board access)
+$app->post  ('/columns/{id}',     'Columns:updateColumn');          // BoardAdmin (with board access)
+$app->delete('/columns/{id}',     'Columns:removeColumn');          // BoardAdmin (with board access)
 
-$app->get   ('/tasks/{id}',       'Tasks:getTask');                 // User
-$app->post  ('/tasks',            'Tasks:addTask');                 // User
-$app->post  ('/tasks/{id}',       'Tasks:updateTask');              // User
-$app->delete('/tasks/{id}',       'Tasks:removeTask');              // User
+$app->get   ('/tasks/{id}',       'Tasks:getTask');                 // User (with board access)
+$app->post  ('/tasks',            'Tasks:addTask');                 // User (with board access)
+$app->post  ('/tasks/{id}',       'Tasks:updateTask');              // User (with board access)
+$app->delete('/tasks/{id}',       'Tasks:removeTask');              // User (with board access)
 
-$app->get   ('/comments/{id}',    'Comments:getComment');           // User
-$app->post  ('/comments',         'Comments:addComment');           // User
-$app->post  ('/comments/{id}',    'Comments:updateComment');        // BoardAdmin or submitter
-$app->delete('/comments/{id}',    'Comments:removeComment');        // BoardAdmin or submitter
+$app->get   ('/comments/{id}',    'Comments:getComment');           // User (with board access)
+$app->post  ('/comments',         'Comments:addComment');           // User (with board access)
+$app->post  ('/comments/{id}',    'Comments:updateComment');        // BoardAdmin or submitter (with board access)
+$app->delete('/comments/{id}',    'Comments:removeComment');        // BoardAdmin or submitter (with board access)
 
-$app->get   ('/attachments/{id}', 'Attachments:getAttachment');     // User
-$app->post  ('/attachments',      'Attachments:addAttachment');     // User
-$app->delete('/attachments/{id}', 'Attachments:removeAttachment');  // BoardAdmin or submitter
+$app->get   ('/attachments/{id}', 'Attachments:getAttachment');     // User (with board access)
+$app->post  ('/attachments',      'Attachments:addAttachment');     // User (with board access)
+$app->delete('/attachments/{id}', 'Attachments:removeAttachment');  // BoardAdmin or submitter (with board access)
 
 $app->get   ('/users',            'Users:getAllUsers');             // User (by board access)
 $app->get   ('/users/{id}',       'Users:getUser');                 // User (by board access)

@@ -4,7 +4,15 @@ use RedBeanPHP\R;
 class AutoActions extends BaseController {
 
     public function getAllActions($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $actionBeans = R::findAll('auto_action');
+
+        // TODO: Filter by boards user has access to
 
         if(count($actionBeans)) {
             $this->apiJson->setSuccess();
@@ -25,8 +33,17 @@ class AutoActions extends BaseController {
     }
 
     public function addAction($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::BoardAdmin);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $action = new AutoAction($this->container);
         $action->loadFromJson($request->getBody());
+
+        $actor = new User($this->container, Auth::GetUserId($request));
+        // TODO: Verify BoardAdmin has board access
 
         if (!$action->save()) {
             $this->logger->addError('Add Action: ', [$action]);
@@ -37,9 +54,8 @@ class AutoActions extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name added automatic action.',
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' added automatic action.',
             '', json_encode($action), 'action', $action->id);
 
         $this->apiJson->setSuccess();
@@ -49,8 +65,17 @@ class AutoActions extends BaseController {
     }
 
     public function removeAction($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::BoardAdmin);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $id = (int)$args['id'];
         $action = new AutoAction($this->container, $id);
+
+        $actor = new User($this->container, Auth::GetUserId($request));
+        // TODO: Verify BoardAdmin has board access
 
         if($action->id !== $id) {
             $this->logger->addError('Remove Action: ', [$action]);
@@ -63,9 +88,8 @@ class AutoActions extends BaseController {
         $before = $action;
         $action->delete();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name removed action ' . $before->id,
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username .' removed action ' . $before->id . '.',
             json_encode($before), '', 'action', $id);
 
         $this->apiJson->setSuccess();
