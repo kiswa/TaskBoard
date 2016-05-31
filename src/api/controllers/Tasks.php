@@ -4,6 +4,12 @@ use RedBeanPHP\R;
 class Tasks extends BaseController {
 
     public function getTask($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $task = new Task($this->container, (int)$args['id']);
 
         if ($task->id === 0) {
@@ -22,6 +28,12 @@ class Tasks extends BaseController {
     }
 
     public function addTask($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $task = new Task($this->container);
         $task->loadFromJson($request->getBody());
 
@@ -33,9 +45,9 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name added task ' . $task->title . '.',
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' added task ' . $task->title . '.',
             '', json_encode($task), 'task', $task->id);
 
         $this->apiJson->setSuccess();
@@ -46,6 +58,12 @@ class Tasks extends BaseController {
     }
 
     public function updateTask($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $task = new Task($this->container, (int)$args['id']);
         $update = new Task($this->container);
         $update->loadFromJson($request->getBody());
@@ -74,6 +92,12 @@ class Tasks extends BaseController {
     }
 
     public function removeTask($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $id = (int)$args['id'];
         $task = new Task($this->container, $id);
 
@@ -88,9 +112,9 @@ class Tasks extends BaseController {
         $before = $task;
         $task->delete();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name removed task ' . $before->title,
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' removed task ' . $before->title,
             json_encode($before), '', 'task', $id);
 
         $this->apiJson->setSuccess();

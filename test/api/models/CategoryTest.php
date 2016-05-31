@@ -18,14 +18,19 @@ class CategoryTest extends PHPUnit_Framework_TestCase {
             return;
         }
 
-        $task = DataMock::getCategory();
-        $this->json = json_encode($task);
-        $this->bean = $task;
+        $category = DataMock::getCategory();
+        $this->json = json_encode($category);
+        $this->bean = $category;
     }
 
     public function testCreateCategory() {
         $category = new Category(new ContainerMock());
         $this->assertDefaultProperties($category);
+    }
+
+    public function testSaveCategory() {
+        $category = new Category(new ContainerMock());
+        $this->assertTrue($category->save());
     }
 
     public function testLoadFromBean() {

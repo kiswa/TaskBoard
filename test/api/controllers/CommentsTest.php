@@ -14,70 +14,119 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
     public function setUp() {
         RedBeanPHP\R::nuke();
 
+        Auth::CreateInitialAdmin(new ContainerMock());
+
         $this->comments = new Comments(new ContainerMock());
     }
 
     public function testGetComment() {
-        $expected = new ApiJson();
-        $expected->addAlert('error', 'No column found for ID 1.');
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
 
         $args = [];
         $args['id'] = 1;
 
-        $actual = $this->comments->getComment(null,
+        $actual = $this->comments->getComment($request,
             new ResponseMock(), $args);
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals('No comment found for ID 1.',
+            $actual->alerts[0]['text']);
 
         $this->createComment();
-        $actual = $this->comments->getComment(null,
+
+        $this->comments = new Comments(new ContainerMock());
+        $request->header = [DataMock::getJwt()];
+
+        $actual = $this->comments->getComment($request,
             new ResponseMock(), $args);
-        $this->assertTrue($actual->status === 'success');
-        $this->assertTrue(count($actual->data) === 1);
+        $this->assertEquals('success', $actual->status);
+        $this->assertEquals(2, count($actual->data));
     }
 
+    public function testGetCommentUnprivileged() {
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->comments->getComment($request,
+            new ResponseMock(), null);
+
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
+
+
     public function testAddRemoveComment() {
-        $expected = new ApiJson();
-
         $actual = $this->createComment();
+        $this->comments = new Comments(new ContainerMock());
 
-        $expected->setSuccess();
-        $expected->addAlert('success', 'Comment added.');
-
-        $this->assertEquals($expected, $actual);
-
-        $expected->addAlert('success', 'Comment removed.');
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
 
         $args = [];
         $args['id'] = 1;
 
-        $actual = $this->comments->removeComment(null,
+        $actual = $this->comments->removeComment($request,
             new ResponseMock(), $args);
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals('Comment removed.', $actual->alerts[0]['text']);
     }
 
-    public function testAddBadComment() {
+    public function testAddRemoveCommentUnprivileged() {
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $comment = DataMock::getComment();
+        $comment->id = 0;
+
+        $request->payload = $comment;
+
+        $actual = $this->comments->addComment($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->comments->removeComment($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
+
+
+    public function testAddRemoveBadComment() {
         $request = new RequestMock();
         $request->invalidPayload = true;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->comments->addComment($request,
             new ResponseMock(), null);
 
-        $this->assertTrue($response->status === 'failure');
-        $this->assertTrue($response->alerts[0]['type'] === 'error');
-    }
+        $this->assertEquals('failure', $response->status);
+        $this->assertEquals('error', $response->alerts[0]['type']);
 
-    public function testRemoveBadComment() {
+        $this->comments = new Comments(new ContainerMock());
+        $request->header = [DataMock::getJwt()];
+
         $args = [];
         $args['id'] = 5; // No such comment
 
-        $response = $this->comments->removeComment(null,
+        $response = $this->comments->removeComment($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'failure');
+        $this->assertEquals('failure', $response->status);
     }
 
     public function testUpdateComment() {
         $this->createComment();
+        $this->comments = new Comments(new ContainerMock());
 
         $comment = DataMock::getComment();
         $comment->text = 'updated';
@@ -87,15 +136,42 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
 
         $request = new RequestMock();
         $request->payload = $comment;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->comments->updateComment($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
 
+        $this->comments = new Comments(new ContainerMock());
         $request->payload = new stdClass();
+        $request->header = [DataMock::getJwt()];
+
         $response = $this->comments->updateComment($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->alerts[2]['type'] === 'error');
+        $this->assertEquals('error', $response->alerts[0]['type']);
+    }
+
+    public function testUpdateCommentUnprivileged() {
+        $res = DataMock::createUnpriviligedUser();
+        $this->assertEquals('success', $res->status);
+
+        $this->createComment();
+        $this->comments = new Comments(new ContainerMock());
+
+        $comment = DataMock::getComment();
+        $comment->text = 'updated';
+
+        $args = [];
+        $args['id'] = $comment->id;
+
+        $request = new RequestMock();
+        $request->payload = $comment;
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->comments->updateComment($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
     }
 
     private function createComment() {
@@ -104,10 +180,11 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
         $comment->id = 0;
 
         $request->payload = $comment;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->comments->addComment($request,
             new ResponseMock(), null);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
 
         return $response;
     }

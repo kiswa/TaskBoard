@@ -4,12 +4,18 @@ use RedBeanPHP\R;
 class Comments extends BaseController {
 
     public function getComment($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $comment = new Comment($this->container, (int)$args['id']);
 
         if ($comment->id === 0) {
             $this->logger->addError('Attempt to load comment ' .
                 $args['id'] . ' failed.');
-            $this->apiJson->addAlert('error', 'No column found for ID ' .
+            $this->apiJson->addAlert('error', 'No comment found for ID ' .
                 $args['id'] . '.');
 
             return $this->jsonResponse($response);
@@ -22,6 +28,12 @@ class Comments extends BaseController {
     }
 
     public function addComment($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
         $comment = new Comment($this->container);
         $comment->loadFromJson($request->getBody());
 
@@ -33,9 +45,9 @@ class Comments extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name added comment ' . $comment->id . '.',
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' added comment ' . $comment->id . '.',
             '', json_encode($comment), 'comment', $comment->id);
 
         $this->apiJson->setSuccess();
@@ -45,6 +57,15 @@ class Comments extends BaseController {
     }
 
     public function updateComment($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
+        // TODO: If user, verify submitting user
+        $actor = new User($this->container, Auth::GetUserId($request));
+
         $comment = new Comment($this->container, (int)$args['id']);
         $update = new Comment($this->container);
         $update->loadFromJson($request->getBody());
@@ -59,9 +80,8 @@ class Comments extends BaseController {
 
         $update->save();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name updated comment ' . $update->id,
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' updated comment ' . $update->id,
             json_encode($comment), json_encode($update),
             'comment', $update->id);
 
@@ -72,6 +92,15 @@ class Comments extends BaseController {
     }
 
     public function removeComment($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
+        // TODO: If user, verify submitting user
+        $actor = new User($this->container, Auth::GetUserId($request));
+
         $id = (int)$args['id'];
         $comment = new Comment($this->container, $id);
 
@@ -86,9 +115,8 @@ class Comments extends BaseController {
         $before = $comment;
         $comment->delete();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name removed comment ' . $before->id,
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' removed comment ' . $before->id,
             json_encode($before), '', 'comment', $id);
 
         $this->apiJson->setSuccess();

@@ -91,8 +91,8 @@ class DataMock {
     public static function getCategory() {
         $category = new stdClass();
         $category->id = 1;
-        $category->board_id = 1;
         $category->name = 'cat1';
+        $category->board_id = 1;
 
         return $category;
     }
@@ -166,13 +166,13 @@ class DataMock {
         $task->id = 1;
         $task->title = 'test';
         $task->description = 'description';
-        $task->assignee_id = 1;
+        $task->assignee = 1;
         $task->category_id = 1;
+        $task->column_id = 1;
         $task->color = '#ffffff';
         $task->due_date = 1234567890;
         $task->points = 3;
         $task->position = 1;
-        $task->column_id = 1;
         $task->attachments[] = DataMock::getAttachment();
         $task->comments[] = DataMock::getComment();
 

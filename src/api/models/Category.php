@@ -5,7 +5,7 @@ class Category extends BaseModel {
     public $board_id = 0;
 
     public function __construct($container, $id = 0) {
-        parent::__construct('column', $id, $container);
+        parent::__construct('category', $id, $container);
 
         $this->loadFromBean($this->bean);
     }

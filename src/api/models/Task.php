@@ -3,7 +3,7 @@ class Task extends BaseModel {
     public $id = 0;
     public $title = '';
     public $description = '';
-    public $assignee_id = 0;
+    public $assignee = 0;
     public $category_id = 0;
     public $column_id = 0;
     public $color = '';
@@ -25,7 +25,7 @@ class Task extends BaseModel {
         $bean->id = $this->id;
         $bean->title = $this->title;
         $bean->description = $this->description;
-        $bean->assignee_id = $this->assignee_id;
+        $bean->assignee = $this->assignee;
         $bean->category_id = $this->category_id;
         $bean->column_id = $this->column_id;
         $bean->color = $this->color;
@@ -111,7 +111,7 @@ class Task extends BaseModel {
             $this->id = (int)$obj->id;
             $this->title = $obj->title;
             $this->description = $obj->description;
-            $this->assignee_id = (int)$obj->assignee_id;
+            $this->assignee = (int)$obj->assignee;
             $this->category_id = (int)$obj->category_id;
             $this->column_id = (int)$obj->column_id;
             $this->color = $obj->color;

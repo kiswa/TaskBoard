@@ -7,73 +7,125 @@ class TasksTest extends PHPUnit_Framework_TestCase {
     public static function setupBeforeClass() {
         try {
             RedBeanPHP\R::setup('sqlite:tests.db');
-            // RedBeanPHP\R::fancyDebug(true);
         } catch (Exception $ex) { }
     }
 
     public function setUp() {
         RedBeanPHP\R::nuke();
 
+        Auth::CreateInitialAdmin(new ContainerMock());
+
         $this->tasks = new Tasks(new ContainerMock());
     }
 
     public function testGetTask() {
-        $expected = new ApiJson();
-        $expected->addAlert('error', 'No task found for ID 1.');
-
         $args = [];
         $args['id'] = 1;
 
-        $actual = $this->tasks->getTask(null,
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
+        $actual = $this->tasks->getTask($request,
             new ResponseMock(), $args);
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals('No task found for ID 1.',
+            $actual->alerts[0]['text']);
 
         $this->createTask();
-        $actual = $this->tasks->getTask(null,
-                new ResponseMock(), $args);
-        $this->assertTrue($actual->status === 'success');
-        $this->assertTrue(count($actual->data) === 1);
+        $request->header = [DataMock::getJwt()];
+
+        $actual = $this->tasks->getTask($request, new ResponseMock(), $args);
+
+        $this->assertEquals('success', $actual->status);
+        $this->assertEquals(2, count($actual->data));
+    }
+
+    public function testGetTaskUnprivileged() {
+        $args = [];
+        $args['id'] = 1;
+
+        $this->createTask();
+        DataMock::createUnpriviligedUser();
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->tasks->getTask($request, new ResponseMock(), $args);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
     }
 
     public function testAddRemoveTask() {
-        $expected = new ApiJson();
-
         $actual = $this->createTask();
 
-        $expected->setSuccess();
-        $expected->addAlert('success', 'Task test added.');
-
-        $this->assertEquals($expected, $actual);
-
-        $expected->addAlert('success', 'Task test removed.');
+        $this->assertEquals('success', $actual->status);
 
         $args = [];
         $args['id'] = 1;
 
-        $actual = $this->tasks->removeTask(null,
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
+        $actual = $this->tasks->removeTask($request,
             new ResponseMock(), $args);
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals('Task test removed.', $actual->alerts[0]['text']);
+    }
+
+    public function testAddRemoveTaskUnprivileged() {
+        DataMock::createUnpriviligedUser();
+
+        $request= new RequestMock();
+        $task = DataMock::getTask();
+        $task->id = 0;
+        $task->column_id = 0;
+        $task->category_id = 0;
+        $task->attachments = [];
+        $task->comments = [];
+
+        $request->payload = $task;
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->tasks->addTask($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+
+        $this->tasks = new Tasks(new ContainerMock);
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->tasks->removeTask($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
     }
 
     public function testAddBadTask() {
         $request = new RequestMock();
         $request->invalidPayload = true;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->tasks->addTask($request,
             new ResponseMock(), null);
 
-        $this->assertTrue($response->status === 'failure');
-        $this->assertTrue($response->alerts[0]['type'] === 'error');
+        $this->assertEquals('failure', $response->status);
+        $this->assertEquals('error', $response->alerts[0]['type']);
     }
 
     public function testRemoveBadTask() {
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
         $args = [];
         $args['id'] = 5; // No such task
 
-        $response = $this->tasks->removeTask(null,
+        $response = $this->tasks->removeTask($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'failure');
+        $this->assertEquals('failure', $response->status);
     }
 
     public function testUpdateTask() {
@@ -87,29 +139,53 @@ class TasksTest extends PHPUnit_Framework_TestCase {
 
         $request = new RequestMock();
         $request->payload = $task;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->tasks->updateTask($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
 
+        $this->tasks = new Tasks(new ContainerMock());
         $request->payload = new stdClass();
+        $request->header = [DataMock::getJwt()];
+
         $response = $this->tasks->updateTask($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->alerts[2]['type'] === 'error');
+        $this->assertEquals('error', $response->alerts[0]['type']);
+    }
+
+    public function testUpdateTaskUnprivileged() {
+        DataMock::createUnpriviligedUser();
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->tasks->updateTask($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
     }
 
     private function createTask() {
         $request= new RequestMock();
         $task = DataMock::getTask();
         $task->id = 0;
+        $task->column_id = 0;
+        $task->category_id = 0;
+        $task->attachments = [];
+        $task->comments = [];
 
         $request->payload = $task;
+        $request->header = [DataMock::getJwt()];
 
         $response = $this->tasks->addTask($request,
             new ResponseMock(), null);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
+
+        $this->tasks = new Tasks(new ContainerMock);
 
         return $response;
     }
+
 }
 

@@ -147,9 +147,6 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('error', $response->alerts[2]['type']);
     }
 
-    /**
-     * @group single
-     */
     public function testUpdateColumnUnprivileged() {
         $res = DataMock::createUnpriviligedUser();
         $this->assertEquals('success', $res->status);

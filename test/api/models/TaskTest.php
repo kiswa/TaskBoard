@@ -70,7 +70,7 @@ class TaskTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($task->id === 0);
         $this->assertTrue($task->title === '');
         $this->assertTrue($task->description === '');
-        $this->assertTrue($task->assignee_id === 0);
+        $this->assertTrue($task->assignee === 0);
         $this->assertTrue($task->category_id === 0);
         $this->assertTrue($task->column_id === 0);
         $this->assertTrue($task->color === '');
@@ -83,7 +83,7 @@ class TaskTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($task->id === 1);
         $this->assertTrue($task->title === 'test');
         $this->assertTrue($task->description === 'description');
-        $this->assertTrue($task->assignee_id === 1);
+        $this->assertTrue($task->assignee === 1);
         $this->assertTrue($task->category_id === 1);
         $this->assertTrue($task->column_id === 1);
         $this->assertTrue($task->color === '#ffffff');

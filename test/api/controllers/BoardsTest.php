@@ -190,6 +190,11 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
 
+        $board = DataMock::getBoard();
+        $board->id = 0;
+
+        $request->payload = $board;
+
         $response = $this->boards->addBoard($request,
             new ResponseMock(), null);
         $this->assertTrue($response->status === 'success');
