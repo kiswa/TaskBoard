@@ -78,9 +78,9 @@ class Tasks extends BaseController {
 
         $update->save();
 
-        // TODO: Get existing user to log user_id and name
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name updated task ' . $task->title,
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' updated task ' . $task->title,
             json_encode($task), json_encode($update),
             'task', $update->id);
 
