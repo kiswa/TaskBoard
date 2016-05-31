@@ -48,11 +48,11 @@
     "gulp-concat": "^2.6.0",
     "gulp-coverage": "^0.3.38",
     "gulp-cssnano": "^2.1.2",
-    "gulp-imagemin": "^2.4.0",
+    "gulp-imagemin": "^3.0.1",
     "gulp-mocha": "^2.2.0",
-    "gulp-phpunit": "^0.14.0",
+    "gulp-phpunit": "^0.15.0",
     "gulp-sass": "^2.3.1",
-    "gulp-scss-lint": "^0.3.9",
+    "gulp-scss-lint": "^0.4.0",
     "gulp-typescript": "^2.13.1",
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
@@ -63,7 +63,7 @@
     "systemjs": "^0.19.27",
     "systemjs-builder": "^0.15.18",
     "touch": "^1.0.0",
-    "typings": "^0.8.1",
+    "typings": "^1.0.4",
     "zone.js": "^0.6.12"
   }
 }
