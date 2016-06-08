@@ -7,9 +7,14 @@
 @import 'scss-base-settings';
 @import 'scss-base';
 
+// chartist
+@import 'chartist-settings';
+@import 'chartist';
+
 // Local styles
 @import 'core';
 @import 'nav-top';
 @import 'settings';
+@import 'dashboard';
 @import 'icons';
 

@@ -1,0 +1,112 @@
+<div class="dashboard">
+    <section>
+        <h2>Boards and Tasks</h2>
+
+        <div class="row">
+            <h3>My Boards</h3>
+
+            <table class="alternating">
+                <thead>
+                    <tr>
+                        <th>Board</th>
+                        <th>Columns</th>
+                        <th>Categories</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#">Personal Projects</a></td>
+                        <td>
+                            To Do <span class="badge" title="Tasks in Column">8</span>
+                            Doing <span class="badge" title="Tasks in Column">3</span>
+                            Done <span class="badge" title="Tasks in Column">0</span>
+                        </td>
+                        <td>
+                            List <span class="badge" title="Tasks in Category">3</span>
+                            Thing 1 <span class="badge" title="Tasks in Category">4</span>
+                            Thing 2 <span class="badge" title="Tasks in Category">4</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">TaskBoard</a></td>
+                        <td>
+                            Backlog <span class="badge" title="Tasks in Column">23</span>
+                            Ready <span class="badge" title="Tasks in Column">5</span>
+                            In Work <span class="badge" title="Tasks in Column">3</span>
+                            Test <span class="badge" title="Tasks in Column">2</span>
+                            Done <span class="badge" title="Tasks in Column">18</span>
+                        </td>
+                        <td>
+                            Front-End <span class="badge" title="Tasks in Category">19</span>
+                            Back-End <span class="badge" title="Tasks in Category">28</span>
+                            Test <span class="badge" title="Tasks in Category">2</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <h3>My Tasks</h3>
+
+            <table class="alternating">
+                <thead>
+                    <tr>
+                        <th>Board</th>
+                        <th>Task</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#">TaskBoard</a></td>
+                        <td>
+                            <a href="#">An Important Task</a>
+                            <span class="badge" title="Task Color"
+                                style="background-color:#debee8">&nbsp;</span>
+                        </td>
+                        <td>
+                            <span class="details">Column: <em>In Work</em></span>
+                            <span class="details">Due: <em>12/31/2016</em></span>
+                            <span class="details">Points: <em>8</em></span>
+                            <span class="details">Attachments: <em>2</em></span>
+                            <span class="details">Comments: <em>5</em></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">Personal Projects</a></td>
+                        <td>
+                            <a href="#">Make a List</a>
+                            <span class="badge" title="Task Color"
+                                style="background-color:#bee7f4">&nbsp;</span>
+                        </td>
+                        <td>
+                            <span class="details">Column: <em>To Do</em></span>
+                            <span class="details">Comments: <em>2</em></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2>Analytics</h2>
+
+        <div class="row">
+            <select>
+                <option>Select Board...</option>
+            </select>
+            <div class="half-page">
+                <h3>Task Distribution by User</h3>
+                <tb-charts chart-name="chartByUser" series="7,13,8,5"
+                    labels="admin, tester, user, another"></tb-charts>
+            </div>
+            <div class="half-page">
+                <h3>Task Distribution by Column</h3>
+                <tb-charts chart-name="chartByColumn" series="18,3,7"
+                    labels="To Do,Doing,Done"></tb-charts>
+            </div>
+        </div>
+    </section>
+</div>

@@ -14,14 +14,6 @@
         }
     }
 
-    .row {
-        @include row();
-    }
-
-    .right {
-        float: right;
-    }
-
     .half-page {
         @include span-columns(9 of 18);
     }
@@ -43,23 +35,6 @@
     }
 
     section {
-        @include clearfix();
-        @include shadow-low();
-
-        background-color: $white;
-        margin-bottom: 1em;
-        position: relative;
-
-        h2 {
-            background-color: $color-heading-bg;
-            padding: 7px;
-        }
-
-        h3 {
-            padding: 7px;
-            padding-left: 0;
-        }
-
         ul {
             border: 1px solid lighten($color-border, 10%);
             border-radius: 4px;
@@ -80,15 +55,7 @@
             }
 
             .badge {
-                background-color: $color-tertiary;
-                border-radius: 33%;
-                box-shadow: inset 1px 1px rgba(0, 0, 0, .1);
                 float: right;
-                font-size: .75em;
-                font-weight: 700;
-                line-height: 2.3em;
-                margin: 2px;
-                padding: 0 7px;
             }
         }
 
@@ -109,10 +76,6 @@
         .hold-bottom {
             bottom: 7px;
             position: absolute;
-        }
-
-        .row {
-            padding: 7px;
         }
 
         .autosize {

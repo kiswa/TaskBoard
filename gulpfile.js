@@ -27,6 +27,7 @@ let gulp = require('gulp'),
         bourbon: 'node_modules/bourbon/app/assets/stylesheets',
         neat: 'node_modules/bourbon-neat/app/assets/stylesheets',
         scss_base: 'node_modules/scss-base/src',
+        chartist: 'node_modules/chartist/dist/scss',
 
         tests_app: 'test/app/**/*.spec.js',
         tests_api: 'test/api/**/*.php',
@@ -78,7 +79,8 @@ gulp.task('scss', () => {
             includePaths: [
                 paths.bourbon,
                 paths.neat,
-                paths.scss_base
+                paths.scss_base,
+                paths.chartist
             ]
         }))
         .pipe(concat('styles.css'))
@@ -98,7 +100,8 @@ gulp.task('tsc', () => {
 gulp.task('shims', () => {
     return gulp.src([
             'node_modules/zone.js/dist/zone.js',
-            'node_modules/reflect-metadata/Reflect.js'
+            'node_modules/reflect-metadata/Reflect.js',
+            'node_modules/chartist/dist/chartist.js'
         ])
         .pipe(concat('shims.js'))
         .pipe(gulp.dest('dist/js/'));

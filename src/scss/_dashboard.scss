@@ -1,0 +1,14 @@
+.dashboard {
+    @include clearfix();
+
+    margin: 7px 1em;
+
+    .details {
+        margin-right: 1em;
+    }
+
+    .half-page {
+        @include span-columns(9 of 18);
+    }
+}
+
