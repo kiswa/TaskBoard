@@ -1,4 +1,7 @@
 linters:
+  ColorVariable:
+    enabled: false
+
   Indentation:
     width: 4
 
