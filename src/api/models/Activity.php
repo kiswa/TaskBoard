@@ -8,6 +8,7 @@ class Activity extends BaseModel {
     public $after = '';
     public $item_type = '';
     public $item_id = 0;
+    public $timestamp = 0;
 
     public function __construct($container, $id = 0, $internal = false) {
         parent::__construct('activity', $id, $container);
@@ -35,6 +36,7 @@ class Activity extends BaseModel {
         $bean->after = $this->after;
         $bean->item_type = $this->item_type;
         $bean->item_id = $this->item_id;
+        $bean->timestamp = $this->timestamp;
     }
 
     public function loadFromBean($bean) {
@@ -74,6 +76,7 @@ class Activity extends BaseModel {
             $this->after = $obj->after;
             $this->item_type = $obj->item_type;
             $this->item_id = (int) $obj->item_id;
+            $this->timestamp = (int) $obj->timestamp;
         } catch (Exception $ex) {
             $this->is_valid = false;
         }

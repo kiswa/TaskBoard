@@ -10,6 +10,7 @@ class DbLogger {
         $activity->after = $after;
         $activity->item_type = $item_type;
         $activity->item_id = $item_id;
+        $activity->timestamp = time();
 
         $activity->save();
     }
