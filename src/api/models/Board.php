@@ -23,7 +23,7 @@ class Board extends BaseModel {
         $bean->xownColumnList = [];
         $bean->xownCategoryList = [];
         $bean->xownAutoActionList = [];
-        $bean->ownUserList = [];
+        $bean->sharedUserList = [];
 
         foreach($this->columns as $col) {
             $col->updateBean();
@@ -42,7 +42,7 @@ class Board extends BaseModel {
 
         foreach($this->users as $user) {
             $user->updateBean();
-            $this->bean->ownUserList[] = $user->bean;
+            $this->bean->sharedUserList[] = $user->bean;
         }
     }
 
@@ -82,8 +82,8 @@ class Board extends BaseModel {
             }
         }
 
-        if (isset($bean->ownUserList)) {
-            foreach($bean->ownUserList as $item) {
+        if (isset($bean->sharedUserList)) {
+            foreach($bean->sharedUserList as $item) {
                 $this->users[] = new User($this->container, $item->id);
             }
         }
