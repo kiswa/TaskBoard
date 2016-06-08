@@ -100,13 +100,58 @@
             <div class="half-page">
                 <h3>Task Distribution by User</h3>
                 <tb-charts chart-name="chartByUser" series="7,13,8,5"
-                    labels="admin, tester, user, another"></tb-charts>
+                    labels="admin,tester,user,another"
+                    table-head="User"></tb-charts>
             </div>
             <div class="half-page">
                 <h3>Task Distribution by Column</h3>
                 <tb-charts chart-name="chartByColumn" series="18,3,7"
-                    labels="To Do,Doing,Done"></tb-charts>
+                    labels="To Do,Doing,Done"
+                    table-head="Column"></tb-charts>
             </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Activity Log</h2>
+
+        <div class="row">
+            <table class="alternating">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Timestamp</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>admin</td>
+                        <td>admin added task Mockup Dashboard.</td>
+                        <td>5/22/2016 1:31:53 PM</td>
+                        <td><a href="#">View Task</a></td>
+                    </tr>
+                    <tr>
+                        <td>admin</td>
+                        <td>admin added board Test.</td>
+                        <td>5/13/2016 4:16:46 PM</td>
+                        <td><a href="#">View Board</a></td>
+                    </tr>
+                    <tr>
+                        <td>admin</td>
+                        <td>admin removed board Demo.</td>
+                        <td>5/11/2016 9:21:39 AM</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>admin</td>
+                        <td>admin added board Demo.</td>
+                        <td>5/11/2016 9:18:26 AM</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 </div>

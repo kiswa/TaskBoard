@@ -2,26 +2,43 @@ import { Component, Input, AfterViewInit } from '@angular/core';
 
 @Component({
     selector: 'tb-charts',
-    template: '<div id="{{ chartName }}" class="ct-chart ct-golden-section"></div>'
+    templateUrl: 'app/dashboard/charts/charts.template.html'
 })
 export class Charts implements AfterViewInit {
     @Input('chart-name') chartName: string;
     @Input('series') series: string;
     @Input('labels') labels: string;
+    @Input('table-head') tableHead: string;
+
+    private percentages: number[];
+    private data: number[];
+    private words: string[];
+
+    constructor() {
+        this.percentages = [];
+        this.data = [];
+        this.words = [];
+    }
 
     ngAfterViewInit() {
+        this.data = this.convertToNumberArray(this.series.split(','));
+        this.words = this.labels.split(',');
+
         let data = {
-            series: this.convertToNumberArray(this.series.split(',')),
-            labels: this.labels.split(',')
+            series: this.data,
+            labels: this.words
         },
         options = {
             donut: true,
-            donutWidth: 150,
-            labelInterpolationFnc: function(label, index) {
-                let value = data.series[index];
+            donutWidth: 100,
+            labelInterpolationFnc: (label, index) => {
+                let value = data.series[index],
+                    percent = Math.round(value /
+                        data.series.reduce(Chartist.sum) * 100);
 
-                return label + ' ' + Math.round(value /
-                    data.series.reduce(Chartist.sum) * 100) + '%';
+                this.percentages.push(percent);
+
+                return label + ' ' + percent + '%';
             }
         };
 

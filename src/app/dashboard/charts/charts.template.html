@@ -1,0 +1,19 @@
+<div id="{{ chartName }}" class="ct-chart ct-golden-section"></div>
+
+<table class="alternating">
+    <thead>
+        <tr>
+            <th>{{ tableHead }}</th>
+            <th>Task Count</th>
+            <th>Percentage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let percent of percentages; let i = index;">
+            <td>{{ words[i] }}</td>
+            <td>{{ data[i] }}</td>
+            <td>{{ percent }}%</td>
+        </tr>
+    </tbody>
+</table>
+
