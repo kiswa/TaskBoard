@@ -4,6 +4,22 @@ use Firebase\JWT\JWT;
 
 class Auth extends BaseController {
 
+    public static function HasBoardAccess($container, $request, $boardId) {
+        $hasAccess = false;
+
+        $userId = Auth::GetUserId($request);
+        $board = new Board($container, $boardId);
+
+        foreach($board->users as $user) {
+            if ($user->id === $userId) {
+                $hasAccess = true;
+                break;
+            }
+        }
+
+        return $hasAccess;
+    }
+
     public static function CreateInitialAdmin($container) {
         $admin = new User($container, 1);
 

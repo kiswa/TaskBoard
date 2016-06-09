@@ -12,8 +12,6 @@ class AutoActions extends BaseController {
 
         $actionBeans = R::findAll('auto_action');
 
-        // TODO: Filter by boards user has access to
-
         if(count($actionBeans)) {
             $this->apiJson->setSuccess();
 
@@ -21,7 +19,10 @@ class AutoActions extends BaseController {
                 $action = new AutoAction($this->container);
                 $action->loadFromBean($bean);
 
-                $this->apiJson->addData($action);
+                if (Auth::HasBoardAccess($this->container,
+                        $request, $action->board_id)) {
+                    $this->apiJson->addData($action);
+                }
             }
         } else {
             $this->logger->addInfo('No automatic actions in database.');

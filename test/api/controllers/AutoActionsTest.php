@@ -18,6 +18,9 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
         $this->actions = new AutoActions(new ContainerMock());
     }
 
+    /**
+     * @group single
+     */
     public function testGetAllActions() {
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
@@ -32,11 +35,11 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
 
         $request->header = [DataMock::getJwt()];
 
-        $actions = $this->actions->getAllActions($request,
+        $actual = $this->actions->getAllActions($request,
             new ResponseMock(), null);
 
-        $this->assertEquals(2, count($actions->data));
-        $this->assertEquals('success', $actions->status);
+        $this->assertEquals(2, count($actual->data));
+        $this->assertEquals('success', $actual->status);
     }
 
     public function testAddRemoveAction() {
@@ -124,6 +127,17 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
     }
 
     private function createAutoAction() {
+        $board = DataMock::getBoard();
+        $board->users = [];
+        $board->users[] = new User(new ContainerMock(), 1);
+
+        $request = new RequestMock();
+        $request->payload = $board;
+        $request->header = [DataMock::getJwt()];
+
+        $boards = new Boards(new ContainerMock());
+        $boards->addBoard($request, new ResponseMock(), null);
+
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
 
