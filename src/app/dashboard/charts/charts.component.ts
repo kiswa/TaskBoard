@@ -36,7 +36,9 @@ export class Charts implements AfterViewInit {
                     percent = Math.round(value /
                         data.series.reduce(Chartist.sum) * 100);
 
-                this.percentages.push(percent);
+                if (this.percentages.length < this.data.length) {
+                    this.percentages.push(percent);
+                }
 
                 return label + ' ' + percent + '%';
             }

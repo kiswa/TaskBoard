@@ -10,5 +10,39 @@
     .half-page {
         @include span-columns(9 of 18);
     }
+
+    .calendar {
+        td {
+            width: calc(100% / 7);
+        }
+
+        th {
+            text-align: center;
+
+            .icon {
+                cursor: pointer;
+            }
+        }
+
+        .days {
+            background-color: $color-table-row;
+        }
+
+        .day {
+            border-left: 1px solid $color-border;
+            height: 8em;
+            position: relative;
+
+            &:last-of-type {
+                border-right: 1px solid $color-border;
+            }
+        }
+
+        .date {
+            left: 5px;
+            position: absolute;
+            top: 2px;
+        }
+    }
 }
 

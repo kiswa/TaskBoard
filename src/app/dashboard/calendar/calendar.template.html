@@ -1,0 +1,24 @@
+<h3>Tasks Due by Month</h3>
+
+<table class="calendar">
+    <thead>
+        <tr>
+            <th><i class="icon icon-angle-double-left"
+                (click)="previousMonth()"></i></th>
+            <th colspan="5">{{ monthLabels[month] }} {{ year }}</th>
+            <th><i class="icon icon-angle-double-right"
+                (click)="nextMonth()"></i></th>
+        </tr>
+        <tr class="days">
+            <th *ngFor="let day of dayLabels">{{ day }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let week of calendarDays">
+            <td *ngFor="let day of week" class="day">
+                <span class="date">{{ day }}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
