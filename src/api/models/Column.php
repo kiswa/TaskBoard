@@ -41,10 +41,8 @@ class Column extends BaseModel {
         $this->loadPropertiesFrom($bean);
         $this->tasks = [];
 
-        if (isset($bean->xownTaskList)) {
-            foreach($bean->xownTaskList as $item) {
-                $this->tasks[] = new Task($this->container, $item->id);
-            }
+        foreach($bean->xownTaskList as $item) {
+            $this->tasks[] = new Task($this->container, $item->id);
         }
     }
 

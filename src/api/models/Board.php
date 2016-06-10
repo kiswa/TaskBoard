@@ -62,30 +62,22 @@ class Board extends BaseModel {
         $this->loadPropertiesFrom($bean);
         $this->resetArrays();
 
-        if (isset($bean->xownColumnList)) {
-            foreach($bean->xownColumnList as $item) {
-                $this->columns[] = new Column($this->container, $item->id);
-            }
+        foreach($bean->xownColumnList as $item) {
+            $this->columns[] = new Column($this->container, $item->id);
         }
 
-        if (isset($bean->xownCategoryList)) {
-            foreach($bean->xownCategoryList as $item) {
-                $this->categories[] =
-                    new Category($this->container, $item->id);
-            }
+        foreach($bean->xownCategoryList as $item) {
+            $this->categories[] =
+                new Category($this->container, $item->id);
         }
 
-        if (isset($bean->xownAutoActionList)) {
-            foreach($bean->xownAutoActionList as $item) {
-                $this->auto_actions[] =
-                    new AutoAction($this->container, $item->id);
-            }
+        foreach($bean->xownAutoActionList as $item) {
+            $this->auto_actions[] =
+                new AutoAction($this->container, $item->id);
         }
 
-        if (isset($bean->sharedUserList)) {
-            foreach($bean->sharedUserList as $item) {
-                $this->users[] = new User($this->container, $item->id);
-            }
+        foreach($bean->sharedUserList as $item) {
+            $this->users[] = new User($this->container, $item->id);
         }
     }
 

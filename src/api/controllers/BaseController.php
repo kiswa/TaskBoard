@@ -17,6 +17,16 @@ abstract class BaseController {
         return $response->withStatus($status)->withJson($this->apiJson);
     }
 
+    public function checkBoardAccess($boardId, $request) {
+        if (!Auth::HasBoardAccess($this->container, $request,
+                $boardId)) {
+            $this->apiJson->addAlert('error', 'Access restricted.');
+            return false;
+        }
+
+        return true;
+    }
+
     public function secureRoute($request, $response, $securityLevel) {
         $response = Auth::RefreshToken($request, $response, $this->container);
         $status = $response->getStatusCode();

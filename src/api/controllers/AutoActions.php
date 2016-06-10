@@ -43,10 +43,9 @@ class AutoActions extends BaseController {
         $action = new AutoAction($this->container);
         $action->loadFromJson($request->getBody());
 
-        $actor = new User($this->container, Auth::GetUserId($request));
-        // TODO: Verify BoardAdmin has board access
+        $board = new Board($this->container, $action->board_id);
 
-        if (!$action->save()) {
+        if ($board->id === 0) {
             $this->logger->addError('Add Action: ', [$action]);
             $this->apiJson->addAlert('error',
                 'Error adding automatic action. ' .
@@ -54,6 +53,14 @@ class AutoActions extends BaseController {
 
             return $this->jsonResponse($response);
         }
+
+        if (!$this->checkBoardAccess($action->board_id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
+        $action->save();
+
+        $actor = new User($this->container, Auth::GetUserId($request));
 
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' added automatic action.',
@@ -75,10 +82,7 @@ class AutoActions extends BaseController {
         $id = (int)$args['id'];
         $action = new AutoAction($this->container, $id);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
-        // TODO: Verify BoardAdmin has board access
-
-        if($action->id !== $id) {
+        if ($action->id !== $id) {
             $this->logger->addError('Remove Action: ', [$action]);
             $this->apiJson->addAlert('error', 'Error removing action. ' .
                 'No action found for ID ' . $id . '.');
@@ -86,8 +90,14 @@ class AutoActions extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if (!$this->checkBoardAccess($action->board_id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
         $before = $action;
         $action->delete();
+
+        $actor = new User($this->container, Auth::GetUserId($request));
 
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username .' removed action ' . $before->id . '.',

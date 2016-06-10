@@ -64,17 +64,13 @@ class Task extends BaseModel {
         $this->attachments = [];
         $this->comments = [];
 
-        if (isset($bean->xownAttachmentList)) {
-            foreach($bean->xownAttachmentList as $item) {
-                $this->attachments[] =
-                    new Attachment($this->container, $item->id);
-            }
+        foreach($bean->xownAttachmentList as $item) {
+            $this->attachments[] =
+                new Attachment($this->container, $item->id);
         }
 
-        if (isset($bean->xownCommentList)) {
-            foreach($bean->xownCommentList as $item) {
-                $this->comments[] = new Comment($this->container, $item->id);
-            }
+        foreach($bean->xownCommentList as $item) {
+            $this->comments[] = new Comment($this->container, $item->id);
         }
     }
 

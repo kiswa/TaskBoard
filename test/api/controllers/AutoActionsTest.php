@@ -18,9 +18,6 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
         $this->actions = new AutoActions(new ContainerMock());
     }
 
-    /**
-     * @group single
-     */
     public function testGetAllActions() {
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
@@ -39,6 +36,16 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
             new ResponseMock(), null);
 
         $this->assertEquals(2, count($actual->data));
+        $this->assertEquals('success', $actual->status);
+
+        DataMock::createStandardUser();
+        $this->actions = new AutoActions(new ContainerMock());
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->actions->getAllActions($request,
+            new ResponseMock(), null);
+
+        $this->assertEquals(1, count($actual->data));
         $this->assertEquals('success', $actual->status);
     }
 
@@ -74,6 +81,44 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
+    public function testAddActionForbidden() {
+        $this->createBoard();
+        DataMock::createBoardAdminUser();
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $action = DataMock::getAutoAction();
+        $action->id = 0;
+
+        $request->payload = $action;
+
+        $actual = $this->actions->addAction($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testRemoveActionForbidden() {
+        $actual = $this->createAutoAction();
+        $this->assertEquals('success', $actual->status);
+
+        DataMock::createBoardAdminUser();
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $args = [];
+        $args['id'] = 1;
+
+        $this->actions = new AutoActions(new ContainerMock());
+
+        $actual = $this->actions->removeAction($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
     public function testAddRemoveActionUnprivileged() {
         $res = DataMock::createUnpriviligedUser();
         $this->assertEquals('success', $res->status);
@@ -106,6 +151,8 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testAddRemoveBadAction() {
+        $this->createBoard();
+
         $request = new RequestMock();
         $request->invalidPayload = true;
         $request->header = [DataMock::getJwt()];
@@ -119,17 +166,20 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
         $args = [];
         $args['id'] = 5; // No such action
 
+        $this->actions = new AutoActions(new ContainerMock());
         $request->header = [DataMock::getJwt()];
 
         $response = $this->actions->removeAction($request,
             new ResponseMock(), $args);
+
         $this->assertEquals('failure', $response->status);
     }
 
-    private function createAutoAction() {
+    private function createBoard() {
         $board = DataMock::getBoard();
         $board->users = [];
         $board->users[] = new User(new ContainerMock(), 1);
+        $board->auto_actions = [];
 
         $request = new RequestMock();
         $request->payload = $board;
@@ -137,6 +187,10 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
 
         $boards = new Boards(new ContainerMock());
         $boards->addBoard($request, new ResponseMock(), null);
+    }
+
+    private function createAutoAction() {
+        $this->createBoard();
 
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];

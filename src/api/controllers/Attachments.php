@@ -12,6 +12,11 @@ class Attachments extends BaseController {
 
         $attachment = new Attachment($this->container, (int)$args['id']);
 
+        if (!$this->checkBoardAccess($this->getBoardId($attachment->task_id),
+                $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
         if ($attachment->id === 0) {
             $this->logger->addError('Attempt to load attachment ' .
                 $args['id'] . ' failed.');
@@ -37,7 +42,9 @@ class Attachments extends BaseController {
         $attachment = new Attachment($this->container);
         $attachment->loadFromJson($request->getBody());
 
-        if (!$attachment->save()) {
+        $task = new Task($this->container, $attachment->task_id);
+
+        if ($task->id === 0) {
             $this->logger->addError('Add Attachment: ', [$attachment]);
             $this->apiJson->addAlert('error', 'Error adding attachment. ' .
                 'Please try again.');
@@ -45,7 +52,14 @@ class Attachments extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if (!$this->checkBoardAccess($this->getBoardId($task->id), $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
+        $attachment->save();
+
         $actor = new User($this->container, Auth::GetUserId($request));
+
         $this->dbLogger->logChange($this->container, 0,
             '$user->name added attachment.', '', json_encode($attachment),
             'attachment', $attachment->id);
@@ -80,6 +94,11 @@ class Attachments extends BaseController {
             }
         } // @codeCoverageIgnore
 
+        if (!$this->checkBoardAccess($this->getBoardId($attachment->task_id),
+                $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
         if ($attachment->id !== $id) {
             $this->logger->addError('Remove Attachment: ', [$attachment]);
             $this->apiJson->addAlert('error', 'Error removing attachment. ' .
@@ -100,6 +119,18 @@ class Attachments extends BaseController {
             'Attachment ' . $before->name . ' removed.');
 
         return $this->jsonResponse($response);
+    }
+
+    private function getBoardId($taskId) {
+        $task = new Task($this->container, $taskId);
+
+        if ($task->id === 0) {
+            return 0;
+        }
+
+        $column = new Column($this->container, $task->column_id);
+
+        return $column->board_id;
     }
 }
 

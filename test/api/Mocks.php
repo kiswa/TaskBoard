@@ -30,14 +30,31 @@ class DataMock {
 
     public static function createStandardUser() {
         $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
         $user = DataMock::getUser();
         $user->id = 0;
         $user->username = 'standard';
         $user->security_level = SecurityLevel::User;
 
-        $jwt = DataMock::getJwt();
         $request->payload = $user;
-        $request->header = [$jwt];
+
+        $users = new Users(new ContainerMock());
+        $response = $users->addUser($request, new ResponseMock(), null);
+
+        return $response;
+    }
+
+    public static function createBoardAdminUser() {
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
+        $user = DataMock::getUser();
+        $user->id = 0;
+        $user->username = 'boardadmin';
+        $user->security_level = SecurityLevel::BoardAdmin;
+
+        $request->payload = $user;
 
         $users = new Users(new ContainerMock());
         $response = $users->addUser($request, new ResponseMock(), null);
@@ -47,14 +64,14 @@ class DataMock {
 
     public static function createUnpriviligedUser() {
         $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
         $user = DataMock::getUser();
         $user->id = 0;
         $user->username = 'badtester';
         $user->security_level = SecurityLevel::Unprivileged;
 
-        $jwt = DataMock::getJwt();
         $request->payload = $user;
-        $request->header = [$jwt];
 
         $users = new Users(new ContainerMock());
         $response = $users->addUser($request, new ResponseMock(), null);

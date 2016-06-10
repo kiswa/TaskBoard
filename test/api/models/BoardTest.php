@@ -25,7 +25,7 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $this->bean->xownColumnList = $board->columns;
         $this->bean->xownCategoryList = $board->categories;
         $this->bean->xownAutoActionList = $board->auto_actions;
-        $this->bean->ownUserList = $board->users;
+        $this->bean->sharedUserList = $board->users;
     }
 
     private function assertDefaultProperties($board) {

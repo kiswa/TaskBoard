@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
 
+/**
+ * @group single
+ */
 class AttachmentsTest extends PHPUnit_Framework_TestCase {
     private $attachments;
 
@@ -19,6 +22,8 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testGetAttachment() {
+        $this->markTestSkipped('TODO');
+
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
 
@@ -42,6 +47,8 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testAddRemoveAttachment() {
+        $this->markTestSkipped('TODO');
+
         $actual = $this->createAttachment();
 
         $this->assertEquals('Attachment added.', $actual->alerts[0]['text']);
@@ -73,6 +80,8 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testAddRemoveUnprivileged() {
+        $this->markTestSkipped('TODO');
+
         $res = DataMock::createUnpriviligedUser();
         $this->assertEquals('success', $res->status);
 
@@ -125,6 +134,8 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testRemoveAttachmentUserSecurity() {
+        $this->markTestSkipped('TODO');
+
         $actual = $this->createAttachment();
         $this->assertEquals('Attachment added.', $actual->alerts[0]['text']);
 
