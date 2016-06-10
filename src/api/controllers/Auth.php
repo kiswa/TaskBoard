@@ -24,7 +24,7 @@ class Auth extends BaseController {
         $admin = new User($container, 1);
 
         // Don't create more than one admin
-        if ($admin->id === 1) {
+        if ($admin->id) {
             return;
         }
 
