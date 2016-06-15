@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
 
-/**
- * @group single
- */
+    /**
+     * @group single
+     */
 class AttachmentsTest extends PHPUnit_Framework_TestCase {
     private $attachments;
 
@@ -22,8 +22,6 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testGetAttachment() {
-        $this->markTestSkipped('TODO');
-
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
 
@@ -46,9 +44,26 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(2, count($actual->data));
     }
 
-    public function testAddRemoveAttachment() {
-        $this->markTestSkipped('TODO');
+    public function testGetAttachmentForbidden() {
+        $this->createAttachment();
 
+        DataMock::createBoardAdminUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $this->attachments = new Attachments(new ContainerMock());
+
+        $actual = $this->attachments->getAttachment($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testAddRemoveAttachment() {
         $actual = $this->createAttachment();
 
         $this->assertEquals('Attachment added.', $actual->alerts[0]['text']);
@@ -79,9 +94,28 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('error', $response->alerts[0]['type']);
     }
 
-    public function testAddRemoveUnprivileged() {
-        $this->markTestSkipped('TODO');
+    public function testAddAttachmentForbidden() {
+        $this->createBoard();
+        $this->createTask();
+        DataMock::createBoardAdminUser();
 
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $attachment = DataMock::getAttachment();
+        $attachment->id = 0;
+
+        $request->payload = $attachment;
+
+        $this->attachments = new Attachments(new ContainerMock());
+
+        $actual = $this->attachments->addAttachment($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testAddRemoveUnprivileged() {
         $res = DataMock::createUnpriviligedUser();
         $this->assertEquals('success', $res->status);
 
@@ -134,8 +168,6 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testRemoveAttachmentUserSecurity() {
-        $this->markTestSkipped('TODO');
-
         $actual = $this->createAttachment();
         $this->assertEquals('Attachment added.', $actual->alerts[0]['text']);
 
@@ -169,7 +201,36 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $response->status);
     }
 
+    private function createBoard() {
+        $board = DataMock::getBoard();
+        $board->users = [];
+        $board->users[] = new User(new ContainerMock(), 1);
+        $board->auto_actions = [];
+
+        $request = new RequestMock();
+        $request->payload = $board;
+        $request->header = [DataMock::getJwt()];
+
+        $boards = new Boards(new ContainerMock());
+        $boards->addBoard($request, new ResponseMock(), null);
+    }
+
+    private function createTask() {
+        $task = DataMock::getTask();
+        $task->id = 0;
+
+        $request = new RequestMock();
+        $request->payload = $task;
+        $request->header = [DataMock::getJwt()];
+
+        $tasks = new Tasks(new ContainerMock());
+        $tasks->addTask($request, new ResponseMock(), null);
+    }
+
     private function createAttachment() {
+        $this->createBoard();
+        $this->createTask();
+
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
 

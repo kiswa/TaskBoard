@@ -12,11 +12,6 @@ class Attachments extends BaseController {
 
         $attachment = new Attachment($this->container, (int)$args['id']);
 
-        if (!$this->checkBoardAccess($this->getBoardId($attachment->task_id),
-                $request)) {
-            return $this->jsonResponse($response, 403);
-        }
-
         if ($attachment->id === 0) {
             $this->logger->addError('Attempt to load attachment ' .
                 $args['id'] . ' failed.');
@@ -24,6 +19,11 @@ class Attachments extends BaseController {
                 $args['id'] . '.');
 
             return $this->jsonResponse($response);
+        }
+
+        if (!$this->checkBoardAccess($this->getBoardId($attachment->task_id),
+                $request)) {
+            return $this->jsonResponse($response, 403);
         }
 
         $this->apiJson->setSuccess();
