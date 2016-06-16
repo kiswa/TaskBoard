@@ -94,17 +94,17 @@ class Attachments extends BaseController {
             }
         } // @codeCoverageIgnore
 
-        if (!$this->checkBoardAccess($this->getBoardId($attachment->task_id),
-                $request)) {
-            return $this->jsonResponse($response, 403);
-        }
-
         if ($attachment->id !== $id) {
             $this->logger->addError('Remove Attachment: ', [$attachment]);
             $this->apiJson->addAlert('error', 'Error removing attachment. ' .
                 'No attachment found for ID ' . $id . '.');
 
             return $this->jsonResponse($response);
+        }
+
+        if (!$this->checkBoardAccess($this->getBoardId($attachment->task_id),
+                $request)) {
+            return $this->jsonResponse($response, 403);
         }
 
         $before = $attachment;
@@ -123,10 +123,6 @@ class Attachments extends BaseController {
 
     private function getBoardId($taskId) {
         $task = new Task($this->container, $taskId);
-
-        if ($task->id === 0) {
-            return 0;
-        }
 
         $column = new Column($this->container, $task->column_id);
 

@@ -186,16 +186,39 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
 
     }
 
+    public function testRemoveAttachmentForbidden() {
+        $this->createAttachment();
+
+        DataMock::createBoardAdminUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $this->attachments = new Attachments(new ContainerMock());
+
+        $actual = $this->attachments->removeAttachment($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
     public function testRemoveBadAttachment() {
+        $this->createAttachment();
+        $this->attachments = new Attachments(new ContainerMock());
+
         $args = [];
         $args['id'] = 5; // No such attachment
 
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
 
-        $response = $this->attachments->removeAttachment($request,
+        $actual = $this->attachments->removeAttachment($request,
             new ResponseMock(), $args);
-        $this->assertEquals('failure', $response->status);
+        $this->assertEquals('Error removing attachment. ' .
+            'No attachment found for ID 5.', $actual->alerts[0]['text']);
     }
 
     private function createBoard() {

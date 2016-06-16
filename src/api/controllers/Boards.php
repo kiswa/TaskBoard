@@ -139,10 +139,6 @@ class Boards extends BaseController {
         $id = (int)$args['id'];
         $board = new Board($this->container, $id);
 
-        if (!$this->checkBoardAccess($board->id, $request)) {
-            return $this->jsonResponse($response, 403);
-        }
-
         if ($board->id !== $id) {
             $this->logger->addError('Remove Board: ', [$board]);
             $this->apiJson->addAlert('error', 'Error removing board. ' .
