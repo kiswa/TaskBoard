@@ -11,7 +11,6 @@ class Columns extends BaseController {
         }
 
         $column = new Column($this->container, (int)$args['id']);
-        // TODO: Verify user has board access
 
         if ($column->id === 0) {
             $this->logger->addError('Attempt to load column ' .
@@ -20,6 +19,10 @@ class Columns extends BaseController {
                 $args['id'] . '.');
 
             return $this->jsonResponse($response);
+        }
+
+        if (!$this->checkBoardAccess($column->board_id, $request)) {
+            return $this->jsonResponse($response, 403);
         }
 
         $this->apiJson->setSuccess();
@@ -35,19 +38,26 @@ class Columns extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
-        // TODO: Verify user has board access
-        $actor = new User($this->container, Auth::GetUserId($request));
-
         $column = new Column($this->container);
         $column->loadFromJson($request->getBody());
 
-        if (!$column->save()) {
+        $board = new Board($this->container, $column->board_id);
+
+        if ($board->id === 0) {
             $this->logger->addError('Add Column: ', [$column]);
             $this->apiJson->addAlert('error', 'Error adding column. ' .
                 'Please try again.');
 
             return $this->jsonResponse($response);
         }
+
+        if (!$this->checkBoardAccess($column->board_id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
+        $column->save();
+
+        $actor = new User($this->container, Auth::GetUserId($request));
 
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' added column ' . $column->name . '.',
@@ -67,10 +77,12 @@ class Columns extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
-        // TODO: Verify user has board access
-        $actor = new User($this->container, Auth::GetUserId($request));
-
         $column = new Column($this->container, (int)$args['id']);
+
+        if (!$this->checkBoardAccess($column->board_id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
         $update = new Column($this->container);
         $update->loadFromJson($request->getBody());
 
@@ -84,6 +96,7 @@ class Columns extends BaseController {
 
         $update->save();
 
+        $actor = new User($this->container, Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' updated column ' . $update->name,
             json_encode($column), json_encode($update),
@@ -103,9 +116,6 @@ class Columns extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
-        // TODO: Verify user has board access
-        $actor = new User($this->container, Auth::GetUserId($request));
-
         $id = (int)$args['id'];
         $column = new Column($this->container, $id);
 
@@ -117,9 +127,14 @@ class Columns extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if (!$this->checkBoardAccess($column->board_id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
         $before = $column;
         $column->delete();
 
+        $actor = new User($this->container, Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' removed column ' . $before->name,
             json_encode($before), '', 'column', $id);

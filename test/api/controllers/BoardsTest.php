@@ -1,9 +1,6 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
 
-    /**
-     * @group single
-     */
 class BoardsTest extends PHPUnit_Framework_TestCase {
     private $boards;
 

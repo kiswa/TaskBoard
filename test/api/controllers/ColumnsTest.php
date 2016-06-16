@@ -54,6 +54,25 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
+    public function testGetColumnForbidden() {
+        $this->createColumn();
+
+        DataMock::createBoardAdminUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $this->columns = new Columns(new ContainerMock());
+
+        $actual = $this->columns->getColumn($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
     public function testAddRemoveColumn() {
         $actual = $this->createColumn();
         $this->assertEquals('success', $actual->status);
@@ -122,6 +141,44 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $response->status);
     }
 
+    public function testAddColumnForbidden() {
+        $this->createColumn();
+
+        DataMock::createBoardAdminUser();
+
+        $column = DataMock::getColumn();
+        $column->id = 0;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+        $request->payload = $column;
+
+        $this->columns = new Columns(new ContainerMock());
+
+        $actual = $this->columns->addColumn($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testRemoveColumnForbidden() {
+        $this->createColumn();
+
+        DataMock::createBoardAdminUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $this->columns = new Columns(new ContainerMock());
+
+        $actual = $this->columns->removeColumn($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
     public function testUpdateColumn() {
         $this->createColumn();
 
@@ -170,12 +227,56 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
+    public function testUpdateColumnForbidden() {
+        $this->createColumn();
+
+        DataMock::createBoardAdminUser();
+
+        $column = DataMock::getColumn();
+        $column->name = 'test';
+
+        $args = [];
+        $args['id'] = $column->id;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+        $request->payload = $column;
+
+        $this->columns = new Columns(new ContainerMock());
+
+        $actual = $this->columns->updateColumn($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    private function createBoard() {
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+
+        $board = DataMock::getBoard();
+        $board->id = 0;
+
+        $request->payload = $board;
+        $boards = new Boards(new ContainerMock());
+
+        $response = $boards->addBoard($request,
+            new ResponseMock(), null);
+        $this->assertEquals('success', $response->status);
+
+        return $response;
+    }
+
     private function createColumn() {
+        $this->createBoard();
+
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
 
         $column = DataMock::getColumn();
         $column->id = 0;
+        $column->name = 'testing';
+        $column->tasks = [];
 
         $request->payload = $column;
 
