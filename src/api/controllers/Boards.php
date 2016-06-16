@@ -16,11 +16,13 @@ class Boards extends BaseController {
             $this->apiJson->setSuccess();
 
             foreach($boardBeans as $bean) {
-                // TODO: Filter boards to those where the user is a member
                 $board = new Board($this->container);
                 $board->loadFromBean($bean);
 
-                $this->apiJson->addData($board);
+                if (Auth::HasBoardAccess($this->container,
+                        $request, $board->id)) {
+                    $this->apiJson->addData($board);
+                }
             }
         } else {
             $this->logger->addInfo('No boards in database.');
@@ -38,7 +40,6 @@ class Boards extends BaseController {
         }
 
         $board = new Board($this->container, (int)$args['id']);
-        // TODO: Filter boards to those where the user is a member
 
         if ($board->id === 0) {
             $this->logger->addError('Attempt to load board ' . $args['id'] .
@@ -47,6 +48,10 @@ class Boards extends BaseController {
                 $args['id'] . '.');
 
             return $this->jsonResponse($response);
+        }
+
+        if (!$this->checkBoardAccess($board->id, $request)) {
+            return $this->jsonResponse($response, 403);
         }
 
         $this->apiJson->setSuccess();
@@ -93,7 +98,10 @@ class Boards extends BaseController {
         }
 
         $board = new Board($this->container, (int)$args['id']);
-        // TODO: Filter boards to those where the user is a member
+
+        if (!$this->checkBoardAccess($board->id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
 
         $update = new Board($this->container);
         $update->loadFromJson($request->getBody());
@@ -130,6 +138,10 @@ class Boards extends BaseController {
 
         $id = (int)$args['id'];
         $board = new Board($this->container, $id);
+
+        if (!$this->checkBoardAccess($board->id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
 
         if ($board->id !== $id) {
             $this->logger->addError('Remove Board: ', [$board]);

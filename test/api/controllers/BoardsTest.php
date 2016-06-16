@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
 
+    /**
+     * @group single
+     */
 class BoardsTest extends PHPUnit_Framework_TestCase {
     private $boards;
 
@@ -79,6 +82,25 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $actual = $this->boards->getBoard($request,
             new ResponseMock(), $args);
         $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testGetBoardForbidden() {
+        $this->createBoard();
+
+        DataMock::createBoardAdminUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $this->boards = new Boards(new ContainerMock());
+
+        $actual = $this->boards->getBoard($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
             $actual->alerts[0]['text']);
     }
 
@@ -184,6 +206,29 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $response = $this->boards->updateBoard($request,
             new ResponseMock(), $args);
         $this->assertEquals('failure', $response->status);
+    }
+
+    public function testUpdateBoardForbidden() {
+        $this->createBoard();
+
+        DataMock::createBoardAdminUser();
+
+        $board = DataMock::getBoard();
+        $board->is_active = false;
+
+        $args = [];
+        $args['id'] = $board->id;
+
+        $this->boards = new Boards(new ContainerMock());
+
+        $request = new RequestMock();
+        $request->payload = $board;
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->boards->updateBoard($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
     }
 
     private function createBoard() {
