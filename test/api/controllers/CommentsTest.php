@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
 
+/**
+ * @group single
+ */
 class CommentsTest extends PHPUnit_Framework_TestCase {
     private $comments;
 
@@ -40,6 +43,25 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
             new ResponseMock(), $args);
         $this->assertEquals('success', $actual->status);
         $this->assertEquals(2, count($actual->data));
+    }
+
+    public function testGetCommentForbidden() {
+        $this->createComment();
+
+        DataMock::createBoardAdminUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $this->comments = new Comments(new ContainerMock());
+
+        $actual = $this->comments->getComment($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
     }
 
     public function testGetCommentUnprivileged() {
@@ -124,6 +146,66 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $response->status);
     }
 
+    public function testAddCommentForbidden() {
+        $this->createBoard();
+        $this->createTask();
+        DataMock::createBoardAdminUser();
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $comment = DataMock::getComment();
+        $comment->id = 0;
+
+        $request->payload = $comment;
+
+        $this->comments = new Comments(new ContainerMock());
+
+        $actual = $this->comments->addComment($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testRemoveCommentForbidden() {
+        $this->createComment();
+
+        DataMock::createBoardAdminUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $this->comments = new Comments(new ContainerMock());
+
+        $actual = $this->comments->removeComment($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testRemoveCommentUserSecurity() {
+        $this->createComment();
+
+        DataMock::createStandardUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $this->comments = new Comments(new ContainerMock());
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->comments->removeComment($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('You do not have sufficient permissions to ' .
+            'remove this comment.', $actual->alerts[0]['text']);
+    }
+
     public function testUpdateComment() {
         $this->createComment();
         $this->comments = new Comments(new ContainerMock());
@@ -174,7 +256,81 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
+    public function testUpdateCommentForbidden() {
+        $this->createComment();
+
+        DataMock::createBoardAdminUser();
+
+        $comment = DataMock::getComment();
+        $comment->text = 'updated';
+
+        $args = [];
+        $args['id'] = $comment->id;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+        $request->payload = $comment;
+
+        $this->comments = new Comments(new ContainerMock());
+
+        $actual = $this->comments->updateComment($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testUpdateCommentUserSecurity() {
+        $this->createComment();
+        DataMock::createStandardUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $comment = DataMock::getComment();
+        $comment->text = 'updated';
+
+        $this->comments = new Comments(new ContainerMock());
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+        $request->payload = $comment;
+
+        $actual = $this->comments->updateComment($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('You do not have sufficient permissions to ' .
+            'update this comment.', $actual->alerts[0]['text']);
+    }
+
+    private function createBoard() {
+        $board = DataMock::getBoard();
+        $board->users = [];
+        $board->users[] = new User(new ContainerMock(), 1);
+        $board->auto_actions = [];
+
+        $request = new RequestMock();
+        $request->payload = $board;
+        $request->header = [DataMock::getJwt()];
+
+        $boards = new Boards(new ContainerMock());
+        $boards->addBoard($request, new ResponseMock(), null);
+    }
+
+    private function createTask() {
+        $task = DataMock::getTask();
+        $task->id = 0;
+
+        $request = new RequestMock();
+        $request->payload = $task;
+        $request->header = [DataMock::getJwt()];
+
+        $tasks = new Tasks(new ContainerMock());
+        $tasks->addTask($request, new ResponseMock(), null);
+    }
+
     private function createComment() {
+        $this->createBoard();
+        $this->createTask();
+
         $request = new RequestMock();
         $comment = DataMock::getComment();
         $comment->id = 0;

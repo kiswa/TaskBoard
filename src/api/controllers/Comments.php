@@ -21,6 +21,13 @@ class Comments extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        $task = new Task($this->container, $comment->task_id);
+        $column = new Column($this->container, $task->column_id);
+
+        if (!$this->checkBoardAccess($column->board_id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
         $this->apiJson->setSuccess();
         $this->apiJson->addData($comment);
 
@@ -37,7 +44,9 @@ class Comments extends BaseController {
         $comment = new Comment($this->container);
         $comment->loadFromJson($request->getBody());
 
-        if (!$comment->save()) {
+        $task = new Task($this->container, $comment->task_id);
+
+        if ($task->id === 0) {
             $this->logger->addError('Add Comment: ', [$comment]);
             $this->apiJson->addAlert('error', 'Error adding comment. ' .
                 'Please try again.');
@@ -45,7 +54,14 @@ class Comments extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if (!$this->checkBoardAccess($this->getBoardId($task->id), $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
+        $comment->save();
+
         $actor = new User($this->container, Auth::GetUserId($request));
+
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' added comment ' . $comment->id . '.',
             '', json_encode($comment), 'comment', $comment->id);
@@ -63,10 +79,23 @@ class Comments extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
-        // TODO: If user, verify submitting user
         $actor = new User($this->container, Auth::GetUserId($request));
 
-        $comment = new Comment($this->container, (int)$args['id']);
+        $id = (int)$args['id'];
+        $comment = new Comment($this->container, $id);
+
+        // If User level, only the user that created the comment
+        // may update it. If higher level, update is allowed.
+        if ($actor->security_level->getValue() === SecurityLevel::User) {
+            if ($actor->id !== $comment->user_id) {
+                $this->apiJson->addAlert('error',
+                    'You do not have sufficient permissions ' .
+                    'to update this comment.');
+
+                return $this->jsonResponse($response);
+            }
+        } // @codeCoverageIgnore
+
         $update = new Comment($this->container);
         $update->loadFromJson($request->getBody());
 
@@ -76,6 +105,11 @@ class Comments extends BaseController {
                 'Please try again.');
 
             return $this->jsonResponse($response);
+        }
+
+        if (!$this->checkBoardAccess($this->getBoardId($comment->task_id),
+                $request)) {
+            return $this->jsonResponse($response, 403);
         }
 
         $update->save();
@@ -98,11 +132,22 @@ class Comments extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
-        // TODO: If user, verify submitting user
         $actor = new User($this->container, Auth::GetUserId($request));
 
         $id = (int)$args['id'];
         $comment = new Comment($this->container, $id);
+
+        // If User level, only the user that created the comment
+        // may delete it. If higher level, delete is allowed.
+        if ($actor->security_level->getValue() === SecurityLevel::User) {
+            if ($actor->id !== $comment->user_id) {
+                $this->apiJson->addAlert('error',
+                    'You do not have sufficient permissions ' .
+                    'to remove this comment.');
+
+                return $this->jsonResponse($response);
+            }
+        } // @codeCoverageIgnore
 
         if ($comment->id !== $id) {
             $this->logger->addError('Remove Comment: ', [$comment]);
@@ -110,6 +155,11 @@ class Comments extends BaseController {
                 'No comment found for ID ' . $id . '.');
 
             return $this->jsonResponse($response);
+        }
+
+        if (!$this->checkBoardAccess($this->getBoardId($comment->task_id),
+                $request)) {
+            return $this->jsonResponse($response, 403);
         }
 
         $before = $comment;
@@ -123,6 +173,14 @@ class Comments extends BaseController {
         $this->apiJson->addAlert('success', 'Comment removed.');
 
         return $this->jsonResponse($response);
+    }
+
+    private function getBoardId($taskId) {
+        $task = new Task($this->container, $taskId);
+
+        $column = new Column($this->container, $task->column_id);
+
+        return $column->board_id;
     }
 }
 

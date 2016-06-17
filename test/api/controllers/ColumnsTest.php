@@ -179,8 +179,10 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Access restricted.',
             $actual->alerts[0]['text']);
     }
+
     public function testUpdateColumn() {
         $this->createColumn();
+        $this->columns = new Columns(new ContainerMock());
 
         $column = DataMock::getColumn();
         $column->name = 'updated';
@@ -196,12 +198,13 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
             new ResponseMock(), $args);
         $this->assertEquals('success', $response->status);
 
+        $this->columns = new Columns(new ContainerMock());
         $request->payload = new stdClass();
         $request->header = [DataMock::getJwt()];
 
         $response = $this->columns->updateColumn($request,
             new ResponseMock(), $args);
-        $this->assertEquals('error', $response->alerts[2]['type']);
+        $this->assertEquals('error', $response->alerts[0]['type']);
     }
 
     public function testUpdateColumnUnprivileged() {

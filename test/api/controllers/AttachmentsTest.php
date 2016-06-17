@@ -175,7 +175,7 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
         $args['id'] = 1;
 
         $this->attachments = new Attachments(new ContainerMock());
-        $request =new RequestMock();
+        $request = new RequestMock();
         $request->header = [DataMock::getJwt(2)];
 
         $actual = $this->attachments->removeAttachment($request,
@@ -183,7 +183,6 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('You do not have sufficient permissions to ' .
             'remove this attachment.', $actual->alerts[0]['text']);
-
     }
 
     public function testRemoveAttachmentForbidden() {
