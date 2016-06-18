@@ -39,6 +39,22 @@ class TasksTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(2, count($actual->data));
     }
 
+    public function testGetTaskForbidden() {
+        $this->createTask();
+
+        DataMock::createBoardAdminUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $actual = $this->tasks->getTask($request, new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
     public function testGetTaskUnprivileged() {
         $args = [];
         $args['id'] = 1;
@@ -128,6 +144,39 @@ class TasksTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $response->status);
     }
 
+    public function testAddTaskForbidden() {
+        $this->createBoard();
+        DataMock::createBoardAdminUser();
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $task = DataMock::getTask();
+        $task->id = 0;
+
+        $request->payload = $task;
+
+        $actual = $this->tasks->addTask($request, new ResponseMock(), null);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testRemoveTaskForbidden() {
+        $this->createTask();
+        DataMock::createBoardAdminUser();
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $args = [];
+        $args['id'] = 1;
+
+        $actual = $this->tasks->removeTask($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
     public function testUpdateTask() {
         $this->createTask();
 
@@ -166,20 +215,51 @@ class TasksTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
+    public function testUpdateTaskForbidden() {
+        $this->createTask();
+        DataMock::createBoardAdminUser();
+
+        $task = DataMock::getTask();
+        $task->text = 'updated';
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+        $request->payload = $task;
+
+        $actual = $this->tasks->updateTask($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    private function createBoard() {
+        $board = DataMock::getBoard();
+        $board->users = [];
+        $board->users[] = new User(new ContainerMock(), 1);
+        $board->auto_actions = [];
+
+        $request = new RequestMock();
+        $request->payload = $board;
+        $request->header = [DataMock::getJwt()];
+
+        $boards = new Boards(new ContainerMock());
+        $boards->addBoard($request, new ResponseMock(), null);
+    }
+
     private function createTask() {
-        $request= new RequestMock();
+        $this->createBoard();
+
         $task = DataMock::getTask();
         $task->id = 0;
-        $task->column_id = 0;
-        $task->category_id = 0;
-        $task->attachments = [];
-        $task->comments = [];
 
+        $request= new RequestMock();
         $request->payload = $task;
         $request->header = [DataMock::getJwt()];
 
-        $response = $this->tasks->addTask($request,
-            new ResponseMock(), null);
+        $response = $this->tasks->addTask($request, new ResponseMock(), null);
         $this->assertEquals('success', $response->status);
 
         $this->tasks = new Tasks(new ContainerMock);

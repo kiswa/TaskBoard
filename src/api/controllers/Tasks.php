@@ -21,6 +21,10 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if (!$this->checkBoardAccess($this->getBoardId($task->id), $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
         $this->apiJson->setSuccess();
         $this->apiJson->addData($task);
 
@@ -37,7 +41,9 @@ class Tasks extends BaseController {
         $task = new Task($this->container);
         $task->loadFromJson($request->getBody());
 
-        if (!$task->save()) {
+        $column = new Column($this->container, $task->column_id);
+
+        if ($column->id === 0) {
             $this->logger->addError('Add Task: ', [$task]);
             $this->apiJson->addAlert('error', 'Error adding task. ' .
                 'Please check your entries and try again.');
@@ -45,7 +51,14 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if (!$this->checkBoardAccess($column->board_id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
+        $task->save();
+
         $actor = new User($this->container, Auth::GetUserId($request));
+
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' added task ' . $task->title . '.',
             '', json_encode($task), 'task', $task->id);
@@ -64,7 +77,11 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
-        $task = new Task($this->container, (int)$args['id']);
+        $actor = new User($this->container, Auth::GetUserId($request));
+
+        $id = (int)$args['id'];
+        $task = new Task($this->container, $id);
+
         $update = new Task($this->container);
         $update->loadFromJson($request->getBody());
 
@@ -76,9 +93,13 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if (!$this->checkBoardAccess($this->getBoardId($task->column_id),
+                $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
         $update->save();
 
-        $actor = new User($this->container, Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' updated task ' . $task->title,
             json_encode($task), json_encode($update),
@@ -98,6 +119,8 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
+        $actor = new User($this->container, Auth::GetUserId($request));
+
         $id = (int)$args['id'];
         $task = new Task($this->container, $id);
 
@@ -109,10 +132,13 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if (!$this->checkBoardAccess($this->getBoardId($task->id), $request)) {
+            return $this->jsonResponse($response, 403);
+        }
+
         $before = $task;
         $task->delete();
 
-        $actor = new User($this->container, Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' removed task ' . $before->title,
             json_encode($before), '', 'task', $id);
@@ -122,6 +148,14 @@ class Tasks extends BaseController {
             'Task ' . $before->title . ' removed.');
 
         return $this->jsonResponse($response);
+    }
+
+    private function getBoardId($taskId) {
+        $task = new Task($this->container, $taskId);
+
+        $column = new Column($this->container, $task->column_id);
+
+        return $column->board_id;
     }
 }
 
