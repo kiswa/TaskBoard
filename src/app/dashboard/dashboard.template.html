@@ -111,6 +111,17 @@
             </div>
         </div>
         <div class="row">
+            <h3>Task Burndown</h3>
+
+            <label class="inline">Start Date: <input type="date"></label>
+            <label class="inline">End Date: <input type="date"></label>
+
+            <tb-charts chart-name="chartBurndown" chart-type="line"
+                series="21,18,13,8,3"
+                labels="1-2-2016,1-3-2016,1-4-2016,1-5-2016,1-6-2016"
+                table-head="Date"></tb-charts>
+        </div>
+        <div class="row">
             <tb-calendar board-id="1"></tb-calendar>
         </div>
     </section>

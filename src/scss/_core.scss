@@ -70,6 +70,14 @@ button {
     float: right;
 }
 
+.inline {
+    margin-right: 1em;
+
+    input {
+        width: auto;
+    }
+}
+
 .badge {
     background-color: $color-tertiary;
     border-radius: 33%;

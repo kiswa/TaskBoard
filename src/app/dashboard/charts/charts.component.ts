@@ -6,6 +6,7 @@ import { Component, Input, AfterViewInit } from '@angular/core';
 })
 export class Charts implements AfterViewInit {
     @Input('chart-name') chartName: string;
+    @Input('chart-type') chartType: string = 'pie';
     @Input('series') series: string;
     @Input('labels') labels: string;
     @Input('table-head') tableHead: string;
@@ -24,6 +25,14 @@ export class Charts implements AfterViewInit {
         this.data = this.convertToNumberArray(this.series.split(','));
         this.words = this.labels.split(',');
 
+        if (this.chartType === 'line') {
+            this.createLineChart();
+        } else {
+            this.createPieChart();
+        }
+    }
+
+    private createPieChart() {
         let data = {
             series: this.data,
             labels: this.words
@@ -32,9 +41,9 @@ export class Charts implements AfterViewInit {
             donut: true,
             donutWidth: 100,
             labelInterpolationFnc: (label, index) => {
-                let value = data.series[index],
+                let value = this.data[index],
                     percent = Math.round(value /
-                        data.series.reduce(Chartist.sum) * 100);
+                        this.data.reduce(Chartist.sum) * 100);
 
                 if (this.percentages.length < this.data.length) {
                     this.percentages.push(percent);
@@ -45,6 +54,27 @@ export class Charts implements AfterViewInit {
         };
 
         new Chartist.Pie('#' + this.chartName, data, options)
+    }
+
+    private createLineChart() {
+        let data = {
+            series: [this.data],
+            labels: this.words
+        },
+        options = {
+            axisY: {
+                onlyInteger: true
+            },
+            low: 0,
+            height: '200px',
+            plugins: [ Chartist.plugins.tooltip({
+                transformTooltipTextFnc: (value) => {
+                    return value + ' points remaining'
+                }
+            }) ]
+        };
+
+        new Chartist.Line('#' + this.chartName, data, options);
     }
 
     private convertToNumberArray(arr: string[]): number[] {

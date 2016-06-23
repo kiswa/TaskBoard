@@ -1,6 +1,7 @@
-<div id="{{ chartName }}" class="ct-chart ct-golden-section"></div>
+<div id="{{ chartName }}" class="ct-chart"
+    [ngClass]="{'ct-golden-section': chartType === 'pie', 'white-labels': chartType === 'pie'}"></div>
 
-<table class="alternating">
+<table class="alternating" *ngIf="chartType !== 'line'">
     <thead>
         <tr>
             <th>{{ tableHead }}</th>
