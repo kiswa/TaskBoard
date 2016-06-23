@@ -102,7 +102,8 @@ gulp.task('shims', () => {
             'node_modules/core-js/client/shim.js',
             'node_modules/zone.js/dist/zone.js',
             'node_modules/reflect-metadata/Reflect.js',
-            'node_modules/chartist/dist/chartist.js'
+            'node_modules/chartist/dist/chartist.js',
+            'node_modules/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.js'
         ])
         .pipe(concat('shims.js'))
         .pipe(gulp.dest('dist/js/'));
