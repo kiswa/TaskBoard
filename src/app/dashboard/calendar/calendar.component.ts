@@ -14,15 +14,36 @@ export class Calendar {
         'September', 'October', 'November', 'December'
     ];
 
+    private today: Date;
     private month: number;
     private year: number;
     private calendarDays;
+    private tasks;
 
     constructor() {
-        let today = new Date();
+        this.today = new Date();
 
-        this.month = today.getMonth();
-        this.year = today.getFullYear();
+        this.month = this.today.getMonth();
+        this.year = this.today.getFullYear();
+
+        this.tasks = [];
+        this.tasks[22] = [
+            {
+                title: 'Some work that must get done',
+                points: 5,
+                color: '#bee7f4'
+            },
+            {
+                title: 'Another thing to do',
+                points: 3,
+                color: '#debee8'
+            },
+            {
+                title: 'Testing a date with multiple tasks',
+                points: 8,
+                color: '#ffffe0'
+            }
+        ];
 
         this.generateCalendar();
     }
@@ -48,6 +69,10 @@ export class Calendar {
         }
 
         this.generateCalendar();
+    }
+
+    private getColor(task) {
+        return task.color;
     }
 
     private generateCalendar(): void {

@@ -66,7 +66,7 @@ export class Charts implements AfterViewInit {
                 onlyInteger: true
             },
             low: 0,
-            height: '200px',
+            height: '300px',
             plugins: [ Chartist.plugins.tooltip({
                 transformTooltipTextFnc: (value) => {
                     return value + ' points remaining'
