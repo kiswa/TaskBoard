@@ -35,7 +35,7 @@
     "@angular/http": "^2.0.0-rc.3",
     "@angular/platform-browser": "^2.0.0-rc.3",
     "@angular/platform-browser-dynamic": "^2.0.0-rc.3",
-    "@angular/router": "^3.0.0-alpha.7",
+    "@angular/router": "^3.0.0-alpha.8",
     "bourbon": "^4.2.7",
     "bourbon-neat": "^1.8.0",
     "chai": "^3.5.0",
@@ -52,7 +52,7 @@
     "gulp-cssnano": "^2.1.2",
     "gulp-imagemin": "^3.0.1",
     "gulp-mocha": "^2.2.0",
-    "gulp-phpunit": "^0.15.2",
+    "gulp-phpunit": "^0.16.0",
     "gulp-sass": "^2.3.2",
     "gulp-scss-lint": "^0.4.0",
     "gulp-typescript": "^2.13.6",
@@ -65,7 +65,7 @@
     "systemjs": "^0.19.31",
     "systemjs-builder": "^0.15.23",
     "touch": "^1.0.0",
-    "typings": "^1.3.0",
+    "typings": "^1.3.1",
     "zone.js": "^0.6.12"
   }
 }
