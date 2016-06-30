@@ -4,11 +4,13 @@ import { HTTP_PROVIDERS } from '@angular/http';
 //import { enableProdMode } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { Constants } from './constants.injectable';
 
 //enableProdMode();
 
 bootstrap(AppComponent, [
     // ROUTER_PROVIDERS,
-    HTTP_PROVIDERS
+    HTTP_PROVIDERS,
+    Constants
 ]);
 
