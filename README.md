@@ -97,8 +97,9 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
 
  * [Angular 2](https://angular.io/) single-page app
  * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
- * [scss-base](https://www.npmjs.com/package/scss-base) base styles
+ * [scss-base](https://www.npmjs.com/package/scss-base) for the base styling
  * [marked](https://github.com/chjj/marked) Markdown parser
+ * [Chartist.js](https://gionkunz.github.io/chartist-js/) for all charts
 
 ##### Back End
 
