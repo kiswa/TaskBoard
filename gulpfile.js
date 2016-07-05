@@ -165,6 +165,8 @@ gulp.task('api-test-db', () => {
 });
 
 gulp.task('test-api', ['api-test-db'], () => {
+    del('tests.log');
+
     return gulp.src('test/api/phpunit.xml')
         .pipe(phpunit('./src/api/vendor/phpunit/phpunit/phpunit'));
 });
