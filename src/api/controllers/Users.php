@@ -13,15 +13,15 @@ class Users extends BaseController {
         $this->apiJson->setSuccess();
         $userBeans = R::findAll('user');
 
-        // TODO: Filter returned users by requesting user's security level
-        // and board access. User and BoardAdmin should only see users on
-        // boards they have access to.
+        $userIds = $this->getUserIdsByBoardAccess(Auth::GetUserId($request));
 
         foreach($userBeans as $bean) {
             $user = new User($this->container);
             $user->loadFromBean($bean);
 
-            $this->apiJson->addData($this->cleanUser($user));
+            if (in_array($user->id, $userIds)) {
+                $this->apiJson->addData($this->cleanUser($user));
+            }
         }
 
         return $this->jsonResponse($response);
@@ -34,20 +34,25 @@ class Users extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
-        $user = new User($this->container, (int)$args['id']);
+        $id = (int)$args['id'];
+
+        $userIds = $this->getUserIdsByBoardAccess(Auth::GetUserId($request));
+        $user = new User($this->container, $id);
 
         if ($user->id === 0) {
-            $this->logger->addError('Attempt to load user ' . $args['id'] .
+            $this->logger->addError('Attempt to load user ' . $id .
                 ' failed.');
             $this->apiJson->addAlert('error', 'No user found for ID ' .
-                $args['id'] . '.');
+                $id . '.');
 
             return $this->jsonResponse($response);
         }
 
-        // TODO: Filter returned user by requesting user's security level
-        // and board access. User and BoardAdmin should only see users on
-        // boards they have access to.
+        if (!in_array($id, $userIds)) {
+            $this->apiJson->addAlert('error', 'Access restricted.');
+
+            return $this->jsonResponse($response, 403);
+        }
 
         $this->apiJson->setSuccess();
         $this->apiJson->addData($this->cleanUser($user));
@@ -151,6 +156,26 @@ class Users extends BaseController {
             'User ' . $before->username . ' removed.');
 
         return $this->jsonResponse($response);
+    }
+
+    private function getUserIdsByBoardAccess($userId) {
+        $userIds = [];
+
+        $boardIds = R::getAll('SELECT board_id FROM board_user ' .
+            'WHERE user_id = :user_id',
+            [':user_id' => $userId]);
+
+        foreach($boardIds as $id) {
+            $board = R::load('board', (int) $id['board_id']);
+
+            foreach($board->sharedUserList as $user) {
+                if (!in_array((int) $user->id, $userIds)) {
+                    $userIds[] = (int) $user->id;
+                }
+            }
+        }
+
+        return $userIds;
     }
 
     private function cleanUser($user) {

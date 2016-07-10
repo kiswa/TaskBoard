@@ -21,6 +21,7 @@ abstract class BaseController {
         if (!Auth::HasBoardAccess($this->container, $request,
                 $boardId)) {
             $this->apiJson->addAlert('error', 'Access restricted.');
+
             return false;
         }
 

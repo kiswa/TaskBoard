@@ -8,6 +8,11 @@ class Auth extends BaseController {
         $hasAccess = false;
 
         $userId = Auth::GetUserId($request);
+        $user = new User($container, $userId);
+        if ($user->security_level->getValue() === SecurityLevel::Admin) {
+            return true;
+        }
+
         $board = new Board($container, $boardId);
 
         foreach($board->users as $user) {
