@@ -100,9 +100,6 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
-/**
- * @group single
- */
     public function testGetUserForbidden() {
         $this->createUser();
         DataMock::createStandardUser();
