@@ -57,7 +57,7 @@ gulp.task('html', () => {
 });
 
 gulp.task('fonts', () => {
-    return gulp.src('src/fonts/*.*')
+    return gulp.src('src/fonts/fontello.*')
         .pipe(gulp.dest('dist/css/fonts/'));
 });
 

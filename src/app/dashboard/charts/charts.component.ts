@@ -2,7 +2,7 @@ import { Component, Input, AfterViewInit } from '@angular/core';
 
 @Component({
     selector: 'tb-charts',
-    templateUrl: 'app/dashboard/charts/charts.template.html'
+    templateUrl: 'app/dashboard/charts/charts.component.html'
 })
 export class Charts implements AfterViewInit {
     @Input('chart-name') chartName: string;

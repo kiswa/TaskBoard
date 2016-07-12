@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'tb-calendar',
-    templateUrl: 'app/dashboard/calendar/calendar.template.html'
+    templateUrl: 'app/dashboard/calendar/calendar.component.html'
 })
 export class Calendar {
     @Input('board-id') boardId: number;

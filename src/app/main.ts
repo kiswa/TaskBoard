@@ -4,7 +4,7 @@ import { HTTP_PROVIDERS } from '@angular/http';
 //import { enableProdMode } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { Constants } from './constants.injectable';
+import { Constants } from './app.constants';
 
 //enableProdMode();
 

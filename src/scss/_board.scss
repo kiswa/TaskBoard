@@ -1,0 +1,151 @@
+.board-nav {
+    margin: 5px;
+    width: 99%;
+
+    label {
+        display: inline-block;
+
+        select {
+            width: auto;
+        }
+    }
+}
+
+.board {
+    display: flex;
+    height: calc(100% - 96px);
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+
+    .icon-minus-squared-alt,
+    .icon-plus-squared-alt {
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+    .column {
+        @include shadow-low();
+        @include clearfix();
+
+        background-color: #fff;
+        flex: 1 0 300px;
+        height: calc(100% - 7px);
+        margin-left: 7px;
+        overflow: auto;
+        white-space: normal;
+
+        h3 {
+            background-color: $color-heading-bg;
+            border-bottom: 1px solid lighten($color-border, 18%);
+            font-size: 24px;
+            padding: 5px;
+
+            span {
+                cursor: pointer;
+            }
+
+            .icon-angle-double-up {
+                display: none;
+            }
+
+            .badge {
+                display: none;
+            }
+        }
+
+        &:last-of-type {
+            margin-right: 7px;
+        }
+
+        &.collapsed {
+            background-color: $color-heading-bg;
+            flex: 0 0 35px;
+            overflow: hidden;
+
+            h3 {
+                border: 0;
+                transform: rotate(90deg)
+                    translateX(-35px)
+                    translateY(5px);
+                transform-origin: left bottom;
+                white-space: nowrap;
+            }
+
+            .icon-minus-squared-alt,
+            .icon-plus-squared-alt {
+                display: none;
+            }
+
+            .badge {
+                display: inline-block;
+                font-size: .6em;
+                margin-left: 1em;
+                transform: rotate(-90deg) translateX(4px);
+            }
+
+            .task {
+                display: none;
+            }
+
+            .icon-angle-double-up {
+                display: inline-block;
+            }
+
+            .icon-angle-double-down {
+                display: none;
+            }
+        }
+    }
+
+    .task {
+        @include shadow-low();
+
+        background-color: #ffffe0;
+        margin: 5px;
+
+        h4 {
+            border-bottom: 1px solid lighten($color-border, 25%);
+            cursor: move;
+            font-size: 18px;
+            line-height: 1.5em;
+            padding: 0 5px 2px;
+
+            .badge {
+                font-size: .5em;
+                margin-right: -3px;
+                margin-top: 3px;
+            }
+        }
+
+        .description {
+            max-height: 12em;
+            overflow: auto;
+            padding: 5px;
+
+            p {
+                margin: 0 0 10px;
+            }
+
+            p:last-of-type {
+                margin: 0;
+            }
+        }
+
+        .stats {
+            font-size: .9em;
+            padding: 0 5px;
+        }
+
+        .category {
+            font-weight: 700;
+        }
+
+        &.compact {
+            .description {
+                display: none;
+            }
+        }
+    }
+}
+

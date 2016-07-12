@@ -26,8 +26,13 @@
         text-align: center;
     }
 
+    label {
+        display: inline-block;
+        margin-top: .5em;
+    }
+
     button {
-        margin-top: 1em;
+        margin-top: .5em;
         width: 100%;
     }
 

@@ -1,6 +1,9 @@
 html {
-    background-color: $color-background;
     background-image: url('../images/bg.png');
+}
+
+html,
+body {
     height: 100%;
 }
 
@@ -82,10 +85,11 @@ button {
     background-color: $color-tertiary;
     border-radius: 33%;
     box-shadow: inset 1px 1px rgba(0, 0, 0, .1);
+    font-family: 'Fira Mono';
     font-size: .75em;
     font-weight: 700;
-    line-height: 2.3em;
+    line-height: 1.7em;
     margin: 2px;
-    padding: 0 7px;
+    padding: 3px 5px 1px;
 }
 
