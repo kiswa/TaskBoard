@@ -18,7 +18,7 @@ let gulp = require('gulp'),
     tsc = require('gulp-typescript'),
     jsMinify = require('gulp-uglify'),
 
-    scsslint = require('gulp-scss-lint'),
+    scssLint = require('gulp-scss-lint'),
     sass = require('gulp-sass'),
     cssPrefixer = require('gulp-autoprefixer'),
     cssMinify = require('gulp-cssnano'),
@@ -67,9 +67,9 @@ gulp.task('images', () => {
         .pipe(gulp.dest('dist/images/'));
 });
 
-gulp.task('lintScss', () => {
+gulp.task('scss-lint', () => {
     return gulp.src(paths.scss)
-        .pipe(scsslint({ config: 'lint.yml' }));
+        .pipe(scssLint({ config: 'lint.yml' }));
 });
 
 gulp.task('scss', () => {
@@ -97,7 +97,14 @@ gulp.task('tsc', () => {
         .pipe(gulp.dest('build/'));
 });
 
-gulp.task('shims', () => {
+gulp.task('sourceMaps', () => {
+    return gulp.src([
+            'node_modules/reflect-metadata/Reflect.js.map'
+        ])
+        .pipe(gulp.dest('dist/js/'));
+});
+
+gulp.task('vendor', ['sourceMaps'], () => {
     return gulp.src([
             'node_modules/core-js/client/shim.js',
             'node_modules/zone.js/dist/zone.js',
@@ -105,7 +112,7 @@ gulp.task('shims', () => {
             'node_modules/chartist/dist/chartist.js',
             'node_modules/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.js'
         ])
-        .pipe(concat('shims.js'))
+        .pipe(concat('vendor.js'))
         .pipe(gulp.dest('dist/js/'));
 });
 
@@ -181,7 +188,7 @@ gulp.task('test-api-single', ['api-test-db'], () => {
 
 gulp.task('watch', () => {
     let watchTs = gulp.watch(paths.ts, ['system-build']),
-        watchScss = gulp.watch(paths.scss, ['lintScss', 'scss']),
+        watchScss = gulp.watch(paths.scss, ['scss-lint', 'scss']),
         watchHtml = gulp.watch(paths.html, ['html']),
         watchImages = gulp.watch(paths.images, ['images']),
         watchApi = gulp.watch(paths.api, ['api']),
@@ -212,11 +219,11 @@ gulp.task('watchtests', () => {
 });
 
 gulp.task('default', [
-    'shims',
+    'vendor',
     'system-build',
     'html',
     'images',
-    'lintScss',
+    'scss-lint',
     'fonts',
     'scss',
     'api'
