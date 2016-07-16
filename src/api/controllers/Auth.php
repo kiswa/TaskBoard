@@ -162,6 +162,29 @@ class Auth extends BaseController {
         return $this->jsonResponse($response);
     }
 
+    public function authenticate($request, $response, $args) {
+        if (!$request->hasHeader('Authorization')) {
+            $this->apiJson->addData(false);
+
+            return $this->jsonResponse($response, 400);
+        }
+
+        $jwt = $request->getHeader('Authorization')[0];
+        $payload = self::getJwtPayload($jwt);
+
+        if ($payload === null) {
+            $this->apiJson->addAlert('error', 'Invalid access token.');
+            $this->apiJson->addData(false);
+
+            return $this->jsonResponse($response, 401);
+        }
+
+        $this->apiJson->setSuccess();
+        $this->apiJson->addData(true);
+
+        return $this->jsonResponse($response);
+    }
+
     private static function getJwtPayload($jwt) {
         try {
             $payload = JWT::decode($jwt, self::getJwtKey(), ['HS256']);

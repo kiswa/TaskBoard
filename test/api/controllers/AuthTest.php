@@ -121,5 +121,48 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $actual = $this->auth->logout($request, new ResponseMock(), null);
         $this->assertTrue($actual->status === 'failure');
     }
+
+    /**
+     * @group single
+     */
+    public function testAuthenticate() {
+        $data = new stdClass();
+        $data->username = 'admin';
+        $data->password = 'admin';
+
+        $request = new RequestMock();
+        $request->payload = $data;
+
+        Auth::CreateInitialAdmin(new ContainerMock());
+        Auth::CreateJwtKey();
+
+        $actual = $this->auth->login($request, new ResponseMock(), null);
+        $this->assertTrue($actual->status === 'success');
+
+        $jwt = $actual->data[0];
+
+        $this->auth = new Auth(new ContainerMock());
+        $request = new RequestMock();
+        $request->header = [$jwt];
+
+        $actual = $this->auth->authenticate($request, new ResponseMock(), null);
+        $this->assertEquals('success', $actual->status);
+        $this->assertEquals(true, $actual->data[0]);
+
+        $this->auth = new Auth(new ContainerMock());
+        $request->hasHeader = false;
+
+        $actual = $this->auth->authenticate($request, new ResponseMock(), null);
+        $this->assertEquals('failure', $actual->status);
+        $this->assertEquals(false, $actual->data[0]);
+
+        $this->auth = new Auth(new ContainerMock());
+        $request = new RequestMock();
+        $request->header = ['not a valid JWT'];
+
+        $actual = $this->auth->authenticate($request, new ResponseMock(), null);
+        $this->assertEquals('failure', $actual->status);
+        $this->assertEquals(false, $actual->data[0]);
+    }
 }
 

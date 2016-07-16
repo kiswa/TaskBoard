@@ -51,6 +51,7 @@ $app->delete('/users/{id}',       'Users:removeUser');              // Admin
 
 $app->post  ('/login',            'Auth:login');                    // Unsecured
 $app->post  ('/logout',           'Auth:logout');                   // Unsecured
+$app->post  ('/authenticate',     'Auth:authenticate');             // Unsecured
 
 $app->run();
 R::close();
