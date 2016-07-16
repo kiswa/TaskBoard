@@ -24,20 +24,12 @@ export class AuthService {
 
         return this.http.post('api/authenticate', token, { headers: header }).
             map(res => {
-                let response: ApiResponse = res.json();
+                this.checkStatus(res);
 
-                if (res.status === 200 && response.data.length) {
-                    this.activeUser = response.data[1];
-                }
-
-                return true;
+                return this.activeUser !== null;
             }).
             catch((res, caught) => {
-                let response: ApiResponse = res.json();
-                this.activeUser = null;
-                localStorage.removeItem(this.jwtKey);
-
-                this.router.navigate(['']);
+                this.checkStatus(res);
 
                 return Observable.of(false);
             });
