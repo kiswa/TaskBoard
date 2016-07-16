@@ -1,0 +1,23 @@
+<nav class="nav-top">
+    <h1>
+        TaskBoard
+        <span>
+            <small>
+                - {{ pageName }}
+                <small class="dark small">(v{{ version }})</small>
+            </small>
+        </span>
+    </h1>
+
+    <div class="buttons">
+        <button [ngClass]="{ flat: !isActive('dashboard') }"
+            (click)="navigateTo('dashboard')">Dashboard</button>
+        <button [ngClass]="{ flat: !isActive('boards') }"
+            (click)="navigateTo('boards')">Boards</button>
+        <button [ngClass]="{ flat: !isActive('settings') }"
+            (click)="navigateTo('settings')">Settings</button>
+        <button class="flat"
+            (click)="logout()">Logout (username)</button>
+    </div>
+</nav>
+

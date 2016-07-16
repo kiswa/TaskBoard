@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { TopNav } from '../top-nav/top-nav.component';
+import { TopNav } from '../shared/index';
 
 @Component({
     selector: 'tb-board',

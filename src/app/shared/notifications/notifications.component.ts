@@ -1,0 +1,34 @@
+import { Component } from '@angular/core';
+
+import { Notification } from '../models/notification.model';
+import { NotificationsService } from './notifications.service';
+
+@Component({
+    selector: 'tb-notifications',
+    templateUrl: 'app/shared/notifications/notifications.component.html'
+})
+export class Notifications {
+    private notes: Notification[];
+
+    constructor(private notifications: NotificationsService) {
+        this.notes = new Array<Notification>();
+
+        notifications.noteAdded.subscribe(note => {
+            this.notes.push(note);
+
+            setTimeout(() => { this.hide.bind(this)(note) }, 3000);
+        });
+    }
+
+    private hide(note: Notification): void {
+        let index = this.notes.indexOf(note);
+        note.type = note.type + " clicked";
+
+        if (index >= 0) {
+            setTimeout(() => {
+                this.notes.splice(index, 1);
+            }, 500);
+        }
+    }
+}
+

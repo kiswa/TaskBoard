@@ -1,6 +1,13 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Constants } from '../app.constants';
+import {
+    AuthService,
+    ApiResponse,
+    Notification,
+    NotificationsService
+} from '../shared/index';
 
 @Component({
     selector: 'tb-login',
@@ -8,9 +15,31 @@ import { Constants } from '../app.constants';
 })
 export class Login {
     version: string;
+    username: string;
+    password: string;
+    remember: boolean;
+    isSubmitted: boolean = false;
 
-    constructor(constants: Constants) {
+    constructor(constants: Constants, private authService: AuthService,
+            private router: Router, private notes: NotificationsService) {
         this.version = constants.VERSION;
+    }
+
+    login(): void {
+        this.isSubmitted = true;
+
+        this.authService.login(this.username, this.password, this.remember).
+            subscribe((response: ApiResponse) => {
+                response.alerts.forEach(msg => {
+                    this.notes.add(new Notification(msg.type, msg.text));
+                });
+
+                if (response.status === 'success') {
+                    this.router.navigate(['/boards']);
+                }
+
+                this.isSubmitted = false;
+        });
     }
 }
 

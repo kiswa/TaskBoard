@@ -2,11 +2,17 @@
     @include shadow-low();
 
     background-color: $white;
-    margin: 3em auto;
+    display: inline-block;
+    margin: 3em 41%;
     max-width: 350px;
     padding: 1em;
     position: relative;
     text-align: center;
+
+    form {
+        box-shadow: none;
+        padding: 0;
+    }
 
     h1 {
         margin: 1em;

@@ -45,10 +45,7 @@
                 cursor: pointer;
             }
 
-            .icon-angle-double-up {
-                display: none;
-            }
-
+            .icon-angle-double-up,
             .badge {
                 display: none;
             }
@@ -72,29 +69,51 @@
                 white-space: nowrap;
             }
 
-            .icon-minus-squared-alt,
-            .icon-plus-squared-alt {
-                display: none;
-            }
-
             .badge {
                 display: inline-block;
                 font-size: .6em;
-                margin-left: 1em;
+                margin-left: .9em;
                 transform: rotate(-90deg) translateX(4px);
             }
 
-            .task {
+            .icon-angle-double-down,
+            .icon-minus-squared-alt,
+            .icon-plus-squared-alt,
+            .task,
+            .quick-add {
                 display: none;
             }
 
             .icon-angle-double-up {
                 display: inline-block;
             }
+        }
+    }
 
-            .icon-angle-double-down {
-                display: none;
-            }
+    .quick-add {
+        padding: 7px;
+
+        input {
+            width: calc(100% - 42px);
+        }
+
+        button {
+            background-color: $white;
+            border-color: $color-border;
+            color: $color-text;
+            height: 36px;
+            margin-left: 2px;
+            padding: 9px;
+            vertical-align: bottom;
+        }
+    }
+
+    .tasks {
+        padding: 7px;
+        padding-bottom: 0;
+
+        div:last-of-type {
+            margin-bottom: 0;
         }
     }
 
@@ -102,7 +121,7 @@
         @include shadow-low();
 
         background-color: #ffffe0;
-        margin: 5px;
+        margin-bottom: 7px;
 
         h4 {
             border-bottom: 1px solid lighten($color-border, 25%);

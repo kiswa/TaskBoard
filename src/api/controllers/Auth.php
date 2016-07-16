@@ -124,8 +124,13 @@ class Auth extends BaseController {
         $user->last_login = time();
         $user->save();
 
+        $user->security_level = $user->security_level->getValue();
+        unset($user->password_hash);
+        unset($user->active_token);
+
         $this->apiJson->setSuccess();
         $this->apiJson->addData($jwt);
+        $this->apiJson->addData($user);
 
         return $this->jsonResponse($response);
     }

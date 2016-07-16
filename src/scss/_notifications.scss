@@ -1,0 +1,54 @@
+$success: #dff2bf;
+$warn: #feefb3;
+$error: #ffbaba;
+$info: #bde5f8;
+
+.notifications {
+    bottom: 1%;
+    left: calc(50% - 200px);
+    position: absolute;
+
+    div {
+        @include shadow-float;
+
+        border: 1px solid;
+        border-radius: 2px;
+        cursor: pointer;
+        margin-bottom: .5em;
+        min-height: 3em;
+        opacity: 1;
+        padding: 1em;
+        text-align: center;
+        transition: opacity .5s linear;
+        width: 400px;
+
+        &.clicked {
+            opacity: 0;
+        }
+
+        &.success {
+            background-color: $success;
+            border-color: darken($success, 30%);
+            color: darken($success, 60%);
+        }
+
+        &.error {
+            background-color: $error;
+            border-color: darken($error, 10%);
+            color: darken($error, 60%);
+        }
+
+        &.warn {
+            background-color: $warn;
+            border-color: darken($warn, 30%);
+            color: darken($warn, 57%);
+        }
+
+        &.info {
+            background-color: $info;
+            border-color: darken($info, 30%);
+            color: darken($info, 50%);
+        }
+    }
+}
+

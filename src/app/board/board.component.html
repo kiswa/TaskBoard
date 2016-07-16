@@ -38,45 +38,53 @@
             <span class="right icon icon-angle-double-down"
                 title="Collapse Column"></span>
         </h3>
-        <div class="task">
-            <h4>
-                <span class="icon icon-minus-squared-alt" title="Collapse Task"></span>
-                Something to Get Done
-                <span class="badge right" title="Points">3</span>
-            </h4>
-            <div class="description">
-                <p>This is the thing that needs to get done.</p>
+
+        <div class="tasks">
+            <div class="task">
+                <h4>
+                    <span class="icon icon-minus-squared-alt" title="Collapse Task"></span>
+                    Something to Get Done
+                    <span class="badge right" title="Points">3</span>
+                </h4>
+                <div class="description">
+                    <p>This is the thing that needs to get done.</p>
+                </div>
+                <div class="stats">
+                    Assigned To: admin
+                    <span class="right">
+                        <span class="icon icon-chat-empty" title="4 Comments"></span>
+                        <span class="icon icon-attach" title="2 Attachments"></span>
+                        <span class="category" title="Category"></span>
+                    </span>
+                </div>
             </div>
-            <div class="stats">
-                Assigned To: admin
-                <span class="right">
-                    <span class="icon icon-chat-empty" title="4 Comments"></span>
-                    <span class="icon icon-attach" title="2 Attachments"></span>
-                    <span class="category" title="Category"></span>
-                </span>
+            <div class="task">
+                <h4>
+                    <span class="icon icon-minus-squared-alt" title="Collapse Task"></span>
+                    A Task With a Very Long Title to Test How it Wraps
+                    <span class="badge right" title="Points">3</span>
+                </h4>
+                <div class="description">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p>Fusce ut commodo urna, vitae lacinia quam. Cras eleifend magna massa, vitae porttitor dolor lacinia quis.</p>
+                    <p>Nam tortor risus, faucibus nec lacinia ac, laoreet vitae diam.</p>
+                    <p>Nullam viverra elementum mi, at tincidunt nisl pretium a. Fusce risus risus, ornare facilisis leo a, dictum porta nibh.</p>
+                    <p>Quisque ut augue tortor. Phasellus hendrerit placerat molestie.</p>
+                </div>
+                <div class="stats">
+                    Assigned To: admin
+                    <span class="right">
+                        <span class="icon icon-chat-empty" title="4 Comments"></span>
+                        <span class="icon icon-attach" title="2 Attachments"></span>
+                        <span class="category" title="Category">Front End</span>
+                    </span>
+                </div>
             </div>
         </div>
-        <div class="task">
-            <h4>
-                <span class="icon icon-minus-squared-alt" title="Collapse Task"></span>
-                A Task With a Very Long Title to Test How it Wraps
-                <span class="badge right" title="Points">3</span>
-            </h4>
-            <div class="description">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <p>Fusce ut commodo urna, vitae lacinia quam. Cras eleifend magna massa, vitae porttitor dolor lacinia quis.</p>
-                <p>Nam tortor risus, faucibus nec lacinia ac, laoreet vitae diam.</p>
-                <p>Nullam viverra elementum mi, at tincidunt nisl pretium a. Fusce risus risus, ornare facilisis leo a, dictum porta nibh.</p>
-                <p>Quisque ut augue tortor. Phasellus hendrerit placerat molestie.</p>
-            </div>
-            <div class="stats">
-                Assigned To: admin
-                <span class="right">
-                    <span class="icon icon-chat-empty" title="4 Comments"></span>
-                    <span class="icon icon-attach" title="2 Attachments"></span>
-                    <span class="category" title="Category">Front End</span>
-                </span>
-            </div>
+
+        <div class="quick-add">
+            <input type="text" placeholder="Quick Add Task - Title Only">
+            <button class="flat"><i class="icon icon-plus"></i></button>
         </div>
     </div>
 
@@ -90,22 +98,30 @@
             <span class="right icon icon-angle-double-down"
                 title="Collapse Column"></span>
         </h3>
-        <div class="task compact">
-            <h4>
-                <span class="icon icon-plus-squared-alt" title="Expand Task"></span>
-                Something Else to Get Done
-                <span class="badge right" title="Points">5</span>
-            </h4>
-            <div class="description">
-                <p>This really needs to be taken care of as well.</p>
-                <p>But probably not as quickly as the other one. Maybe.</p>
+
+        <div class="tasks">
+            <div class="task compact">
+                <h4>
+                    <span class="icon icon-plus-squared-alt" title="Expand Task"></span>
+                    Something Else to Get Done
+                    <span class="badge right" title="Points">5</span>
+                </h4>
+                <div class="description">
+                    <p>This really needs to be taken care of as well.</p>
+                    <p>But probably not as quickly as the other one. Maybe.</p>
+                </div>
+                <div class="stats">
+                    Assigned To: Unassigned
+                    <span class="right">
+                        <span class="category" title="Category">API</span>
+                    </span>
+                </div>
             </div>
-            <div class="stats">
-                Assigned To: Unassigned
-                <span class="right">
-                    <span class="category" title="Category">API</span>
-                </span>
-            </div>
+        </div>
+
+        <div class="quick-add">
+            <input type="text" placeholder="Quick Add Task - Title Only">
+            <button class="flat"><i class="icon icon-plus"></i></button>
         </div>
     </div>
 
@@ -118,6 +134,11 @@
             <span class="right icon icon-angle-double-down"
                 title="Collapse Column"></span>
         </h3>
+
+        <div class="quick-add">
+            <input type="text" placeholder="Quick Add Task - Title Only">
+            <button class="flat"><i class="icon icon-plus"></i></button>
+        </div>
     </div>
 
     <div class="column collapsed">
@@ -130,18 +151,26 @@
             <span class="right icon icon-angle-double-down"
                 title="Collapse Column"></span>
         </h3>
-        <div class="task">
-            <h4>Something Else to Get Done <span class="badge right" title="Points">5</span></h4>
-            <div class="description">
-                <p>This really needs to be taken care of as well.</p>
-                <p>But probably not as quickly as the other one. Maybe.</p>
+
+        <div class="tasks">
+            <div class="task">
+                <h4>Something Else to Get Done <span class="badge right" title="Points">5</span></h4>
+                <div class="description">
+                    <p>This really needs to be taken care of as well.</p>
+                    <p>But probably not as quickly as the other one. Maybe.</p>
+                </div>
+                <div class="stats">
+                    Assigned To: Unassigned
+                    <span class="right">
+                        <span class="category" title="Category">API</span>
+                    </span>
+                </div>
             </div>
-            <div class="stats">
-                Assigned To: Unassigned
-                <span class="right">
-                    <span class="category" title="Category">API</span>
-                </span>
-            </div>
+        </div>
+
+        <div class="quick-add">
+            <input type="text" placeholder="Quick Add Task - Title Only">
+            <button class="flat"><i class="icon icon-plus"></i></button>
         </div>
     </div>
 </div>

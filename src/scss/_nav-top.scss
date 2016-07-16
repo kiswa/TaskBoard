@@ -28,6 +28,10 @@
             background-color: lighten($color-background, 10%);
             color: $color-primary;
         }
+
+        button {
+            cursor: pointer;
+        }
     }
 }
 
