@@ -24,6 +24,12 @@ Installing TaskBoard is as easy as 1, 2, 3!
  2. Extract it to your webserver
  3. Verify the `api` directory is writable
 
+### First Use
+
+Open a web browser to the location you installed TaskBoard and use `admin` as the username and password to log into TaskBoard.
+
+Go to the `Settings` page to update your user (username, email, password, *etc.*) and create your first board!
+
 ## Features
 
 ### Boards
