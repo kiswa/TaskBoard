@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Constants } from '../app.constants';
 import {
+    Constants,
     AuthService,
     ApiResponse,
     Notification,

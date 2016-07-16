@@ -22,7 +22,7 @@ export class Notifications {
 
     private hide(note: Notification): void {
         let index = this.notes.indexOf(note);
-        note.type = note.type + " clicked";
+        note.type += " clicked";
 
         if (index >= 0) {
             setTimeout(() => {

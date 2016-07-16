@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 
-import { Constants } from '../../app.constants';
+import { Constants } from '../constants';
 import { AuthService } from '../auth/index';
 
 @Component({

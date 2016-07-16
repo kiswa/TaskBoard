@@ -6,13 +6,16 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 
 import { User, ApiResponse } from '../index';
+import { Constants } from '../constants';
 
 @Injectable()
 export class AuthService {
     activeUser: User;
     isLoggedIn: boolean = false;
+    jwtKey: string;
 
-    constructor(private http: Http) {
+    constructor(private http: Http, constants: Constants) {
+        this.jwtKey = constants.TOKEN;
     }
 
     login(username: string, password: string,
@@ -31,7 +34,7 @@ export class AuthService {
                     this.isLoggedIn = true;
                     this.activeUser = response.data[1];
 
-                    localStorage.setItem('jwt', response.data[0])
+                    localStorage.setItem(this.jwtKey, response.data[0])
                 }
 
                 return response;
@@ -43,7 +46,7 @@ export class AuthService {
                     this.activeUser = null;
                     this.isLoggedIn = false;
 
-                    localStorage.removeItem('jwt');
+                    localStorage.removeItem(this.jwtKey);
                 }
 
                 return Observable.of(response);
