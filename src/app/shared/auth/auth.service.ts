@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers } from '@angular/http';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -10,12 +11,36 @@ import { Constants } from '../constants';
 
 @Injectable()
 export class AuthService {
-    activeUser: User;
-    isLoggedIn: boolean = false;
+    activeUser: User = null;
     jwtKey: string;
 
-    constructor(private http: Http, constants: Constants) {
+    constructor(constants: Constants, private http: Http, private router: Router) {
         this.jwtKey = constants.TOKEN;
+    }
+
+    authenticate(): Observable<boolean> {
+        let token = localStorage.getItem(this.jwtKey);
+        let header = new Headers({'Authorization': token});
+
+        return this.http.post('api/authenticate', token, { headers: header }).
+            map(res => {
+                let response: ApiResponse = res.json();
+
+                if (res.status === 200 && response.data.length) {
+                    this.activeUser = response.data[1];
+                }
+
+                return true;
+            }).
+            catch((res, caught) => {
+                let response: ApiResponse = res.json();
+                this.activeUser = null;
+                localStorage.removeItem(this.jwtKey);
+
+                this.router.navigate(['']);
+
+                return Observable.of(false);
+            });
     }
 
     login(username: string, password: string,
@@ -29,32 +54,36 @@ export class AuthService {
         return this.http.post('api/login', json).
             map(res => {
                 let response: ApiResponse = res.json();
-
-                if (res.status === 200) {
-                    this.isLoggedIn = true;
-                    this.activeUser = response.data[1];
-
-                    localStorage.setItem(this.jwtKey, response.data[0])
-                }
+                this.checkStatus(res);
 
                 return response;
             }).
             catch((res, caught) => {
                 let response: ApiResponse = res.json();
-
-                if (res.status === 401) {
-                    this.activeUser = null;
-                    this.isLoggedIn = false;
-
-                    localStorage.removeItem(this.jwtKey);
-                }
+                this.checkStatus(res);
 
                 return Observable.of(response);
             });
     }
 
     logout(): void {
-        this.isLoggedIn = false;
+        this.activeUser = null;
+        localStorage.removeItem(this.jwtKey);
+
+        this.router.navigate(['']);
+    }
+
+    private checkStatus(response: Response) {
+        if (response.status === 200) {
+            let apiResponse: ApiResponse = response.json();
+
+            this.activeUser = apiResponse.data[1];
+            localStorage.setItem(this.jwtKey, apiResponse.data[0])
+        }
+
+        if (response.status === 401) {
+            this.logout();
+        }
     }
 }
 

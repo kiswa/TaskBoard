@@ -147,14 +147,12 @@ class AuthTest extends PHPUnit_Framework_TestCase {
 
         $actual = $this->auth->authenticate($request, new ResponseMock(), null);
         $this->assertEquals('success', $actual->status);
-        $this->assertEquals(true, $actual->data[0]);
 
         $this->auth = new Auth(new ContainerMock());
         $request->hasHeader = false;
 
         $actual = $this->auth->authenticate($request, new ResponseMock(), null);
         $this->assertEquals('failure', $actual->status);
-        $this->assertEquals(false, $actual->data[0]);
 
         $this->auth = new Auth(new ContainerMock());
         $request = new RequestMock();
@@ -162,7 +160,6 @@ class AuthTest extends PHPUnit_Framework_TestCase {
 
         $actual = $this->auth->authenticate($request, new ResponseMock(), null);
         $this->assertEquals('failure', $actual->status);
-        $this->assertEquals(false, $actual->data[0]);
     }
 }
 

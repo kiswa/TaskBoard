@@ -124,13 +124,9 @@ class Auth extends BaseController {
         $user->last_login = time();
         $user->save();
 
-        $user->security_level = $user->security_level->getValue();
-        unset($user->password_hash);
-        unset($user->active_token);
-
         $this->apiJson->setSuccess();
         $this->apiJson->addData($jwt);
-        $this->apiJson->addData($user);
+        $this->apiJson->addData($this->sanitizeUser($user));
 
         return $this->jsonResponse($response);
     }
@@ -164,8 +160,6 @@ class Auth extends BaseController {
 
     public function authenticate($request, $response, $args) {
         if (!$request->hasHeader('Authorization')) {
-            $this->apiJson->addData(false);
-
             return $this->jsonResponse($response, 400);
         }
 
@@ -174,15 +168,25 @@ class Auth extends BaseController {
 
         if ($payload === null) {
             $this->apiJson->addAlert('error', 'Invalid access token.');
-            $this->apiJson->addData(false);
 
             return $this->jsonResponse($response, 401);
         }
 
+        $user = new User($this->container, $payload->uid);
+
         $this->apiJson->setSuccess();
-        $this->apiJson->addData(true);
+        $this->apiJson->addData($jwt);
+        $this->apiJson->addData($this->sanitizeUser($user));
 
         return $this->jsonResponse($response);
+    }
+
+    private function sanitizeUser($user) {
+        $user->security_level = $user->security_level->getValue();
+        unset($user->password_hash);
+        unset($user->active_token);
+
+        return $user;
     }
 
     private static function getJwtPayload($jwt) {
