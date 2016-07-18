@@ -3,11 +3,11 @@
 
     background-color: $white;
     display: inline-block;
-    margin: 3em 41%;
-    max-width: 350px;
+    margin: 3em calc(50% - 175px);
     padding: 1em;
     position: relative;
     text-align: center;
+    width: 350px;
 
     form {
         box-shadow: none;
