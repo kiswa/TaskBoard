@@ -2,73 +2,7 @@
 
 <div class="settings">
     <div class="half-page">
-        <section>
-            <h2>User Settings</h2>
-
-            <div class="half">
-                <h3>Change Password</h3>
-
-                <label for="currentPassword" class="hidden">Current Password</label>
-                <input type="password" id="currentPassword" placeholder="Current Password">
-
-                <label for="newPassword" class="hidden">Current Password</label>
-                <input type="password" id="newPassword" placeholder="New Password">
-
-                <label for="verifyPassword" class="hidden">Current Password</label>
-                <input type="password" id="verifyPassword" placeholder="Verify New Password">
-
-                <button>Change Password</button>
-                <button class="flat">Reset</button>
-
-                <h3 class="tall">All Boards Options</h3>
-                <label>
-                    Select default board:
-                    <select class="autosize">
-                        <option>None</option>
-                    </select>
-                </label>
-                <label>
-                    New tasks appear at column
-                    <select class="autosize">
-                        <option>bottom</option>
-                        <option>top</option>
-                    </select>
-                </label>
-                <label>
-                    Display tasks side-by-side in colums?
-                    <input type="checkbox">
-                </label>
-            </div>
-
-            <div class="half">
-                <h3>Change Username</h3>
-
-                <label for="username" class="hidden">New Username</label>
-                <input type="text" id="username" placeholder="New Username">
-
-                <button>Change Username</button>
-                <button class="flat">Reset</button>
-
-                <h3 class="tall">Change Email</h3>
-
-                <label for="email" class="hidden">New Email</label>
-                <input type="text" id="email" placeholder="New Email">
-
-                <button>Change Email</button>
-                <button class="flat">Reset</button>
-
-                <div class="hold-bottom">
-                    <label>
-                        Show animations?
-                        <input type="checkbox" checked>
-                    </label>
-                    <label>
-                        Show Assignee on task cards?
-                        <input type="checkbox" checked>
-                    </label>
-                </div>
-            </div>
-        </section>
+        <tb-user-settings></tb-user-settings>
 
         <section>
             <h2>User Administration</h2>
