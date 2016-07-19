@@ -17,7 +17,7 @@
         <button [ngClass]="{ flat: !isActive('settings') }"
             (click)="navigateTo('settings')">Settings</button>
         <button class="flat"
-            (click)="logout()">Logout (username)</button>
+            (click)="logout()">Logout ({{ username }})</button>
     </div>
 </nav>
 

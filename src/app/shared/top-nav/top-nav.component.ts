@@ -3,6 +3,8 @@ import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 
 import { Constants } from '../constants';
 import { AuthService } from '../auth/index';
+import { NotificationsService } from '../notifications/index';
+import { Notification } from '../models/index';
 
 @Component({
     selector: 'tb-top-nav',
@@ -12,15 +14,22 @@ import { AuthService } from '../auth/index';
 export class TopNav {
     @Input('page-name') pageName: string;
     version: string;
+    username: string;
 
     constructor(constants: Constants, private router: Router,
-            private authService: AuthService) {
+            private authService: AuthService,
+            private notes: NotificationsService) {
         this.version = constants.VERSION;
+        this.username = authService.activeUser.username;
     }
 
     logout(): void {
-        this.authService.logout();
-        this.router.navigate(['']);
+        this.authService.logout().subscribe(res => {
+            let alert = res.alerts[0];
+            this.notes.add(new Notification(alert.type, alert.text))
+
+            this.router.navigate(['']);
+        });
     }
 
     isActive(route: string): boolean {

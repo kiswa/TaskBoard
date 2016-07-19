@@ -13,21 +13,22 @@ export class Notifications {
     constructor(private notifications: NotificationsService) {
         this.notes = new Array<Notification>();
 
-        notifications.noteAdded.subscribe(note => {
-            this.notes.push(note);
-
-            setTimeout(() => { this.hide.bind(this)(note) }, 3000);
-        });
+        notifications.noteAdded
+            .subscribe(note => {
+                this.notes.push(note);
+                setTimeout(() => { this.hide.bind(this)(note) }, 3000);
+            });
     }
 
     private hide(note: Notification): void {
         let index = this.notes.indexOf(note);
+
         note.type += " clicked";
 
         if (index >= 0) {
             setTimeout(() => {
                 this.notes.splice(index, 1);
-            }, 500);
+            }, 500); // 500ms is the fade out transition time
         }
     }
 }

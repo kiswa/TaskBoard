@@ -28,8 +28,8 @@ export class Login {
     login(): void {
         this.isSubmitted = true;
 
-        this.authService.login(this.username, this.password, this.remember).
-            subscribe((response: ApiResponse) => {
+        this.authService.login(this.username, this.password, this.remember)
+            .subscribe((response: ApiResponse) => {
                 response.alerts.forEach(msg => {
                     this.notes.add(new Notification(msg.type, msg.text));
                 });

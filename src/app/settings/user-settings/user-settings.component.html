@@ -4,17 +4,27 @@
     <div class="half">
         <h3>Change Password</h3>
 
-        <label for="currentPassword" class="hidden">Current Password</label>
-        <input type="password" id="currentPassword" placeholder="Current Password">
+        <form>
+            <label for="currentPassword" class="hidden">Current Password</label>
+            <input type="password" id="currentPassword" name="currentPassword"
+                placeholder="Current Password"
+                [(ngModel)]="changePassword.current">
 
-        <label for="newPassword" class="hidden">Current Password</label>
-        <input type="password" id="newPassword" placeholder="New Password">
+            <label for="newPassword" class="hidden">New Password</label>
+            <input type="password" id="newPassword" name="newPassword"
+                placeholder="New Password"
+                [(ngModel)]="changePassword.newPass">
 
-        <label for="verifyPassword" class="hidden">Current Password</label>
-        <input type="password" id="verifyPassword" placeholder="Verify New Password">
+            <label for="verifyPassword" class="hidden">Verify Password</label>
+            <input type="password" id="verifyPassword" name="verifyPassword"
+                placeholder="Verify New Password"
+                [(ngModel)]="changePassword.verPass">
 
-        <button>Change Password</button>
-        <button class="flat">Reset</button>
+            <button type="submit" [disabled]="changePassword.submitted"
+                (click)="updatePassword()">Change Password</button>
+            <button class="flat" [disabled] = "changePassword.submitted"
+                (click)="resetPasswordForm()">Reset</button>
+        </form>
 
         <h3 class="tall">All Boards Options</h3>
         <label>

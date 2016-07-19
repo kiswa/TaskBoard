@@ -99,6 +99,11 @@ class Users extends BaseController {
 
         $user = new User($this->container, (int)$args['id']);
 
+        $data = $request->getBody();
+        if (property_exists($data, 'oldPass')) {
+            return $this->updatePassword($user, $data, $response);
+        }
+
         $update = new User($this->container);
         $update->loadFromJson($request->getBody());
 
@@ -154,6 +159,26 @@ class Users extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'User ' . $before->username . ' removed.');
+
+        return $this->jsonResponse($response);
+    }
+
+    private function updatePassword($user, $data, $response) {
+        $isValid = ($user->password_hash ===
+            password_hash($data->oldPass, PASSWORD_BCRYPT));
+
+        if (!$isValid) {
+            $this->logger->addError('Update Password: ', [$user]);
+            $this->apiJson->addAlert('error', 'Error updating password. ' .
+                'Please check your entries and try again.');
+
+            return $this->jsonResponse($response);
+        }
+
+        $update = new User($this->container, $user->id);
+        $update->password_hash =
+            password_hash($data->newPass, PASSWORD_BCRYPT);
+        $update->save();
 
         return $this->jsonResponse($response);
     }
