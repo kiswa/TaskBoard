@@ -224,6 +224,34 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[2]['text']);
     }
 
+    /**
+     * @group single
+     */
+    public function testChangePassword() {
+        $this->createUser();
+
+        $tmp = RedBeanPHP\R::load('user', 2);
+        $this->assertEquals(2, $tmp->id);
+
+        $tmp->password_hash = password_hash('testpass', PASSWORD_BCRYPT);
+        RedBeanPHP\R::store($tmp);
+
+        $user = DataMock::getUser();
+        $user->new_password = 'test';
+        $user->old_password = 'testpass';
+
+        $args = [];
+        $args['id'] = $user->id;
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+    }
+
     private function createBoard() {
         $board = DataMock::getBoard();
         $board->users = [];

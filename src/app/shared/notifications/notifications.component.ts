@@ -23,9 +23,9 @@ export class Notifications {
     private hide(note: Notification): void {
         let index = this.notes.indexOf(note);
 
-        note.type += " clicked";
-
         if (index >= 0) {
+            note.type += " clicked";
+
             setTimeout(() => {
                 this.notes.splice(index, 1);
             }, 500); // 500ms is the fade out transition time

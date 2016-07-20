@@ -122,9 +122,6 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($actual->status === 'failure');
     }
 
-    /**
-     * @group single
-     */
     public function testAuthenticate() {
         $data = new stdClass();
         $data->username = 'admin';

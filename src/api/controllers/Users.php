@@ -98,14 +98,29 @@ class Users extends BaseController {
         }
 
         $user = new User($this->container, (int)$args['id']);
-
-        $data = $request->getBody();
-        if (property_exists($data, 'oldPass')) {
-            return $this->updatePassword($user, $data, $response);
-        }
-
         $update = new User($this->container);
-        $update->loadFromJson($request->getBody());
+
+        $data = json_decode($request->getBody());
+        if (isset($data->new_password) && isset($data->old_password)) {
+            if (password_verify($data->old_password, $user->password_hash)) {
+                $data->password_hash =
+                    password_hash($data->new_password, PASSWORD_BCRYPT);
+            } else {
+                $this->logger->addError('Update User: ', [$user, $update]);
+                $this->apiJson->addAlert('error', 'Error updating user. ' .
+                    'Incorrect current password.');
+
+                return $this->jsonResponse($response);
+            }
+
+            unset($data->new_password);
+            unset($data->old_password);
+        } else {
+            $data->password_hash = $user->password_hash;
+        }
+        $data->active_token = $user->active_token;
+
+        $update->loadFromJson(json_encode($data));
 
         if ($user->id !== $update->id) {
             $this->logger->addError('Update User: ', [$user, $update]);
@@ -159,26 +174,6 @@ class Users extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'User ' . $before->username . ' removed.');
-
-        return $this->jsonResponse($response);
-    }
-
-    private function updatePassword($user, $data, $response) {
-        $isValid = ($user->password_hash ===
-            password_hash($data->oldPass, PASSWORD_BCRYPT));
-
-        if (!$isValid) {
-            $this->logger->addError('Update Password: ', [$user]);
-            $this->apiJson->addAlert('error', 'Error updating password. ' .
-                'Please check your entries and try again.');
-
-            return $this->jsonResponse($response);
-        }
-
-        $update = new User($this->container, $user->id);
-        $update->password_hash =
-            password_hash($data->newPass, PASSWORD_BCRYPT);
-        $update->save();
 
         return $this->jsonResponse($response);
     }

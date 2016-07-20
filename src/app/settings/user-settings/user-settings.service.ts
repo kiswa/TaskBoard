@@ -12,24 +12,30 @@ import {
     AuthService
 } from '../../shared/index';
 
+interface UpdateUser extends User {
+    new_password?: string;
+    old_password?: string;
+}
+
 @Injectable()
 export class UserSettingsService {
     activeUser: User = null;
     jwtKey: string;
 
-    constructor(auth: AuthService, constants: Constants) {
+    constructor(auth: AuthService, constants: Constants, private http: Http) {
         this.activeUser = auth.activeUser;
         this.jwtKey = constants.TOKEN;
     }
 
     changePassword(oldPass: string, newPass: string): Observable<ApiResponse> {
-        let json = JSON.stringify({
-            oldPass: oldPass,
-            newPass: newPass
-        });
+        let updateUser: UpdateUser = this.activeUser;
+        updateUser.new_password = newPass;
+        updateUser.old_password = oldPass;
+
+        let json = JSON.stringify(updateUser);
         let headers = this.getHeaders();
 
-        return http.post('api/users/' + this.activeUser.user_id, json,
+        return this.http.post('api/users/' + this.activeUser.id, json,
                 { headers: headers })
             .map(res => {
                 let response: ApiResponse = res.json();

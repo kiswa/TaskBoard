@@ -5,7 +5,8 @@ import {
     AuthService,
     NotificationsService,
     User,
-    Notification
+    Notification,
+    ApiResponse
 } from '../../shared/index';
 
 interface PassForm {
@@ -17,7 +18,8 @@ interface PassForm {
 
 @Component({
     selector: 'tb-user-settings',
-    templateUrl: 'app/settings/user-settings/user-settings.component.html'
+    templateUrl: 'app/settings/user-settings/user-settings.component.html',
+    providers: [ UserSettingsService ]
 })
 export class UserSettings {
     private user: User;
@@ -37,9 +39,18 @@ export class UserSettings {
             return;
         }
 
-        // TODO: submit the change request
-        this.resetPasswordForm();
-        this.changePassword.submitted = false;
+        this.userService
+            .changePassword(this.changePassword.current,
+                            this.changePassword.newPass)
+            .subscribe((response: ApiResponse) => {
+                console.log(response);
+                response.alerts.forEach(msg => {
+                    this.notes.add(new Notification(msg.type, msg.text));
+
+                    this.resetPasswordForm();
+                    this.changePassword.submitted = false;
+                });
+            });
     }
 
     resetPasswordForm() {
