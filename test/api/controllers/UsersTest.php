@@ -224,9 +224,6 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[2]['text']);
     }
 
-    /**
-     * @group single
-     */
     public function testChangePassword() {
         $this->createUser();
 
@@ -250,6 +247,18 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $response = $this->users->updateUser($request,
             new ResponseMock(), $args);
         $this->assertEquals('success', $response->status);
+
+        $this->users = new Users(new ContainerMock());
+        $user->old_password = 'test1';
+        $user->new_password = 'test';
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $response->status);
     }
 
     private function createBoard() {
