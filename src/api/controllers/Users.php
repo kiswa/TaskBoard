@@ -130,6 +130,17 @@ class Users extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if ($user->username !== $update->username) {
+            $existing = R::findOne('user', 'username = ?', [ $update->username ]);
+            if ($existing !== null) {
+                $this->logger->addError('Update User: ', [$user, $update]);
+                $this->apiJson->addAlert('error', 'Error updating username. ' .
+                    'That username is already taken.');
+
+                return $this->jsonResponse($response);
+            }
+        }
+
         $update->save();
 
         $actor = new User($this->container, Auth::GetUserId($request));
@@ -141,6 +152,7 @@ class Users extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'User ' . $update->username . ' updated.');
+        $this->apiJson->addData(json_encode($update));
 
         return $this->jsonResponse($response);
     }

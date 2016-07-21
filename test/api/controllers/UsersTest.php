@@ -261,6 +261,38 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $response->status);
     }
 
+/**
+ * @group single
+ */
+    public function testChangeUsername() {
+        $this->createUser();
+
+        $user = DataMock::getUser();
+        $user->username = 'newusername';
+
+        $args = [];
+        $args['id'] = $user->id;
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+
+        $this->users = new Users(new ContainerMock());
+        $user->username = 'admin';
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $response->status);
+    }
+
     private function createBoard() {
         $board = DataMock::getBoard();
         $board->users = [];
