@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
-import { Router } from '@angular/router';
+import { Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -22,8 +21,7 @@ interface UpdateUser extends User {
 export class UserSettingsService {
     activeUser: User = null;
 
-    constructor(auth: AuthService, constants: Constants,
-            private http: Http, private router: Router) {
+    constructor(auth: AuthService, constants: Constants, private http: Http) {
         this.activeUser = auth.activeUser;
     }
 

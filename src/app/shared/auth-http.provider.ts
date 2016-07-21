@@ -27,9 +27,8 @@ export const API_HTTP_PROVIDERS = [
 export class ApiHttp extends Http {
     private JWT_KEY = 'taskboard.jwt';
 
-    constructor(backend: ConnectionBackend,
-                defaultOptions: RequestOptions,
-                private router: Router) {
+    constructor(backend: ConnectionBackend, defaultOptions: RequestOptions,
+            private router: Router) {
         super(backend, defaultOptions);
     }
 
