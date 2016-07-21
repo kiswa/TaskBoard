@@ -21,8 +21,9 @@ interface UpdateUser extends User {
 export class UserSettingsService {
     activeUser: User = null;
 
-    constructor(auth: AuthService, constants: Constants, private http: Http) {
-        this.activeUser = auth.activeUser;
+    constructor(constants: Constants,
+            private auth: AuthService, private http: Http) {
+        auth.userChanged.subscribe(user => this.activeUser = user);
     }
 
     changePassword(oldPass: string, newPass: string): Observable<ApiResponse> {
@@ -35,6 +36,25 @@ export class UserSettingsService {
         return this.http.post('api/users/' + this.activeUser.id, json)
             .map(res => {
                 let response: ApiResponse = res.json();
+                return response;
+            })
+            .catch((res, caught) => {
+                let response: ApiResponse = res.json();
+                return Observable.of(response);
+            });
+    }
+
+    changeUsername(newName: string): Observable<ApiResponse> {
+        let updateUser = this.activeUser;
+        updateUser.username = newName;
+
+        let json = JSON.stringify(updateUser);
+
+        return this.http.post('api/users/' + this.activeUser.id, json)
+            .map(res => {
+                let response: ApiResponse = res.json();
+                this.auth.updateUser(JSON.parse(response.data[1]));
+
                 return response;
             })
             .catch((res, caught) => {

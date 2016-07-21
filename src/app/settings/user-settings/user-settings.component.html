@@ -49,19 +49,27 @@
     <div class="half">
         <h3>Change Username</h3>
 
-        <label for="username" class="hidden">New Username</label>
-        <input type="text" id="username" placeholder="New Username">
+        <form>
+            <label for="username" class="hidden">New Username</label>
+            <input type="text" id="username" name="username"
+                placeholder="New Username"
+                [(ngModel)]="changeUsername.newName" >
 
-        <button>Change Username</button>
-        <button class="flat">Reset</button>
+            <button type="submit" [disabled]="changeUsername.submitted"
+                (click)="updateUsername()">Change Username</button>
+            <button class="flat" [disabled]="changeUsername.submitted"
+                (click)="resetUsernameForm()">Reset</button>
+        </form>
 
-        <h3 class="tall">Change Email</h3>
+        <form>
+            <h3 class="tall">Change Email</h3>
 
-        <label for="email" class="hidden">New Email</label>
-        <input type="text" id="email" placeholder="New Email">
+            <label for="email" class="hidden">New Email</label>
+            <input type="text" id="email" placeholder="New Email">
 
-        <button>Change Email</button>
-        <button class="flat">Reset</button>
+            <button type="submit">Change Email</button>
+            <button class="flat">Reset</button>
+        </form>
 
         <div class="hold-bottom">
             <label>

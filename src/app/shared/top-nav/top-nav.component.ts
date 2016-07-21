@@ -20,7 +20,9 @@ export class TopNav {
             private authService: AuthService,
             private notes: NotificationsService) {
         this.version = constants.VERSION;
-        this.username = authService.activeUser.username;
+
+        authService.userChanged
+            .subscribe(user => this.username = user.username);
     }
 
     logout(): void {

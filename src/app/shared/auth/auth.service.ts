@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Router } from '@angular/router';
 
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
@@ -11,17 +12,23 @@ import { Constants } from '../constants';
 
 @Injectable()
 export class AuthService {
-    activeUser: User = null;
+    private activeUser = new BehaviorSubject<User>(null);
+
+    public userChanged = this.activeUser.asObservable();
 
     constructor(constants: Constants, private http: Http,
             private router: Router) {
+    }
+
+    updateUser(user: User): void {
+        this.activeUser.next(user);
     }
 
     authenticate(): Observable<boolean> {
         return this.http.post('api/authenticate', null)
             .map(res => {
                 let response: ApiResponse = res.json();
-                this.activeUser = response.data[1];
+                this.updateUser(response.data[1]);
 
                 return this.activeUser !== null;
             })
@@ -41,13 +48,13 @@ export class AuthService {
         return this.http.post('api/login', json)
             .map(res => {
                 let response: ApiResponse = res.json();
-                this.activeUser = response.data[1];
+                this.updateUser(response.data[1]);
 
                 return response;
             })
             .catch((res, caught) => {
                 let response: ApiResponse = res.json();
-                this.activeUser = null;
+                this.updateUser(null);
 
                 return Observable.of(response);
             });

@@ -16,6 +16,11 @@ interface PassForm {
     submitted: boolean;
 };
 
+interface UsernameForm {
+    newName: string;
+    submitted: boolean;
+};
+
 @Component({
     selector: 'tb-user-settings',
     templateUrl: 'app/settings/user-settings/user-settings.component.html',
@@ -24,12 +29,13 @@ interface PassForm {
 export class UserSettings {
     private user: User;
     private changePassword: PassForm;
+    private changeUsername: UsernameForm;
 
     constructor(private auth: AuthService,
             private notes: NotificationsService,
             private userService: UserSettingsService) {
-        this.user = auth.activeUser;
-        this.resetPasswordForm();
+        auth.userChanged.subscribe(user => this.user = user);
+        this.resetForms();
     }
 
     updatePassword() {
@@ -41,14 +47,37 @@ export class UserSettings {
 
         this.userService
             .changePassword(this.changePassword.current,
-                            this.changePassword.newPass)
+                    this.changePassword.newPass)
             .subscribe((response: ApiResponse) => {
                 response.alerts.forEach(msg => {
                     this.notes.add(new Notification(msg.type, msg.text));
-
-                    this.resetPasswordForm();
-                    this.changePassword.submitted = false;
                 });
+
+                this.resetPasswordForm();
+                this.changePassword.submitted = false;
+            });
+    }
+
+    updateUsername() {
+        this.changeUsername.submitted = true;
+
+        if (this.changeUsername.newName === '') {
+            this.notes.add(new Notification('error',
+                'New Username cannot be blank.'));
+            this.changeUsername.submitted = false;
+
+            return;
+        }
+
+        this.userService
+            .changeUsername(this.changeUsername.newName)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(msg => {
+                    this.notes.add(new Notification(msg.type, msg.text));
+                });
+
+                this.resetUsernameForm();
+                this.changeUsername.submitted = false;
             });
     }
 
@@ -59,6 +88,18 @@ export class UserSettings {
             verPass: '',
             submitted: false
         };
+    }
+
+    resetUsernameForm() {
+        this.changeUsername = {
+            newName: '',
+            submitted: false
+        };
+    }
+
+    private resetForms() {
+        this.resetPasswordForm();
+        this.resetUsernameForm();
     }
 
     private validatePassForm() {
