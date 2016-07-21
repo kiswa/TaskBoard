@@ -81,15 +81,11 @@ export class ApiHttp extends Http {
         return observable
             .map((res: Response) => {
                 let response: ApiResponse = res.json();
-                console.log(response);
-
                 localStorage.setItem(this.JWT_KEY, response.data[0]);
 
                 return res;
             })
             .catch((err, source) => {
-                console.log(err);
-
                 if (err.status === 401 && err.url.indexOf('login') === -1) {
                     this.router.navigate(['']);
                     localStorage.removeItem(this.JWT_KEY);
