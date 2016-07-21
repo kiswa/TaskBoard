@@ -18,7 +18,8 @@ class DataMock {
 
         $jwt = Firebase\JWT\JWT::encode(array(
             'exp' => time() + (60 * 30), // 30 minutes
-            'uid' => $userId
+            'uid' => $userId,
+            'mul' => 1
         ), $key->secret);
 
         $user = RedBeanPHP\R::load('user', $userId);

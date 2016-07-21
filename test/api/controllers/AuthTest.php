@@ -42,7 +42,8 @@ class AuthTest extends PHPUnit_Framework_TestCase {
 
         $token = JWT::encode(array(
             'exp' => time() + 600,
-            'uid' => 1
+            'uid' => 1,
+            'mul' => 1
             ), $jwtKey->secret);
 
         $admin->active_token = $token;
@@ -67,6 +68,7 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $data = new stdClass();
         $data->username = 'admin';
         $data->password = 'admin';
+        $data->remember = false;
 
         $request = new RequestMock();
         $request->payload = $data;
@@ -93,6 +95,7 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $data = new stdClass();
         $data->username = 'admin';
         $data->password = 'admin';
+        $data->remember = false;
 
         $request = new RequestMock();
         $request->payload = $data;
@@ -126,6 +129,7 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $data = new stdClass();
         $data->username = 'admin';
         $data->password = 'admin';
+        $data->remember = false;
 
         $request = new RequestMock();
         $request->payload = $data;
