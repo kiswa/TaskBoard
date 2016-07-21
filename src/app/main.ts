@@ -5,20 +5,19 @@ import { enableProdMode } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { APP_ROUTER_PROVIDERS } from './app.routes';
-import { NotificationsService, API_HTTP_PROVIDERS } from './shared/index';
+import { API_HTTP_PROVIDERS } from './app.api-http';
+import { NotificationsService } from './shared/index';
 import { Constants } from './shared/constants';
 
 // enableProdMode();
 
-bootstrap(AppComponent,
-    [
-        HTTP_PROVIDERS,
-        disableDeprecatedForms(),
-        provideForms(),
-        APP_ROUTER_PROVIDERS,
-        API_HTTP_PROVIDERS,
-        Constants,
-        NotificationsService
-    ]
-);
+bootstrap(AppComponent, [
+    HTTP_PROVIDERS,
+    disableDeprecatedForms(),
+    provideForms(),
+    APP_ROUTER_PROVIDERS,
+    API_HTTP_PROVIDERS,
+    Constants,
+    NotificationsService
+]);
 

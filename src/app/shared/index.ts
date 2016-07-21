@@ -3,5 +3,4 @@ export * from './auth/index';
 export * from './models/index';
 export * from './notifications/index';
 export * from './constants';
-export * from './auth-http.provider';
 
