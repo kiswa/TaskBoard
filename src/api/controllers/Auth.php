@@ -74,7 +74,7 @@ class Auth extends BaseController {
             return $response->withStatus(401);
         }
 
-        $jwt = self::createJwt($payload->uid);
+        $jwt = self::createJwt($payload->uid, (int) $payload->mul);
         $user->active_token = $jwt;
         $user->save();
 
@@ -117,7 +117,7 @@ class Auth extends BaseController {
             return $this->jsonResponse($response, 401);
         }
 
-        $jwt = self::createJwt($user->id);
+        $jwt = self::createJwt($user->id, ($data->remember ? 200 : 1));
         $user = new User($this->container, $user->id);
 
         $user->active_token = $jwt;
@@ -199,10 +199,12 @@ class Auth extends BaseController {
         return $payload;
     }
 
-    private static function createJwt($userId) {
+    private static function createJwt($userId, $mult = 1) {
+        // If 'remember me' feature is desired, set the multiplier higher
         return JWT::encode(array(
-                    'exp' => time() + (60 * 30), // 30 minutes
-                    'uid' => $userId
+                    'exp' => time() + (60 * 30) * $mult, // 30 minutes * $mult
+                    'uid' => $userId,
+                    'mul' => $mult
                 ), Auth::getJwtKey());
     }
 

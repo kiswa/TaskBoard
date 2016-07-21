@@ -15,8 +15,8 @@ import {
 })
 export class Login {
     version: string;
-    username: string;
-    password: string;
+    username: string = '';
+    password: string = '';
     remember: boolean;
     isSubmitted: boolean = false;
 
@@ -26,6 +26,12 @@ export class Login {
     }
 
     login(): void {
+        if (this.username === '' || this.password === '') {
+            this.notes.add(new Notification('error',
+                'Username and password are required.'));
+            return;
+        }
+
         this.isSubmitted = true;
 
         this.authService.login(this.username, this.password, this.remember)

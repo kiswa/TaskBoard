@@ -43,7 +43,6 @@ export class UserSettings {
             .changePassword(this.changePassword.current,
                             this.changePassword.newPass)
             .subscribe((response: ApiResponse) => {
-                console.log(response);
                 response.alerts.forEach(msg => {
                     this.notes.add(new Notification(msg.type, msg.text));
 

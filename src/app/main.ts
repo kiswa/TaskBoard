@@ -5,7 +5,7 @@ import { enableProdMode } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { APP_ROUTER_PROVIDERS } from './app.routes';
-import { NotificationsService } from './shared/index';
+import { NotificationsService, API_HTTP_PROVIDERS } from './shared/index';
 import { Constants } from './shared/constants';
 
 // enableProdMode();
@@ -16,6 +16,7 @@ bootstrap(AppComponent,
         disableDeprecatedForms(),
         provideForms(),
         APP_ROUTER_PROVIDERS,
+        API_HTTP_PROVIDERS,
         Constants,
         NotificationsService
     ]

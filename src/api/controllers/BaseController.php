@@ -50,10 +50,7 @@ abstract class BaseController {
             return 403;
         }
 
-        $token = new stdClass();
-        $token->jwt = (string) $response->getBody();
-
-        $this->apiJson->addData($token);
+        $this->apiJson->addData((string) $response->getBody());
 
         return $status;
     }

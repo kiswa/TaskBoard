@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -20,11 +21,10 @@ interface UpdateUser extends User {
 @Injectable()
 export class UserSettingsService {
     activeUser: User = null;
-    jwtKey: string;
 
-    constructor(auth: AuthService, constants: Constants, private http: Http) {
+    constructor(auth: AuthService, constants: Constants,
+            private http: Http, private router: Router) {
         this.activeUser = auth.activeUser;
-        this.jwtKey = constants.TOKEN;
     }
 
     changePassword(oldPass: string, newPass: string): Observable<ApiResponse> {
@@ -33,30 +33,16 @@ export class UserSettingsService {
         updateUser.old_password = oldPass;
 
         let json = JSON.stringify(updateUser);
-        let headers = this.getHeaders();
 
-        return this.http.post('api/users/' + this.activeUser.id, json,
-                { headers: headers })
+        return this.http.post('api/users/' + this.activeUser.id, json)
             .map(res => {
                 let response: ApiResponse = res.json();
-
                 return response;
             })
             .catch((res, caught) => {
                 let response: ApiResponse = res.json();
-
                 return Observable.of(response);
             });
-    }
-
-    private getHeaders(): Headers {
-        let token = localStorage.getItem(this.jwtKey);
-        let headers = new Headers();
-
-        headers.append('Content-Type', 'application/json');
-        headers.append('Authorization', token);
-
-        return headers;
     }
 }
 
