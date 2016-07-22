@@ -27,6 +27,22 @@ class User extends BaseModel {
         $this->loadFromBean($this->bean);
     }
 
+    public function save() {
+        $retVal = parent::save();
+
+        if ($retVal && $this->user_option_id === 0) {
+            // Create and save user options
+            $user_options = new UserOptions($this->container);
+
+            $user_options->save();
+            $this->user_option_id = $user_options->id;
+
+            return parent::save();
+        }
+
+        return $retVal;
+    }
+
     public function updateBean() {
         $bean = $this->bean;
 
