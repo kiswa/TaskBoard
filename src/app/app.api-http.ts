@@ -34,11 +34,13 @@ export class ApiHttp extends Http {
 
     request(url: string | Request,
             options?: RequestOptionsArgs): Observable<Response> {
-        return this.intercept(super.request(url, options));
+        return this.intercept(super.request(url,
+            this.getRequestOptionArgs(options)));
     }
 
     get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-        return this.intercept(super.get(url, options));
+        return this.intercept(super.get(url,
+            this.getRequestOptionArgs(options)));
     }
 
     post(url: string, body: string,
@@ -54,7 +56,8 @@ export class ApiHttp extends Http {
     }
 
     delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-        return this.intercept(super.delete(url, options));
+        return this.intercept(super.delete(url,
+            this.getRequestOptionArgs(options)));
     }
 
     getRequestOptionArgs(options?: RequestOptionsArgs) : RequestOptionsArgs {
