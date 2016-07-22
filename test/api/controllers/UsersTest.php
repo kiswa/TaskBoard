@@ -261,9 +261,6 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $response->status);
     }
 
-/**
- * @group single
- */
     public function testChangeUsername() {
         $this->createUser();
 
