@@ -39,6 +39,14 @@ export class UserSettings implements OnInit {
         this.resetForms();
     }
 
+    onOptionChange(option: string, event: any) {
+        switch (option) {
+            case 'tasks':
+                this.userOptions.new_tasks_at_bottom = (event === 'true');
+            break;
+        }
+    }
+
     updatePassword() {
         this.changePassword.submitted = true;
 

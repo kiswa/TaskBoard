@@ -35,14 +35,17 @@
         </label>
         <label>
             New tasks appear at column
-            <select class="autosize">
-                <option>bottom</option>
-                <option>top</option>
+            <select class="autosize"
+                [ngModel]="userOptions.new_tasks_at_bottom"
+                (ngModelChange)="onOptionChange('tasks', $event)">
+                <option value="true">bottom</option>
+                <option value="false">top</option>
             </select>
         </label>
         <label>
             Display tasks side-by-side in colums?
-            <input type="checkbox">
+            <input type="checkbox"
+                [(ngModel)]="userOptions.multiple_tasks_per_row">
         </label>
     </div>
 
@@ -78,11 +81,11 @@
         <div class="hold-bottom">
             <label>
                 Show animations?
-                <input type="checkbox" checked>
+                <input type="checkbox" [(ngModel)]="userOptions.show_animations">
             </label>
             <label>
                 Show Assignee on task cards?
-                <input type="checkbox" checked>
+                <input type="checkbox" [(ngModel)]="userOptions.show_assignee">
             </label>
         </div>
     </div>
