@@ -53,7 +53,7 @@
             <label for="username" class="hidden">New Username</label>
             <input type="text" id="username" name="username"
                 placeholder="New Username"
-                [(ngModel)]="changeUsername.newName" >
+                [(ngModel)]="changeUsername.newName">
 
             <button type="submit" [disabled]="changeUsername.submitted"
                 (click)="updateUsername()">Change Username</button>
@@ -65,10 +65,14 @@
             <h3 class="tall">Change Email</h3>
 
             <label for="email" class="hidden">New Email</label>
-            <input type="text" id="email" placeholder="New Email">
+            <input type="text" id="email" name="email"
+                placeholder="New Email - Blank to disable"
+                [(ngModel)]="changeEmail.newEmail">
 
-            <button type="submit">Change Email</button>
-            <button class="flat">Reset</button>
+            <button type="submit" [disabled]="changeEmail.submitted"
+                (click)="updateEmail()">Change Email</button>
+            <button class="flat" [disabled]="changeEmail.submitted"
+                (click)="resetEmailForm()">Reset</button>
         </form>
 
         <div class="hold-bottom">

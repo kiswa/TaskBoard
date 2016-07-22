@@ -62,5 +62,15 @@ export class UserSettingsService {
                 return Observable.of(response);
             });
     }
+
+    changeEmail(newEmail: string): Observable<ApiResponse> {
+        let json = JSON.stringify(this.activeUser);
+
+        return this.http.post('api/users/' + this.activeUser.id, json)
+            .map(res => {
+                let response: ApiResponse = res.json();
+                return response;
+            });
+    }
 }
 
