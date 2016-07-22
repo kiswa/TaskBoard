@@ -13,14 +13,12 @@
     "url": "git+https://kiswa@github.com/kiswa/TaskBoard.git"
   },
   "keywords": [
-    "Kanban",
-    "board",
     "kanban",
     "board",
     "task",
-    "task",
-    "board",
-    "taskboard"
+    "taskboard",
+    "track",
+    "todo"
   ],
   "author": "Matthew Ross <root@matthewross.me> (https://matthewross.me)",
   "license": "MIT",
