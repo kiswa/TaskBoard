@@ -173,10 +173,12 @@ class Auth extends BaseController {
         }
 
         $user = new User($this->container, $payload->uid);
+        $opts = new UserOptions($this->container, $user->user_option_id);
 
         $this->apiJson->setSuccess();
         $this->apiJson->addData($jwt);
         $this->apiJson->addData($this->sanitizeUser($user));
+        $this->apiJson->addData($opts);
 
         return $this->jsonResponse($response);
     }
@@ -203,7 +205,7 @@ class Auth extends BaseController {
         // If 'remember me' feature is desired, set the multiplier higher
         return JWT::encode(array(
                     'exp' => time() + (60 * 30) * $mult, // 30 minutes * $mult
-                    'uid' => $userId,
+                    'uid' => (int) $userId,
                     'mul' => $mult
                 ), Auth::getJwtKey());
     }
