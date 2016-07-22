@@ -64,12 +64,19 @@ export class UserSettingsService {
     }
 
     changeEmail(newEmail: string): Observable<ApiResponse> {
-        let json = JSON.stringify(this.activeUser);
+        let updateUser = this.activeUser;
+        updateUser.email = newEmail;
+
+        let json = JSON.stringify(updateUser);
 
         return this.http.post('api/users/' + this.activeUser.id, json)
             .map(res => {
                 let response: ApiResponse = res.json();
                 return response;
+            })
+            .catch((res, caught) => {
+                let response: ApiResponse = res.json();
+                return Observable.of(response);
             });
     }
 }

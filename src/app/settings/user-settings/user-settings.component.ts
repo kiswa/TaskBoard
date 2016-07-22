@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 import { UserSettingsService } from './user-settings.service';
-import {
-    PassForm,
-    UsernameForm,
-    EmailForm
-} from './user-settings.models';
+import { PassForm, UsernameForm, EmailForm } from './user-settings.models';
 import {
     AuthService,
     NotificationsService,
     User,
+    UserOptions,
     Notification,
     ApiResponse
 } from '../../shared/index';
@@ -21,14 +18,21 @@ import {
 })
 export class UserSettings implements OnInit {
     private user: User;
+    private userOptions: UserOptions;
     private changePassword: PassForm;
     private changeUsername: UsernameForm;
-    private changeEmail: EmailForm
+    private changeEmail: EmailForm;
 
     constructor(private auth: AuthService,
             private notes: NotificationsService,
             private userService: UserSettingsService) {
-        auth.userChanged.subscribe(user => this.user = user);
+        this.changeEmail = new EmailForm();
+
+        auth.userChanged.subscribe(user => {
+            this.user = user;
+            this.changeEmail.newEmail = user.email;
+            this.userOptions = auth.userOptions;
+        });
     }
 
     ngOnInit() {
@@ -42,9 +46,8 @@ export class UserSettings implements OnInit {
             return;
         }
 
-        this.userService
-            .changePassword(this.changePassword.current,
-                    this.changePassword.newPass)
+        this.userService.changePassword(this.changePassword.current,
+                this.changePassword.newPass)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
                 this.resetPasswordForm();
@@ -63,8 +66,7 @@ export class UserSettings implements OnInit {
             return;
         }
 
-        this.userService
-            .changeUsername(this.changeUsername.newName)
+        this.userService.changeUsername(this.changeUsername.newName)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
                 this.resetUsernameForm();
@@ -75,7 +77,8 @@ export class UserSettings implements OnInit {
     updateEmail() {
         this.changeEmail.submitted = true;
 
-        let emailRegex = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+        // https://davidcel.is/posts/stop-validating-email-addresses-with-regex/
+        let emailRegex = /.+@.+\..+/i;
         let match = this.changeEmail.newEmail.match(emailRegex);
 
         if (!match && this.changeEmail.newEmail !== '') {
@@ -86,8 +89,7 @@ export class UserSettings implements OnInit {
             return;
         }
 
-        this.userService
-            .changeEmail(this.changeEmail.newEmail)
+        this.userService.changeEmail(this.changeEmail.newEmail)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
                 this.resetEmailForm();
