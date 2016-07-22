@@ -7,28 +7,33 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 
-import { User, ApiResponse } from '../index';
+import { User, UserOptions, ApiResponse } from '../index';
 import { Constants } from '../constants';
 
 @Injectable()
 export class AuthService {
     private activeUser = new BehaviorSubject<User>(null);
 
+    public userOptions: UserOptions = null;
     public userChanged = this.activeUser.asObservable();
 
     constructor(constants: Constants, private http: Http,
             private router: Router) {
     }
 
-    updateUser(user: User): void {
+    updateUser(user: User, userOpts?: UserOptions): void {
         this.activeUser.next(user);
+
+        if (userOpts) {
+            this.userOptions = userOpts;
+        }
     }
 
     authenticate(): Observable<boolean> {
         return this.http.post('api/authenticate', null)
             .map(res => {
                 let response: ApiResponse = res.json();
-                this.updateUser(response.data[1]);
+                this.updateUser(response.data[1], response.data[2]);
 
                 return this.activeUser !== null;
             })
@@ -48,13 +53,13 @@ export class AuthService {
         return this.http.post('api/login', json)
             .map(res => {
                 let response: ApiResponse = res.json();
-                this.updateUser(response.data[1]);
+                this.updateUser(response.data[1], response.data[2]);
 
                 return response;
             })
             .catch((res, caught) => {
                 let response: ApiResponse = res.json();
-                this.updateUser(null);
+                this.updateUser(null, null);
 
                 return Observable.of(response);
             });
