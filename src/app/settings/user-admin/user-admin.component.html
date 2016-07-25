@@ -1,0 +1,41 @@
+<section>
+    <h2>User Administration</h2>
+
+    <div class="row">
+        <table class="alternating">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Security Level</th>
+                    <th>Default Board</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="!loading">
+                <tr *ngFor="let user of users">
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.security_level_name }}</td>
+                    <td>{{ user.default_board_name }}</td>
+                    <td>
+                        <span *ngIf="user.can_admin">
+                            <a (click)="editUser(user)">
+                                <i class="icon icon-edit color-primary"></i>
+                            </a>
+                            <a (click)="removeUser(user)">
+                                <i class="icon icon-trash-empty color-secondary"></i>
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div *ngIf="loading" class="center">
+            <div class="spinner"></div>
+        </div>
+
+        <button (click)="addUser()">Add User</button>
+    </div>
+</section>
+

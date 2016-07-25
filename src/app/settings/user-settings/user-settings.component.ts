@@ -41,10 +41,28 @@ export class UserSettings implements OnInit {
 
     onOptionChange(option: string, event: any) {
         switch (option) {
-            case 'tasks':
+            case 'new_tasks':
                 this.userOptions.new_tasks_at_bottom = (event === 'true');
             break;
+            case 'mult_tasks':
+                this.userOptions.multiple_tasks_per_row = event;
+            break;
+            case 'show_anim':
+                this.userOptions.show_animations = event;
+            break;
+            case 'show_assign':
+                this.userOptions.show_assignee = event;
+            break;
         }
+        this.updateUserOptions();
+    }
+
+    updateUserOptions() {
+        this.userService.changeUserOptions(this.userOptions)
+            .subscribe((response: ApiResponse) => {
+                this.addAlerts(response.alerts);
+                console.log(response);
+            });
     }
 
     updatePassword() {

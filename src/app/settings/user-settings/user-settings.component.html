@@ -27,17 +27,18 @@
         </form>
 
         <h3 class="tall">All Boards Options</h3>
-        <label>
+        <label><strong>TODO</strong>
             Select default board:
             <select class="autosize">
                 <option>None</option>
             </select>
+            <strong>TODO</strong>
         </label>
         <label>
             New tasks appear at column
             <select class="autosize"
                 [ngModel]="userOptions.new_tasks_at_bottom"
-                (ngModelChange)="onOptionChange('tasks', $event)">
+                (ngModelChange)="onOptionChange('new_tasks', $event)">
                 <option value="true">bottom</option>
                 <option value="false">top</option>
             </select>
@@ -45,7 +46,8 @@
         <label>
             Display tasks side-by-side in colums?
             <input type="checkbox"
-                [(ngModel)]="userOptions.multiple_tasks_per_row">
+                [ngModel]="userOptions.multiple_tasks_per_row"
+                (ngModelChange)="onOptionChange('mult_tasks', $event)">
         </label>
     </div>
 
@@ -81,11 +83,15 @@
         <div class="hold-bottom">
             <label>
                 Show animations?
-                <input type="checkbox" [(ngModel)]="userOptions.show_animations">
+                <input type="checkbox"
+                    [ngModel]="userOptions.show_animations"
+                    (ngModelChange)="onOptionChange('show_anim', $event)">
             </label>
             <label>
                 Show Assignee on task cards?
-                <input type="checkbox" [(ngModel)]="userOptions.show_assignee">
+                <input type="checkbox"
+                    [ngModel]="userOptions.show_assignee"
+                    (ngModelChange)="onOptionChange('show_assign', $event)">
             </label>
         </div>
     </div>

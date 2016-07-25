@@ -7,8 +7,8 @@ import 'rxjs/add/operator/catch';
 
 import {
     User,
+    UserOptions,
     ApiResponse,
-    Constants,
     AuthService
 } from '../../shared/index';
 
@@ -21,8 +21,7 @@ interface UpdateUser extends User {
 export class UserSettingsService {
     activeUser: User = null;
 
-    constructor(constants: Constants,
-            private auth: AuthService, private http: Http) {
+    constructor(private auth: AuthService, private http: Http) {
         auth.userChanged.subscribe(user => this.activeUser = user);
     }
 
@@ -70,6 +69,20 @@ export class UserSettingsService {
         let json = JSON.stringify(updateUser);
 
         return this.http.post('api/users/' + this.activeUser.id, json)
+            .map(res => {
+                let response: ApiResponse = res.json();
+                return response;
+            })
+            .catch((res, caught) => {
+                let response: ApiResponse = res.json();
+                return Observable.of(response);
+            });
+    }
+
+    changeUserOptions(newOptions: UserOptions): Observable<ApiResponse> {
+        let json = JSON.stringify(newOptions);
+
+        return this.http.post('api/users/' + this.activeUser.id + '/opts', json)
             .map(res => {
                 let response: ApiResponse = res.json();
                 return response;
