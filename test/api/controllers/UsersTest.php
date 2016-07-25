@@ -27,7 +27,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 
         $actual = $this->users->getAllUsers($request,
             new ResponseMock(), null);
-        $this->assertEquals(3, count($actual->data));
+        $this->assertEquals(2, count($actual->data[1]));
 
         $res = DataMock::createUnpriviligedUser();
         $this->assertEquals('success', $res->status);
@@ -222,6 +222,92 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             new ResponseMock(), $args);
         $this->assertEquals('Insufficient privileges.',
             $actual->alerts[2]['text']);
+    }
+
+    public function testUpdateUserForbidden() {
+        $this->createUser();
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt(2)];
+
+        $args = [];
+        $args['id'] = 1;
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $response->status);
+        $this->assertEquals('Access restricted.',
+            $response->alerts[0]['text']);
+    }
+
+    public function testUpdateUserOptions() {
+        DataMock::createStandardUser();
+        $user = new User(new ContainerMock(), 2);
+        $opts = new UserOptions(new ContainerMock);
+        $opts->save();
+        $user->user_option_id = $opts->id;
+        $user->save();
+
+        $args = [];
+        $args['id'] = 2;
+
+        $data = DataMock::getUserOptions();
+        $data->id = 2;
+        $data->new_tasks_at_bottom = false;
+
+        $request = new RequestMock();
+        $request->payload = $data;
+        $request->header = [DataMock::getJwt(2)];
+
+        $response = $this->users->updateUserOptions($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+
+        $args['id'] = 1;
+        $request->header = [DataMock::getJwt(2)];
+
+        $this->users = new Users(new ContainerMock());
+        $response = $this->users->updateUserOptions($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('failure', $response->status);
+        $this->assertEquals('Access restricted.',
+            $response->alerts[0]['text']);
+    }
+
+    public function testUpdateUserOptionsInvalid() {
+        DataMock::createStandardUser();
+        $user = new User(new ContainerMock(), 2);
+        $opts = new UserOptions(new ContainerMock);
+        $opts->save();
+        $user->user_option_id = $opts->id;
+        $user->save();
+
+        $data = DataMock::getUserOptions();
+        $data->id = 2;
+
+        DataMock::createUnpriviligedUser();
+
+        $args = [];
+        $args['id'] = 2;
+
+        $request = new RequestMock();
+        $request->payload = $data;
+        $request->header = [DataMock::getJwt(3)];
+
+        $response = $this->users->updateUserOptions($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $response->status);
+
+        $args['id'] = 2;
+        $data->id = 4; // No such user options
+        $request->payload = $data;
+        $request->header = [DataMock::getJwt(2)];
+        $this->users = new Users(new ContainerMock());
+
+        $response = $this->users->updateUserOptions($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $response->status);
     }
 
     public function testChangePassword() {

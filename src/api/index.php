@@ -46,7 +46,8 @@ $app->delete('/attachments/{id}', 'Attachments:removeAttachment');  // BoardAdmi
 $app->get   ('/users',            'Users:getAllUsers');             // User (by board access)
 $app->get   ('/users/{id}',       'Users:getUser');                 // User (by board access)
 $app->post  ('/users',            'Users:addUser');                 // Admin
-$app->post  ('/users/{id}',       'Users:updateUser');              // Admin
+$app->post  ('/users/{id}',       'Users:updateUser');              // User (limited to self - Higher can edit any)
+$app->post  ('/users/{id}/opts',  'Users:updateUserOptions');       // User (limited to self)
 $app->delete('/users/{id}',       'Users:removeUser');              // Admin
 
 $app->post  ('/login',            'Auth:login');                    // Unsecured

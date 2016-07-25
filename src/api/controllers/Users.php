@@ -14,15 +14,19 @@ class Users extends BaseController {
         $userBeans = R::findAll('user');
 
         $userIds = $this->getUserIdsByBoardAccess(Auth::GetUserId($request));
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $isAdmin = ($actor->security_level->getValue() === SecurityLevel::Admin);
 
+        $data = [];
         foreach($userBeans as $bean) {
             $user = new User($this->container);
             $user->loadFromBean($bean);
 
-            if (in_array($user->id, $userIds)) {
-                $this->apiJson->addData($this->cleanUser($user));
+            if (in_array($user->id, $userIds) || $isAdmin) {
+                $data[] = $this->cleanUser($user);
             }
         }
+        $this->apiJson->addData($data);
 
         return $this->jsonResponse($response);
     }
@@ -92,13 +96,22 @@ class Users extends BaseController {
 
     public function updateUser($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::Admin);
+            SecurityLevel::User);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
         $user = new User($this->container, (int)$args['id']);
         $update = new User($this->container);
+        $actor = new User($this->container, Auth::GetUserId($request));
+
+        if ($actor->id !== $user->id) {
+            if ($actor->security_level->getValue() === SecurityLevel::User) {
+                $this->apiJson->addAlert('error', 'Access restricted.');
+
+                return $this->jsonResponse($response, 403);
+            }
+        }
 
         $data = json_decode($request->getBody());
         if (isset($data->new_password) && isset($data->old_password)) {
@@ -143,7 +156,6 @@ class Users extends BaseController {
 
         $update->save();
 
-        $actor = new User($this->container, Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' updated user ' . $update->username,
             json_encode($user), json_encode($update),
@@ -152,6 +164,51 @@ class Users extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'User ' . $update->username . ' updated.');
+        $this->apiJson->addData(json_encode($update));
+
+        return $this->jsonResponse($response);
+    }
+
+    public function updateUserOptions($request, $response, $args) {
+        $status = $this->secureRoute($request, $response,
+            SecurityLevel::User);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
+        $user = new User($this->container, (int)$args['id']);
+        $actor = new User($this->container, Auth::GetUserId($request));
+
+        if ($actor->id !== $user->id) {
+            $this->apiJson->addAlert('error', 'Access restricted.');
+
+            return $this->jsonResponse($response, 403);
+        }
+
+        $userOpts = new UserOptions($this->container, $user->user_option_id);
+        $update = new UserOptions($this->container);
+
+        $data = $request->getBody();
+        $update->loadFromJson($data);
+
+        if ($userOpts->id !== $update->id) {
+            $this->logger->addError('Update User Options: ',
+                [$userOpts, $update]);
+            $this->apiJson->addAlert('error', 'Error updating user options. ' .
+                'Please check your entries and try again.');
+
+            return $this->jsonResponse($response);
+        }
+
+        $update->save();
+
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' updated user options',
+            json_encode($userOpts), json_encode($update),
+            'user_option', $update->id);
+
+        $this->apiJson->setSuccess();
+        $this->apiJson->addAlert('success', 'User options updated.');
         $this->apiJson->addData(json_encode($update));
 
         return $this->jsonResponse($response);
