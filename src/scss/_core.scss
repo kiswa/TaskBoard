@@ -50,15 +50,6 @@ a {
     background-position: left 1.05em;
 }
 
-.loading {
-    padding-top: 2em;
-    text-align: center;
-}
-
-.small {
-    font-size: .8em;
-}
-
 table {
     border-collapse: collapse;
     margin-bottom: 1em;
@@ -66,6 +57,44 @@ table {
 
 button {
     transition: background .3s;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    animation: spin 1s infinite;
+    border: 3px solid $color-heading-bg;
+    border-radius: 50%;
+    border-right-color: $color-text;
+    display: inline-block;
+    height: 20px;
+    margin-bottom: -.3em;
+    width: 20px;
+}
+
+.color-primary {
+    color: $color-primary;
+}
+
+.color-secondary {
+    color: $color-secondary;
+}
+
+.loading {
+    padding-top: 2em;
+    text-align: center;
+}
+
+.small {
+    font-size: .8em;
 }
 
 .row {
@@ -76,6 +105,10 @@ button {
 
 .right {
     float: right;
+}
+
+.center {
+    text-align: center;
 }
 
 .inline {
