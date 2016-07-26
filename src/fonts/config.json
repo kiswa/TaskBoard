@@ -107,6 +107,24 @@
       "css": "minus-squared-alt",
       "code": 61767,
       "src": "fontawesome"
+    },
+    {
+      "uid": "531bc468eecbb8867d822f1c11f1e039",
+      "css": "calendar",
+      "code": 59407,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "88e6faa0f633ee23667f815689e82af3",
+      "css": "eyedropper",
+      "code": 61947,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "f4445feb55521283572ee88bc304f928",
+      "css": "floppy",
+      "code": 59408,
+      "src": "fontawesome"
     }
   ]
 }
