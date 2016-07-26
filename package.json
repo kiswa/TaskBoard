@@ -61,8 +61,8 @@
     "reflect-metadata": "^0.1.3",
     "rxjs": "5.0.0-beta.6",
     "scss-base": "^1.1.6",
-    "systemjs": "^0.19.31",
-    "systemjs-builder": "^0.15.23",
+    "systemjs": "^0.19.35",
+    "systemjs-builder": "^0.15.25",
     "touch": "^1.0.0",
     "typings": "^1.3.2",
     "zone.js": "^0.6.12"
