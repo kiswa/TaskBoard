@@ -4,7 +4,8 @@ import { UserAdminService } from './user-admin.service';
 import {
     AuthService,
     User,
-    ApiResponse
+    ApiResponse,
+    Modal
 } from '../../shared/index';
 
 interface UserDisplay extends User {
@@ -13,18 +14,28 @@ interface UserDisplay extends User {
     can_admin: boolean;
 }
 
+class NewUser extends User {
+    public password: string = '';
+    public verifyPassword: string = '';
+}
+
 @Component({
     selector: 'tb-user-admin',
     templateUrl: 'app/settings/user-admin/user-admin.component.html',
-    providers: [ UserAdminService ]
+    providers: [ UserAdminService, Modal ],
+    directives: [ Modal ]
 })
 export class UserAdmin {
     private activeUser: User = null;
     private users: Array<UserDisplay>;
     private loading: boolean = true;
+    private isModalOpen: boolean = false;
+    private newUser: NewUser;
 
     constructor(private userService: UserAdminService,
             private auth: AuthService) {
+        this.newUser = new NewUser();
+
         auth.userChanged.subscribe(user => this.activeUser = user);
 
         this.userService.getUsers()
@@ -36,12 +47,18 @@ export class UserAdmin {
     }
 
     addUser(): void {
+        this.newUser = new NewUser();
+        this.isModalOpen = true;
     }
 
     editUser(user: UserDisplay): void {
     }
 
     removeUser(user: UserDisplay): void {
+    }
+
+    private modalClosed(): void {
+        this.isModalOpen = false;
     }
 
     private updateUserList(): void {

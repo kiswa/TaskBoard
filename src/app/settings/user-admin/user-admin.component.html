@@ -20,10 +20,12 @@
                     <td>{{ user.default_board_name }}</td>
                     <td>
                         <span *ngIf="user.can_admin">
-                            <a (click)="editUser(user)">
+                            <a href="javascript:" title="Edit User"
+                                (click)="editUser(user)">
                                 <i class="icon icon-edit color-primary"></i>
                             </a>
-                            <a (click)="removeUser(user)">
+                            <a href="javascript:" title="Remove User"
+                                (click)="removeUser(user)">
                                 <i class="icon icon-trash-empty color-secondary"></i>
                             </a>
                         </span>
@@ -35,7 +37,62 @@
             <div class="spinner"></div>
         </div>
 
-        <button (click)="addUser()">Add User</button>
+        <button (click)="addUser()">
+            <i class="icon icon-plus"></i> Add User
+        </button>
     </div>
 </section>
+
+<tb-modal modal-title="Add User"
+    [is-open]="isModalOpen" (onClose)="modalClosed()">
+    <label>
+        Username
+        <input type="text" name="new-username" placeholder="Username" autofocus
+            [(ngModel)]="newUser.username">
+    </label>
+
+    <label>
+        Password
+        <input type="password" name="new-password" placeholder="Password"
+            [(ngModel)]="newUser.password">
+    </label>
+    <input type="password" name="new-password-verify"
+        placeholder="Verify Password"
+        [(ngModel)]="newUser.verifyPassword">
+
+    <label>
+        Email
+        <input type="text" name="new-email" placeholder="email"
+            [(ngModel)]="newUser.email">
+    </label>
+
+    <label>
+        Default Board <i class="icon icon-help-circled"></i>
+        <select>
+            <option>TODO</option>
+        </select>
+    </label>
+
+    <label>
+        Board Access
+        <select multiple>
+            <option>TODO</option>
+        </select>
+    </label>
+
+    <label>
+        Security Level
+        <select name="new-security"
+            [(ngModel)]="newUser.security_level">
+            <option value="3">User</option>
+            <option value="2">Board Admin</option>
+            <option value="1">Admin</option>
+        </select>
+    </label>
+
+    <div class="buttons">
+        <button><i class="icon icon-plus"></i> Add User</button>
+        <button class="flat" (click)="isModalOpen = false">Cancel</button>
+    </div>
+</tb-modal>
 
