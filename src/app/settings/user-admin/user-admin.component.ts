@@ -22,7 +22,7 @@ class NewUser extends User {
 @Component({
     selector: 'tb-user-admin',
     templateUrl: 'app/settings/user-admin/user-admin.component.html',
-    providers: [ UserAdminService, Modal ],
+    providers: [ UserAdminService ],
     directives: [ Modal ]
 })
 export class UserAdmin {

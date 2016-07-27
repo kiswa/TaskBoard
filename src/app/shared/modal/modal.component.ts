@@ -31,9 +31,7 @@ export class Modal {
 
     keyup(event: KeyboardEvent) {
         if (event.keyCode === 27) {
-            if (!this.blocking) {
-                this.close();
-            }
+            this.close(true);
         }
     }
 }
