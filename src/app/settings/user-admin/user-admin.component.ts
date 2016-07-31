@@ -2,21 +2,31 @@ import { Component } from '@angular/core';
 
 import { UserAdminService } from './user-admin.service';
 import {
-    AuthService,
     User,
     ApiResponse,
-    Modal
+    Modal,
+    Notification,
+    AuthService,
+    NotificationsService,
+    ModalService
 } from '../../shared/index';
 
-interface UserDisplay extends User {
-    default_board_name: string;
-    security_level_name: string;
-    can_admin: boolean;
+class UserDisplay extends User {
+    public default_board_name: string;
+    public security_level_name: string;
+    public can_admin: boolean;
 }
 
-class NewUser extends User {
+export class ModalUser extends UserDisplay {
     public password: string = '';
     public verifyPassword: string = '';
+}
+
+class ModalProperties {
+    constructor(public title: string,
+        public prefix: string,
+        public user: ModalUser) {
+    }
 }
 
 @Component({
@@ -26,17 +36,29 @@ class NewUser extends User {
     directives: [ Modal ]
 })
 export class UserAdmin {
-    private activeUser: User = null;
+    private activeUser: User;
     private users: Array<UserDisplay>;
     private loading: boolean = true;
-    private isModalOpen: boolean = false;
-    private newUser: NewUser;
+    private modalProps: ModalProperties;
+    private userToRemove: UserDisplay;
+
+    private MODAL_ID: string;
+    private MODAL_CONFIRM_ID: string;
 
     constructor(private userService: UserAdminService,
-            private auth: AuthService) {
-        this.newUser = new NewUser();
+            private notes: NotificationsService,
+            private auth: AuthService,
+            private modal: ModalService) {
+        this.modalProps = new ModalProperties('', '', new ModalUser());
+        this.MODAL_ID = 'user-addEdit-form';
+        this.MODAL_CONFIRM_ID = 'user-remove-confirm';
+        this.users = [];
 
-        auth.userChanged.subscribe(user => this.activeUser = user);
+        auth.userChanged
+            .subscribe(activeUser => {
+                this.activeUser = activeUser;
+                this.replaceUser(activeUser);
+            });
 
         this.userService.getUsers()
             .subscribe((response: ApiResponse) => {
@@ -46,19 +68,113 @@ export class UserAdmin {
             });
     }
 
-    addUser(): void {
-        this.newUser = new NewUser();
-        this.isModalOpen = true;
+    addEditUser(): void {
+        let isAdd = (this.modalProps.title === 'Add');
+
+        if (!this.validateModalUser()) {
+            return;
+        }
+
+        if (isAdd) {
+            this.userService.addUser(this.modalProps.user)
+                .subscribe((response: ApiResponse) => {
+                    response.alerts.forEach(note => this.notes.add(note));
+
+                    this.replaceUserList(response);
+
+                    if (response.status === 'success') {
+                        this.modal.close(this.MODAL_ID);
+                    }
+                });
+
+            return;
+        }
+
+        this.userService.editUser(this.modalProps.user)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                this.replaceUser(JSON.parse(response.data[1]));
+
+                if (response.status === 'success') {
+                    this.modal.close(this.MODAL_ID);
+                }
+            });
     }
 
-    editUser(user: UserDisplay): void {
+    removeUser(): void {
+        this.userService.removeUser(this.userToRemove.id)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+                this.replaceUserList(response);
+
+                if(response.status === 'success') {
+                    this.modal.close(this.MODAL_CONFIRM_ID);
+                }
+            })
     }
 
-    removeUser(user: UserDisplay): void {
+    private replaceUser(newUser: User) {
+        this.users.forEach((user, index) => {
+            if (user.id === newUser.id) {
+                this.users[index] = <UserDisplay> newUser;
+                this.updateUserList();
+            }
+        });
     }
 
-    private modalClosed(): void {
-        this.isModalOpen = false;
+    private replaceUserList(response: ApiResponse): void {
+        if (response.status === 'success') {
+            this.users = response.data[1];
+            this.updateUserList();
+        }
+    }
+
+    private validateModalUser(): boolean {
+        let user = this.modalProps.user;
+
+        if (user.username === '') {
+            this.notes.add(new Notification('error', 'Username is required.'));
+            return false;
+        }
+
+        if (user.password === '') {
+            this.notes.add(new Notification('error', 'Password is required.'));
+            return false;
+        }
+
+        if (user.password !== user.verifyPassword) {
+            this.notes.add(new Notification('error',
+                'New password and verify password do not match.'));
+            return false;
+        }
+
+        let emailRegex = /.+@.+\..+/i;
+        let match = user.email.match(emailRegex);
+
+        if (!match && user.email !== '') {
+            this.notes.add(new Notification('error', 'Invalid email address.'));
+            return false;
+        }
+
+        return true;
+    }
+
+    private showModal(title: string, user?: UserDisplay): void {
+        let isAdd = (title === 'Add');
+
+        this.modalProps = {
+            title: title,
+            prefix: isAdd ? '' : 'Change',
+            user: isAdd ? new ModalUser() : <ModalUser> user
+        }
+
+        this.modal.open(this.MODAL_ID);
+    }
+
+    private showConfirmModal(user: UserDisplay): void {
+        this.userToRemove = user;
+        this.modal.open(this.MODAL_CONFIRM_ID);
     }
 
     private updateUserList(): void {
@@ -72,8 +188,14 @@ export class UserAdmin {
                 user.security_level === 2 ?
                     'Board Admin' :
                     'User';
-            // TODO: Determine ability to edit a given user
+
             user.can_admin = true;
+
+            // TODO: Determine ability to edit a given user
+            if (user.id === this.activeUser.id ||
+                    this.activeUser.security_level === 3) {
+                user.can_admin = false;
+            }
         }
     }
 }

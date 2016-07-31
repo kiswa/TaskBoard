@@ -12,9 +12,9 @@ import { Notification } from '../models/index';
     directives: [ ROUTER_DIRECTIVES ]
 })
 export class TopNav {
-    @Input('page-name') pageName: string;
-    version: string;
-    username: string;
+    @Input('page-name') pageName: string = '';
+    version: string = '';
+    username: string = '';
 
     constructor(constants: Constants, private router: Router,
             private authService: AuthService,

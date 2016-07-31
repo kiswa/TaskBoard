@@ -61,7 +61,6 @@ export class UserSettings implements OnInit {
         this.userService.changeUserOptions(this.userOptions)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
-                console.log(response);
             });
     }
 

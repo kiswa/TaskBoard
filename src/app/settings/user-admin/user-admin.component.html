@@ -21,11 +21,11 @@
                     <td>
                         <span *ngIf="user.can_admin">
                             <a href="javascript:" title="Edit User"
-                                (click)="editUser(user)">
+                                (click)="showModal('Edit', user)">
                                 <i class="icon icon-edit color-primary"></i>
                             </a>
                             <a href="javascript:" title="Remove User"
-                                (click)="removeUser(user)">
+                                (click)="showConfirmModal(user)">
                                 <i class="icon icon-trash-empty color-secondary"></i>
                             </a>
                         </span>
@@ -37,37 +37,50 @@
             <div class="spinner"></div>
         </div>
 
-        <button (click)="addUser()">
+        <button *ngIf="activeUser.security_level < 3"
+            (click)="showModal('Add')">
             <i class="icon icon-plus"></i> Add User
         </button>
     </div>
 </section>
 
-<tb-modal modal-title="Add User"
-    [is-open]="isModalOpen" (onClose)="modalClosed()">
+<tb-modal modal-title="Confirm User Removal" blocking="true"
+    modal-id="{{ MODAL_CONFIRM_ID }}">
+    <div class="center">Removing a user cannot be undone.<br>Are you sure?</div>
+    <div class="buttons">
+        <button class="flat" (click)="removeUser()">Yes</button>
+        <button (click)="modal.close(MODAL_CONFIRM_ID)">No</button>
+    </div>
+</tb-modal>
+
+<tb-modal modal-title="{{ modalProps.title }} User" modal-id="{{ MODAL_ID }}">
     <label>
-        Username
+        {{ modalProps.prefix }} Username
         <input type="text" name="new-username" placeholder="Username" autofocus
-            [(ngModel)]="newUser.username">
+            [(ngModel)]="modalProps.user.username">
     </label>
 
     <label>
-        Password
+        {{ modalProps.prefix }} Password
         <input type="password" name="new-password" placeholder="Password"
-            [(ngModel)]="newUser.password">
+            [(ngModel)]="modalProps.user.password">
     </label>
     <input type="password" name="new-password-verify"
         placeholder="Verify Password"
-        [(ngModel)]="newUser.verifyPassword">
+        [(ngModel)]="modalProps.user.verifyPassword">
 
     <label>
-        Email
-        <input type="text" name="new-email" placeholder="email"
-            [(ngModel)]="newUser.email">
+        {{ modalProps.prefix }} Email
+        <input type="text" name="new-email"
+            placeholder="New Email - Blank to disable"
+            [(ngModel)]="modalProps.user.email">
     </label>
 
     <label>
-        Default Board <i class="icon icon-help-circled"></i>
+        Default Board
+        <i *ngIf="modalProps.title === 'Add'"
+            title="Selecting a default board adds the user to that board."
+            class="icon icon-help-circled"></i>
         <select>
             <option>TODO</option>
         </select>
@@ -83,7 +96,7 @@
     <label>
         Security Level
         <select name="new-security"
-            [(ngModel)]="newUser.security_level">
+            [(ngModel)]="modalProps.user.security_level">
             <option value="3">User</option>
             <option value="2">Board Admin</option>
             <option value="1">Admin</option>
@@ -91,8 +104,15 @@
     </label>
 
     <div class="buttons">
-        <button><i class="icon icon-plus"></i> Add User</button>
-        <button class="flat" (click)="isModalOpen = false">Cancel</button>
+        <button (click)="addEditUser()">
+            <i class="icon"
+                [ngClass]="{ 'icon-plus': modalProps.prefix === '', 'icon-floppy': modalProps.prefix !== '' }"></i>
+            {{ modalProps.prefix === '' ? 'Add' : 'Save' }}
+            User
+        </button>
+        <button class="flat" (click)="modal.close(MODAL_ID)">
+            Cancel
+        </button>
     </div>
 </tb-modal>
 
