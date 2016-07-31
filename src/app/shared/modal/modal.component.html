@@ -2,7 +2,7 @@
     <div class="modal-overlay" (click)="close(true)"></div>
 
     <div class="modal">
-        <div class="title">
+        <div class="title" *ngIf="modalTitle">
             <h2>
                 {{ modalTitle }}
                 <span class="right" (click)="close()">

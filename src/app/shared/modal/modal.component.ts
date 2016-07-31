@@ -1,37 +1,36 @@
 import {
     Component,
     Input,
-    Output,
-    EventEmitter
+    OnInit
 } from '@angular/core';
+
+import { ModalService } from './modal.service';
 
 @Component({
     selector: 'tb-modal',
     templateUrl: 'app/shared/modal/modal.component.html',
     host: { '(document:keyup)': 'keyup($event)' }
 })
-export class Modal {
+export class Modal implements OnInit {
+    @Input('modal-id') modalId: string;
     @Input('modal-title') modalTitle: string;
     @Input() blocking = false;
-    @Input('is-open') isOpen = false;
-    @Output() onClose = new EventEmitter<boolean>();
+    isOpen: boolean = false;
 
-    open() {
-        this.isOpen = true;
+    constructor(private modalService: ModalService) {
     }
 
-    close(checkBlocking = false) {
-        if (checkBlocking && this.blocking) {
-            return;
-        }
-
-        this.isOpen = false;
-        this.onClose.next(false);
+    ngOnInit() {
+        this.modalService.registerModal(this);
     }
 
-    keyup(event: KeyboardEvent) {
+    private close(checkBlocking = false): void {
+        this.modalService.close(this.modalId, checkBlocking);
+    }
+
+    private keyup(event: KeyboardEvent): void {
         if (event.keyCode === 27) {
-            this.close(true);
+            this.modalService.close(this.modalId, true);
         }
     }
 }
