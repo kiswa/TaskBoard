@@ -43,6 +43,16 @@ class User extends BaseModel {
         return $retVal;
     }
 
+    public function delete() {
+        $userOpts = new UserOptions($this->container, $this->user_option_id);
+
+        if ($userOpts->id === $this->user_option_id) {
+            $userOpts->delete();
+        }
+
+        parent::delete();
+    }
+
     public function updateBean() {
         $bean = $this->bean;
 

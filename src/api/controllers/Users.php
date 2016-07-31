@@ -11,21 +11,7 @@ class Users extends BaseController {
         }
 
         $this->apiJson->setSuccess();
-        $userBeans = R::findAll('user');
-
-        $userIds = $this->getUserIdsByBoardAccess(Auth::GetUserId($request));
-        $actor = new User($this->container, Auth::GetUserId($request));
-        $isAdmin = ($actor->security_level->getValue() === SecurityLevel::Admin);
-
-        $data = [];
-        foreach($userBeans as $bean) {
-            $user = new User($this->container);
-            $user->loadFromBean($bean);
-
-            if (in_array($user->id, $userIds) || $isAdmin) {
-                $data[] = $this->cleanUser($user);
-            }
-        }
+        $data = $this->getAllUsersCleaned($request);
         $this->apiJson->addData($data);
 
         return $this->jsonResponse($response);
@@ -71,8 +57,16 @@ class Users extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
+        $data = json_decode($request->getBody());
         $user = new User($this->container);
-        $user->loadFromJson($request->getBody());
+
+        if (isset($data->password)) {
+            $data->password_hash =
+                password_hash($data->password, PASSWORD_BCRYPT);
+            unset($data->password);
+            unset($data->password_verify);
+        }
+        $user->loadFromJson(json_encode($data));
 
         if (!$user->save()) {
             $this->logger->addError('Add User: ', [$user]);
@@ -90,6 +84,7 @@ class Users extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'User ' . $user->username . ' added.');
+        $this->apiJson->addData($this->getAllUsersCleaned($request));
 
         return $this->jsonResponse($response);
     }
@@ -133,6 +128,12 @@ class Users extends BaseController {
         }
         $data->active_token = $user->active_token;
 
+        if (isset($data->password)) {
+            $data->password_hash =
+                password_hash($data->password, PASSWORD_BCRYPT);
+            unset($data->password);
+        }
+
         $update->loadFromJson(json_encode($data));
 
         if ($user->id !== $update->id) {
@@ -164,7 +165,7 @@ class Users extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'User ' . $update->username . ' updated.');
-        $this->apiJson->addData(json_encode($update));
+        $this->apiJson->addData(json_encode($this->cleanUser($update)));
 
         return $this->jsonResponse($response);
     }
@@ -210,6 +211,7 @@ class Users extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success', 'User options updated.');
         $this->apiJson->addData(json_encode($update));
+        $this->apiJson->addData(json_encode($this->cleanUser($user)));
 
         return $this->jsonResponse($response);
     }
@@ -243,8 +245,29 @@ class Users extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'User ' . $before->username . ' removed.');
+        $this->apiJson->addData($this->getAllUsersCleaned($request));
 
         return $this->jsonResponse($response);
+    }
+
+    private function getAllUsersCleaned($request) {
+        $userBeans = R::findAll('user');
+
+        $userIds = $this->getUserIdsByBoardAccess(Auth::GetUserId($request));
+        $actor = new User($this->container, Auth::GetUserId($request));
+        $isAdmin = ($actor->security_level->getValue() === SecurityLevel::Admin);
+
+        $data = [];
+        foreach($userBeans as $bean) {
+            $user = new User($this->container);
+            $user->loadFromBean($bean);
+
+            if (in_array($user->id, $userIds) || $isAdmin) {
+                $data[] = $this->cleanUser($user);
+            }
+        }
+
+        return $data;
     }
 
     private function getUserIdsByBoardAccess($userId) {

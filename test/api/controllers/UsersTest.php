@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
 
+/**
+ * @group single
+ */
 class UsersTest extends PHPUnit_Framework_TestCase {
     private $users;
 
@@ -116,6 +119,24 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             new ResponseMock(), $args);
         $this->assertEquals('Access restricted.',
             $actual->alerts[0]['text']);
+    }
+
+    public function testAddUserFrontend() {
+        $user = DataMock::getUser();
+        $user->id = 0;
+        $user->user_option_id = 0;
+        $user->default_board_id = 0;
+
+        $user->password = 'test';
+        $user->password_verify = 'test';
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+        $request->payload = $user;
+
+        $actual = $this->users->addUser($request,
+            new ResponseMock(), null);
+        $this->assertEquals('success', $actual->status);
     }
 
     public function testAddRemoveUser() {
@@ -308,6 +329,30 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $response = $this->users->updateUserOptions($request,
             new ResponseMock(), $args);
         $this->assertEquals('failure', $response->status);
+    }
+
+    public function testChangePasswordOverride() {
+        $this->createUser();
+
+        $tmp = RedBeanPHP\R::load('user', 2);
+        $this->assertEquals(2, $tmp->id);
+
+        $tmp->password_hash = password_hash('testpass', PASSWORD_BCRYPT);
+        RedBeanPHP\R::store($tmp);
+
+        $user = DataMock::getUser();
+        $user->password = 'newpassword';
+
+        $args = [];
+        $args['id'] = $user->id;
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
     }
 
     public function testChangePassword() {
