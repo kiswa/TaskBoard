@@ -12,8 +12,8 @@
     @include shadow-float();
 
     background-color: $white;
-    left: calc(50vw - 200px);
-    max-height: calc(100vh - 10em);
+    left: calc(50% - 200px);
+    max-height: calc(100% - 10em);
     min-height: 10em;
     overflow-y: auto;
     position: fixed;

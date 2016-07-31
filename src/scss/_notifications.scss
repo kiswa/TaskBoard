@@ -7,6 +7,7 @@ $info: #bde5f8;
     bottom: 1%;
     left: calc(50% - 200px);
     position: absolute;
+    z-index: 100000;
 
     div {
         @include shadow-float;
