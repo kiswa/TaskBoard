@@ -60,7 +60,7 @@ export class ApiHttp extends Http {
             this.getRequestOptionArgs(options)));
     }
 
-    getRequestOptionArgs(options?: RequestOptionsArgs) : RequestOptionsArgs {
+    getRequestOptionArgs(options?: RequestOptionsArgs): RequestOptionsArgs {
         if (options == null) {
             options = new RequestOptions();
         }
