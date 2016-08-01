@@ -139,6 +139,14 @@ global.HttpMock = {
     post: (url, data) => {
         var response = new global.ResponseMock(url);
         return RxJs.Observable.of(response);
+    },
+    get: (url) => {
+        var response = new global.ResponseMock(url);
+        return RxJs.Observable.of(response);
+    },
+    delete: (url) => {
+        var response = new global.ResponseMock(url);
+        return RxJs.Observable.of(response);
     }
 };
 
