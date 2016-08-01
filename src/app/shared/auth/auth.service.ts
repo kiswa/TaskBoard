@@ -35,7 +35,7 @@ export class AuthService {
                 let response: ApiResponse = res.json();
                 this.updateUser(response.data[1], response.data[2]);
 
-                return this.activeUser !== null;
+                return true;
             })
             .catch((res, caught) => {
                 return Observable.of(false);

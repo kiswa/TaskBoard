@@ -16,8 +16,17 @@ global.RouterMock = function() {
 
 global.AuthServiceMock = {
     userChanged: RxJs.Observable.of({
-        username: 'tester'
+        id: 1,
+        username: 'tester',
+        default_board_id: 0,
+        security_level: 2
     }),
+    login: () => {
+        return RxJs.Observable.of({
+            alerts: [ 'Logged in' ],
+            status: 'success'
+        });
+    },
     logout: () => {
         return RxJs.Observable.of({
             alerts: [ 'Logged out' ]
@@ -28,10 +37,108 @@ global.AuthServiceMock = {
     }
 };
 
-global.NotificationMock = {
-    note: '',
-    add: (note) => {
-        this.note = note;
+global.NotificationsServiceMock = function() {
+    var notes = new RxJs.Subject();
+
+    return {
+        noteAdded: notes.asObservable(),
+        add: (note) => {
+            notes.next(note);
+        }
+    };
+};
+
+global.ResponseMock = function(endpoint) {
+    return {
+        json: () => {
+            return {
+                alerts: [],
+                data: [ 'jwt', 'data1', 'data2' ],
+                status: 'success',
+                endpoint: endpoint
+            };
+        }
+    };
+};
+
+global.ModalServiceMock = function() {
+    var closed = new RxJs.Subject(),
+        opened = new RxJs.Subject(),
+        register = new RxJs.Subject();
+
+    return {
+        closeCalled: closed.asObservable(),
+        openCalled: opened.asObservable(),
+        registerCalled: register.asObservable(),
+
+        open: (id) => {
+            opened.next(id);
+        },
+        close: () => {
+            closed.next(true);
+        },
+        registerModal: () => {
+            register.next(true);
+        }
+    };
+};
+
+global.UserAdminServiceMock = function() {
+    var userList = [
+            { id: 1, username: 'tester', security_level: 2 },
+            { id: 2, username: 'test', security_level: 3, default_board_id: 0 }
+        ];
+
+    return {
+        getUsers: () => {
+            return RxJs.Observable.of({
+                data: [
+                    null,
+                    userList
+                ]
+            });
+        },
+        addUser: (user) => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [
+                    null,
+                    userList.concat(user)
+                ]
+            });
+        },
+        editUser: (user) => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [
+                    null,
+                    JSON.stringify({
+                        id: 1,
+                        username: 'changed',
+                        security_level: 3
+                    })
+                ]
+            });
+        },
+        removeUser: (userId) => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [
+                    null,
+                    userList.slice(1)
+                ]
+            });
+        }
+    };
+};
+
+global.HttpMock = {
+    post: (url, data) => {
+        var response = new global.ResponseMock(url);
+        return RxJs.Observable.of(response);
     }
 };
 

@@ -12,10 +12,10 @@ import { ModalService } from './modal.service';
     host: { '(document:keyup)': 'keyup($event)' }
 })
 export class Modal implements OnInit {
-    @Input('modal-id') modalId: string;
-    @Input('modal-title') modalTitle: string;
+    @Input('modal-id') modalId = '';
+    @Input('modal-title') modalTitle = '';
     @Input() blocking = false;
-    isOpen: boolean = false;
+    isOpen = false;
 
     constructor(private modalService: ModalService) {
     }

@@ -108,7 +108,7 @@ export class UserAdmin {
                 response.alerts.forEach(note => this.notes.add(note));
                 this.replaceUserList(response);
 
-                if(response.status === 'success') {
+                if (response.status === 'success') {
                     this.modal.close(this.MODAL_CONFIRM_ID);
                 }
             })

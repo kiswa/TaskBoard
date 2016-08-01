@@ -1,4 +1,4 @@
-/* global ConstantsMock RouterMock AuthServiceMock NotificationMock */
+/* global ConstantsMock RouterMock AuthServiceMock NotificationsServiceMock */
 
 require('../../mocks.js');
 
@@ -14,7 +14,7 @@ describe('TopNav', () => {
     beforeEach(() => {
         router = new RouterMock();
         topNav = new TopNav(ConstantsMock, router,
-            AuthServiceMock, NotificationMock);
+            AuthServiceMock, new NotificationsServiceMock());
     });
 
     it('has pageName', () => {

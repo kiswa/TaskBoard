@@ -15,10 +15,10 @@ import {
 })
 export class Login {
     version: string;
-    username: string = '';
-    password: string = '';
-    remember: boolean;
-    isSubmitted: boolean = false;
+    username = '';
+    password = '';
+    remember = false;
+    isSubmitted = false;
 
     constructor(constants: Constants, private authService: AuthService,
             private router: Router, private notes: NotificationsService) {
