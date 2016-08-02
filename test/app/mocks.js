@@ -135,6 +135,24 @@ global.UserAdminServiceMock = function() {
     };
 };
 
+global.UserSettingsServiceMock = {
+    changeUserOptions: (opts) => {
+        return RxJs.Observable.of({
+            alerts: []
+        });
+    },
+    changeUsername: (newName) => {
+        return RxJs.Observable.of({
+            alerts: []
+        });
+    },
+    changePassword: (newPass) => {
+        return RxJs.Observable.of({
+            alerts: []
+        })
+    }
+};
+
 global.HttpMock = {
     post: (url, data) => {
         var response = new global.ResponseMock(url);
