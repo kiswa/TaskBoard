@@ -5,11 +5,11 @@ import { Component, Input, AfterViewInit } from '@angular/core';
     templateUrl: 'app/dashboard/charts/charts.component.html'
 })
 export class Charts implements AfterViewInit {
-    @Input('chart-name') chartName: string;
-    @Input('chart-type') chartType: string = 'pie';
-    @Input('series') series: string;
-    @Input('labels') labels: string;
-    @Input('table-head') tableHead: string;
+    @Input('chart-name') chartName = '';
+    @Input('chart-type') chartType = 'pie';
+    @Input('series') series = '';
+    @Input('labels') labels = '';
+    @Input('table-head') tableHead = '';
 
     private percentages: number[];
     private data: number[];
