@@ -4,14 +4,14 @@ var chai = require('chai'),
     path = '../../../../build/settings/user-settings/',
     UserSettings = require(path + 'user-settings.component.js').UserSettings;
 
-describe('UserAdminService', () => {
+describe('UserSettings', () => {
     var userSettings,
         notifications;
 
     beforeEach(() => {
         notifications = new NotificationsServiceMock();
         userSettings = new UserSettings(AuthServiceMock,
-            notifications, UserSettingsServiceMock)
+            notifications, UserSettingsServiceMock);
     });
 
     it('resets forms on init', () => {
@@ -41,16 +41,27 @@ describe('UserAdminService', () => {
             current: ''
         };
 
-        var first = true;
+        var first = true,
+            second = true;
         notifications.noteAdded.subscribe(note => {
             if (first) {
                 expect(note.type).to.equal('error');
                 first = false;
+            } else if (second) {
+                expect(note.type).to.equal('error');
+                second = false;
             } else {
                 expect(note.type).to.equal('success');
+                done();
             }
-            done();
         });
+        userSettings.updatePassword();
+
+        userSettings.changePassword = {
+            current: 'old',
+            newPass: 'new',
+            verPass: 'err'
+        };
         userSettings.updatePassword();
 
         userSettings.changePassword = {
@@ -71,13 +82,32 @@ describe('UserAdminService', () => {
                 first = false;
             } else {
                 expect(note.type).to.equal('success');
+                done();
             }
-            done();
         });
         userSettings.updateUsername();
 
         userSettings.changeUsername = { newName: 'test' };
         userSettings.updateUsername();
+    });
+
+    it('has a function to update email', (done) => {
+        userSettings.changeEmail = { newEmail: 'asdf' };
+
+        var first = true;
+        notifications.noteAdded.subscribe(note => {
+            if (first) {
+                expect(note.type).to.equal('error');
+                first = false;
+            } else {
+                expect(note.type).to.equal('success');
+                done();
+            }
+        });
+        userSettings.updateEmail();
+
+        userSettings.changeEmail.newEmail = 'test@example.com';
+        userSettings.updateEmail();
     });
 });
 

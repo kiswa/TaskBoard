@@ -1,5 +1,10 @@
 var RxJs = require('rxjs/Rx');
 
+global.Chartist = {
+    Pie: function() {},
+    Line: function() {}
+};
+
 global.ConstantsMock = {
     VERSION: 'TEST'
 };
@@ -21,6 +26,8 @@ global.AuthServiceMock = {
         default_board_id: 0,
         security_level: 2
     }),
+    updateUser: (user) => {
+    },
     login: () => {
         return RxJs.Observable.of({
             alerts: [ 'Logged in' ],
@@ -53,7 +60,7 @@ global.ResponseMock = function(endpoint) {
         json: () => {
             return {
                 alerts: [],
-                data: [ 'jwt', 'data1', 'data2' ],
+                data: [ 'jwt', 'true', 'true' ],
                 status: 'success',
                 endpoint: endpoint
             };
@@ -143,13 +150,18 @@ global.UserSettingsServiceMock = {
     },
     changeUsername: (newName) => {
         return RxJs.Observable.of({
-            alerts: []
+            alerts: [{ type: 'success', text: ''}]
         });
     },
     changePassword: (newPass) => {
         return RxJs.Observable.of({
-            alerts: []
-        })
+            alerts: [{ type: 'success', text: ''}]
+        });
+    },
+    changeEmail: (newEmail) => {
+        return RxJs.Observable.of({
+            alerts: [{ type: 'success', text: ''}]
+        });
     }
 };
 
