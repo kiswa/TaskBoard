@@ -89,6 +89,8 @@ gulp.task('scss', () => {
 });
 
 gulp.task('tsc', () => {
+    del('build/');
+
     let tsProject = tsc.createProject('tsconfig.json'),
         tsResult = tsProject.src()
             .pipe(tsc(tsProject));
