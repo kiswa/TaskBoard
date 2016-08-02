@@ -1,8 +1,14 @@
 var RxJs = require('rxjs/Rx');
 
 global.Chartist = {
-    Pie: function() {},
-    Line: function() {}
+    Pie: function(id, data, opts) {
+        this.sum = function() { return 100; };
+    },
+    Line: function(id, data, opts) {
+        this.plugins = {
+            tooltip: () => {}
+        };
+    }
 };
 
 global.ConstantsMock = {
