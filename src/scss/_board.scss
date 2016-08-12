@@ -90,24 +90,6 @@
         }
     }
 
-    .quick-add {
-        padding: 7px;
-
-        input {
-            width: calc(100% - 42px);
-        }
-
-        button {
-            background-color: $white;
-            border-color: $color-border;
-            color: $color-text;
-            height: 36px;
-            margin-left: 2px;
-            padding: 9px;
-            vertical-align: bottom;
-        }
-    }
-
     .tasks {
         padding: 7px;
         padding-bottom: 0;

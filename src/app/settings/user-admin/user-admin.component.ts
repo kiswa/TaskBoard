@@ -38,9 +38,9 @@ class ModalProperties {
 export class UserAdmin {
     private activeUser: User;
     private users: Array<UserDisplay>;
-    private loading: boolean = true;
     private modalProps: ModalProperties;
     private userToRemove: UserDisplay;
+    private loading = true;
 
     private MODAL_ID: string;
     private MODAL_CONFIRM_ID: string;

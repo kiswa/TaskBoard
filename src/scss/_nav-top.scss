@@ -23,11 +23,6 @@
     .buttons {
         float: right;
         margin-top: -2.2em;
-
-        .flat {
-            background-color: lighten($color-background, 10%);
-            color: $color-primary;
-        }
     }
 }
 

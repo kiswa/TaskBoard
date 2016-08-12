@@ -1,7 +1,7 @@
 <div *ngIf="isOpen">
     <div class="modal-overlay" (click)="close(true)"></div>
 
-    <div class="modal">
+    <div class="modal" [ngClass]="{ wide: wide }">
         <div class="title" *ngIf="modalTitle">
             <h2>
                 {{ modalTitle }}

@@ -90,10 +90,41 @@
             </tbody>
         </table>
 
-        <button>
-            <i class="icon icon-plus"></i>
-            Add Board
+        <button *ngIf="activeUser.security_level === 1"
+            (click)="showModal('Add')">
+            <i class="icon icon-plus"></i> Add Board
         </button>
     </div>
 </section>
+
+<tb-modal modal-title="{{ modalProps.title }} Board"
+    modal-id="{{ MODAL_ID }}" wide="true">
+    <label>
+        Board Name
+        <input type="text" name="board-name" placeholder="Board Name"
+            [(ngModel)]="modalProps.boardName">
+    </label>
+    <div class="half-modal">
+        <label>Columns</label>
+        <p>TODO: Display existing columns</p>
+        <div class="quick-add">
+            <input type="text" name="new-column"
+                placeholder="Column Name" [(ngModel)]="modalProps.newColumnName">
+            <button class="flat" (click)="addColumn()">
+                <i class="icon icon-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="half-modal">
+        <label>Categories</label>
+        <p>TODO: List existing categories</p>
+        <div class="quick-add">
+            <input type="text" name="new-category" placeholder="Category Name"
+                [(ngModel)]="modalProps.newCategoryName">
+            <button class="flat" (click)="addCategory()">
+                <i class="icon icon-plus"></i>
+            </button>
+        </div>
+    </div>
+</tb-modal>
 

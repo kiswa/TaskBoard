@@ -14,12 +14,18 @@
     background-color: $white;
     left: calc(50% - 200px);
     max-height: calc(100% - 10em);
+    max-width: 100%;
     min-height: 10em;
     overflow-y: auto;
     position: fixed;
     top: 5em;
     width: 400px;
     z-index: 1100;
+
+    &.wide {
+        left: calc(50% - 300px);
+        width: 600px;
+    }
 
     .title {
         background-color: $color-heading-bg;

@@ -55,6 +55,16 @@ table {
     margin-bottom: 1em;
 }
 
+// Override scss-base flat styles
+[type="reset"].flat,
+[type="button"].flat,
+[type="submit"].flat,
+button.flat,
+.btn.flat {
+    background-color: $white;
+    color: $color-primary;
+}
+
 button {
     transition: background .3s;
 }
@@ -129,5 +139,19 @@ button {
     line-height: 1.7em;
     margin: 2px;
     padding: 3px 5px 1px;
+}
+
+.quick-add {
+    padding: 7px;
+
+    input {
+        width: calc(100% - 42px);
+    }
+
+    button {
+        height: 36px;
+        margin-left: 2px;
+        padding: 9px;
+    }
 }
 
