@@ -46,13 +46,13 @@ export class ApiHttp extends Http {
     post(url: string, body: string,
             options?: RequestOptionsArgs): Observable<Response> {
         return this.intercept(super.post(url, body,
-            this.getRequestOptionArgs(options)));
+            this.getRequestOptionArgs(options, body)));
     }
 
     put(url: string, body: string,
             options?: RequestOptionsArgs): Observable<Response> {
         return this.intercept(super.put(url, body,
-            this.getRequestOptionArgs(options)));
+            this.getRequestOptionArgs(options, body)));
     }
 
     delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
@@ -60,13 +60,18 @@ export class ApiHttp extends Http {
             this.getRequestOptionArgs(options)));
     }
 
-    getRequestOptionArgs(options?: RequestOptionsArgs): RequestOptionsArgs {
-        if (options == null) {
+    getRequestOptionArgs(options?: RequestOptionsArgs, body?: string): RequestOptionsArgs {
+        if (!options) {
             options = new RequestOptions();
         }
 
-        if (options.headers == null) {
+        if (!options.headers) {
             options.headers = new Headers();
+        }
+
+        // Temp fix TODO: remove when fix released
+        if (!options.body) {
+            options.body = body ? body : '';
         }
 
         options.headers.append('Content-Type', 'application/json');
