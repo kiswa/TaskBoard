@@ -125,6 +125,12 @@
       "css": "floppy",
       "code": 59408,
       "src": "fontawesome"
+    },
+    {
+      "uid": "d3b3f17bc3eb7cd809a07bbd4d178bee",
+      "css": "resize-vertical",
+      "code": 59409,
+      "src": "fontawesome"
     }
   ]
 }
