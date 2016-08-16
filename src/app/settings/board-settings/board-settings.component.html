@@ -63,8 +63,8 @@
                         </ul>
                     </td>
                     <td>
-                        <a href=""><i class="icon icon-edit"></i></a>
-                        <a href=""><i class="icon icon-trash-empty"></i></a>
+                        <a href="" title="Edit Board"><i class="icon icon-edit color-primary"></i></a>
+                        <a href="" title="Remove Board"><i class="icon icon-trash-empty color-secondary"></i></a>
                         <label><input type="checkbox" checked> Active</label>
                     </td>
                 </tr>
@@ -82,8 +82,8 @@
                         </ul>
                     </td>
                     <td>
-                        <a href=""><i class="icon icon-edit"></i></a>
-                        <a href=""><i class="icon icon-trash-empty"></i></a>
+                        <a href="" title="Edit Board"><i class="icon icon-edit color-primary"></i></a>
+                        <a href="" title="Remove Board"><i class="icon icon-trash-empty color-secondary"></i></a>
                         <label><input type="checkbox" checked> Active</label>
                     </td>
                 </tr>
@@ -104,27 +104,118 @@
         <input type="text" name="board-name" placeholder="Board Name"
             [(ngModel)]="modalProps.boardName">
     </label>
+
     <div class="half-modal">
         <label>Columns</label>
-        <p>TODO: Display existing columns</p>
+        <ul class="modal-list" [hidden]="!modalProps.columns.length"
+            [dragula]="'columns-bag'" [dragulaModel]="modalProps.columns">
+            <li *ngFor="let column of modalProps.columns">
+                <i class="icon icon-resize-vertical"></i>
+                {{ column.name }}
+                <span class="actions">
+                    <i class="icon icon-edit color-primary"></i>
+                    <i class="icon icon-trash-empty color-secondary"
+                        (click)="modalProps.removeColumn(column)"></i>
+                </span>
+            </li>
+        </ul>
         <div class="quick-add">
-            <input type="text" name="new-column"
-                placeholder="Column Name" [(ngModel)]="modalProps.newColumnName">
-            <button class="flat" (click)="addColumn()">
-                <i class="icon icon-plus"></i>
-            </button>
+            <form>
+                <input type="text" name="new-column"
+                    placeholder="Column Name"
+                    [(ngModel)]="modalProps.newColumnName">
+                <button type="submit" class="flat" title="Add Column"
+                    (click)="modalProps.addColumn()">
+                    <i class="icon icon-plus"></i>
+                </button>
+            </form>
         </div>
     </div>
+
     <div class="half-modal">
         <label>Categories</label>
-        <p>TODO: List existing categories</p>
-        <div class="quick-add">
-            <input type="text" name="new-category" placeholder="Category Name"
-                [(ngModel)]="modalProps.newCategoryName">
-            <button class="flat" (click)="addCategory()">
-                <i class="icon icon-plus"></i>
-            </button>
+        <ul *ngIf="modalProps.categories.length" class="modal-list">
+            <li *ngFor="let category of modalProps.categories">
+                {{ category.name }}
+                <span class="actions">
+                    <span class="badge" title="Default Task Color"
+                        [style.background-color]="getColor(category)"></span>
+                    <i class="icon icon-edit color-primary"></i>
+                    <i class="icon icon-trash-empty color-secondary"
+                        (click)="modalProps.removeCategory(category)"></i>
+                </span>
+            </li>
+        </ul>
+        <div class="quick-add categories">
+            <form>
+                <input type="text" name="new-category"
+                    placeholder="Category Name"
+                    [(ngModel)]="modalProps.newCategoryName">
+                <input type="color" name="category-default-color"
+                    title="Default Task Color"
+                    [(ngModel)]="modalProps.categoryDefaultColor">
+                <button type="submit" class="flat" title="Add Category"
+                     (click)="modalProps.addCategory()">
+                    <i class="icon icon-plus"></i>
+                </button>
+            </form>
         </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="issue-trackers">
+        <label>
+            Issue Trackers
+            <i class="icon icon-help-circled"
+                alt="Example URL: https://github.com/kiswa/TaskBoard/issues/%BUGID\1%
+                       Example RegExp: (?:Issue)?#(\d+)"></i>
+        </label>
+        <ul *ngIf="modalProps.issueTrackers.length" class="modal-list">
+            <li *ngFor="let tracker of modalProps.issueTrackers">
+                {{ tracker.url }} | {{ tracker.bugId }}
+                <span class="actions">
+                    <i class="icon icon-edit color-primary"></i>
+                    <i class="icon icon-trash-empty color-secondary"
+                        (click)="modalProps.removeIssueTracker(tracker)"></i>
+                </span>
+            </li>
+        </ul>
+        <div>
+            <form>
+                <input type="text" name="issue-tracker"
+                    placeholder="Issue Tracker URL - use %BUGID% as placeholder"
+                    [(ngModel)]="modalProps.issueTrackerUrl">
+                <input type="text" name="issue-tracker-bug-id"
+                    placeholder="BUGID RegExp"
+                    [(ngModel)]="modalProps.issueTrackerBugId">
+                <button type="submit" class="flat" title="Add Issue Tracker"
+                    (click)="modalProps.addIssueTracker()">
+                    <i class="icon icon-plus"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="users">
+        <label>Select Users</label>
+        <br><strong>TODO: List users with checkboxes</strong>
+        <p>
+            <strong>*</strong> Including a Board Admin, makes
+            them an admin of this board.<br>
+            <em>Administrators have access to all boards and are
+            not listed here.</em>
+        </p>
+    </div>
+
+    <div class="buttons">
+        <button (click)="addBoard()">
+            <i class="icon icon-plus"></i>
+            Add Board
+        </button>
+        <button class="flat" (click)="modal.close(MODAL_ID)">
+            Cancel
+        </button>
     </div>
 </tb-modal>
 

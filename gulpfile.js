@@ -20,6 +20,7 @@ let gulp = require('gulp'),
 
     scssLint = require('gulp-scss-lint'),
     sass = require('gulp-sass'),
+    cssImport = require('gulp-cssimport'),
     cssPrefixer = require('gulp-autoprefixer'),
     cssMinify = require('gulp-cssnano'),
 
@@ -84,6 +85,7 @@ gulp.task('scss', () => {
             ]
         }))
         .pipe(concat('styles.css'))
+        .pipe(cssImport({}))
         .pipe(cssPrefixer())
         .pipe(gulp.dest('dist/css/'));
 });
@@ -127,8 +129,11 @@ gulp.task('system-build', ['tsc'], () => {
 });
 
 gulp.task('minify', () => {
+    // jsMinify options object is temporary due to problem in Angular RC5
     let js = gulp.src('dist/js/**/*.js')
-        .pipe(jsMinify())
+        .pipe(jsMinify({
+            mangle: { screw_ie8 : true, keep_fnames: true }
+        }))
         .pipe(gulp.dest('dist/js/'));
 
     let css = gulp.src('dist/css/styles.css')

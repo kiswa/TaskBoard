@@ -1,4 +1,4 @@
-<div *ngIf="isOpen">
+<div [hidden]="!isOpen">
     <div class="modal-overlay" (click)="close(true)"></div>
 
     <div class="modal" [ngClass]="{ wide: wide }">

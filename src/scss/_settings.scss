@@ -3,14 +3,11 @@
 
     margin: 7px 1em;
 
-    .activity-log {
-        margin: 7px;
-        margin-right: 0;
+    .quick-add {
+        padding: 0;
 
         button {
-            float: right;
-            font-size: .9em;
-            padding: 3px 5px;
+            vertical-align: top;
         }
     }
 
@@ -20,11 +17,16 @@
 
     .half-modal {
         float: left;
-        margin-right: 1%;
+        margin-right: 2%;
         width: 49%;
 
-        &:last-of-type {
+        &:nth-of-type(2) {
             margin: 0;
+        }
+
+        label {
+            display: inline-block;
+            margin-top: 1em;
         }
     }
 
@@ -42,6 +44,105 @@
                 background-image: none;
             }
         }
+    }
+
+    .categories {
+        [type="text"] {
+            width: calc(100% - 84px);
+        }
+
+        [type="color"] {
+            cursor: pointer;
+            height: 36px;
+            margin-left: 2px;
+            vertical-align: bottom;
+            width: 36px;
+        }
+    }
+
+    .issue-trackers {
+        label {
+            display: inline-block;
+            margin-top: 1em;
+        }
+
+        [type="text"] {
+            &:first-of-type {
+                width: 380px;
+            }
+
+            &:last-of-type {
+                margin-left: 2px;
+                width: 148px;
+            }
+        }
+
+        button {
+            height: 36px;
+            margin-left: 2px;
+            padding: 9px;
+            vertical-align: top;
+        }
+    }
+
+    .users {
+        label {
+            display: inline-block;
+            margin-top: 1em;
+        }
+    }
+
+    .gu-mirror {
+        @include shadow-high;
+
+        background: $white;
+        display: block;
+        // To override default opacity settings
+        filter: alpha(opacity=100);
+        opacity: 1;
+
+        .actions {
+            float: right;
+        }
+    }
+
+    .modal-list {
+        border: 1px solid $color-border;
+        border-radius: 3px;
+        list-style: none;
+        margin: 0;
+        margin-bottom: 1em;
+        padding: 0;
+
+        li {
+            border-bottom: 1px solid $color-border;
+            padding: 0 7px;
+
+            &:last-of-type {
+                border: 0;
+            }
+        }
+
+        .actions {
+            float: right;
+        }
+
+        .badge {
+            margin-right: 5px;
+        }
+
+        .icon-trash-empty,
+        .icon-edit {
+            cursor: pointer;
+        }
+    }
+
+    .icon-resize-vertical {
+        border-right: 1px solid $color-border;
+        cursor: move;
+        margin-left: -5px;
+        margin-right: .5em;
+        width: 1.5em;
     }
 
     section {
@@ -66,7 +167,7 @@
 
             .badge {
                 float: right;
-                margin-top: 4px;
+                margin-top: 3px;
             }
         }
 

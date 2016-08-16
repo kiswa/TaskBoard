@@ -90,6 +90,25 @@ button {
     width: 20px;
 }
 
+.icon-help-circled {
+    position: relative;
+
+    &:hover:after {
+        @include shadow-high;
+
+        background-color: $white;
+        border: 1px solid $color-border;
+        content: attr(alt);
+        left: 20px;
+        min-width: 250px;
+        padding: 7px;
+        position: absolute;
+        text-align: left;
+        top: -1em;
+        z-index: 100;
+    }
+}
+
 .color-primary {
     color: $color-primary;
 }
@@ -105,6 +124,10 @@ button {
 
 .small {
     font-size: .8em;
+}
+
+.clearfix {
+    @include clearfix;
 }
 
 .row {
@@ -130,6 +153,7 @@ button {
 }
 
 .badge {
+    border: 1px solid $color-border;
     background-color: $color-tertiary;
     border-radius: 33%;
     box-shadow: inset 1px 1px rgba(0, 0, 0, .1);
