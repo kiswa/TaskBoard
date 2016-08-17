@@ -153,8 +153,8 @@ button {
 }
 
 .badge {
-    border: 1px solid $color-border;
     background-color: $color-tertiary;
+    border: 1px solid $color-border;
     border-radius: 33%;
     box-shadow: inset 1px 1px rgba(0, 0, 0, .1);
     font-family: 'Fira Mono';
