@@ -1,7 +1,5 @@
-/* global UserAdminServiceMock NotificationsServiceMock AuthServiceMock ModalServiceMock */
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/settings/user-admin/',
+/* global expect UserAdminServiceMock NotificationsServiceMock AuthServiceMock ModalServiceMock */
+var path = '../../../../build/settings/user-admin/',
     UserAdmin = require(path + 'user-admin.component.js').UserAdmin;
 
 describe('UserAdmin', () => {

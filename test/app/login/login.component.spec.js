@@ -1,7 +1,5 @@
-/* global ConstantsMock AuthServiceMock RouterMock NotificationsServiceMock */
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../build/login/',
+/* global expect ConstantsMock AuthServiceMock RouterMock NotificationsServiceMock */
+var path = '../../../build/login/',
     Login = require(path + 'login.component.js').Login;
 
 describe('Login', () => {

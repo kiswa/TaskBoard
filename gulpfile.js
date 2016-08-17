@@ -158,7 +158,9 @@ gulp.task('test', ['test-app', 'test-api']);
 
 gulp.task('test-app', ['tsc'], () => {
     return gulp.src(paths.tests_app)
-        .pipe(mocha());
+        .pipe(mocha({
+            require: ['./test/app/mocks.js']
+        }));
 });
 
 gulp.task('coverage', ['tsc'], () => {
@@ -166,7 +168,9 @@ gulp.task('coverage', ['tsc'], () => {
         .pipe(coverage.instrument({
             pattern: ['build/**/*.js']
         }))
-        .pipe(mocha())
+        .pipe(mocha({
+            require: ['./test/app/mocks.js']
+        }))
         .pipe(coverage.gather())
         .pipe(coverage.format())
         .pipe(gulp.dest('./'));

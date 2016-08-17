@@ -1,7 +1,5 @@
-/* global HttpMock */
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/settings/user-admin/',
+/* global expect HttpMock */
+var path = '../../../../build/settings/user-admin/',
     UserAdminService = require(path + 'user-admin.service.js').UserAdminService;
 
 describe('UserAdminService', () => {
@@ -36,7 +34,7 @@ describe('UserAdminService', () => {
         userAdminService.removeUser(1).subscribe(user => {
             expect(user.endpoint).to.equal('api/users/1');
             done();
-        })
-    })
+        });
+    });
 });
 

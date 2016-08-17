@@ -1,7 +1,5 @@
-/* global ModalServiceMock */
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/shared/modal/',
+/* global expect ModalServiceMock */
+var path = '../../../../build/shared/modal/',
     Modal = require(path + 'modal.component.js').Modal;
 
 describe('Modal', () => {

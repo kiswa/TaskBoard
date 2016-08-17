@@ -1,6 +1,5 @@
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/shared/models/',
+/* globals expect */
+var path = '../../../../build/shared/models/',
     User = require(path + 'user.model.js').User;
 
 describe('User', () => {

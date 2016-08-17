@@ -1,7 +1,5 @@
-/* global NotificationsServiceMock */
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/shared/notifications/',
+/* global  expect NotificationsServiceMock */
+var path = '../../../../build/shared/notifications/',
     Notifications = require(path + 'notifications.component.js').Notifications;
 
 describe('Notifications', () => {

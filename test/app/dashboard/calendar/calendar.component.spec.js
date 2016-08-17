@@ -1,6 +1,5 @@
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/dashboard/calendar/',
+/* global expect */
+var path = '../../../../build/dashboard/calendar/',
     Calendar = require(path + 'calendar.component.js').Calendar;
 
 describe('Calendar', () => {

@@ -1,8 +1,5 @@
-require('../../mocks.js');
-
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/dashboard/charts/',
+/* globals expect */
+var path = '../../../../build/dashboard/charts/',
     Charts = require(path + 'charts.component.js').Charts;
 
 describe('Charts', () => {

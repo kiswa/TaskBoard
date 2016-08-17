@@ -1,6 +1,5 @@
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../build/shared/',
+/* global expect */
+var path = '../../../build/shared/',
     Constants = require(path + 'constants.js').Constants;
 
     describe('Constants', () => {

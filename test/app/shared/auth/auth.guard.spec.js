@@ -1,7 +1,5 @@
-/* global AuthServiceMock */
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/shared/auth/',
+/* global expect AuthServiceMock */
+var path = '../../../../build/shared/auth/',
     AuthGuard = require(path + 'auth.guard.js').AuthGuard;
 
 describe('AuthGuard', () => {

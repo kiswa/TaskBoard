@@ -1,7 +1,5 @@
-/* global ConstantsMock, HttpMock, RouterMock */
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/shared/auth/',
+/* global expect ConstantsMock, HttpMock, RouterMock */
+var path = '../../../../build/shared/auth/',
     AuthService = require(path + 'auth.service.js').AuthService;
 
 describe('AuthService', () => {

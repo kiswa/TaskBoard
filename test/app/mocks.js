@@ -1,4 +1,11 @@
-var RxJs = require('rxjs/Rx');
+var MockBrowser = require('mock-browser').mocks.MockBrowser,
+    mockBrowser = new MockBrowser(),
+    chai = require('chai');
+
+global.RxJs = require('rxjs/Rx');
+global.expect = chai.expect;
+global.document = mockBrowser.getDocument();
+global.localStorage = mockBrowser.getLocalStorage();
 
 global.Chartist = {
     Pie: function(id, data, opts) {

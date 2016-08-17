@@ -1,33 +1,9 @@
+/* globals expect RxJs localStorage */
 require('reflect-metadata/Reflect.js');
 
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../build/app.',
+var path = '../../build/app.',
     apihttp = require(path + 'api-http.js'),
-    ApiHttp = apihttp.ApiHttp,
-    RxJs = require('rxjs/Rx');
-
-global.localStorage = (function() {
-    var storage = {};
-
-    return {
-        getItem: (key) => {
-            if (storage.hasOwnProperty(key)) {
-                return storage[key];
-            } else {
-                return '';
-            }
-        },
-        setItem: (key, value) => {
-            storage[key] = value;
-        },
-        removeItem: (key) => {
-            if (storage.hasOwnProperty(key)) {
-                delete storage[key];
-            }
-        }
-    };
-})();
+    ApiHttp = apihttp.ApiHttp;
 
 describe('ApiHttp', () => {
     var apiHttp;
@@ -46,13 +22,13 @@ describe('ApiHttp', () => {
     });
 
     it('injects headers', () => {
-        global.localStorage.setItem('taskboard.jwt', 'testjwt');
+        localStorage.setItem('taskboard.jwt', 'testjwt');
 
         var headers = apiHttp.getRequestOptionArgs().headers;
 
-        expect(headers._headersMap.get('Content-Type')[0])
+        expect(headers._headersMap.get('content-type')[0])
             .to.equal('application/json');
-        expect(headers._headersMap.get('Authorization')[0])
+        expect(headers._headersMap.get('authorization')[0])
             .to.equal('testjwt');
     });
 
@@ -67,13 +43,13 @@ describe('ApiHttp', () => {
 
         apiHttp.intercept(RxJs.Observable.of(response))
             .map(response => {
-                expect(global.localStorage.getItem('taskboard.jwt'))
+                expect(localStorage.getItem('taskboard.jwt'))
                     .to.equal('testjwt');
             });
 
         apiHttp.intercept(RxJs.Observable.throw(null, response))
             .catch((err, caught) => {
-                expect(global.localStorage.getItem('taskboard.jwt'))
+                expect(localStorage.getItem('taskboard.jwt'))
                     .to.equal('');
             });
     });

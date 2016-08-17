@@ -1,10 +1,5 @@
-/* global ConstantsMock RouterMock AuthServiceMock NotificationsServiceMock */
-
-require('../../mocks.js');
-
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/shared/top-nav/',
+/* global expect ConstantsMock RouterMock AuthServiceMock NotificationsServiceMock */
+var path = '../../../../build/shared/top-nav/',
     TopNav = require(path + 'top-nav.component.js').TopNav;
 
 describe('TopNav', () => {

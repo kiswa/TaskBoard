@@ -1,7 +1,5 @@
-/* global AuthServiceMock NotificationsServiceMock UserSettingsServiceMock */
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/settings/user-settings/',
+/* global expect AuthServiceMock NotificationsServiceMock UserSettingsServiceMock */
+var path = '../../../../build/settings/user-settings/',
     UserSettings = require(path + 'user-settings.component.js').UserSettings;
 
 describe('UserSettings', () => {

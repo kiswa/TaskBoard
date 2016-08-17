@@ -1,6 +1,5 @@
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/shared/modal/',
+/* globals expect */
+var path = '../../../../build/shared/modal/',
     ModalService = require(path + 'modal.service.js').ModalService;
 
 describe('ModalService', () => {
@@ -12,7 +11,7 @@ describe('ModalService', () => {
         modal = {
             modalId: 'testModal',
             isOpen: false
-        }
+        };
     });
 
     it('has an array of modals', () => {

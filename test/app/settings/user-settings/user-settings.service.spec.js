@@ -1,7 +1,5 @@
-/* global AuthServiceMock HttpMock */
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/settings/user-settings/',
+/* global expect AuthServiceMock HttpMock */
+var path = '../../../../build/settings/user-settings/',
     UserSettingsService =
         require(path + 'user-settings.service.js').UserSettingsService;
 

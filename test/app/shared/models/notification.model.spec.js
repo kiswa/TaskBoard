@@ -1,6 +1,5 @@
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/shared/models/',
+/* global expect */
+var path = '../../../../build/shared/models/',
     Notification = require(path + 'notification.model.js').Notification;
 
 describe('Notification', () => {

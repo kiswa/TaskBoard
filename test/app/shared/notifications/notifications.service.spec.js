@@ -1,6 +1,5 @@
-var chai = require('chai'),
-    expect = chai.expect,
-    path = '../../../../build/shared/notifications/',
+/* global expect */
+var path = '../../../../build/shared/notifications/',
     NotificationsService = require(path + 'notifications.service.js')
         .NotificationsService;
 
