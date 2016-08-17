@@ -4,7 +4,7 @@ import { TopNav } from '../shared/index';
 import {
     UserSettings,
     UserAdmin,
-    BoardSettings
+    BoardAdmin
 } from './index';
 
 @Component({
@@ -14,7 +14,7 @@ import {
         TopNav,
         UserSettings,
         UserAdmin,
-        BoardSettings
+        BoardAdmin
     ]
 })
 export class Settings {

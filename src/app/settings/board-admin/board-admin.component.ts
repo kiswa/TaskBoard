@@ -14,12 +14,12 @@ import {
 import { BoardData } from './board-data.model';
 
 @Component({
-    selector: 'tb-board-settings',
+    selector: 'tb-board-admin',
     templateUrl: 'app/settings/board-settings/board-settings.component.html',
     directives: [ Modal, Dragula ],
     viewProviders: [ DragulaService ]
 })
-export class BoardSettings {
+export class BoardAdmin {
     private activeUser: User;
     private loading = true;
     private modalProps: BoardData;
