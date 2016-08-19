@@ -86,6 +86,19 @@
     }
 
     .users {
+        .user-select {
+            display: inline-block;
+            width: 33%;
+
+            span {
+                font-weight: 700;
+            }
+
+            label {
+                margin-top: auto;
+            }
+        }
+
         label {
             display: inline-block;
             margin-top: 1em;

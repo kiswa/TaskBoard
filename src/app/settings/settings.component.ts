@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { TopNav } from '../shared/index';
+import { SettingsService } from './settings.service';
 import {
     UserSettings,
     UserAdmin,
@@ -15,8 +16,11 @@ import {
         UserSettings,
         UserAdmin,
         BoardAdmin
-    ]
+    ],
+    providers: [ SettingsService ]
 })
 export class Settings {
+    constructor(private settings: SettingsService) {
+    }
 }
 

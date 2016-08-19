@@ -1,9 +1,6 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
 
-/**
- * @group single
- */
 class UsersTest extends PHPUnit_Framework_TestCase {
     private $users;
 
@@ -105,7 +102,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 
     public function testGetUserForbidden() {
         $this->createUser();
-        DataMock::createStandardUser();
+        DataMock::createStandardUser('nono');
 
         $args = [];
         $args['id'] = 1;
@@ -137,6 +134,24 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $actual = $this->users->addUser($request,
             new ResponseMock(), null);
         $this->assertEquals('success', $actual->status);
+    }
+
+    public function testAddDuplicateUser() {
+        $user = DataMock::getUser();
+        $user->id = 0;
+        $user->user_option_id = 0;
+        $user->default_board_id = 0;
+        $user->username = 'admin';
+        $user->password = 'test';
+        $user->password_verify = 'test';
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+        $request->payload = $user;
+
+        $actual = $this->users->addUser($request,
+            new ResponseMock(), null);
+        $this->assertEquals('failure', $actual->status);
     }
 
     public function testAddRemoveUser() {

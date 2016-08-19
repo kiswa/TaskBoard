@@ -39,46 +39,37 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="boards/1">Example Board</a></td>
-                    <td>
-                        <ul>
-                            <li>Col1<span class="badge" title="Item Count">3</span></li>
-                            <li>Col2<span class="badge" title="Item Count">0</span></li>
-                            <li>Col3<span class="badge" title="Item Count">5</span></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Cat1<span class="badge" title="Default Task Color" style="background-color:#debee8">&nbsp;</span></li>
-                            <li>Cat2<span class="badge" title="Default Task Color" style="background-color:#bee7f4">&nbsp;</span></li>
-                            <li>Cat3<span class="badge" title="Default Task Color" style="background-color:#ffffe0">&nbsp;</span></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>admin</li>
-                            <li>other_guy</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <a href="" title="Edit Board"><i class="icon icon-edit color-primary"></i></a>
-                        <a href="" title="Remove Board"><i class="icon icon-trash-empty color-secondary"></i></a>
-                        <label><input type="checkbox" checked> Active</label>
-                    </td>
+            <tbody *ngIf="!loading">
+                <tr *ngIf="boards.length === 0">
+                    <td colspan="5" class="center"
+                        [innerHTML]="noBoardsMessage"></td>
                 </tr>
-                <tr>
-                    <td><a href="boards/2">Other Board</a></td>
+                <tr *ngFor="let board of boards">
+                    <td><a href="boards/{{ board.id }}">{{ board.name }}</a></td>
                     <td>
                         <ul>
-                            <li>One<span class="badge">0</span></li>
+                            <li *ngFor="let col of board.columns">
+                                {{ col.name }}
+                                <span class="badge" title="Item Count">{{ col.tasks.length }}</span>
+                            </li>
                         </ul>
                     </td>
-                    <td></td>
+                    <td>
+                        <ul *ngIf="board.categories.length">
+                            <li *ngFor="let cat of board.categories">
+                                {{ cat.name }}
+                                <span class="badge" title="Default Task Color"
+                                    style="background-color:{{ cat.default_task_color }}">
+                                    &nbsp;
+                                </span>
+                            </li>
+                        </ul>
+                    </td>
                     <td>
                         <ul>
-                            <li>admin</li>
+                            <li *ngFor="let user of board.users">
+                                {{ user.username }}
+                            </li>
                         </ul>
                     </td>
                     <td>
@@ -89,6 +80,9 @@
                 </tr>
             </tbody>
         </table>
+        <div *ngIf="loading" class="center">
+            <div class="spinner"></div>
+        </div>
 
         <button *ngIf="activeUser.security_level === 1"
             (click)="showModal('Add')">
@@ -199,10 +193,17 @@
 
     <div class="users">
         <label>Select Users</label>
-        <br><strong>TODO: List users with checkboxes</strong>
+        <div class="clearfix"></div>
+        <div class="user-select" *ngFor="let user of users">
+            <label>
+                <input type="checkbox">
+                {{ user.username }}
+                <span *ngIf="user.security_level === 2">*</span>
+            </label>
+        </div>
         <p>
-            <strong>*</strong> Including a Board Admin, makes
-            them an admin of this board.<br>
+            <span *ngIf="hasBAUsers"><strong>*</strong> Including a Board Admin, makes
+            them an admin of this board.<br></span>
             <em>Administrators have access to all boards and are
             not listed here.</em>
         </p>

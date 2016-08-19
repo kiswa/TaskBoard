@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 
 import { UserAdminService } from './user-admin.service';
+import { SettingsService } from '../settings.service';
 import {
     User,
+    Board,
     ApiResponse,
     Modal,
     Notification,
@@ -36,10 +38,12 @@ class ModalProperties {
     directives: [ Modal ]
 })
 export class UserAdmin {
-    private activeUser: User;
     private users: Array<UserDisplay>;
+    private boards: Array<Board>;
+    private activeUser: User;
     private modalProps: ModalProperties;
     private userToRemove: UserDisplay;
+
     private loading = true;
 
     private MODAL_ID: string;
@@ -48,11 +52,13 @@ export class UserAdmin {
     constructor(private userService: UserAdminService,
             private notes: NotificationsService,
             private auth: AuthService,
+            private settings: SettingsService,
             private modal: ModalService) {
         this.modalProps = new ModalProperties('', '', new ModalUser());
         this.MODAL_ID = 'user-addEdit-form';
         this.MODAL_CONFIRM_ID = 'user-remove-confirm';
         this.users = [];
+        this.boards = [];
 
         auth.userChanged
             .subscribe(activeUser => {
@@ -60,11 +66,22 @@ export class UserAdmin {
                 this.replaceUser(activeUser);
             });
 
-        this.userService.getUsers()
+        this.settings.getUsers()
             .subscribe((response: ApiResponse) => {
                 this.users = response.data[1];
                 this.updateUserList();
                 this.loading = false;
+
+                this.settings.getBoards()
+                    .subscribe((response: ApiResponse) => {
+                        this.boards = response.data[1];
+
+                        if (!Array.isArray(this.boards)) {
+                            this.boards = [];
+                        }
+
+                        this.settings.updateBoards(this.boards);
+                    });
             });
     }
 
@@ -179,6 +196,8 @@ export class UserAdmin {
 
     private updateUserList(): void {
         for (var user of this.users) {
+            user = <UserDisplay> user;
+
             if (user.default_board_id === 0) {
                 user.default_board_name = 'None';
             }
@@ -197,6 +216,8 @@ export class UserAdmin {
                 user.can_admin = false;
             }
         }
+
+        this.settings.updateUsers(<Array<User>> this.users);
     }
 }
 

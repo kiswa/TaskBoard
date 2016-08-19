@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
+import { SettingsService } from '../settings.service';
 import { UserSettingsService } from './user-settings.service';
 import { PassForm, UsernameForm, EmailForm } from './user-settings.models';
 import {
     AuthService,
     NotificationsService,
     User,
+    Board,
     UserOptions,
     Notification,
     ApiResponse
@@ -17,6 +19,7 @@ import {
     providers: [ UserSettingsService ]
 })
 export class UserSettings implements OnInit {
+    private boards: Array<Board>;
     private user: User;
     private userOptions: UserOptions;
     private changePassword: PassForm;
@@ -25,13 +28,19 @@ export class UserSettings implements OnInit {
 
     constructor(private auth: AuthService,
             private notes: NotificationsService,
-            private userService: UserSettingsService) {
+            private settings: SettingsService,
+            private users: UserSettingsService) {
+        this.boards = [];
         this.changeEmail = new EmailForm();
 
         auth.userChanged.subscribe(user => {
             this.user = user;
             this.changeEmail.newEmail = user.email;
             this.userOptions = auth.userOptions;
+        });
+
+        settings.boardsChanged.subscribe(boards => {
+            this.boards = boards;
         });
     }
 
@@ -58,7 +67,14 @@ export class UserSettings implements OnInit {
     }
 
     updateUserOptions() {
-        this.userService.changeUserOptions(this.userOptions)
+        this.users.changeUserOptions(this.userOptions)
+            .subscribe((response: ApiResponse) => {
+                this.addAlerts(response.alerts);
+            });
+    }
+
+    updateDefaultBoard() {
+        this.users.changeDefaultBoard(this.user)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
             });
@@ -71,7 +87,7 @@ export class UserSettings implements OnInit {
             return;
         }
 
-        this.userService.changePassword(this.changePassword.current,
+        this.users.changePassword(this.changePassword.current,
                 this.changePassword.newPass)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
@@ -91,7 +107,7 @@ export class UserSettings implements OnInit {
             return;
         }
 
-        this.userService.changeUsername(this.changeUsername.newName)
+        this.users.changeUsername(this.changeUsername.newName)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
                 this.resetUsernameForm();
@@ -114,7 +130,7 @@ export class UserSettings implements OnInit {
             return;
         }
 
-        this.userService.changeEmail(this.changeEmail.newEmail)
+        this.users.changeEmail(this.changeEmail.newEmail)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
                 this.resetEmailForm();

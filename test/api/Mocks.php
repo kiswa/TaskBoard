@@ -29,13 +29,13 @@ class DataMock {
         return $jwt;
     }
 
-    public static function createStandardUser() {
+    public static function createStandardUser($username = 'standard') {
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
 
         $user = DataMock::getUser();
         $user->id = 0;
-        $user->username = 'standard';
+        $user->username = $username;
         $user->security_level = SecurityLevel::User;
 
         $request->payload = $user;

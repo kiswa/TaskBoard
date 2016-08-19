@@ -27,12 +27,16 @@
         </form>
 
         <h3 class="tall">All Boards Options</h3>
-        <label><strong>TODO</strong>
+        <label>
             Select default board:
-            <select class="autosize">
-                <option>None</option>
+            <select class="autosize"
+                [ngModel]="user.default_board_id"
+                (ngModelChange)="updateDefaultBoard()">
+                <option value="0">None</option>
+                <option *ngFor="let board of boards" value="{{ board.id }}">
+                    {{ board.name }}
+                </option>
             </select>
-            <strong>TODO</strong>
         </label>
         <label>
             New tasks appear at column

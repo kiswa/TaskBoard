@@ -9,13 +9,6 @@ describe('UserAdminService', () => {
         userAdminService = new UserAdminService(HttpMock);
     });
 
-    it('provides a list of users', (done) => {
-        userAdminService.getUsers().subscribe(users => {
-            expect(users.endpoint).to.equal('api/users');
-            done();
-        });
-    });
-
     it('allows a user to be added', (done) => {
         userAdminService.addUser(null).subscribe(user => {
             expect(user.endpoint).to.equal('api/users');

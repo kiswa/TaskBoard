@@ -1,3 +1,4 @@
+/* global RxJs */
 var MockBrowser = require('mock-browser').mocks.MockBrowser,
     mockBrowser = new MockBrowser(),
     chai = require('chai');
@@ -103,6 +104,31 @@ global.ModalServiceMock = function() {
     };
 };
 
+global.SettingsServiceMock = function() {
+    var userList = [
+            { id: 1, username: 'tester', security_level: 2 },
+            { id: 2, username: 'test', security_level: 3, default_board_id: 0 }
+        ];
+
+    return {
+        usersChanged: RxJs.Observable.of(userList),
+        updateUsers: (users) => {
+            userList = [];
+            userList = users;
+        },
+        getUsers: () => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [
+                    null,
+                    userList
+                ]
+            });
+        }
+    };
+};
+
 global.UserAdminServiceMock = function() {
     var userList = [
             { id: 1, username: 'tester', security_level: 2 },
@@ -110,14 +136,6 @@ global.UserAdminServiceMock = function() {
         ];
 
     return {
-        getUsers: () => {
-            return RxJs.Observable.of({
-                data: [
-                    null,
-                    userList
-                ]
-            });
-        },
         addUser: (user) => {
             return RxJs.Observable.of({
                 status: 'success',
