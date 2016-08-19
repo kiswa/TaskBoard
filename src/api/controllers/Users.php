@@ -60,6 +60,17 @@ class Users extends BaseController {
         $data = json_decode($request->getBody());
         $user = new User($this->container);
 
+        if (isset($data->username)) {
+            $existing = R::findOne('user', 'username = ?', [ $data->username ]);
+
+            if ($existing) {
+                $this->apiJson->addAlert('error', 'Username already exists. ' .
+                    'Change the username and try again.');
+
+                return $this->jsonResponse($response);
+            }
+        }
+
         if (isset($data->password)) {
             $data->password_hash =
                 password_hash($data->password, PASSWORD_BCRYPT);
