@@ -1,6 +1,6 @@
 {
     "globalDependencies": {
         "chartist": "registry:dt/chartist#0.9.5+20160619034222",
-        "core-js": "registry:dt/core-js#0.0.0+20160602141332"
+        "core-js": "registry:dt/core-js#0.0.0+20160725163759"
     }
 }
