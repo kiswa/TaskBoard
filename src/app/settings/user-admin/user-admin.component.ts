@@ -66,7 +66,7 @@ export class UserAdmin {
                 this.replaceUser(activeUser);
             });
 
-        this.settings.getUsers()
+        settings.getUsers()
             .subscribe((response: ApiResponse) => {
                 this.users = response.data[1];
                 this.updateUserList();
@@ -74,10 +74,9 @@ export class UserAdmin {
 
                 this.settings.getBoards()
                     .subscribe((response: ApiResponse) => {
-                        this.boards = response.data[1];
-
-                        if (!Array.isArray(this.boards)) {
-                            this.boards = [];
+                        let boards = response.data[1];
+                        if (boards) {
+                            this.boards = boards;
                         }
 
                         this.settings.updateBoards(this.boards);

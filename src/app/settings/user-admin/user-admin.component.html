@@ -82,14 +82,19 @@
             <i alt="Selecting a default board adds the user to that board."
                 class="icon icon-help-circled"></i>
             <select>
-                <option>TODO</option>
+                <option value="0">None</option>
+                <option *ngFor="let board of boards" value="{{ board.id }}">
+                    {{ board.name }}
+                </option>
             </select>
         </label>
 
         <label>
             Board Access
             <select multiple>
-                <option>TODO</option>
+                <option *ngFor="let board of boards" value="{{ board.id }}">
+                    {{ board.name }}
+                </option>
             </select>
         </label>
     </div>

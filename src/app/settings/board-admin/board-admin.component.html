@@ -59,7 +59,7 @@
                             <li *ngFor="let cat of board.categories">
                                 {{ cat.name }}
                                 <span class="badge" title="Default Task Color"
-                                    style="background-color:{{ cat.default_task_color }}">
+                                    [style.background-color]="getColor(cat)">
                                     &nbsp;
                                 </span>
                             </li>

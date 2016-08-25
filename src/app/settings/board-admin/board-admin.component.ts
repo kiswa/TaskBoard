@@ -5,10 +5,10 @@ import { Dragula, DragulaService } from 'ng2-dragula/ng2-dragula';
 import {
     ApiResponse,
     Board,
+    User,
     InlineEdit,
     Modal,
     Notification,
-    User,
     AuthService,
     ModalService,
     NotificationsService
@@ -101,7 +101,17 @@ export class BoardAdmin {
         this.setBoardUsers();
 
         if (this.validateBoard()) {
-            this.boardService.addBoard(this.modalProps);
+            this.boardService.addBoard(this.modalProps)
+                .subscribe((response: ApiResponse) => {
+                    response.alerts.forEach(note => this.notes.add(note));
+
+                    console.log(response);
+                    // TODO: Update boards list
+
+                    if (response.status === 'success') {
+                        this.modal.close(this.MODAL_ID);
+                    }
+                });
         }
     }
 
@@ -162,20 +172,24 @@ export class BoardAdmin {
     }
 
     private getColor(category: any): string {
+        if (category.default_task_color) {
+            return category.default_task_color;
+        }
+
         return category.defaultColor;
     }
 
     private showModal(title: string): void {
         let isAdd = (title === 'Add');
 
+        this.modalProps = new BoardData(title);
+
         if (isAdd) {
-            this.modalProps = new BoardData(title);
             this.users.forEach((user: SelectableUser) => {
                 user.selected = false;
             });
         } else {
             // TODO: Load board data in constructor
-            this.modalProps = new BoardData(title);
         }
 
         this.modal.open(this.MODAL_ID);
