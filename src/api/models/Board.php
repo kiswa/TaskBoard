@@ -6,6 +6,7 @@ class Board extends BaseModel {
     public $columns = [];
     public $categories = [];
     public $auto_actions = [];
+    public $issue_trackers = [];
     public $users = [];
 
     public function __construct($container, $id = 0) {
@@ -23,6 +24,7 @@ class Board extends BaseModel {
         $bean->xownColumnList = [];
         $bean->xownCategoryList = [];
         $bean->xownAutoActionList = [];
+        $bean->xownIssueTrackerList = [];
         $bean->sharedUserList = [];
 
         foreach($this->columns as $col) {
@@ -40,6 +42,11 @@ class Board extends BaseModel {
             $this->bean->xownAutoActionList[] = $act->bean;
         }
 
+        foreach($this->issue_trackers as $ist) {
+            $ist->updateBean();
+            $this->bean->xownIssueTrackerList[] = $ist->bean;
+        }
+
         foreach($this->users as $user) {
             $user->updateBean();
             $this->bean->sharedUserList[] = $user->bean;
@@ -53,7 +60,7 @@ class Board extends BaseModel {
             return;
         }
 
-        if($bean->id === 0) {
+        if ($bean->id === 0) {
             return;
         }
 
@@ -74,6 +81,11 @@ class Board extends BaseModel {
         foreach($bean->xownAutoActionList as $item) {
             $this->auto_actions[] =
                 new AutoAction($this->container, $item->id);
+        }
+
+        foreach($bean->xownIssueTrackerList as $item) {
+            $this->issue_trackers[] =
+                new IssueTracker($this->container, $item->id);
         }
 
         foreach($bean->sharedUserList as $item) {
@@ -115,6 +127,13 @@ class Board extends BaseModel {
             }
         }
 
+        if (isset($obj->issue_trackers)) {
+            foreach($obj->issue_trackers as $item) {
+                $this->issue_trackers[] =
+                    new IssueTracker($this->container, $item->id);
+            }
+        }
+
         if (isset($obj->users)) {
             foreach($obj->users as $item) {
                 $this->users[] = new User($this->container, $item->id);
@@ -136,6 +155,7 @@ class Board extends BaseModel {
         $this->columns = [];
         $this->categories = [];
         $this->auto_actions = [];
+        $this->issue_trackers = [];
         $this->users = [];
     }
 }
