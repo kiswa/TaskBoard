@@ -236,10 +236,7 @@ class TasksTest extends PHPUnit_Framework_TestCase {
     }
 
     private function createBoard() {
-        $board = DataMock::getBoard();
-        $board->users = [];
-        $board->users[] = new User(new ContainerMock(), 1);
-        $board->auto_actions = [];
+        $board = DataMock::getBoardForDb();
 
         $request = new RequestMock();
         $request->payload = $board;

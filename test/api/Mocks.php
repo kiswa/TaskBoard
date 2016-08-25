@@ -96,6 +96,25 @@ class DataMock {
         return $board;
     }
 
+    public static function getBoardForDb() {
+        $board = new stdClass();
+        $board->id = 0;
+        $board->name = 'test';
+        $board->is_active = true;
+        $board->columns = [];
+        $board->categories = [];
+        $board->auto_actions = [];
+        $board->issue_trackers = [];
+        $board->users = [];
+
+        $column = self::getColumn();
+        $column->id = 0;
+        $column->tasks = [];
+        $board->columns[] = $column;
+
+        return $board;
+    }
+
     public static function getColumn() {
         $column = new stdClass();
         $column->id = 1;

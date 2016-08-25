@@ -23,6 +23,19 @@ global.ConstantsMock = {
     VERSION: 'TEST'
 };
 
+global.TitleMock = function() {
+    var title = '';
+
+    return {
+        getTitle: () => {
+            return title;
+        },
+        setTitle: (text) => {
+            title = text;
+        }
+    };
+};
+
 global.RouterMock = function() {
     return {
         path: 'test',

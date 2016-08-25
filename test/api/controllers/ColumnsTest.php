@@ -257,10 +257,9 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
         $request = new RequestMock();
         $request->header = [DataMock::getJwt()];
 
-        $board = DataMock::getBoard();
-        $board->id = 0;
-
+        $board = DataMock::getBoardForDb();
         $request->payload = $board;
+
         $boards = new Boards(new ContainerMock());
 
         $response = $boards->addBoard($request,

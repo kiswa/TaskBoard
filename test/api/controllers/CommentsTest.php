@@ -7,7 +7,6 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
     public static function setupBeforeClass() {
         try {
             RedBeanPHP\R::setup('sqlite:tests.db');
-            // RedBeanPHP\R::fancyDebug(true);
         } catch (Exception $ex) { }
     }
 
@@ -299,10 +298,7 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
     }
 
     private function createBoard() {
-        $board = DataMock::getBoard();
-        $board->users = [];
-        $board->users[] = new User(new ContainerMock(), 1);
-        $board->auto_actions = [];
+        $board = DataMock::getBoardForDb();
 
         $request = new RequestMock();
         $request->payload = $board;
