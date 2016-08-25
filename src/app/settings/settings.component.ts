@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 import { TopNav } from '../shared/index';
 import { SettingsService } from './settings.service';
@@ -20,7 +21,8 @@ import {
     providers: [ SettingsService ]
 })
 export class Settings {
-    constructor(private settings: SettingsService) {
+    constructor(private settings: SettingsService, private title: Title) {
+        title.setTitle('TaskBoard - Settings');
     }
 }
 

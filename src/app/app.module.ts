@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_PROVIDERS } from '@angular/http';
 
@@ -22,6 +22,7 @@ import {
         APP_ROUTING
     ],
     providers: [
+        Title,
         HTTP_PROVIDERS,
         API_HTTP_PROVIDERS,
         AuthGuard,
