@@ -4,23 +4,28 @@ import { Dragula, DragulaService } from 'ng2-dragula/ng2-dragula';
 
 import {
     ApiResponse,
-    User,
     Board,
+    InlineEdit,
     Modal,
     Notification,
+    User,
+    AuthService,
     ModalService,
-    NotificationsService,
-    AuthService
+    NotificationsService
 } from '../../shared/index';
 import { SettingsService } from '../settings.service';
-//import { BoardAdminService } from './board-admin.service';
+import { BoardAdminService } from './board-admin.service';
 import { BoardData } from './board-data.model';
+
+class SelectableUser extends User {
+    public selected: boolean;
+}
 
 @Component({
     selector: 'tb-board-admin',
     templateUrl: 'app/settings/board-admin/board-admin.component.html',
-    directives: [ Modal, Dragula ],
-//    providers: [ BoardAdminService ],
+    directives: [ InlineEdit, Modal, Dragula ],
+    providers: [ BoardAdminService ],
     viewProviders: [ DragulaService ]
 })
 export class BoardAdmin {
@@ -38,6 +43,8 @@ export class BoardAdmin {
     constructor(private auth: AuthService,
             private modal: ModalService,
             private settings: SettingsService,
+            private boardService: BoardAdminService,
+            private notes: NotificationsService,
             private dragula: DragulaService) {
         this.MODAL_ID = 'board-addedit-form';
         this.users = [];
@@ -61,10 +68,11 @@ export class BoardAdmin {
             this.users = [];
             this.hasBAUsers = false;
 
-            users.forEach((user) => {
+            users.forEach(user => {
                 // Don't include admin users
                 if (user.security_level > 1) {
                     this.users.push(user);
+
                     if (user.security_level === 2) {
                         this.hasBAUsers = true;
                     }
@@ -89,6 +97,70 @@ export class BoardAdmin {
         });
     }
 
+    addBoard(): void {
+        this.setBoardUsers();
+
+        if (this.validateBoard()) {
+            this.boardService.addBoard(this.modalProps);
+        }
+    }
+
+    private validateBoard(): boolean {
+        if (this.modalProps.boardName === '') {
+            this.notes.add(new Notification('error',
+                'Board name is required.'));
+            return false;
+        }
+
+        if (this.modalProps.columns.length === 0) {
+            this.notes.add(new Notification('error',
+                'At least one column is required.'));
+            return false;
+        }
+
+        return true;
+    }
+
+    private setBoardUsers(): void {
+        this.users.forEach((user: SelectableUser) => {
+            if (user.selected) {
+                this.modalProps.users.push(user);
+            }
+        });
+    }
+
+    private getColumnName(i: number): string {
+        return this.modalProps.columns[i].name;
+    }
+
+    private onColumnNameEdit(e: string, i: number): void {
+        this.modalProps.columns[i].name = e;
+    }
+
+    private getCategoryName(i: number): string {
+        return this.modalProps.categories[i].name;
+    }
+
+    private onCategoryNameEdit(e: string, i: number): void {
+        this.modalProps.categories[i].name = e;
+    }
+
+    private getTrackerUrl(i): string {
+        return this.modalProps.issueTrackers[i].url;
+    }
+
+    private onTrackerUrlEdit(e: string, i: number): void {
+        this.modalProps.issueTrackers[i].url = e;
+    }
+
+    private getTrackerRegExp(i: number): string {
+        return this.modalProps.issueTrackers[i].bugId;
+    }
+
+    private onTrackerRegExpEdit(e: string, i: number): void {
+        this.modalProps.issueTrackers[i].bugId = e;
+    }
+
     private getColor(category: any): string {
         return category.defaultColor;
     }
@@ -98,6 +170,9 @@ export class BoardAdmin {
 
         if (isAdd) {
             this.modalProps = new BoardData(title);
+            this.users.forEach((user: SelectableUser) => {
+                user.selected = false;
+            });
         } else {
             // TODO: Load board data in constructor
             this.modalProps = new BoardData(title);

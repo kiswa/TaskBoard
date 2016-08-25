@@ -4,7 +4,7 @@
     <div class="row">
         <h3>Current Boards</h3>
 
-        <div class="small right filters">
+        <div class="small right filters" *ngIf="boards.length">
             <label class="inline right">
                 Show By User:
                 <select class="autosize">
@@ -103,12 +103,13 @@
         <label>Columns</label>
         <ul class="modal-list" [hidden]="!modalProps.columns.length"
             [dragula]="'columns-bag'" [dragulaModel]="modalProps.columns">
-            <li *ngFor="let column of modalProps.columns">
+            <li *ngFor="let column of modalProps.columns; let i = index">
                 <i class="icon icon-resize-vertical"></i>
-                {{ column.name }}
+                <inline-edit [text]="getColumnName(i)"
+                    (edit)="onColumnNameEdit($event, i)"></inline-edit>
                 <span class="actions">
-                    <i class="icon icon-edit color-primary"></i>
                     <i class="icon icon-trash-empty color-secondary"
+                        title="Remove"
                         (click)="modalProps.removeColumn(column)"></i>
                 </span>
             </li>
@@ -129,13 +130,14 @@
     <div class="half-modal">
         <label>Categories</label>
         <ul *ngIf="modalProps.categories.length" class="modal-list">
-            <li *ngFor="let category of modalProps.categories">
-                {{ category.name }}
+            <li *ngFor="let category of modalProps.categories; let i = index">
+                <span class="badge" title="Default Task Color"
+                    [style.background-color]="getColor(category)"></span>
+                <inline-edit [text]="getCategoryName(i)"
+                    (edit)="onCategoryNameEdit($event, i)"></inline-edit>
                 <span class="actions">
-                    <span class="badge" title="Default Task Color"
-                        [style.background-color]="getColor(category)"></span>
-                    <i class="icon icon-edit color-primary"></i>
                     <i class="icon icon-trash-empty color-secondary"
+                        title="Remove"
                         (click)="modalProps.removeCategory(category)"></i>
                 </span>
             </li>
@@ -163,13 +165,16 @@
             Issue Trackers
             <i class="icon icon-help-circled"
                 alt="Example URL: https://github.com/kiswa/TaskBoard/issues/%BUGID\1%
-                       Example RegExp: (?:Issue)?#(\d+)"></i>
+                     Example RegExp: (?:Issue)?#(\d+)"></i>
         </label>
         <ul *ngIf="modalProps.issueTrackers.length" class="modal-list">
-            <li *ngFor="let tracker of modalProps.issueTrackers">
-                {{ tracker.url }} | {{ tracker.bugId }}
+            <li class="double-edit"
+                *ngFor="let tracker of modalProps.issueTrackers; let i = index">
+                <inline-edit class="first" [text]="getTrackerUrl(i)"
+                    (edit)="onTrackerUrlEdit($event, i)"></inline-edit>
+                <inline-edit class="last" [text]="getTrackerRegExp(i)"
+                    (edit)="onTrackerRegExpEdit($event, i)"></inline-edit>
                 <span class="actions">
-                    <i class="icon icon-edit color-primary"></i>
                     <i class="icon icon-trash-empty color-secondary"
                         (click)="modalProps.removeIssueTracker(tracker)"></i>
                 </span>
@@ -194,19 +199,17 @@
     <div class="users">
         <label>Select Users</label>
         <div class="clearfix"></div>
-        <div class="user-select" *ngFor="let user of users">
-            <label>
-                <input type="checkbox">
+        <label class="user-select" *ngFor="let user of users; let i = index">
+                <input type="checkbox" [(ngModel)]="users[i].selected">
                 {{ user.username }}
                 <span *ngIf="user.security_level === 2">*</span>
-            </label>
-        </div>
-        <p>
-            <span *ngIf="hasBAUsers"><strong>*</strong> Including a Board Admin, makes
-            them an admin of this board.<br></span>
+        </label>
+        <div>
+            <em *ngIf="hasBAUsers"><strong>*</strong> Including a Board Admin,
+            makes them an admin of this board.<br></em>
             <em>Administrators have access to all boards and are
             not listed here.</em>
-        </p>
+        </div>
     </div>
 
     <div class="buttons">
