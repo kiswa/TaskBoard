@@ -108,22 +108,34 @@ global.SettingsServiceMock = function() {
     var userList = [
             { id: 1, username: 'tester', security_level: 2 },
             { id: 2, username: 'test', security_level: 3, default_board_id: 0 }
+        ],
+        boardsList = [
+            { id: 1, name: 'Testing' }
         ];
 
     return {
         usersChanged: RxJs.Observable.of(userList),
+        boardsChanged: RxJs.Observable.of(boardsList),
+
         updateUsers: (users) => {
-            userList = [];
             userList = users;
         },
         getUsers: () => {
             return RxJs.Observable.of({
                 status: 'success',
                 alerts: [],
-                data: [
-                    null,
-                    userList
-                ]
+                data: [ null, userList ]
+            });
+        },
+
+        updateBoards: (boards) => {
+            boardsList = boards;
+        },
+        getBoards: () => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [ null, boardsList ]
             });
         }
     };

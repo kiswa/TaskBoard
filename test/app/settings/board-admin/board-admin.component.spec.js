@@ -1,4 +1,4 @@
-/* global expect AuthServiceMock SettingsServiceMock ModalServiceMock */
+/* global expect AuthServiceMock SettingsServiceMock ModalServiceMock NotificationsServiceMock */
 var path = '../../../../build/settings/board-admin/',
     BoardAdmin = require(path + 'board-admin.component.js').BoardAdmin,
     DragulaService = require('../../../../node_modules/ng2-dragula/src/app/providers/dragula.provider.js')
@@ -9,7 +9,8 @@ describe('BoardAdmin', () => {
 
     beforeEach(() => {
         boardAdmin = new BoardAdmin(AuthServiceMock, new ModalServiceMock(),
-            new SettingsServiceMock(), new DragulaService());
+            new SettingsServiceMock(), new NotificationsServiceMock(),
+            new DragulaService());
     });
 
     it('has a function to get a color', () => {
