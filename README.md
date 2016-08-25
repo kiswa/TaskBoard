@@ -114,3 +114,19 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
  * [JWT](https://jwt.io/) authentication
  * [SQLite](https://www.sqlite.org/) database
 
+## Lines of Code
+
+Because I like seeing the numbers.
+
+Language     |  Files |    Blank | Comment |     Code
+-------------|-------:|---------:|--------:|---------:
+PHP          |     26 |      643 |      19 |     2041
+TypeScript   |     43 |      363 |       7 |     1545
+HTML         |     15 |       92 |       0 |      974
+SASS         |     13 |      187 |       8 |      860
+__SUM:__     | __97__ | __1285__ |  __34__ | __5420__
+
+Counts generated with command:
+`cloc --exclude-dir=vendor --exclude-ext=json src/`
+and last updated Aug 24, 2016
+
