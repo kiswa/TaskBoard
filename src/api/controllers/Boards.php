@@ -10,20 +10,11 @@ class Boards extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
-        $boardBeans = R::findAll('board');
+        $boards = $this->loadAllBoards($request);
 
-        if (count($boardBeans)) {
+        if (count($boards)) {
             $this->apiJson->setSuccess();
-
-            foreach($boardBeans as $bean) {
-                $board = new Board($this->container);
-                $board->loadFromBean($bean);
-
-                if (Auth::HasBoardAccess($this->container,
-                        $request, $board->id)) {
-                    $this->apiJson->addData($board);
-                }
-            }
+            $this->apiJson->addData($boards);
         } else {
             $this->logger->addInfo('No boards in database.');
             $this->apiJson->addAlert('info', 'No boards in database.');
@@ -70,6 +61,8 @@ class Boards extends BaseController {
         $board = new Board($this->container);
         $board->loadFromJson($request->getBody());
 
+        // TODO: Get all admin users and add them to board
+
         if (!$board->save()) {
             $this->logger->addError('Add Board: ', [$board]);
             $this->apiJson->addAlert('error', 'Error adding board. ' .
@@ -86,6 +79,7 @@ class Boards extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'Board ' . $board->name . ' added.');
+        $this->apiJson->addData($this->loadAllBoards($request));
 
         return $this->jsonResponse($response);
     }
@@ -162,5 +156,23 @@ class Boards extends BaseController {
         return $this->jsonResponse($response);
     }
 
+    private function loadAllBoards($request) {
+        $boards = [];
+        $boardBeans = R::findAll('board');
+
+        if (count($boardBeans)) {
+            foreach($boardBeans as $bean) {
+                $board = new Board($this->container);
+                $board->loadFromBean($bean);
+
+                if (Auth::HasBoardAccess($this->container,
+                        $request, $board->id)) {
+                    $boards[] = $board;
+                }
+            }
+        }
+
+        return $boards;
+    }
 }
 

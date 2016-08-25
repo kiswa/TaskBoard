@@ -109,34 +109,62 @@ class Board extends BaseModel {
 
         if (isset($obj->columns)) {
             foreach($obj->columns as $item) {
-                $this->columns[] = new Column($this->container, $item->id);
+                $column = new Column($this->container, $item->id);
+
+                if ($column->id === 0) {
+                    $column->loadFromJson(json_encode($item));
+                }
+
+                $this->columns[] = $column;
             }
         }
 
         if (isset($obj->categories)) {
             foreach($obj->categories as $item) {
-                $this->categories[] =
-                    new Category($this->container, $item->id);
+                $category = new Category($this->container, $item->id);
+
+                if ($category->id === 0) {
+                    $category->loadFromJson(json_encode($item));
+                }
+
+                $this->categories[] = $category;
             }
         }
 
         if (isset($obj->auto_actions)) {
             foreach($obj->auto_actions as $item) {
-                $this->auto_actions[] =
-                    new AutoAction($this->container, $item->id);
+                $auto_action = new AutoAction($this->container, $item->id);
+
+                if ($auto_action->id === 0) {
+                    $auto_action->loadFromJson(json_encode($item));
+                }
+
+                $this->auto_actions[] = $auto_action;
+
             }
         }
 
         if (isset($obj->issue_trackers)) {
             foreach($obj->issue_trackers as $item) {
-                $this->issue_trackers[] =
-                    new IssueTracker($this->container, $item->id);
+                $issue_tracker = new IssueTracker($this->container, $item->id);
+
+                if ($issue_tracker->id === 0) {
+                    $issue_tracker->loadFromJson(json_encode($item));
+                }
+
+                $this->issue_trackers[] = $issue_tracker;
             }
         }
 
         if (isset($obj->users)) {
             foreach($obj->users as $item) {
-                $this->users[] = new User($this->container, $item->id);
+                $user = new User($this->container, $item->id);
+
+                if ($user->id === 0) {
+                    $user->loadFromJson(json_encode($item));
+                }
+
+                $this->users[] = $user;
             }
         }
     }
