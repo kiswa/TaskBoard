@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
@@ -13,7 +13,7 @@ import {
     selector: 'tb-login',
     templateUrl: 'app/login/login.component.html'
 })
-export class Login {
+export class Login implements OnInit {
     version: string;
     username = '';
     password = '';
@@ -23,6 +23,15 @@ export class Login {
     constructor(constants: Constants, private authService: AuthService,
             private router: Router, private notes: NotificationsService) {
         this.version = constants.VERSION;
+    }
+
+    ngOnInit(): void {
+        this.authService.authenticate()
+            .subscribe(isAuth => {
+                if (isAuth) {
+                    this.router.navigate(['/boards']);
+                }
+            });
     }
 
     login(): void {
