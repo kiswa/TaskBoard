@@ -3,6 +3,7 @@ class IssueTracker extends BaseModel {
     public $id = 0;
     public $url = '';
     public $regex = '';
+    public $board_id = 0;
 
     public function __construct($container, $id = 0) {
         parent::__construct('issue_tracker', $id, $container);
@@ -52,6 +53,7 @@ class IssueTracker extends BaseModel {
             $this->id = (int) $obj->id;
             $this->url = $obj->url;
             $this->regex = $obj->regex;
+            $this->board_id = (int) $obj->board_id;
         } catch (Exception $ex) {
             $this->is_valid = false;
         }

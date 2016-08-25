@@ -63,21 +63,25 @@ class CategoryTest extends PHPUnit_Framework_TestCase {
         $category->updateBean();
         $bean = $category->getBean();
 
-        $this->assertTrue($bean->id === $category->id);
-        $this->assertTrue($bean->name === $category->name);
-        $this->assertTrue($bean->board_id === $category->board_id);
+        $this->assertEquals($bean->id, $category->id);
+        $this->assertEquals($bean->name, $category->name);
+        $this->assertEquals($bean->default_task_color,
+            $category->default_task_color);
+        $this->assertEquals($bean->board_id, $category->board_id);
     }
 
     private function assertDefaultProperties($category) {
-        $this->assertTrue($category->id === 0);
-        $this->assertTrue($category->name === '');
-        $this->assertTrue($category->board_id === 0);
+        $this->assertEquals(0, $category->id);
+        $this->assertEquals('', $category->name);
+        $this->assertEquals('', $category->default_task_color);
+        $this->assertEquals(0, $category->board_id);
     }
 
     private function assertMockProperties($category) {
-        $this->assertTrue($category->id === 1);
-        $this->assertTrue($category->name === 'cat1');
-        $this->assertTrue($category->board_id === 1);
+        $this->assertEquals(1, $category->id);
+        $this->assertEquals('cat1', $category->name);
+        $this->assertEquals('#ffffe0', $category->default_task_color);
+        $this->assertEquals(1, $category->board_id);
     }
 }
 

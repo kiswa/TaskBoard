@@ -88,6 +88,7 @@ class DataMock {
         $board->columns[] = DataMock::getColumn();
         $board->categories[] = DataMock::getCategory();
         $board->auto_actions[] = DataMock::getAutoAction();
+        $board->issue_trackers[] = DataMock::getIssueTracker();
         $user = DataMock::getUser();
         $user->id = 1;
         $board->users[] = $user;
@@ -110,6 +111,7 @@ class DataMock {
         $category = new stdClass();
         $category->id = 1;
         $category->name = 'cat1';
+        $category->default_task_color = '#ffffe0';
         $category->board_id = 1;
 
         return $category;
@@ -125,6 +127,16 @@ class DataMock {
         $auto_action->change_to = 'null';
 
         return $auto_action;
+    }
+
+    public static function getIssueTracker() {
+        $issue_tracker = new stdClass();
+        $issue_tracker->id = 1;
+        $issue_tracker->board_id = 1;
+        $issue_tracker->url = 'testUrl';
+        $issue_tracker->regex = 'testRegex';
+
+        return $issue_tracker;
     }
 
     public static function getUser() {

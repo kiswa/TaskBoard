@@ -25,6 +25,7 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $this->bean->xownColumnList = $board->columns;
         $this->bean->xownCategoryList = $board->categories;
         $this->bean->xownAutoActionList = $board->auto_actions;
+        $this->bean->xownIssueTrackerList = $board->issue_trackers;
         $this->bean->sharedUserList = $board->users;
     }
 
@@ -35,6 +36,7 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $this->assertArraySubset($board->columns, []);
         $this->assertArraySubset($board->categories, []);
         $this->assertArraySubset($board->auto_actions, []);
+        $this->assertArraySubset($board->issue_trackers, []);
         $this->assertArraySubset($board->users, []);
     }
 
