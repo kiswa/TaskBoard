@@ -118,15 +118,27 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
 
 Because I like seeing the numbers.
 
+### `src`
+
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
-PHP          |     26 |      643 |      19 |     2041
+PHP          |     26 |      643 |      19 |     2043
 TypeScript   |     43 |      363 |       7 |     1545
 HTML         |     15 |       92 |       0 |      974
 SASS         |     13 |      187 |       8 |      860
-__SUM:__     | __97__ | __1285__ |  __34__ | __5420__
+__SUM:__     | __97__ | __1285__ |  __34__ | __5422__
 
-Counts generated with command:
-`cloc --exclude-dir=vendor --exclude-ext=json src/`
-and last updated Aug 24, 2016
+Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
+
+### `test`
+
+Language     |  Files |    Blank | Comment |     Code
+-------------|-------:|---------:|--------:|---------:
+PHP          |     22 |      940 |      23 |     2683
+JavaScript   |     24 |      245 |      24 |     1028
+__SUM:__     | __46__ | __1185__ |  __47__ | __3711__
+
+Command: `cloc --exclude-ext=xml test/`
+
+Counts last updated Aug 25, 2016
 
