@@ -85,18 +85,33 @@
         }
     }
 
+    .double-edit .first {
+        .inline-edit {
+            margin-right: 1%;
+            width: 70%;
+        }
+
+        [type="text"] {
+            width: 95%;
+        }
+    }
+
+    .double-edit .last {
+        .inline-edit {
+            width: 25%;
+        }
+
+        [type="text"] {
+            width: 86%;
+        }
+    }
+
     .users {
         .user-select {
             display: inline-block;
+            margin-bottom: .3em;
+            margin-top: 0;
             width: 33%;
-
-            span {
-                font-weight: 700;
-            }
-
-            label {
-                margin-top: auto;
-            }
         }
 
         label {
@@ -141,12 +156,30 @@
         }
 
         .badge {
-            margin-right: 5px;
+            margin-left: 5px;
+            margin-right: 13px;
         }
 
         .icon-trash-empty,
         .icon-edit {
             cursor: pointer;
+        }
+    }
+
+    .inline-edit {
+        display: inline-block;
+        width: 82%;
+
+        .icon {
+            cursor: pointer;
+            float: right;
+            margin-top: 4px;
+        }
+
+        [type="text"] {
+            height: 1em;
+            margin: 0;
+            width: 90%;
         }
     }
 
