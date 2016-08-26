@@ -233,6 +233,9 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $request->header = [DataMock::getJwt()];
 
         $board = DataMock::getBoardForDb();
+        $admin = new User(new ContainerMock(), 1);
+        $board->users[] = $admin;
+
         $request->payload = $board;
 
         $response = $this->boards->addBoard($request,
