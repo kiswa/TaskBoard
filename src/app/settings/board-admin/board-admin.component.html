@@ -73,9 +73,19 @@
                         </ul>
                     </td>
                     <td>
-                        <a href="" title="Edit Board"><i class="icon icon-edit color-primary"></i></a>
-                        <a href="" title="Remove Board"><i class="icon icon-trash-empty color-secondary"></i></a>
-                        <label><input type="checkbox" checked> Active</label>
+                        <a href="javascript:" title="Edit Board"
+                            (click)="showModal('Edit', board)">
+                            <i class="icon icon-edit color-primary"></i>
+                        </a>
+                        <a href="javascript:" title="Remove Board"
+                            (click)="showConfirmModal(board)">
+                            <i class="icon icon-trash-empty color-secondary"></i>
+                        </a>
+                        <label>
+                            <input type="checkbox" class="hidden" [ngModel]="board.is_active">
+                            <span class="toggle"></span>
+                            Active
+                        </label>
                     </td>
                 </tr>
             </tbody>

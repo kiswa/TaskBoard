@@ -49,9 +49,10 @@
         </label>
         <label>
             Display tasks side-by-side in colums?
-            <input type="checkbox"
+            <input type="checkbox" class="hidden"
                 [ngModel]="userOptions.multiple_tasks_per_row"
                 (ngModelChange)="onOptionChange('mult_tasks', $event)">
+            <span class="toggle"></span>
         </label>
     </div>
 
@@ -87,15 +88,17 @@
         <div class="hold-bottom">
             <label>
                 Show animations?
-                <input type="checkbox"
+                <input type="checkbox" class="hidden"
                     [ngModel]="userOptions.show_animations"
                     (ngModelChange)="onOptionChange('show_anim', $event)">
+                <span class="toggle"></span>
             </label>
             <label>
                 Show Assignee on task cards?
-                <input type="checkbox"
+                <input type="checkbox" class="hidden"
                     [ngModel]="userOptions.show_assignee"
                     (ngModelChange)="onOptionChange('show_assign', $event)">
+                <span class="toggle"></span>
             </label>
         </div>
     </div>
