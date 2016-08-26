@@ -54,11 +54,12 @@ export class UserAdmin {
             private auth: AuthService,
             private settings: SettingsService,
             private modal: ModalService) {
-        this.modalProps = new ModalProperties('', '', new ModalUser());
         this.MODAL_ID = 'user-addEdit-form';
         this.MODAL_CONFIRM_ID = 'user-remove-confirm';
+
         this.users = [];
         this.boards = [];
+        this.modalProps = new ModalProperties('', '', new ModalUser());
 
         auth.userChanged
             .subscribe(activeUser => {

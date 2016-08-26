@@ -101,6 +101,7 @@ export class UserSettingsService {
         return this.http.post('api/users/' + this.activeUser.id + '/opts', json)
             .map(res => {
                 let response: ApiResponse = res.json();
+
                 this.auth.updateUser(JSON.parse(response.data[2]));
 
                 return response;
