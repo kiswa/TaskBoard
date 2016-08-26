@@ -61,7 +61,12 @@ class Boards extends BaseController {
         $board = new Board($this->container);
         $board->loadFromJson($request->getBody());
 
-        // TODO: Get all admin users and add them to board
+        // All admins are members of every added board
+        $admins = R::findAll('user', ' WHERE security_level = 1 ');
+        foreach($admins as $admin) {
+            $user = new User($this->container, $admin->id);
+            $board->users[] = $user;
+        }
 
         if (!$board->save()) {
             $this->logger->addError('Add Board: ', [$board]);
