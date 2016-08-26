@@ -122,6 +122,14 @@ class Auth extends BaseController {
         $jwt = self::createJwt($user->id, ($data->remember ? 200 : 1));
         $user = new User($this->container, $user->id);
 
+        if ($user->username === 'admin' && $user->last_login === 0) {
+            $this->apiJson->addAlert('warn',
+                'This is your first login, go to Settings ' .
+                'to change your password.');
+            $this->apiJson->addAlert('success',
+                'Go to Settings to create your first board.');
+        }
+
         $user->active_token = $jwt;
         $user->last_login = time();
         $user->save();
