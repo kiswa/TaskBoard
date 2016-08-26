@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 
+import { AuthService, UserOptions } from '../index';
 import { Modal } from './modal.component';
 
 @Injectable()
 export class ModalService {
     private modals: Array<Modal>;
+    private userOptions: UserOptions;
 
-    constructor() {
+    constructor(private auth: AuthService) {
         this.modals = [];
+        this.userOptions = auth.userOptions;
     }
 
     registerModal(newModal: Modal): void {
@@ -25,6 +28,7 @@ export class ModalService {
         var modal = this.findModal(modalId);
 
         if (modal) {
+            modal.animate = this.userOptions.show_animations;
             modal.isOpen = true;
         }
     }

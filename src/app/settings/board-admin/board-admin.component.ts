@@ -34,11 +34,13 @@ export class BoardAdmin {
     private activeUser: User;
     private modalProps: BoardData;
     private noBoardsMessage: string;
+    private boardToRemove: Board;
 
     private hasBAUsers = false;
     private loading = true;
 
     private MODAL_ID: string;
+    private MODAL_CONFIRM_ID: string;
 
     constructor(private auth: AuthService,
             private modal: ModalService,
@@ -47,6 +49,8 @@ export class BoardAdmin {
             private notes: NotificationsService,
             private dragula: DragulaService) {
         this.MODAL_ID = 'board-addedit-form';
+        this.MODAL_CONFIRM_ID = 'board-remove-confirm';
+
         this.users = [];
         this.boards = [];
         this.modalProps = new BoardData();
@@ -97,7 +101,7 @@ export class BoardAdmin {
         });
     }
 
-    addBoard(): void {
+    addEditBoard(): void {
         this.setBoardUsers();
 
         if (this.validateBoard()) {
@@ -105,11 +109,9 @@ export class BoardAdmin {
                 .subscribe((response: ApiResponse) => {
                     response.alerts.forEach(note => this.notes.add(note));
 
-                    console.log(response);
-                    // TODO: Update boards list
-
                     if (response.status === 'success') {
                         this.modal.close(this.MODAL_ID);
+                        this.settings.updateBoards(response.data[1]);
                     }
                 });
         }
@@ -164,11 +166,11 @@ export class BoardAdmin {
     }
 
     private getTrackerRegExp(i: number): string {
-        return this.modalProps.issueTrackers[i].bugId;
+        return this.modalProps.issueTrackers[i].regex;
     }
 
     private onTrackerRegExpEdit(e: string, i: number): void {
-        this.modalProps.issueTrackers[i].bugId = e;
+        this.modalProps.issueTrackers[i].regex = e;
     }
 
     private getColor(category: any): string {
@@ -179,7 +181,7 @@ export class BoardAdmin {
         return category.defaultColor;
     }
 
-    private showModal(title: string): void {
+    private showModal(title: string, board?: Board): void {
         let isAdd = (title === 'Add');
 
         this.modalProps = new BoardData(title);
@@ -189,10 +191,19 @@ export class BoardAdmin {
                 user.selected = false;
             });
         } else {
-            // TODO: Load board data in constructor
+            this.modalProps.boardName = board.name;
+            this.modalProps.columns = board.columns;
+            this.modalProps.categories = board.categories;
+            this.modalProps.issueTrackers = board.issue_trackers;
+            this.modalProps.users = board.users;
         }
 
         this.modal.open(this.MODAL_ID);
+    }
+
+    private showConfirmModal(board: Board): void {
+        this.boardToRemove = board;
+        this.modal.open(this.MODAL_CONFIRM_ID);
     }
 }
 

@@ -1,3 +1,11 @@
+.modal-container {
+    visibility: hidden;
+
+    &.modal-open {
+        visibility: visible;
+    }
+}
+
 .modal-overlay {
     background-color: rgba(0, 0, 0, .4);
     bottom: 0;
@@ -6,25 +14,43 @@
     right: 0;
     top: 0;
     z-index: 1000;
+
+    &.animated {
+        transition: all .3s;
+    }
+
+    &.modal-closed {
+        opacity: 0;
+    }
 }
 
 .modal {
     @include shadow-float();
 
     background-color: $white;
-    left: calc(50% - 200px);
+    left: 50%;
     max-height: calc(100% - 10em);
     max-width: 100%;
     min-height: 10em;
     overflow-y: auto;
     position: fixed;
-    top: 5em;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%) translateZ(0);
     width: 400px;
     z-index: 1100;
+    -webkit-font-smoothing: subpixel-antialiased;
+
+    &.animated {
+        transition: all .3s;
+    }
 
     &.wide {
-        left: calc(50% - 300px);
         width: 600px;
+    }
+
+    &.modal-closed {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-100%);
     }
 
     .title {

@@ -1,7 +1,10 @@
-<div [hidden]="!isOpen">
-    <div class="modal-overlay" (click)="close(true)"></div>
+<div class="modal-container" [ngClass]="{ 'modal-open': isOpen }">
+    <div class="modal-overlay"
+        [ngClass]="{ animated: animate, 'modal-closed': !isOpen }"
+        (click)="close(true)"></div>
 
-    <div class="modal" [ngClass]="{ wide: wide }">
+    <div class="modal"
+        [ngClass]="{ wide: wide, animated: animate, 'modal-closed': !isOpen }">
         <div class="title" *ngIf="modalTitle">
             <h2>
                 {{ modalTitle }}

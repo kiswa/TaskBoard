@@ -59,7 +59,7 @@ export class BoardData {
 
         this.issueTrackers.push({
             url: this.issueTrackerUrl,
-            bugId: this.issueTrackerBugId
+            regex: this.issueTrackerBugId
         });
         this.issueTrackerUrl = '';
         this.issueTrackerBugId = '';

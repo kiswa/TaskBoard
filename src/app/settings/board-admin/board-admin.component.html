@@ -50,7 +50,7 @@
                         <ul>
                             <li *ngFor="let col of board.columns">
                                 {{ col.name }}
-                                <span class="badge" title="Item Count">{{ col.tasks.length }}</span>
+                                <span class="badge" title="Task Count">{{ col.tasks.length }}</span>
                             </li>
                         </ul>
                     </td>
@@ -100,6 +100,15 @@
         </button>
     </div>
 </section>
+
+<tb-modal modal-title="Confirm Board Removal" blocking="true"
+    modal-id="{{ MODAL_CONFIRM_ID }}">
+    <div class="center">Removing a board cannot be undone.<br>Continue?</div>
+    <div class="buttons">
+        <button class="flat" (click)="removeBoard()">Yes</button>
+        <button (click)="modal.close(MODAL_CONFIRM_ID)">No</button>
+    </div>
+</tb-modal>
 
 <tb-modal modal-title="{{ modalProps.title }} Board"
     modal-id="{{ MODAL_ID }}" wide="true">
@@ -223,9 +232,11 @@
     </div>
 
     <div class="buttons">
-        <button (click)="addBoard()">
-            <i class="icon icon-plus"></i>
-            Add Board
+        <button (click)="addEditBoard()">
+            <i class="icon"
+                [ngClass]="{ 'icon-plus': modalProps.title === 'Add', 'icon-floppy': modalProps.title !== 'Add' }"></i>
+            {{ modalProps.title === 'Add' ? 'Add' : 'Save' }}
+            Board
         </button>
         <button class="flat" (click)="modal.close(MODAL_ID)">
             Cancel

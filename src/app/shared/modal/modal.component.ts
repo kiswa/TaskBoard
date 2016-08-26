@@ -16,7 +16,9 @@ export class Modal implements OnInit {
     @Input('modal-title') modalTitle = '';
     @Input() blocking = false;
     @Input() wide = false;
+
     isOpen = false;
+    animate = true;
 
     constructor(private modalService: ModalService) {
     }
