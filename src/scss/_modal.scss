@@ -38,7 +38,6 @@
     transform: translateX(-50%) translateY(-50%) translateZ(0);
     width: 400px;
     z-index: 1100;
-    -webkit-font-smoothing: subpixel-antialiased;
 
     &.animated {
         transition: all .3s;
