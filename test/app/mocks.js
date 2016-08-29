@@ -47,6 +47,9 @@ global.RouterMock = function() {
 };
 
 global.AuthServiceMock = {
+    userOptions: {
+        show_animations: false
+    },
     userChanged: RxJs.Observable.of({
         id: 1,
         username: 'tester',

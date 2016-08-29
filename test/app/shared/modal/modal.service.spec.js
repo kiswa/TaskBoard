@@ -1,4 +1,4 @@
-/* globals expect */
+/* globals expect AuthServiceMock */
 var path = '../../../../build/shared/modal/',
     ModalService = require(path + 'modal.service.js').ModalService;
 
@@ -7,7 +7,7 @@ describe('ModalService', () => {
         modal;
 
     beforeEach(() => {
-        modalService = new ModalService();
+        modalService = new ModalService(AuthServiceMock);
         modal = {
             modalId: 'testModal',
             isOpen: false
