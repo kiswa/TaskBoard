@@ -172,12 +172,24 @@ class Boards extends BaseController {
 
                 if (Auth::HasBoardAccess($this->container,
                         $request, $board->id)) {
+                    foreach($board->users as $user) {
+                        $user = $this->cleanUser($user);
+                    }
+
                     $boards[] = $board;
                 }
             }
         }
 
         return $boards;
+    }
+
+    private function cleanUser($user) {
+        $user->security_level = $user->security_level->getValue();
+        unset($user->password_hash);
+        unset($user->active_token);
+
+        return $user;
     }
 }
 

@@ -166,6 +166,18 @@ class Users extends BaseController {
             }
         }
 
+        if ($user->default_board_id !== $update->default_board_id &&
+                $update->default_board_id !== 0) {
+            $newId = $update->default_board_id;
+
+            if ($newId > 0 && !Auth::HasBoardAccess($this->container, $request,
+                    $newId, $user->id)) {
+                $board = new Board($this->container, $update->default_board_id);
+                $board->users[] = $user;
+                $board->save();
+            }
+        }
+
         $update->save();
 
         $this->dbLogger->logChange($this->container, $actor->id,
@@ -263,9 +275,16 @@ class Users extends BaseController {
 
     private function getAllUsersCleaned($request) {
         $userBeans = R::findAll('user');
+        $userId = Auth::GetUserId($request);
 
         $userIds = $this->getUserIdsByBoardAccess(Auth::GetUserId($request));
-        $actor = new User($this->container, Auth::GetUserId($request));
+
+        // If a user has no board access, they should still see themselves
+        if (count($userIds) === 0) {
+            $userIds[] = $userId;
+        }
+
+        $actor = new User($this->container, $userId);
         $isAdmin = ($actor->security_level->getValue() === SecurityLevel::Admin);
 
         $data = [];

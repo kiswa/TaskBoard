@@ -31,7 +31,7 @@
             Select default board:
             <select class="autosize"
                 [ngModel]="user.default_board_id"
-                (ngModelChange)="updateDefaultBoard()">
+                (ngModelChange)="updateDefaultBoard($event)">
                 <option value="0">None</option>
                 <option *ngFor="let board of boards" value="{{ board.id }}">
                     {{ board.name }}

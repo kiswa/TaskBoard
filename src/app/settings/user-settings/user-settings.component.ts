@@ -73,10 +73,13 @@ export class UserSettings implements OnInit {
             });
     }
 
-    updateDefaultBoard() {
+    updateDefaultBoard(boardId: string) {
+        this.user.default_board_id = parseInt(boardId);
+
         this.users.changeDefaultBoard(this.user)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
+                this.auth.updateUser(JSON.parse(response.data[1]));
             });
     }
 

@@ -35,9 +35,10 @@
     overflow-y: auto;
     position: fixed;
     top: 50%;
-    transform: translateX(-50%) translateY(-50%) translateZ(0);
+    transform: translate(-50%, -50%);
     width: 400px;
     z-index: 1100;
+    zoom: 1.01; // Fixes blurry text
 
     &.animated {
         transition: all .3s;
@@ -49,7 +50,7 @@
 
     &.modal-closed {
         opacity: 0;
-        transform: translateX(-50%) translateY(-100%);
+        transform: translate(-50%, -100%);
     }
 
     .title {
