@@ -81,7 +81,7 @@
             Default Board
             <i alt="Selecting a default board adds the user to that board."
                 class="icon icon-help-circled"></i>
-            <select>
+            <select [(ngModel)]="modalProps.user.default_board_id">
                 <option value="0">None</option>
                 <option *ngFor="let board of boards" value="{{ board.id }}">
                     {{ board.name }}
@@ -91,7 +91,7 @@
 
         <label>
             Board Access
-            <select multiple>
+            <select multiple [(ngModel)]="modalProps.user.boardAccess">
                 <option *ngFor="let board of boards" value="{{ board.id }}">
                     {{ board.name }}
                 </option>

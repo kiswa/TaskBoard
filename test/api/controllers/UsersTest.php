@@ -229,6 +229,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 
         $user = DataMock::getUser();
         $user->username = 'newname';
+        $user->default_board_id = 0;
 
         $args = [];
         $args['id'] = $user->id;
@@ -260,6 +261,35 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[2]['text']);
     }
 
+    public function testUpdateUserDefaultBoard() {
+        $this->createUser(false);
+
+        $user = DataMock::getUser();
+        $user->username = 'newname';
+        $user->default_board_id = 0;
+
+        $args = [];
+        $args['id'] = $user->id;
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertTrue($response->status === 'success');
+
+        $this->users = new Users(new ContainerMock());
+
+        $user->default_board_id = 1;
+        $request->payload = $user;
+        $request->header = [DataMock::getJwt(2)];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertTrue($response->status === 'success');
+    }
+
     public function testUpdateUserForbidden() {
         $this->createUser();
 
@@ -287,12 +317,10 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $args = [];
         $args['id'] = 2;
 
-        $data = DataMock::getUserOptions();
-        $data->id = 2;
-        $data->new_tasks_at_bottom = false;
+        $opts->new_tasks_at_bottom = false;
 
         $request = new RequestMock();
-        $request->payload = $data;
+        $request->payload = $opts;
         $request->header = [DataMock::getJwt(2)];
 
         $response = $this->users->updateUserOptions($request,
@@ -437,13 +465,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
     }
 
     private function createBoard() {
-        $board = DataMock::getBoard();
-        $board->users = [];
-        $board->users[] = new User(new ContainerMock(), 1);
-        $board->auto_actions = [];
-        $board->columns = [];
-        $board->categories = [];
-        $board->auto_actions = [];
+        $board = DataMock::getBoardForDb();
 
         $request = new RequestMock();
         $request->payload = $board;
@@ -453,15 +475,17 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $boards->addBoard($request, new ResponseMock(), null);
     }
 
-    private function createUser() {
+    private function createUser($addToBoard = true) {
         $this->createBoard();
 
         $response = DataMock::createStandardUser();
         $this->assertEquals('success', $response->status);
 
-        $board = new Board(new ContainerMock(), 1);
-        $board->users[] = new User(new ContainerMock(), 2);
-        $board->save();
+        if ($addToBoard) {
+            $board = new Board(new ContainerMock(), 1);
+            $board->users[] = new User(new ContainerMock(), 2);
+            $board->save();
+        }
 
         return $response;
     }

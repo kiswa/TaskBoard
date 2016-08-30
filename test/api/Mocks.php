@@ -109,6 +109,7 @@ class DataMock {
 
         $column = self::getColumn();
         $column->id = 0;
+        $column->position = 0;
         $column->tasks = [];
         $board->columns[] = $column;
 
@@ -165,8 +166,8 @@ class DataMock {
         $user->username = 'tester';
         $user->password_hash = 'hashpass1234';
         $user->email = 'user@example.com';
-        $user->default_board_id = 1;
-        $user->user_option_id = 1;
+        $user->default_board_id = 0;
+        $user->user_option_id = 0;
         $user->last_login = 123456789;
         $user->active_token = '';
 

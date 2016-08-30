@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
 
+/**
+ * @group single
+ */
 class UserTest extends PHPUnit_Framework_TestCase {
     private $json = '';
     private $bean;
@@ -58,36 +61,39 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $user->updateBean();
         $bean = $user->getBean();
 
-        $this->assertTrue($bean->id === $user->id);
-        $this->assertTrue($bean->security_level ===
+        $this->assertEquals($bean->id, $user->id);
+        $this->assertEquals($bean->security_level,
             $user->security_level->getValue());
-        $this->assertTrue($bean->username === $user->username);
-        $this->assertTrue($bean->password_hash === $user->password_hash);
-        $this->assertTrue($bean->email === $user->email);
-        $this->assertTrue($bean->default_board_id === $user->default_board_id);
-        $this->assertTrue($bean->last_login === $user->last_login);
+        $this->assertEquals($bean->username, $user->username);
+        $this->assertEquals($bean->password_hash, $user->password_hash);
+        $this->assertEquals($bean->email, $user->email);
+        $this->assertEquals($bean->default_board_id, $user->default_board_id);
+        $this->assertEquals($bean->user_option_id, $user->user_option_id);
+        $this->assertEquals($bean->last_login, $user->last_login);
     }
 
     private function assertDefaultProperties($user) {
-        $this->assertTrue($user->id === 0);
-        $this->assertTrue($user->security_level->getValue() ===
-            SecurityLevel::Unprivileged);
-        $this->assertTrue($user->username === '');
-        $this->assertTrue($user->password_hash === '');
-        $this->assertTrue($user->email === '');
-        $this->assertTrue($user->default_board_id === 0);
-        $this->assertTrue($user->last_login === 0);
+        $this->assertEquals(0, $user->id);
+        $this->assertEquals(SecurityLevel::Unprivileged,
+            $user->security_level->getValue());
+        $this->assertEquals('', $user->username);
+        $this->assertEquals('', $user->password_hash);
+        $this->assertEquals('', $user->email);
+        $this->assertEquals(0, $user->default_board_id);
+        $this->assertEquals(0, $user->user_option_id);
+        $this->assertEquals(0, $user->last_login);
     }
 
     private function assertMockProperties($user) {
-        $this->assertTrue($user->id === 2);
-        $this->assertTrue($user->security_level->getValue() ===
-            SecurityLevel::BoardAdmin);
-        $this->assertTrue($user->username === 'tester');
-        $this->assertTrue($user->password_hash === 'hashpass1234');
-        $this->assertTrue($user->email === 'user@example.com');
-        $this->assertTrue($user->default_board_id === 1);
-        $this->assertTrue($user->last_login === 123456789);
+        $this->assertEquals(2, $user->id);
+        $this->assertEquals(SecurityLevel::BoardAdmin,
+            $user->security_level->getValue());
+        $this->assertEquals('tester', $user->username);
+        $this->assertEquals('hashpass1234', $user->password_hash);
+        $this->assertEquals('user@example.com', $user->email);
+        $this->assertEquals(0, $user->default_board_id);
+        $this->assertEquals(0, $user->user_option_id);
+        $this->assertEquals(123456789, $user->last_login);
     }
 }
 

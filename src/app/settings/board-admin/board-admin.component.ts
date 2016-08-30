@@ -134,6 +134,8 @@ export class BoardAdmin {
     }
 
     private setBoardUsers(): void {
+        this.modalProps.users = [];
+
         this.users.forEach((user: SelectableUser) => {
             if (user.selected) {
                 this.modalProps.users.push(user);
@@ -195,7 +197,15 @@ export class BoardAdmin {
             this.modalProps.columns = board.columns;
             this.modalProps.categories = board.categories;
             this.modalProps.issueTrackers = board.issue_trackers;
-            this.modalProps.users = board.users;
+
+            this.users.forEach((user: SelectableUser) => {
+                let filtered = board.users.filter(u => u.id === user.id);
+
+                if (filtered.length) {
+                    user.selected = true;
+                }
+            });
+            console.log(board);
         }
 
         this.modal.open(this.MODAL_ID);

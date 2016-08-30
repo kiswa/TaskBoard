@@ -6,7 +6,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 
 import { ApiResponse } from '../../shared/index';
-import { ModalUser } from './user-admin.component';
+import { ModalUser } from './user-admin.models';
 
 @Injectable()
 export class UserAdminService {

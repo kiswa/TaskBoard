@@ -12,24 +12,7 @@ import {
     NotificationsService,
     ModalService
 } from '../../shared/index';
-
-class UserDisplay extends User {
-    public default_board_name: string;
-    public security_level_name: string;
-    public can_admin: boolean;
-}
-
-export class ModalUser extends UserDisplay {
-    public password: string = '';
-    public verifyPassword: string = '';
-}
-
-class ModalProperties {
-    constructor(public title: string,
-        public prefix: string,
-        public user: ModalUser) {
-    }
-}
+import { UserDisplay, ModalUser, ModalProperties } from './user-admin.models';
 
 @Component({
     selector: 'tb-user-admin',
@@ -70,8 +53,6 @@ export class UserAdmin {
         settings.getUsers()
             .subscribe((response: ApiResponse) => {
                 this.users = response.data[1];
-                this.updateUserList();
-                this.loading = false;
 
                 this.settings.getBoards()
                     .subscribe((response: ApiResponse) => {
@@ -81,6 +62,8 @@ export class UserAdmin {
                         }
 
                         this.settings.updateBoards(this.boards);
+                        this.updateUserList();
+                        this.loading = false;
                     });
             });
     }
@@ -194,13 +177,22 @@ export class UserAdmin {
         this.modal.open(this.MODAL_CONFIRM_ID);
     }
 
+    private getDefaultBoardName(user: UserDisplay): string {
+        let filtered = this.boards
+            .filter(board => board.id === user.default_board_id);
+
+        if (filtered.length) {
+            return filtered[0].name;
+        }
+
+        return 'None';
+    }
+
     private updateUserList(): void {
         for (var user of this.users) {
             user = <UserDisplay> user;
 
-            if (user.default_board_id === 0) {
-                user.default_board_name = 'None';
-            }
+            user.default_board_name = this.getDefaultBoardName(user);
 
             user.security_level_name = user.security_level === 1 ?
                 'Admin' :
@@ -211,6 +203,8 @@ export class UserAdmin {
             user.can_admin = true;
 
             // TODO: Determine ability to edit a given user
+            // This may actually be it, as the API only returns users
+            // by board access.
             if (user.id === this.activeUser.id ||
                     this.activeUser.security_level === 3) {
                 user.can_admin = false;

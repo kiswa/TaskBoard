@@ -4,10 +4,14 @@ use Firebase\JWT\JWT;
 
 class Auth extends BaseController {
 
-    public static function HasBoardAccess($container, $request, $boardId) {
+    public static function HasBoardAccess($container, $request,
+            $boardId, $userId = null) {
         $hasAccess = false;
 
-        $userId = Auth::GetUserId($request);
+        if ($userId === null) {
+            $userId = self::GetUserId($request);
+        }
+
         $user = new User($container, $userId);
         if ($user->security_level->getValue() === SecurityLevel::Admin) {
             return true;
