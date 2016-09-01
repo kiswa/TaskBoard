@@ -66,6 +66,28 @@ class ColumnTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($bean->board_id === $column->board_id);
     }
 
+    /**
+     * @group single
+     */
+    public function testRemoveChild() {
+        $column = new Column(new ContainerMock());
+
+        $task = new Task(new ContainerMock());
+        $task->title = 'test';
+        $column->tasks[] = $task;
+
+        $task = new Task(new ContainerMock());
+        $task->title = 'test2';
+        $column->tasks[] = $task;
+
+        $column->save();
+        $this->assertEquals(2, count($column->getBean()->xownTaskList));
+
+        unset($column->tasks[1]);
+        $column->save();
+        $this->assertEquals(1, count($column->getBean()->xownTaskList));
+    }
+
     private function assertDefaultProperties($column) {
         $this->assertTrue($column->id === 0);
         $this->assertTrue($column->name === '');

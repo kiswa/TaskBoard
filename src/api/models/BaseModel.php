@@ -19,6 +19,7 @@ abstract class BaseModel {
     public abstract function loadFromBean($bean);
     public abstract function loadFromJson($json);
 
+    // To make the bean accessible to tests
     public function getBean() {
         return $this->bean;
     }
@@ -41,7 +42,6 @@ abstract class BaseModel {
             ]);
 
             return false;   // @codeCoverageIgnore
-                            // Due to false negative
         }
 
         return true;
@@ -50,6 +50,55 @@ abstract class BaseModel {
     public function delete() {
         $this->updateBean();
         R::trash($this->bean);
+    }
+
+    protected function updateBeanList(&$objList, &$beanList) {
+        foreach ($objList as $obj) {
+            $obj->updateBean();
+
+            if ($obj->id > 0 && array_key_exists($obj->id, $beanList)) {
+                $beanList[$obj->id] = $obj->bean;
+            } else {
+                $beanList[] = $obj->bean;
+            }
+        }
+
+        foreach($beanList as $bean) {
+            $found = false;
+
+            foreach($objList as $obj) {
+                if ($obj->bean->id == $bean->id) {
+                    $found = true;
+                }
+            }
+
+            if (!$found) {
+                unset($beanList[(int)$bean->id]);
+            }
+        }
+    }
+
+    protected function updateObjList(&$objList, &$beanList, $ctor) {
+        // Beans are indexed by id, the object list is zero-based
+        $count = 0;
+
+        foreach($beanList as $bean) {
+            if (array_key_exists($count, $objList)) {
+                $objList[$count]->bean = $bean;
+                $objList[$count]->loadFromBean($bean);
+            } else {
+                $objList[] = $ctor($bean->id);
+            }
+            $count++;
+        }
+
+        // Remove extra objects
+        $len = count($objList);
+        if ($len > $count) {
+            for (; $count < $len; $count++) {
+                unset($objList[$count]);
+            }
+        }
     }
 }
 

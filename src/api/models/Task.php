@@ -33,18 +33,10 @@ class Task extends BaseModel {
         $bean->points = $this->points;
         $bean->position = $this->position;
 
-        $bean->xownAttachmentList = [];
-        $bean->xownCommentList = [];
-
-        foreach($this->attachments as $attachment) {
-            $attachment->updateBean();
-            $bean->xownAttachmentList[] = $attachment->bean;
-        }
-
-        foreach($this->comments as $comment) {
-            $comment->updateBean();
-            $bean->xownCommentList[] = $comment->bean;
-        }
+        $this->updateBeanList($this->attachments,
+            $bean->xownAttachmentList);
+        $this->updateBeanList($this->comments,
+            $bean->xownCommentList);
     }
 
     public function loadFromBean($bean) {
@@ -61,17 +53,14 @@ class Task extends BaseModel {
         $this->is_valid = true;
         $this->loadPropertiesFrom($bean);
 
-        $this->attachments = [];
-        $this->comments = [];
-
-        foreach($bean->xownAttachmentList as $item) {
-            $this->attachments[] =
-                new Attachment($this->container, $item->id);
-        }
-
-        foreach($bean->xownCommentList as $item) {
-            $this->comments[] = new Comment($this->container, $item->id);
-        }
+        $this->updateObjList($this->attachments, $bean->xownAttachmentList,
+            function($id) {
+                return new Attachment($this->container, $id);
+            });
+        $this->updateObjList($this->comments, $bean->xownCommentList,
+            function($id) {
+                return new Comment($this->container, $id);
+            });
     }
 
     public function loadFromJson($json) {
@@ -86,12 +75,10 @@ class Task extends BaseModel {
         $this->is_valid = true;
         $this->loadPropertiesFrom($obj);
 
-        $this->attachments = [];
-        $this->comments = [];
-
         if (isset($obj->attachments)) {
             foreach($obj->attachments as $item) {
-                $this->comments[] = new Attachment($this->container, $item->id);
+                $this->attachments[] =
+                    new Attachment($this->container, $item->id);
             }
         }
 

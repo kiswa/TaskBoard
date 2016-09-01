@@ -4,7 +4,7 @@ class Column extends BaseModel {
     public $name = '';
     public $position = 0;
     public $board_id = 0;
-    public $tasks = []; // Task model array
+    public $tasks = [];
 
     public function __construct($container, $id = 0) {
         parent::__construct('column', $id, $container);
@@ -19,11 +19,8 @@ class Column extends BaseModel {
         $bean->name = $this->name;
         $bean->position = $this->position;
         $bean->board_id = $this->board_id;
-        $bean->xownTaskList = [];
 
-        foreach($this->tasks as $task) {
-            $bean->xownTaskList[] = $task->bean;
-        }
+        $this->updateBeanList($this->tasks, $bean->xownTaskList);
     }
 
     public function loadFromBean($bean) {
@@ -39,11 +36,11 @@ class Column extends BaseModel {
 
         $this->is_valid = true;
         $this->loadPropertiesFrom($bean);
-        $this->tasks = [];
 
-        foreach($bean->xownTaskList as $item) {
-            $this->tasks[] = new Task($this->container, $item->id);
-        }
+        $this->updateObjList($this->tasks, $bean->xownTaskList,
+            function($id) {
+                return new Task($this->container, $id);
+            });
     }
 
     public function loadFromJson($json) {
@@ -57,7 +54,6 @@ class Column extends BaseModel {
 
         $this->is_valid = true;
         $this->loadPropertiesFrom($obj);
-        $this->tasks = [];
 
         if (isset($obj->tasks)) {
             foreach($obj->tasks as $item) {

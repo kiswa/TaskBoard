@@ -166,13 +166,12 @@ class Users extends BaseController {
             }
         }
 
-        if ($user->default_board_id !== $update->default_board_id &&
-                $update->default_board_id !== 0) {
+        if ($user->default_board_id !== $update->default_board_id) {
             $newId = $update->default_board_id;
 
             if ($newId > 0 && !Auth::HasBoardAccess($this->container, $request,
                     $newId, $user->id)) {
-                $board = new Board($this->container, $update->default_board_id);
+                $board = new Board($this->container, $newId);
                 $board->users[] = $user;
                 $board->save();
             }
