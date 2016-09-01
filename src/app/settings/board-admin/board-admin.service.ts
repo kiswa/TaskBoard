@@ -15,7 +15,6 @@ export class BoardAdminService {
 
     addBoard(board: BoardData): Observable<ApiResponse> {
         let newBoard = this.convertForApi(board);
-        console.log(newBoard);
 
         return this.http.post('api/boards', newBoard)
             .map(res => {

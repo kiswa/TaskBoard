@@ -205,7 +205,6 @@ export class BoardAdmin {
                     user.selected = true;
                 }
             });
-            console.log(board);
         }
 
         this.modal.open(this.MODAL_ID);

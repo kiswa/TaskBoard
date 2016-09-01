@@ -50,6 +50,11 @@ export class UserAdmin {
                 this.replaceUser(activeUser);
             });
 
+        settings.boardsChanged
+            .subscribe(boards => {
+                this.boards = boards;
+            });
+
         settings.getUsers()
             .subscribe((response: ApiResponse) => {
                 this.users = response.data[1];
@@ -92,6 +97,7 @@ export class UserAdmin {
 
         this.userService.editUser(this.modalProps.user)
             .subscribe((response: ApiResponse) => {
+                console.log(response);
                 response.alerts.forEach(note => this.notes.add(note));
 
                 this.replaceUser(JSON.parse(response.data[1]));
