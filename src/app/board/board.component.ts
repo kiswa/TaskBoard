@@ -5,8 +5,7 @@ import { TopNav } from '../shared/index';
 
 @Component({
     selector: 'tb-board',
-    templateUrl: 'app/board/board.component.html',
-    directives: [ TopNav ]
+    templateUrl: 'app/board/board.component.html'
 })
 export class Board {
     constructor(private title: Title) {

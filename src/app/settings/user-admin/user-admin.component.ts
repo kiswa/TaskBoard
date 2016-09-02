@@ -17,8 +17,7 @@ import { UserDisplay, ModalUser, ModalProperties } from './user-admin.models';
 @Component({
     selector: 'tb-user-admin',
     templateUrl: 'app/settings/user-admin/user-admin.component.html',
-    providers: [ UserAdminService ],
-    directives: [ Modal ]
+    providers: [ UserAdminService ]
 })
 export class UserAdmin {
     private users: Array<UserDisplay>;

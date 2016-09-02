@@ -3,8 +3,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard, AuthService } from './shared/index';
 import { Login } from './login/login.component';
 import { Board } from './board/board.component';
-import { Settings } from './settings/settings.component';
-import { Dashboard } from './dashboard/dashboard.component';
+import {
+    Settings,
+    UserAdmin,
+    BoardAdmin,
+    UserSettings
+} from './settings/index';
+import { Dashboard, Charts, Calendar } from './dashboard/index';
 
 const ROUTES: Routes = [
     {
@@ -28,8 +33,16 @@ const ROUTES: Routes = [
     }
 ];
 
-export const APP_COMPONENTS = [
-    Login, Board, Settings, Dashboard
+export const ROUTE_COMPONENTS = [
+    Login,
+    Board,
+    Settings,
+    UserAdmin,
+    BoardAdmin,
+    UserSettings,
+    Dashboard,
+    Charts,
+    Calendar
 ];
 
 export const APP_ROUTING = RouterModule.forRoot(ROUTES);

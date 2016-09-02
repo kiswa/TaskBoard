@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HTTP_PROVIDERS } from '@angular/http';
+import { HttpModule } from '@angular/http';
 
-import { APP_ROUTING, APP_COMPONENTS } from './app.routes';
+import { Dragula } from 'ng2-dragula/ng2-dragula';
+
+import { APP_ROUTING, ROUTE_COMPONENTS } from './app.routes';
 import { AppComponent } from './app.component';
 
 import { API_HTTP_PROVIDERS } from './app.api-http';
@@ -11,19 +13,23 @@ import { Constants } from './shared/constants';
 import {
     AuthGuard,
     AuthService,
+    Notifications,
     NotificationsService,
-    ModalService
+    Modal,
+    ModalService,
+    InlineEdit,
+    TopNav
 } from './shared/index';
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
+        HttpModule,
         APP_ROUTING
     ],
     providers: [
         Title,
-        HTTP_PROVIDERS,
         API_HTTP_PROVIDERS,
         AuthGuard,
         AuthService,
@@ -32,8 +38,13 @@ import {
         Constants
     ],
     declarations: [
+        Dragula,
         AppComponent,
-        ...APP_COMPONENTS
+        Notifications,
+        Modal,
+        InlineEdit,
+        TopNav,
+        ...ROUTE_COMPONENTS
     ],
     bootstrap: [ AppComponent ]
 })

@@ -1,4 +1,4 @@
-import { provide } from '@angular/core';
+import { Provider } from '@angular/core';
 import {
     Http,
     Request,
@@ -13,15 +13,18 @@ import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 import { ApiResponse } from './shared/index';
 
 export const API_HTTP_PROVIDERS = [
-    provide(Http, {
+    {
+        provide: Http,
         useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions,
-            router: Router) => new ApiHttp(xhrBackend, requestOptions, router),
+                router: Router) => new ApiHttp(xhrBackend, requestOptions, router),
         deps: [XHRBackend, RequestOptions, Router]
-    })
+    }
 ];
 
 export class ApiHttp extends Http {

@@ -24,7 +24,6 @@ class SelectableUser extends User {
 @Component({
     selector: 'tb-board-admin',
     templateUrl: 'app/settings/board-admin/board-admin.component.html',
-    directives: [ InlineEdit, Modal, Dragula ],
     providers: [ BoardAdminService ],
     viewProviders: [ DragulaService ]
 })

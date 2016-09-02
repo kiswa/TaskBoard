@@ -7,8 +7,7 @@ import { Calendar } from './calendar/calendar.component';
 
 @Component({
     selector: 'tb-dashboard',
-    templateUrl: 'app/dashboard/dashboard.component.html',
-    directives: [ TopNav, Charts, Calendar ]
+    templateUrl: 'app/dashboard/dashboard.component.html'
 })
 export class Dashboard {
     constructor(private title: Title) {

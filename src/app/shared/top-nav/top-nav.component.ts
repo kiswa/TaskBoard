@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ROUTER_DIRECTIVES, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Constants } from '../constants';
 import { AuthService } from '../auth/index';
@@ -8,8 +8,7 @@ import { Notification } from '../models/index';
 
 @Component({
     selector: 'tb-top-nav',
-    templateUrl: 'app/shared/top-nav/top-nav.component.html',
-    directives: [ ROUTER_DIRECTIVES ]
+    templateUrl: 'app/shared/top-nav/top-nav.component.html'
 })
 export class TopNav {
     @Input('page-name') pageName: string = '';

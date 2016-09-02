@@ -12,12 +12,6 @@ import {
 @Component({
     selector: 'tb-settings',
     templateUrl: 'app/settings/settings.component.html',
-    directives: [
-        TopNav,
-        UserSettings,
-        UserAdmin,
-        BoardAdmin
-    ],
     providers: [ SettingsService ]
 })
 export class Settings {
