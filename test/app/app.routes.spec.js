@@ -7,8 +7,8 @@ describe('Routes', () => {
         expect(routes.APP_ROUTING).to.be.an('object');
     });
 
-    it('provides APP_COMPONENTS', () => {
-        expect(routes.APP_COMPONENTS).to.be.an('array');
+    it('provides ROUTE_COMPONENTS', () => {
+        expect(routes.ROUTE_COMPONENTS).to.be.an('array');
     });
 });
 

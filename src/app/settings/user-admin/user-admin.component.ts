@@ -96,7 +96,6 @@ export class UserAdmin {
 
         this.userService.editUser(this.modalProps.user)
             .subscribe((response: ApiResponse) => {
-                console.log(response);
                 response.alerts.forEach(note => this.notes.add(note));
 
                 this.replaceUser(JSON.parse(response.data[1]));
