@@ -232,7 +232,7 @@
     </div>
 
     <div class="buttons">
-        <button (click)="addEditBoard()">
+        <button (click)="addEditBoard()" [disabled]="saving">
             <i class="icon"
                 [ngClass]="{ 'icon-plus': modalProps.title === 'Add', 'icon-floppy': modalProps.title !== 'Add' }"></i>
             {{ modalProps.title === 'Add' ? 'Add' : 'Save' }}

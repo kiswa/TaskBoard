@@ -27,6 +27,7 @@ export class UserAdmin {
     private userToRemove: UserDisplay;
 
     private loading = true;
+    private saving = false;
 
     private MODAL_ID: string;
     private MODAL_CONFIRM_ID: string;
@@ -74,8 +75,10 @@ export class UserAdmin {
 
     addEditUser(): void {
         let isAdd = (this.modalProps.title === 'Add');
+        this.saving = true;
 
         if (!this.validateModalUser()) {
+            this.saving = false;
             return;
         }
 
@@ -88,6 +91,7 @@ export class UserAdmin {
 
                     if (response.status === 'success') {
                         this.modal.close(this.MODAL_ID);
+                        this.saving = false;
                     }
                 });
 
@@ -102,6 +106,7 @@ export class UserAdmin {
 
                 if (response.status === 'success') {
                     this.modal.close(this.MODAL_ID);
+                    this.saving = false;
                 }
             });
     }

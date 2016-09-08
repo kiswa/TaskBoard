@@ -37,6 +37,7 @@ export class BoardAdmin {
 
     private hasBAUsers = false;
     private loading = true;
+    private saving = false;
 
     private MODAL_ID: string;
     private MODAL_CONFIRM_ID: string;
@@ -101,19 +102,24 @@ export class BoardAdmin {
     }
 
     addEditBoard(): void {
+        this.saving = true;
         this.setBoardUsers();
 
-        if (this.validateBoard()) {
-            this.boardService.addBoard(this.modalProps)
-                .subscribe((response: ApiResponse) => {
-                    response.alerts.forEach(note => this.notes.add(note));
-
-                    if (response.status === 'success') {
-                        this.modal.close(this.MODAL_ID);
-                        this.settings.updateBoards(response.data[1]);
-                    }
-                });
+        if (!this.validateBoard()) {
+            this.saving = false;
+            return;
         }
+
+        this.boardService.addBoard(this.modalProps)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status === 'success') {
+                    this.modal.close(this.MODAL_ID);
+                    this.settings.updateBoards(response.data[1]);
+                    this.saving = false;
+                }
+            });
     }
 
     private validateBoard(): boolean {

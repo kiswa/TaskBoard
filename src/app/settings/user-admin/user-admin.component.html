@@ -110,9 +110,10 @@
     </label>
 
     <div class="buttons">
-        <button (click)="addEditUser()">
+        <button (click)="addEditUser()" [disabled]="saving">
             <i class="icon"
-                [ngClass]="{ 'icon-plus': modalProps.prefix === '', 'icon-floppy': modalProps.prefix !== '' }"></i>
+                [ngClass]="{ 'icon-plus': modalProps.prefix === '',
+                    'icon-floppy': modalProps.prefix !== '' }"></i>
             {{ modalProps.prefix === '' ? 'Add' : 'Save' }}
             User
         </button>
