@@ -19,6 +19,5 @@
     ],
     "autoload": {
         "classmap": [ "controllers", "models" ]
-    },
-    "minimum-stability": "stable"
+    }
 }
