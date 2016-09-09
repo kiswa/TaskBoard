@@ -36,10 +36,9 @@ class AutoAction extends BaseModel {
     public function updateBean() {
         $bean = $this->bean;
 
-        $bean->id = $this->id;
-        $bean->board_id = $this->board_id;
+        $bean->board_id = (string) $this->board_id;
         $bean->trigger = $this->trigger->getValue();
-        $bean->source_id = $this->source_id;
+        $bean->source_id = (string) $this->source_id;
         $bean->type = $this->type->getValue();
         $bean->change_to = $this->change_to;
     }

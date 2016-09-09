@@ -58,7 +58,6 @@ class UserOptionsTest extends PHPUnit_Framework_TestCase {
         $options->updateBean();
         $bean = $options->getBean();
 
-        $this->assertTrue($bean->id === $options->id);
         $this->assertTrue((bool) $bean->new_tasks_at_bottom ===
             $options->new_tasks_at_bottom);
         $this->assertTrue((bool) $bean->show_animations === $options->show_animations);

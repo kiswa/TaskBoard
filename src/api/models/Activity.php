@@ -30,13 +30,13 @@ class Activity extends BaseModel {
     public function updateBean() {
         $bean = $this->bean;
 
-        $bean->user_id = $this->user_id;
+        $bean->user_id = (string) $this->user_id;
         $bean->log_text = $this->log_text;
         $bean->before = $this->before;
         $bean->after = $this->after;
         $bean->item_type = $this->item_type;
-        $bean->item_id = $this->item_id;
-        $bean->timestamp = $this->timestamp;
+        $bean->item_id = (string) $this->item_id;
+        $bean->timestamp = (string) $this->timestamp;
     }
 
     public function loadFromBean($bean) {

@@ -15,10 +15,9 @@ class Column extends BaseModel {
     public function updateBean() {
         $bean = $this->bean;
 
-        $bean->id = $this->id;
         $bean->name = $this->name;
-        $bean->position = $this->position;
-        $bean->board_id = $this->board_id;
+        $bean->position = (string) $this->position;
+        $bean->board_id = (string) $this->board_id;
 
         $this->updateBeanList($this->tasks, $bean->xownTaskList);
     }

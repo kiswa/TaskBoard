@@ -58,12 +58,10 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
         $action->updateBean();
         $bean = $action->getBean();
 
-        $this->assertTrue($bean->id === $action->id);
-        $this->assertTrue($bean->board_id === $action->board_id);
-        $this->assertTrue($bean->trigger === $action->trigger->getValue());
-        $this->assertTrue($bean->source_id === $action->source_id);
-        $this->assertTrue($bean->type === $action->type->getValue());
-        $this->assertTrue($bean->change_to === $action->change_to);
+        $this->assertEquals($bean->trigger, $action->trigger->getValue());
+        $this->assertEquals($bean->source_id ,$action->source_id);
+        $this->assertEquals($bean->type, $action->type->getValue());
+        $this->assertEquals($bean->change_to, $action->change_to);
     }
 
     private function assertMockProperties($attachment) {

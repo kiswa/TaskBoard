@@ -61,9 +61,8 @@ class TaskTest extends PHPUnit_Framework_TestCase {
         $task->updateBean();
         $bean = $task->getBean();
 
-        $this->assertTrue($bean->id === $task->id);
-        $this->assertTrue($bean->title === $task->title);
-        $this->assertTrue($bean->column_id === $task->column_id);
+        $this->assertEquals($bean->title, $task->title);
+        $this->assertEquals($bean->column_id, $task->column_id);
     }
 
     private function assertDefaultProperties($task) {

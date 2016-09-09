@@ -224,6 +224,9 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($response->status === 'failure');
     }
 
+    /**
+     * @group single
+     */
     public function testUpdateUser() {
         $this->createUser();
 
@@ -240,25 +243,37 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 
         $response = $this->users->updateUser($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
 
+        $this->users = new Users(new ContainerMock());
+        $args['id'] = $user->id;
         $request->header = [DataMock::getJwt()];
         $request->payload = new stdClass();
 
         $response = $this->users->updateUser($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->alerts[1]['type'] === 'error');
+        $this->assertEquals('error', $response->alerts[0]['type']);
 
         $res = DataMock::createUnpriviligedUser();
         $this->assertEquals('success', $res->status);
 
+        $this->users = new Users(new ContainerMock());
         $request = new RequestMock();
         $request->header = [DataMock::getJwt(3)];
 
         $actual = $this->users->updateUser($request,
             new ResponseMock(), $args);
         $this->assertEquals('Insufficient privileges.',
-            $actual->alerts[2]['text']);
+            $actual->alerts[0]['text']);
+
+        $this->users = new Users(new ContainerMock());
+        $request->header = [DataMock::getJwt(1)];
+        $request->payload = $user;
+        $args['id'] = $user->id + 1;
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $response->status);
     }
 
     public function testUpdateUserDefaultBoard() {
@@ -287,7 +302,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 
         $response = $this->users->updateUser($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
     }
 
     public function testUpdateUserForbidden() {

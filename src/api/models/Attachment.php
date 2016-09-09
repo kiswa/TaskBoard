@@ -17,12 +17,11 @@ class Attachment extends BaseModel {
     public function updateBean() {
         $bean = $this->bean;
 
-        $bean->id = $this->id;
         $bean->filename = $this->filename;
         $bean->name = $this->name;
         $bean->type = $this->type;
-        $bean->user_id = $this->user_id;
-        $bean->task_id = $this->task_id;
+        $bean->user_id = (string) $this->user_id;
+        $bean->task_id = (string) $this->task_id;
         $bean->timestamp = $this->timestamp;
     }
 

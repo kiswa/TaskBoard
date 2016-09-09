@@ -60,15 +60,11 @@ class ColumnTest extends PHPUnit_Framework_TestCase {
         $column->updateBean();
         $bean = $column->getBean();
 
-        $this->assertTrue($bean->id === $column->id);
-        $this->assertTrue($bean->name === $column->name);
-        $this->assertTrue($bean->position === $column->position);
-        $this->assertTrue($bean->board_id === $column->board_id);
+        $this->assertEquals($bean->name, $column->name);
+        $this->assertEquals($bean->position, $column->position);
+        $this->assertEquals($bean->board_id, $column->board_id);
     }
 
-    /**
-     * @group single
-     */
     public function testRemoveChild() {
         $column = new Column(new ContainerMock());
 

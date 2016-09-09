@@ -14,10 +14,9 @@ class Category extends BaseModel {
     public function updateBean() {
         $bean = $this->bean;
 
-        $bean->id = $this->id;
         $bean->name = $this->name;
         $bean->default_task_color = $this->default_task_color;
-        $bean->board_id = $this->board_id;
+        $bean->board_id = (string) $this->board_id;
     }
 
     public function loadFromBean($bean) {

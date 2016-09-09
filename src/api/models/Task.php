@@ -22,16 +22,15 @@ class Task extends BaseModel {
     public function updateBean() {
         $bean = $this->bean;
 
-        $bean->id = $this->id;
         $bean->title = $this->title;
         $bean->description = $this->description;
-        $bean->assignee = $this->assignee;
-        $bean->category_id = $this->category_id;
-        $bean->column_id = $this->column_id;
+        $bean->assignee = (string) $this->assignee;
+        $bean->category_id = (string) $this->category_id;
+        $bean->column_id = (string) $this->column_id;
         $bean->color = $this->color;
         $bean->due_date = $this->due_date;
-        $bean->points = $this->points;
-        $bean->position = $this->position;
+        $bean->points = (string) $this->points;
+        $bean->position = (string) $this->position;
 
         $this->updateBeanList($this->attachments,
             $bean->xownAttachmentList);

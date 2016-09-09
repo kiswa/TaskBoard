@@ -32,8 +32,10 @@ abstract class BaseModel {
         $this->updateBean();
 
         try {
-            $id = R::store($this->bean);
-            $this->loadFromBean($this->bean);
+            $this->id = R::store($this->bean);
+
+            list($props, $type) = $this->bean->getPropertiesAndType();
+            $this->loadFromBean(R::load($type, $this->id));
         } catch (Exception $ex) {
             $this->logger->addError('Save Error: ', [
                 $this->bean,
@@ -53,6 +55,10 @@ abstract class BaseModel {
     }
 
     protected function updateBeanList(&$objList, &$beanList) {
+        if (count($objList) === 0) {
+            return;
+        }
+
         foreach ($objList as $obj) {
             $obj->updateBean();
 
@@ -81,23 +87,11 @@ abstract class BaseModel {
     protected function updateObjList(&$objList, &$beanList, $ctor) {
         // Beans are indexed by id, the object list is zero-based
         $count = 0;
+        $objList = [];
 
         foreach($beanList as $bean) {
-            if (array_key_exists($count, $objList)) {
-                $objList[$count]->bean = $bean;
-                $objList[$count]->loadFromBean($bean);
-            } else {
-                $objList[] = $ctor($bean->id);
-            }
+            $objList[] = $ctor($bean->id);
             $count++;
-        }
-
-        // Remove extra objects
-        $len = count($objList);
-        if ($len > $count) {
-            for (; $count < $len; $count++) {
-                unset($objList[$count]);
-            }
         }
     }
 }

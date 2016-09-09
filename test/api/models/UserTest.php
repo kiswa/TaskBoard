@@ -58,7 +58,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $user->updateBean();
         $bean = $user->getBean();
 
-        $this->assertEquals($bean->id, $user->id);
         $this->assertEquals($bean->security_level,
             $user->security_level->getValue());
         $this->assertEquals($bean->username, $user->username);

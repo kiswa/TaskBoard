@@ -107,8 +107,18 @@ class Users extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
+        $data = json_decode($request->getBody());
         $user = new User($this->container, (int)$args['id']);
-        $update = new User($this->container);
+
+        if (!property_exists($data, 'id')) {
+            $this->logger->addError('Update User: ', [$user, $data]);
+            $this->apiJson->addAlert('error', 'Error updating user. ' .
+                'Please check your entries and try again.');
+
+            return $this->jsonResponse($response);
+        }
+
+        $update = new User($this->container, $data->id);
         $actor = new User($this->container, Auth::GetUserId($request));
 
         if ($actor->id !== $user->id) {
@@ -119,7 +129,6 @@ class Users extends BaseController {
             }
         }
 
-        $data = json_decode($request->getBody());
         if (isset($data->new_password) && isset($data->old_password)) {
             if (password_verify($data->old_password, $user->password_hash)) {
                 $data->password_hash =
@@ -157,6 +166,7 @@ class Users extends BaseController {
 
         if ($user->username !== $update->username) {
             $existing = R::findOne('user', 'username = ?', [ $update->username ]);
+
             if ($existing !== null) {
                 $this->logger->addError('Update User: ', [$user, $update]);
                 $this->apiJson->addAlert('error', 'Error updating username. ' .

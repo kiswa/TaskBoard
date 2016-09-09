@@ -56,13 +56,12 @@ class User extends BaseModel {
     public function updateBean() {
         $bean = $this->bean;
 
-        $bean->id = $this->id;
         $bean->security_level = $this->security_level->getValue();
         $bean->username = $this->username;
         $bean->password_hash = $this->password_hash;
         $bean->email = $this->email;
-        $bean->default_board_id = $this->default_board_id;
-        $bean->user_option_id = $this->user_option_id;
+        $bean->default_board_id = (string) $this->default_board_id;
+        $bean->user_option_id = (string) $this->user_option_id;
         $bean->last_login = $this->last_login;
         $bean->active_token = $this->active_token;
     }

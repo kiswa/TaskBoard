@@ -15,7 +15,6 @@ class UserOptions extends BaseModel {
     public function updateBean() {
         $bean = $this->bean;
 
-        $bean->id = $this->id;
         $bean->new_tasks_at_bottom = $this->new_tasks_at_bottom;
         $bean->show_animations = $this->show_animations;
         $bean->show_assignee = $this->show_assignee;

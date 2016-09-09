@@ -63,7 +63,6 @@ class CategoryTest extends PHPUnit_Framework_TestCase {
         $category->updateBean();
         $bean = $category->getBean();
 
-        $this->assertEquals($bean->id, $category->id);
         $this->assertEquals($bean->name, $category->name);
         $this->assertEquals($bean->default_task_color,
             $category->default_task_color);

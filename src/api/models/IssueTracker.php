@@ -16,6 +16,7 @@ class IssueTracker extends BaseModel {
 
         $bean->url = $this->url;
         $bean->regex = $this->regex;
+        $bean->board_id = (string) $this->board_id;
     }
 
     public function loadFromBean($bean) {

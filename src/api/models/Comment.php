@@ -14,10 +14,9 @@ class Comment extends BaseModel {
     public function updateBean() {
         $bean = $this->bean;
 
-        $bean->id = $this->id;
         $bean->text = $this->text;
-        $bean->user_id = $this->user_id;
-        $bean->task_id = $this->task_id;
+        $bean->user_id = (string) $this->user_id;
+        $bean->task_id = (string) $this->task_id;
     }
 
     public function loadFromBean($bean) {

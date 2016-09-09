@@ -58,13 +58,12 @@ class AttachmentTest extends PHPUnit_Framework_TestCase {
         $attachment->updateBean();
         $bean = $attachment->getBean();
 
-        $this->assertTrue($bean->id === $attachment->id);
-        $this->assertTrue($bean->filename === $attachment->filename);
-        $this->assertTrue($bean->name === $attachment->name);
-        $this->assertTrue($bean->type === $attachment->type);
-        $this->assertTrue($bean->user_id === $attachment->user_id);
-        $this->assertTrue($bean->task_id === $attachment->task_id);
-        $this->assertTrue($bean->timestamp === $attachment->timestamp);
+        $this->assertEquals($bean->filename, $attachment->filename);
+        $this->assertEquals($bean->name, $attachment->name);
+        $this->assertEquals($bean->type, $attachment->type);
+        $this->assertEquals($bean->user_id, $attachment->user_id);
+        $this->assertEquals($bean->task_id, $attachment->task_id);
+        $this->assertEquals($bean->timestamp, $attachment->timestamp);
     }
 
     private function assertMockProperties($attachment) {
