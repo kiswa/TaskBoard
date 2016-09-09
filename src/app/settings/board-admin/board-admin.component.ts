@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Dragula, DragulaService } from 'ng2-dragula/ng2-dragula';
+import { DragulaService } from 'ng2-dragula/ng2-dragula';
 
 import {
     ApiResponse,

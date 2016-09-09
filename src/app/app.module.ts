@@ -3,7 +3,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { Dragula } from 'ng2-dragula/ng2-dragula';
+import { DragulaModule } from 'ng2-dragula/ng2-dragula';
 
 import { APP_ROUTING, ROUTE_COMPONENTS } from './app.routes';
 import { AppComponent } from './app.component';
@@ -26,7 +26,8 @@ import {
         BrowserModule,
         FormsModule,
         HttpModule,
-        APP_ROUTING
+        APP_ROUTING,
+        DragulaModule
     ],
     providers: [
         Title,
@@ -38,7 +39,6 @@ import {
         Constants
     ],
     declarations: [
-        Dragula,
         AppComponent,
         Notifications,
         Modal,

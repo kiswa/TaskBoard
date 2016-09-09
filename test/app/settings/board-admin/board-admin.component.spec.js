@@ -1,7 +1,7 @@
 /* global expect AuthServiceMock SettingsServiceMock ModalServiceMock NotificationsServiceMock */
 var path = '../../../../build/settings/board-admin/',
     BoardAdmin = require(path + 'board-admin.component.js').BoardAdmin,
-    DragulaService = require('../../../../node_modules/ng2-dragula/src/app/providers/dragula.provider.js')
+    DragulaService = require('../../../../node_modules/ng2-dragula/components/dragula.provider.js')
         .DragulaService;
 
 describe('BoardAdmin', () => {
