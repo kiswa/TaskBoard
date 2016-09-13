@@ -179,7 +179,7 @@ class Users extends BaseController {
         if ($user->default_board_id !== $update->default_board_id) {
             $newId = $update->default_board_id;
 
-            $this->addUserToBoard($newId, $user);
+            $this->addUserToBoard($newId, $user, $request);
         }
 
         if (isset($data->boardAccess)) {
@@ -284,7 +284,7 @@ class Users extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    private function addUserToBoard($boardId, $user) {
+    private function addUserToBoard($boardId, $user, $request) {
         if ($boardId > 0 && !Auth::HasBoardAccess($this->container, $request,
                 $boardId, $user->id)) {
             $board = new Board($this->container, $boardId);
