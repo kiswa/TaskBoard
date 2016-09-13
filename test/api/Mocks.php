@@ -249,19 +249,19 @@ class LoggerMock {
     public function addError() {
         // Uncomment to log errors to file
         // The tests cover errors, so there will be plenty to sift through
-        $msg = func_get_arg(0);
-        $err = 'API ERROR: ' . $msg . PHP_EOL;
+        // $msg = func_get_arg(0);
+        // $err = 'API ERROR: ' . $msg . PHP_EOL;
 
-        $objs = func_get_args();
-        array_splice($objs, 0, 1);
+        // $objs = func_get_args();
+        // array_splice($objs, 0, 1);
 
-        ob_start();
-        foreach($objs as $obj) {
-            var_dump($obj);
-        }
-        $strings = ob_get_clean();
+        // ob_start();
+        // foreach($objs as $obj) {
+        //     var_dump($obj);
+        // }
+        // $strings = ob_get_clean();
 
-        file_put_contents('tests.log', [$err, $strings], FILE_APPEND);
+        // file_put_contents('tests.log', [$err, $strings], FILE_APPEND);
     }
 
 }

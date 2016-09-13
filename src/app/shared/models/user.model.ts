@@ -5,7 +5,8 @@ export class User {
             public last_login: Date = null,
             public security_level: number = 3,
             public user_option_id: number = 0,
-            public username: string = '') {
+            public username: string = '',
+            public board_acccess: Array<number> = []) {
     }
 }
 

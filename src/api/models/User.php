@@ -18,6 +18,7 @@ class User extends BaseModel {
     public $user_option_id = 0;
     public $last_login = 0;
     public $active_token = '';
+    public $board_access = [];
 
     public function __construct($container, $id = 0) {
         parent::__construct('user', $id, $container);
@@ -79,6 +80,16 @@ class User extends BaseModel {
 
         $this->is_valid = true;
         $this->loadPropertiesFrom($bean);
+
+        $this->board_access = [];
+        $boards = RedBeanPHP\R::getAll('select bu.board_id, bu.user_id from ' .
+            'board_user bu join board b on b.id = bu.board_id');
+
+        foreach($boards as $item) {
+            if ($this->id === (int)$item['user_id']) {
+                $this->board_access[] = (int)$item['board_id'];
+            }
+        }
     }
 
     public function loadFromJson($json) {

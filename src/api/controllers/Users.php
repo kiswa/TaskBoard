@@ -179,12 +179,14 @@ class Users extends BaseController {
         if ($user->default_board_id !== $update->default_board_id) {
             $newId = $update->default_board_id;
 
-            if ($newId > 0 && !Auth::HasBoardAccess($this->container, $request,
-                    $newId, $user->id)) {
-                $board = new Board($this->container, $newId);
-                $board->users[] = $user;
-                $board->save();
+            $this->addUserToBoard($newId, $user);
+        }
+
+        if (isset($data->boardAccess)) {
+            foreach($data->boardAccess as $boardId) {
+                $this->addUserToBoard($boardId, $user);
             }
+            unset($data->boardAccess);
         }
 
         $update->save();
@@ -280,6 +282,15 @@ class Users extends BaseController {
         $this->apiJson->addData($this->getAllUsersCleaned($request));
 
         return $this->jsonResponse($response);
+    }
+
+    private function addUserToBoard($boardId, $user) {
+        if ($boardId > 0 && !Auth::HasBoardAccess($this->container, $request,
+                $boardId, $user->id)) {
+            $board = new Board($this->container, $boardId);
+            $board->users[] = $user;
+            $board->save();
+        }
     }
 
     private function getAllUsersCleaned($request) {
