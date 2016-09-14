@@ -7,7 +7,6 @@ before_script:
   - nvm install 4
   - nvm use 4
   - npm i -g gulp typings
-  - npm i escape-string-regexp
   - npm i
   - touch tests.db
   - chmod a+w tests.db
