@@ -58,18 +58,7 @@ export class UserAdmin {
         settings.getUsers()
             .subscribe((response: ApiResponse) => {
                 this.users = response.data[1];
-
-                this.settings.getBoards()
-                    .subscribe((response: ApiResponse) => {
-                        let boards = response.data[1];
-                        if (boards) {
-                            this.boards = boards;
-                        }
-
-                        this.settings.updateBoards(this.boards);
-                        this.updateUserList();
-                        this.loading = false;
-                    });
+                this.getBoards();
             });
     }
 
@@ -88,11 +77,7 @@ export class UserAdmin {
                     response.alerts.forEach(note => this.notes.add(note));
 
                     this.replaceUserList(response);
-
-                    if (response.status === 'success') {
-                        this.modal.close(this.MODAL_ID);
-                        this.saving = false;
-                    }
+                    this.closeModal(response.status);
                 });
 
             return;
@@ -103,11 +88,7 @@ export class UserAdmin {
                 response.alerts.forEach(note => this.notes.add(note));
 
                 this.replaceUser(JSON.parse(response.data[1]));
-
-                if (response.status === 'success') {
-                    this.modal.close(this.MODAL_ID);
-                    this.saving = false;
-                }
+                this.closeModal(response.status);
             });
     }
 
@@ -119,8 +100,32 @@ export class UserAdmin {
 
                 if (response.status === 'success') {
                     this.modal.close(this.MODAL_CONFIRM_ID);
+                    this.getBoards();
                 }
             })
+    }
+
+    private closeModal(status: string): void {
+        if (status === 'success') {
+            this.modal.close(this.MODAL_ID);
+            this.saving = false;
+
+            this.getBoards();
+        }
+    }
+
+    private getBoards(): void {
+        this.settings.getBoards()
+            .subscribe((response: ApiResponse) => {
+                let boards = response.data[1];
+                if (boards) {
+                    this.boards = boards;
+                }
+
+                this.settings.updateBoards(this.boards);
+                this.updateUserList();
+                this.loading = false;
+            });
     }
 
     private replaceUser(newUser: User) {
