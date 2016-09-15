@@ -124,8 +124,8 @@
             [dragula]="'columns-bag'" [dragulaModel]="modalProps.columns">
             <li *ngFor="let column of modalProps.columns; let i = index">
                 <i class="icon icon-resize-vertical"></i>
-                <inline-edit [text]="getColumnName(i)"
-                    (edit)="onColumnNameEdit($event, i)"></inline-edit>
+                <inline-edit [text]="getPropertyValue('columns', 'name', i)"
+                    (edit)="onPropertyEdit('columns', 'name', i, $event)"></inline-edit>
                 <span class="actions">
                     <i class="icon icon-trash-empty color-secondary"
                         title="Remove"
@@ -152,8 +152,8 @@
             <li *ngFor="let category of modalProps.categories; let i = index">
                 <span class="badge" title="Default Task Color"
                     [style.background-color]="getColor(category)"></span>
-                <inline-edit [text]="getCategoryName(i)"
-                    (edit)="onCategoryNameEdit($event, i)"></inline-edit>
+                <inline-edit [text]="getPropertyValue('categories', 'name', i)"
+                    (edit)="onPropertyEdit('categories', 'name', i, $event)"></inline-edit>
                 <span class="actions">
                     <i class="icon icon-trash-empty color-secondary"
                         title="Remove"
@@ -189,10 +189,14 @@
         <ul *ngIf="modalProps.issueTrackers.length" class="modal-list">
             <li class="double-edit"
                 *ngFor="let tracker of modalProps.issueTrackers; let i = index">
-                <inline-edit class="first" [text]="getTrackerUrl(i)"
-                    (edit)="onTrackerUrlEdit($event, i)"></inline-edit>
-                <inline-edit class="last" [text]="getTrackerRegExp(i)"
-                    (edit)="onTrackerRegExpEdit($event, i)"></inline-edit>
+                <inline-edit class="first"
+                    [text]="getPropertyValue('issueTrackers', 'url', i)"
+                    (edit)="onPropertyEdit('issueTrackers', 'url', i, $event)">
+                </inline-edit>
+                <inline-edit class="last"
+                    [text]="getPropertyValue('issueTrackers', 'regex', i)"
+                    (edit)="onPropertyEdit('issueTrackers', 'regex', i, $event)">
+                </inline-edit>
                 <span class="actions">
                     <i class="icon icon-trash-empty color-secondary"
                         (click)="modalProps.removeIssueTracker(tracker)"></i>

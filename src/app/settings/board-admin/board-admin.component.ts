@@ -148,36 +148,13 @@ export class BoardAdmin {
         });
     }
 
-    private getColumnName(i: number): string {
-        return this.modalProps.columns[i].name;
+    private getPropertyValue(obj: string, prop: string, i: number): string {
+        return this.modalProps[obj][i][prop];
     }
 
-    private onColumnNameEdit(e: string, i: number): void {
-        this.modalProps.columns[i].name = e;
-    }
-
-    private getCategoryName(i: number): string {
-        return this.modalProps.categories[i].name;
-    }
-
-    private onCategoryNameEdit(e: string, i: number): void {
-        this.modalProps.categories[i].name = e;
-    }
-
-    private getTrackerUrl(i): string {
-        return this.modalProps.issueTrackers[i].url;
-    }
-
-    private onTrackerUrlEdit(e: string, i: number): void {
-        this.modalProps.issueTrackers[i].url = e;
-    }
-
-    private getTrackerRegExp(i: number): string {
-        return this.modalProps.issueTrackers[i].regex;
-    }
-
-    private onTrackerRegExpEdit(e: string, i: number): void {
-        this.modalProps.issueTrackers[i].regex = e;
+    private onPropertyEdit(obj: string, prop: string,
+            i: number, value: any): void {
+        this.modalProps[obj][i][prop] = value;
     }
 
     private getColor(category: any): string {
