@@ -28,7 +28,7 @@
     @include shadow-float();
 
     background-color: $white;
-    left: calc(50% - 300px);
+    left: calc(50% - 200px);
     max-height: calc(100% - 10em);
     max-width: 100%;
     min-height: 10em;
@@ -44,6 +44,7 @@
     }
 
     &.wide {
+        left: calc(50% - 300px);
         width: 600px;
     }
 
