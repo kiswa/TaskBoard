@@ -42,7 +42,7 @@ export class UserAdmin {
 
         this.users = [];
         this.boards = [];
-        this.modalProps = new ModalProperties('', '', new ModalUser());
+        this.modalProps = new ModalProperties('', '', new ModalUser(new User()));
 
         auth.userChanged
             .subscribe(activeUser => {
@@ -180,7 +180,7 @@ export class UserAdmin {
         this.modalProps = {
             title: title,
             prefix: isAdd ? '' : 'Change',
-            user: isAdd ? new ModalUser() : <ModalUser> user
+            user: isAdd ? new ModalUser(new User()) : new ModalUser(user)
         }
 
         this.modal.open(this.MODAL_ID);
