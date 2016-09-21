@@ -6,7 +6,7 @@ describe('User', () => {
     var user;
 
     beforeEach(() => {
-        user = new User;
+        user = new User();
     });
 
     it('has default_board_id', () => {

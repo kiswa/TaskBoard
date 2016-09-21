@@ -11,6 +11,13 @@ describe('UserSettingsService', () => {
             HttpMock);
     });
 
+    it('calls the api to change the default board', (done) => {
+        userSettingsService.changeDefaultBoard('1').subscribe(data => {
+            expect(data.endpoint).to.equal('api/users/1');
+            done();
+        });
+    });
+
     it('calls the api to change a password', (done) => {
         userSettingsService.changePassword('old', 'new').subscribe(data => {
             expect(data.endpoint).to.equal('api/users/1');

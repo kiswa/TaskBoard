@@ -50,5 +50,23 @@ describe('Modal', () => {
         });
         modal.keyup({ keyCode: 27 });
     });
+
+    it('filters clicks on the modal to prevent closing', () => {
+        var stopCalled = false,
+            eventStop = {
+                stopPropagation: () => {
+                    stopCalled = true;
+                }
+            },
+            eventCancel = {
+                cancelBubble: false
+            };
+
+        modal.filterClick(eventStop);
+        expect(stopCalled).to.equal(true);
+
+        modal.filterClick(eventCancel);
+        expect(eventCancel.cancelBubble).to.equal(true);
+    });
 });
 

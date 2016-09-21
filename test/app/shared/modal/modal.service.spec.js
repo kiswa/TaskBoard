@@ -10,7 +10,12 @@ describe('ModalService', () => {
         modalService = new ModalService(AuthServiceMock);
         modal = {
             modalId: 'testModal',
-            isOpen: false
+            isOpen: false,
+            focusElement: {
+                nativeElement: {
+                    focus: () => {}
+                }
+            }
         };
     });
 

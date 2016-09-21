@@ -35,6 +35,15 @@ describe('UserSettings', () => {
         expect(userSettings.userOptions.show_assignee).to.equal(true);
     });
 
+    it('has a function to update default board', (done) => {
+        notifications.noteAdded.subscribe(note => {
+            expect(note.type).to.equal('success');
+            done();
+        });
+
+        userSettings.updateDefaultBoard('1');
+    });
+
     it('has a function to update password', (done) => {
         userSettings.changePassword = {
             current: ''

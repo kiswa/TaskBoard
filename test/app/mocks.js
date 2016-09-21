@@ -70,7 +70,7 @@ global.AuthServiceMock = {
         });
     },
     authenticate: () => {
-        return false;
+        return RxJs.Observable.of(true);
     }
 };
 
@@ -207,19 +207,25 @@ global.UserSettingsServiceMock = {
             alerts: []
         });
     },
+    changeDefaultBoard: (boardId) => {
+        return RxJs.Observable.of({
+            alerts: [{ type: 'success', text: '' }],
+            data: [ '', '{}' ]
+        });
+    },
     changeUsername: (newName) => {
         return RxJs.Observable.of({
-            alerts: [{ type: 'success', text: ''}]
+            alerts: [{ type: 'success', text: '' }]
         });
     },
     changePassword: (newPass) => {
         return RxJs.Observable.of({
-            alerts: [{ type: 'success', text: ''}]
+            alerts: [{ type: 'success', text: '' }]
         });
     },
     changeEmail: (newEmail) => {
         return RxJs.Observable.of({
-            alerts: [{ type: 'success', text: ''}]
+            alerts: [{ type: 'success', text: '' }]
         });
     }
 };

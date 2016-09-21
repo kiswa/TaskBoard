@@ -51,6 +51,8 @@ describe('UserAdmin', () => {
     });
 
     it('has a function to validate a user', () => {
+        userAdmin.modalProps.title = 'Add';
+
         userAdmin.modalProps.user = { username: '' };
         expect(userAdmin.validateModalUser()).to.equal(false);
 

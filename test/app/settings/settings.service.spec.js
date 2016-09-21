@@ -16,11 +16,45 @@ describe('UserAdminService', () => {
         });
     });
 
-    it('notifies subscribers when users are updated', (done) => {
-        settingsService.usersChanged.subscribe((users) => {
-            expect(users).to.be.an('array');
+    it('provides a list of boards', (done) => {
+        settingsService.getBoards().subscribe(users => {
+            expect(users.endpoint).to.equal('api/boards');
             done();
         });
+    });
+
+    it('allows updating users and notifies subscribers', (done) => {
+        var first = true;
+
+        settingsService.usersChanged.subscribe((users) => {
+            expect(users).to.be.an('array');
+
+            if (first) {
+                first = false;
+                return;
+            }
+
+            done();
+        });
+
+        settingsService.updateUsers([]);
+    });
+
+    it('allows updating boards and notifies subscribers', (done) => {
+        var first = true;
+
+        settingsService.boardsChanged.subscribe((boards) => {
+            expect(boards).to.be.an('array');
+
+            if (first) {
+                first = false;
+                return;
+            }
+
+            done();
+        });
+
+        settingsService.updateBoards([]);
     });
 });
 

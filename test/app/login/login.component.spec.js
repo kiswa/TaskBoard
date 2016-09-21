@@ -52,5 +52,16 @@ describe('Login', () => {
             done();
         }, 10);
     });
+
+    it('calls the AuthService during ngOnInit', (done) => {
+        expect(login.ngOnInit).to.be.a('function');
+
+        login.ngOnInit();
+
+        setTimeout(() => {
+            expect(router.path).to.equal('/boards');
+            done();
+        }, 10);
+    });
 });
 
