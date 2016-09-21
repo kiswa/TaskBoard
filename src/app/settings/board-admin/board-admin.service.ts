@@ -42,7 +42,7 @@ export class BoardAdminService {
         });
 
         board.issueTrackers.forEach(tracker => {
-            newBoard.addIssueTracker(tracker.url, tracker.bugId);
+            newBoard.addIssueTracker(tracker.url, tracker.regex);
         });
 
         board.users.forEach(user => {
