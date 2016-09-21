@@ -72,11 +72,6 @@ export class ApiHttp extends Http {
             options.headers = new Headers();
         }
 
-        // Temp fix TODO: remove when fix released
-        if (!options.body) {
-            options.body = body ? body : '';
-        }
-
         options.headers.append('Content-Type', 'application/json');
 
         let jwt = localStorage.getItem(this.JWT_KEY);
@@ -96,7 +91,10 @@ export class ApiHttp extends Http {
                 return res;
             })
             .catch((err, source) => {
-                if (err.status === 401 && err.url.indexOf('login') === -1) {
+                // 401 for invalid token, 400 for no token, and convert
+                // url to string in case it is null.
+                if ((err.status === 401 || err.status === 400) &&
+                        (err.url + '').indexOf('login') === -1) {
                     this.router.navigate(['']);
                     localStorage.removeItem(this.JWT_KEY);
                 }
