@@ -1,6 +1,6 @@
 import { Routes, RouterModule } from '@angular/router';
 
-import { AuthGuard, AuthService } from './shared/index';
+import { AuthGuard } from './shared/index';
 import { Login } from './login/login.component';
 import { Board } from './board/board.component';
 import {
