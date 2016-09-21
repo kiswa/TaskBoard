@@ -179,47 +179,20 @@ button {
     }
 }
 
-.hidden {
-    display: none;
-}
-
 .toggle {
-    position: relative;
-    vertical-align: middle;
+    vertical-align: sub;
 
     &::before {
-        background-color: $color-secondary;
-        border-radius: 3px;
-        content: ' ';
-        display: inline-block;
-        height: 1em;
-        padding: 5px 7px;
-        transition: background 300ms;
+        height: 16px;
         width: 30px;
     }
 
     &::after {
-        background-color: $white;
-        border: 1px solid $color-border;
-        border-radius: 2px;
-        content: ' ';
-        display: inline-block;
-        height: 1.5em;
-        left: 0;
-        position: absolute;
-        top: -.25em;
-        transition: transform 150ms;
-        width: 15px;
+        top: -2px;
     }
 }
 
-.hidden:checked + .toggle {
-    &::before {
-        background-color: $color-primary;
-    }
-
-    &::after {
-        transform: translate(15px);
-    }
+.hidden:checked + .toggle::after {
+    transform: translate(15px);
 }
 

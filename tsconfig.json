@@ -10,6 +10,7 @@
         "noImplicitAny": false
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        ".c9"
     ]
 }
