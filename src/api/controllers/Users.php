@@ -184,7 +184,7 @@ class Users extends BaseController {
 
         if (isset($data->boardAccess)) {
             foreach($data->boardAccess as $boardId) {
-                $this->addUserToBoard($boardId, $user);
+                $this->addUserToBoard($boardId, $user, $request);
             }
             unset($data->boardAccess);
         }
@@ -220,10 +220,11 @@ class Users extends BaseController {
             return $this->jsonResponse($response, 403);
         }
 
-        $userOpts = new UserOptions($this->container, $user->user_option_id);
-        $update = new UserOptions($this->container);
-
         $data = $request->getBody();
+
+        $userOpts = new UserOptions($this->container, $user->user_option_id);
+        $update = new UserOptions($this->container, json_decode($data)->id);
+
         $update->loadFromJson($data);
 
         if ($userOpts->id !== $update->id) {

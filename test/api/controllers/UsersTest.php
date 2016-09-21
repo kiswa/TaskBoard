@@ -224,15 +224,13 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($response->status === 'failure');
     }
 
-    /**
-     * @group single
-     */
     public function testUpdateUser() {
         $this->createUser();
 
         $user = DataMock::getUser();
         $user->username = 'newname';
         $user->default_board_id = 0;
+        $user->boardAccess = [1];
 
         $args = [];
         $args['id'] = $user->id;
