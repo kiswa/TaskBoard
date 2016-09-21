@@ -1,7 +1,8 @@
 import {
     Component,
     Input,
-    OnInit
+    OnInit,
+    ContentChild
 } from '@angular/core';
 
 import { ModalService } from './modal.service';
@@ -16,6 +17,8 @@ export class Modal implements OnInit {
     @Input('modal-title') modalTitle = '';
     @Input() blocking = false;
     @Input() wide = false;
+
+    @ContentChild('focusMe') focusElement;
 
     isOpen = false;
     animate = true;
@@ -34,6 +37,16 @@ export class Modal implements OnInit {
     private keyup(event: KeyboardEvent): void {
         if (event.keyCode === 27) {
             this.modalService.close(this.modalId, true);
+        }
+    }
+
+    private filterClick(event: Event): void {
+        event = event || window.event
+
+        if (event.stopPropagation) {
+            event.stopPropagation();
+        } else {
+            event.cancelBubble = true;
         }
     }
 }

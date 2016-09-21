@@ -56,7 +56,7 @@
 <tb-modal modal-title="{{ modalProps.title }} User" modal-id="{{ MODAL_ID }}">
     <label>
         {{ modalProps.prefix }} Username
-        <input type="text" name="new-username" placeholder="Username" autofocus
+        <input #focusMe type="text" name="new-username" placeholder="Username"
             [(ngModel)]="modalProps.user.username">
     </label>
 

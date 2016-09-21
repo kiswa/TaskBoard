@@ -1,10 +1,10 @@
-<div class="modal-container" [ngClass]="{ 'modal-open': isOpen }">
-    <div class="modal-overlay"
-        [ngClass]="{ animated: animate, 'modal-closed': !isOpen }"
-        (click)="close(true)"></div>
+<div class="modal-container"
+    [ngClass]="{ animated: animate, 'modal-open': isOpen }"
+    (click)="close(true)">
 
     <div class="modal"
-        [ngClass]="{ wide: wide, animated: animate, 'modal-closed': !isOpen }">
+        [ngClass]="{ wide: wide, animated: animate, 'modal-closed': !isOpen }"
+        (click)="filterClick($event)">
         <div class="title" *ngIf="modalTitle">
             <h2>
                 {{ modalTitle }}

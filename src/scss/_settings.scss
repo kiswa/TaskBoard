@@ -177,8 +177,12 @@
         }
 
         [type="text"] {
+            border: 0;
+            border-bottom: 1px solid $color-border;
+            border-radius: 0;
             height: 1em;
             margin: 0;
+            padding-left: 0;
             width: 90%;
         }
     }

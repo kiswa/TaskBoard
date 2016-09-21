@@ -30,6 +30,13 @@ export class ModalService {
         if (modal) {
             modal.animate = this.userOptions.show_animations;
             modal.isOpen = true;
+            document.querySelector('body').classList.add('no-scroll');
+
+            setTimeout(() => {
+                if (modal.focusElement) {
+                    modal.focusElement.nativeElement.focus();
+                }
+            }, 100);
         }
     }
 
@@ -42,6 +49,7 @@ export class ModalService {
             }
 
             modal.isOpen = false;
+            document.querySelector('body').classList.remove('no-scroll');
         }
     }
 

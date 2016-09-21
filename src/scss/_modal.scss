@@ -1,18 +1,18 @@
-.modal-container {
-    visibility: hidden;
-
-    &.modal-open {
-        visibility: visible;
-    }
+.no-scroll {
+    overflow: hidden;
 }
 
-.modal-overlay {
+.modal-container {
     background-color: rgba(0, 0, 0, .4);
     bottom: 0;
+    display: flex;
     left: 0;
+    overflow-y: auto;
+    padding: 10vh 0;
     position: fixed;
     right: 0;
     top: 0;
+    visibility: hidden;
     z-index: 1000;
 
     &.animated {
@@ -22,29 +22,26 @@
     &.modal-closed {
         opacity: 0;
     }
+
+    &.modal-open {
+        opacity: 1;
+        visibility: visible;
+    }
 }
 
 .modal {
     @include shadow-float();
 
     background-color: $white;
-    left: calc(50% - 200px);
-    max-height: calc(100% - 20em);
+    margin: auto;
     max-width: 100%;
-    min-height: 10em;
-    overflow-y: auto;
-    position: fixed;
-    top: 10em;
     width: 400px;
-    z-index: 1100;
-    zoom: 1.01; // Fixes blurry text
 
     &.animated {
         transition: all .3s;
     }
 
     &.wide {
-        left: calc(50% - 300px);
         width: 600px;
     }
 
