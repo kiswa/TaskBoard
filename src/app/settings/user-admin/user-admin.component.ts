@@ -152,7 +152,7 @@ export class UserAdmin {
             return false;
         }
 
-        if (user.password === '') {
+        if (this.modalProps.title === 'Add' && user.password === '') {
             this.notes.add(new Notification('error', 'Password is required.'));
             return false;
         }
