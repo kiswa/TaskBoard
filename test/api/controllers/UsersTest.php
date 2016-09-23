@@ -210,8 +210,8 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $response = $this->users->addUser($request,
             new ResponseMock(), null);
 
-        $this->assertTrue($response->status === 'failure');
-        $this->assertTrue($response->alerts[0]['type'] === 'error');
+        $this->assertEquals('failure', $response->status);
+        $this->assertEquals('error', $response->alerts[0]['type']);
 
         $args = [];
         $args['id'] = 5; // No such user
@@ -221,7 +221,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 
         $response = $this->users->removeUser($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'failure');
+        $this->assertEquals('failure', $response->status);
     }
 
     public function testUpdateUser() {
@@ -290,7 +290,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 
         $response = $this->users->updateUser($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
 
         $this->users = new Users(new ContainerMock());
 

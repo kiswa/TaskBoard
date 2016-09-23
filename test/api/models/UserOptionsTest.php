@@ -58,28 +58,30 @@ class UserOptionsTest extends PHPUnit_Framework_TestCase {
         $options->updateBean();
         $bean = $options->getBean();
 
-        $this->assertTrue((bool) $bean->new_tasks_at_bottom ===
-            $options->new_tasks_at_bottom);
-        $this->assertTrue((bool) $bean->show_animations === $options->show_animations);
-        $this->assertTrue((bool) $bean->show_assignee === $options->show_assignee);
-        $this->assertTrue((bool) $bean->multiple_tasks_per_row ===
-            $options->multiple_tasks_per_row);
+        $this->assertEquals($options->new_tasks_at_bottom,
+            (bool) $bean->new_tasks_at_bottom);
+        $this->assertEquals($options->show_animations,
+            (bool) $bean->show_animations);
+        $this->assertEquals($options->show_assignee,
+            (bool) $bean->show_assignee);
+        $this->assertEquals($options->multiple_tasks_per_row,
+            (bool) $bean->multiple_tasks_per_row);
     }
 
     private function assertDefaultProperties($options) {
-        $this->assertTrue($options->id === 0);
-        $this->assertTrue($options->new_tasks_at_bottom === true);
-        $this->assertTrue($options->show_animations === true);
-        $this->assertTrue($options->show_assignee === true);
-        $this->assertTrue($options->multiple_tasks_per_row === false);
+        $this->assertEquals(0, $options->id);
+        $this->assertEquals(true, $options->new_tasks_at_bottom);
+        $this->assertEquals(true, $options->show_animations);
+        $this->assertEquals(true, $options->show_assignee);
+        $this->assertEquals(false, $options->multiple_tasks_per_row);
     }
 
     private function assertMockProperties($options) {
-        $this->assertTrue($options->id === 1);
-        $this->assertTrue($options->new_tasks_at_bottom === false);
-        $this->assertTrue($options->show_animations === false);
-        $this->assertTrue($options->show_assignee === false);
-        $this->assertTrue($options->multiple_tasks_per_row === true);
+        $this->assertEquals(1, $options->id);
+        $this->assertEquals(false, $options->new_tasks_at_bottom);
+        $this->assertEquals(false, $options->show_animations);
+        $this->assertEquals(false, $options->show_assignee);
+        $this->assertEquals(true, $options->multiple_tasks_per_row);
     }
 }
 

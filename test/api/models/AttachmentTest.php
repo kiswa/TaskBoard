@@ -67,23 +67,23 @@ class AttachmentTest extends PHPUnit_Framework_TestCase {
     }
 
     private function assertMockProperties($attachment) {
-        $this->assertTrue($attachment->id === 1);
-        $this->assertTrue($attachment->filename === 'file');
-        $this->assertTrue($attachment->name === 'file.png');
-        $this->assertTrue($attachment->type === 'image');
-        $this->assertTrue($attachment->user_id === 1);
-        $this->assertTrue($attachment->task_id === 1);
-        $this->assertTrue($attachment->timestamp === 1234567890);
+        $this->assertEquals(1, $attachment->id);
+        $this->assertEquals('file', $attachment->filename);
+        $this->assertEquals('file.png', $attachment->name);
+        $this->assertEquals('image', $attachment->type);
+        $this->assertEquals(1, $attachment->user_id);
+        $this->assertEquals(1, $attachment->task_id);
+        $this->assertEquals(1234567890, $attachment->timestamp);
     }
 
     private function assertDefaultProperties($attachment) {
-        $this->assertTrue($attachment->id === 0);
-        $this->assertTrue($attachment->filename === '');
-        $this->assertTrue($attachment->name === '');
-        $this->assertTrue($attachment->type === '');
-        $this->assertTrue($attachment->user_id === 0);
-        $this->assertTrue($attachment->task_id === 0);
-        $this->assertTrue($attachment->timestamp === null);
+        $this->assertEquals(0, $attachment->id);
+        $this->assertEquals('', $attachment->filename);
+        $this->assertEquals('', $attachment->name);
+        $this->assertEquals('', $attachment->type);
+        $this->assertEquals(0, $attachment->user_id);
+        $this->assertEquals(0, $attachment->task_id);
+        $this->assertEquals(null, $attachment->timestamp);
     }
 }
 

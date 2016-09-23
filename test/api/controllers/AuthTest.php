@@ -74,20 +74,20 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $request->payload = $data;
 
         $actual = $this->auth->login($request, new ResponseMock(), null);
-        $this->assertTrue($actual->status === 'failure');
+        $this->assertEquals('failure', $actual->status);
 
         $this->auth = new Auth(new ContainerMock());
         Auth::CreateInitialAdmin(new ContainerMock());
         Auth::CreateJwtKey();
 
         $actual = $this->auth->login($request, new ResponseMock(), null);
-        $this->assertTrue($actual->status === 'success');
+        $this->assertEquals('success', $actual->status);
 
         $this->auth = new Auth(new ContainerMock());
         $request->payload->password = 'asdf';
 
         $actual = $this->auth->login($request, new ResponseMock(), null);
-        $this->assertTrue($actual->status === 'failure');
+        $this->assertEquals('failure', $actual->status);
     }
 
     public function testLogout() {
@@ -109,20 +109,20 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $request->header = [$jwt];
 
         $actual = $this->auth->logout($request, new ResponseMock(), null);
-        $this->assertTrue($actual->status === 'success');
+        $this->assertEquals('success', $actual->status);
     }
 
     public function testLogoutFailures() {
         $actual = $this->auth->logout(new RequestMock(),
             new ResponseMock(), null);
-        $this->assertTrue($actual->status === 'failure');
+        $this->assertEquals('failure', $actual->status);
 
         $this->auth = new Auth(new ContainerMock());
         $request = new RequestMock();
         $request->hasHeader = false;
 
         $actual = $this->auth->logout($request, new ResponseMock(), null);
-        $this->assertTrue($actual->status === 'failure');
+        $this->assertEquals('failure', $actual->status);
     }
 
     public function testAuthenticate() {
@@ -138,7 +138,7 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         Auth::CreateJwtKey();
 
         $actual = $this->auth->login($request, new ResponseMock(), null);
-        $this->assertTrue($actual->status === 'success');
+        $this->assertEquals('success', $actual->status);
 
         $jwt = $actual->data[0];
 

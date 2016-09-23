@@ -30,9 +30,9 @@ class BoardTest extends PHPUnit_Framework_TestCase {
     }
 
     private function assertDefaultProperties($board) {
-        $this->assertTrue($board->id === 0);
-        $this->assertTrue($board->name === '');
-        $this->assertTrue($board->is_active === true);
+        $this->assertEquals(0, $board->id);
+        $this->assertEquals('', $board->name);
+        $this->assertEquals(true, $board->is_active);
         $this->assertArraySubset($board->columns, []);
         $this->assertArraySubset($board->categories, []);
         $this->assertArraySubset($board->auto_actions, []);
@@ -46,7 +46,7 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $appMock = new AppMock();
         $actual = $appMock->getContainer();
 
-        $this->assertTrue($expected == $actual);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testCreateNewBoard() {
@@ -62,9 +62,9 @@ class BoardTest extends PHPUnit_Framework_TestCase {
 
         $board->loadFromBean($this->bean);
 
-        $this->assertTrue($board->id === 1);
-        $this->assertTrue($board->name === 'test');
-        $this->assertTrue($board->is_active === true);
+        $this->assertEquals(1, $board->id);
+        $this->assertEquals('test', $board->name);
+        $this->assertEquals(true, $board->is_active);
     }
 
     public function testCreateFromJson() {
@@ -78,9 +78,9 @@ class BoardTest extends PHPUnit_Framework_TestCase {
 
         $board->loadFromJson($this->json);
 
-        $this->assertTrue($board->id === 1);
-        $this->assertTrue($board->name === 'test');
-        $this->assertTrue($board->is_active === true);
+        $this->assertEquals(1, $board->id);
+        $this->assertEquals('test', $board->name);
+        $this->assertEquals(true, $board->is_active);
     }
 
     public function testSaveLoadDelete() {
@@ -88,15 +88,15 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $board->loadFromJson($this->json);
 
         $board->save();
-        $this->assertTrue($board->id === 1);
+        $this->assertEquals(1, $board->id);
 
         $board = new Board(new ContainerMock(), 1);
-        $this->assertTrue($board->id === 1);
+        $this->assertEquals(1, $board->id);
 
         $board->delete();
 
         $board = new Board(new ContainerMock(), 1);
-        $this->assertTrue($board->id === 0);
+        $this->assertEquals(0, $board->id);
     }
 
     public function testGetBean() {
@@ -104,13 +104,13 @@ class BoardTest extends PHPUnit_Framework_TestCase {
         $bean = $board->getBean();
 
         // Make sure bean properties exist
-        $this->assertTrue($bean->id === 0);
+        $this->assertEquals(0, $bean->id);
         $this->assertArraySubset($bean->xownColumnList, []);
 
         $this->assertTrue($board->save());
         $bean = $board->getBean();
 
-        $this->assertTrue((int)$bean->id === 1);
+        $this->assertEquals(1, (int)$bean->id);
     }
 }
 

@@ -85,17 +85,17 @@ class ColumnTest extends PHPUnit_Framework_TestCase {
     }
 
     private function assertDefaultProperties($column) {
-        $this->assertTrue($column->id === 0);
-        $this->assertTrue($column->name === '');
-        $this->assertTrue($column->position === 0);
-        $this->assertTrue($column->board_id === 0);
+        $this->assertEquals(0, $column->id);
+        $this->assertEquals('', $column->name);
+        $this->assertEquals(0, $column->position);
+        $this->assertEquals(0, $column->board_id);
     }
 
     private function assertMockProperties($column) {
-        $this->assertTrue($column->id === 1);
-        $this->assertTrue($column->name === 'col1');
-        $this->assertTrue($column->position === 1);
-        $this->assertTrue($column->board_id === 1);
+        $this->assertEquals(1, $column->id);
+        $this->assertEquals('col1', $column->name);
+        $this->assertEquals(1, $column->position);
+        $this->assertEquals(1, $column->board_id);
     }
 }
 

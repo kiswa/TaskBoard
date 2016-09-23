@@ -68,26 +68,24 @@ class AutoActionTest extends PHPUnit_Framework_TestCase {
         $trigger = new ActionTrigger(ActionTrigger::SetToCategory);
         $type = new ActionType(ActionType::ClearDueDate);
 
-        $this->assertTrue($attachment->id === 1);
-        $this->assertTrue($attachment->board_id === 1);
-        $this->assertTrue($attachment->trigger->getValue() ===
-            $trigger->getValue());
-        $this->assertTrue($attachment->source_id === 1);
-        $this->assertTrue($attachment->type->getValue() ===
-            $type->getValue());
-        $this->assertTrue($attachment->change_to === 'null');
+        $this->assertEquals(1, $attachment->id);
+        $this->assertEquals(1, $attachment->board_id);
+        $this->assertEquals($trigger->getValue(),
+            $attachment->trigger->getValue());
+        $this->assertEquals(1, $attachment->source_id);
+        $this->assertEquals($type->getValue(), $attachment->type->getValue());
+        $this->assertEquals('null', $attachment->change_to);
     }
 
     private function assertDefaultProperties($attachment) {
-        $this->assertTrue($attachment->id === 0);
-        $this->assertTrue($attachment->board_id === 0);
-        $this->assertTrue($attachment->trigger->getValue() ===
-            ActionTrigger::MoveToColumn);
-        $this->assertTrue($attachment->source_id === 0);
-        $this->assertTrue($attachment->type->getValue() ===
-            ActionType::SetColor);
-        $this->assertTrue($attachment->change_to === '');
-
+        $this->assertEquals(0, $attachment->id);
+        $this->assertEquals(0, $attachment->board_id);
+        $this->assertEquals(ActionTrigger::MoveToColumn,
+            $attachment->trigger->getValue());
+        $this->assertEquals(0, $attachment->source_id);
+        $this->assertEquals(ActionType::SetColor,
+            $attachment->type->getValue());
+        $this->assertEquals('', $attachment->change_to);
     }
 }
 

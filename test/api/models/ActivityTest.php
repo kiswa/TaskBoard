@@ -50,23 +50,23 @@ class ActivityTest extends PHPUnit_Framework_TestCase {
     }
 
     private function assertMockProperties($activity) {
-        $this->assertTrue($activity->id === 1);
-        $this->assertTrue($activity->user_id === 1);
-        $this->assertTrue($activity->log_text === 'Log test.');
-        $this->assertTrue($activity->before === '');
-        $this->assertTrue($activity->after === '');
-        $this->assertTrue($activity->item_type === 'test');
-        $this->assertTrue($activity->item_id === 1);
+        $this->assertEquals(1, $activity->id);
+        $this->assertEquals(1, $activity->user_id);
+        $this->assertEquals('Log test.', $activity->log_text);
+        $this->assertEquals('', $activity->before);
+        $this->assertEquals('', $activity->after);
+        $this->assertEquals('test', $activity->item_type);
+        $this->assertEquals(1, $activity->item_id);
     }
 
     private function assertDefaultProperties($activity) {
-        $this->assertTrue($activity->id === 0);
-        $this->assertTrue($activity->user_id === 0);
-        $this->assertTrue($activity->log_text === '');
-        $this->assertTrue($activity->before === '');
-        $this->assertTrue($activity->after === '');
-        $this->assertTrue($activity->item_type === '');
-        $this->assertTrue($activity->item_id === 0);
+        $this->assertEquals(0, $activity->id);
+        $this->assertEquals(0, $activity->user_id);
+        $this->assertEquals('', $activity->log_text);
+        $this->assertEquals('', $activity->before);
+        $this->assertEquals('', $activity->after);
+        $this->assertEquals('', $activity->item_type);
+        $this->assertEquals(0, $activity->item_id);
     }
 }
 

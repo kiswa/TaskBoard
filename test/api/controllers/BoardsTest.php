@@ -168,7 +168,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
         $response = $this->boards->removeBoard($request,
             new ResponseMock(), $args);
-        $this->assertTrue($response->status === 'failure');
+        $this->assertEquals('failure', $response->status);
     }
 
     public function testUpdateBoard() {
@@ -240,7 +240,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
         $response = $this->boards->addBoard($request,
             new ResponseMock(), null);
-        $this->assertTrue($response->status === 'success');
+        $this->assertEquals('success', $response->status);
 
         return $response;
     }

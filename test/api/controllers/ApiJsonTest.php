@@ -3,26 +3,26 @@ class ApiJsonTest extends PHPUnit_Framework_TestCase {
     public function testCreateApiJson() {
         $apiJson = new ApiJson();
 
-        $this->assertTrue($apiJson->status === 'failure');
+        $this->assertEquals('failure', $apiJson->status);
         $this->assertArraySubset($apiJson->data, []);
         $this->assertArraySubset($apiJson->alerts, []);
     }
 
     public function testSetSuccess() {
         $apiJson = new ApiJson();
-        $this->assertTrue($apiJson->status === 'failure');
+        $this->assertEquals('failure', $apiJson->status);
 
         $apiJson->setSuccess();
-        $this->assertTrue($apiJson->status === 'success');
+        $this->assertEquals('success', $apiJson->status);
     }
 
     public function testSetFailure() {
         $apiJson = new ApiJson();
         $apiJson->setSuccess();
-        $this->assertTrue($apiJson->status === 'success');
+        $this->assertEquals('success', $apiJson->status);
 
         $apiJson->setFailure();
-        $this->assertTrue($apiJson->status === 'failure');
+        $this->assertEquals('failure', $apiJson->status);
     }
 
     public function testAddData() {

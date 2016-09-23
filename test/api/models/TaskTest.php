@@ -66,29 +66,29 @@ class TaskTest extends PHPUnit_Framework_TestCase {
     }
 
     private function assertDefaultProperties($task) {
-        $this->assertTrue($task->id === 0);
-        $this->assertTrue($task->title === '');
-        $this->assertTrue($task->description === '');
-        $this->assertTrue($task->assignee === 0);
-        $this->assertTrue($task->category_id === 0);
-        $this->assertTrue($task->column_id === 0);
-        $this->assertTrue($task->color === '');
-        $this->assertTrue($task->due_date === null);
-        $this->assertTrue($task->points === null);
-        $this->assertTrue($task->position === 0);
+        $this->assertEquals(0, $task->id);
+        $this->assertEquals('', $task->title);
+        $this->assertEquals('', $task->description);
+        $this->assertEquals(0, $task->assignee);
+        $this->assertEquals(0, $task->category_id);
+        $this->assertEquals(0, $task->column_id);
+        $this->assertEquals('', $task->color);
+        $this->assertEquals(null, $task->due_date);
+        $this->assertEquals(null, $task->points);
+        $this->assertEquals(0, $task->position);
     }
 
     private function assertMockProperties($task) {
-        $this->assertTrue($task->id === 1);
-        $this->assertTrue($task->title === 'test');
-        $this->assertTrue($task->description === 'description');
-        $this->assertTrue($task->assignee === 1);
-        $this->assertTrue($task->category_id === 1);
-        $this->assertTrue($task->column_id === 1);
-        $this->assertTrue($task->color === '#ffffff');
-        $this->assertTrue($task->due_date === 1234567890);
-        $this->assertTrue($task->points === 3);
-        $this->assertTrue($task->position === 1);
+        $this->assertEquals(1, $task->id);
+        $this->assertEquals('test', $task->title);
+        $this->assertEquals('description', $task->description);
+        $this->assertEquals(1, $task->assignee);
+        $this->assertEquals(1, $task->category_id);
+        $this->assertEquals(1, $task->column_id);
+        $this->assertEquals('#ffffff', $task->color);
+        $this->assertEquals(1234567890, $task->due_date);
+        $this->assertEquals(3, $task->points);
+        $this->assertEquals(1, $task->position);
     }
 }
 
