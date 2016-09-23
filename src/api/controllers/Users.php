@@ -87,6 +87,12 @@ class Users extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        if ($data->default_board_id) {
+            $this->addUserToBoard($data->default_board_id, $user, $request);
+        }
+
+        $this->updateBoardAccess($data, $request);
+
         $actor = new User($this->container, Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
              $actor->username . ' added user ' . $user->username . '.',
@@ -182,12 +188,7 @@ class Users extends BaseController {
             $this->addUserToBoard($newId, $user, $request);
         }
 
-        if (isset($data->boardAccess)) {
-            foreach($data->boardAccess as $boardId) {
-                $this->addUserToBoard($boardId, $user, $request);
-            }
-            unset($data->boardAccess);
-        }
+        $this->updateBoardAccess($data, $request);
 
         $update->save();
 
@@ -285,11 +286,43 @@ class Users extends BaseController {
         return $this->jsonResponse($response);
     }
 
+    private function updateBoardAccess(&$userData, $request) {
+        $boardIds = $this->getBoardIdsByAccess($userData->id);
+
+        if (isset($userData->boardAccess)) {
+            $user = new User($this->container, $userData->id);
+
+            foreach($userData->boardAccess as $boardId) {
+                if (!in_array($boardId, $boardIds)) {
+                    $this->addUserToBoard($boardId, $user, $request);
+                }
+            }
+
+            if (count($userData->boardAccess) !== count($boardIds)) {
+                foreach($boardIds as $removeId) {
+                    if (!in_array($removeId, $userData->boardAccess)) {
+                        $this->removeUserFromBoard($removeId, $user);
+                    }
+                }
+            }
+
+            unset($userData->boardAccess);
+        }
+    }
+
     private function addUserToBoard($boardId, $user, $request) {
         if ($boardId > 0 && !Auth::HasBoardAccess($this->container, $request,
                 $boardId, $user->id)) {
             $board = new Board($this->container, $boardId);
             $board->users[] = $user;
+            $board->save();
+        }
+    }
+
+    private function removeUserFromBoard($boardId, $user) {
+        if ($boardId > 0) {
+            $board = new Board($this->container, $boardId);
+            unset($board->users[$user->id - 1]);
             $board->save();
         }
     }
@@ -321,15 +354,26 @@ class Users extends BaseController {
         return $data;
     }
 
-    private function getUserIdsByBoardAccess($userId) {
-        $userIds = [];
+    private function getBoardIdsByAccess($userId) {
+        $boardIds = [];
 
-        $boardIds = R::getAll('SELECT board_id FROM board_user ' .
+        $boards = R::getAll('SELECT board_id FROM board_user ' .
             'WHERE user_id = :user_id',
             [':user_id' => $userId]);
 
+        foreach($boards as $board) {
+            $boardIds[] = (int) $board['board_id'];
+        }
+
+        return $boardIds;
+    }
+
+    private function getUserIdsByBoardAccess($userId) {
+        $userIds = [];
+        $boardIds = $this->getBoardIdsByAccess($userId);
+
         foreach($boardIds as $id) {
-            $board = R::load('board', (int) $id['board_id']);
+            $board = R::load('board', $id);
 
             foreach($board->sharedUserList as $user) {
                 if (!in_array((int) $user->id, $userIds)) {

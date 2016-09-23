@@ -122,7 +122,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $user = DataMock::getUser();
         $user->id = 0;
         $user->user_option_id = 0;
-        $user->default_board_id = 0;
+        $user->default_board_id = 1;
 
         $user->password = 'test';
         $user->password_verify = 'test';
@@ -475,6 +475,41 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $response = $this->users->updateUser($request,
             new ResponseMock(), $args);
         $this->assertEquals('failure', $response->status);
+    }
+
+    public function testUpdateBoardAccess() {
+        $this->createUser();
+        $this->createBoard();
+
+        $user = new User(new ContainerMock(), 2);
+        $this->assertEquals(1, count($user->board_access));
+
+        $user->boardAccess = [1, 2];
+        $args = ['id' => $user->id];
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+
+        $this->users = new Users(new ContainerMock());
+
+        $user = new User(new ContainerMock(), 2);
+        $this->assertEquals(2, count($user->board_access));
+
+        $user->boardAccess = [2];
+        $request->payload = $user;
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+
+        $user = new User(new ContainerMock(), 2);
+        $this->assertEquals(1, count($user->board_access));
     }
 
     private function createBoard() {
