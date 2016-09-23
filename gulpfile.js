@@ -41,6 +41,7 @@ let gulp = require('gulp'),
         images: 'src/images/**/*.*',
         scss: 'src/scss/**/*.scss',
         scssMain: 'src/scss/main.scss',
+        app: 'src/app/**/*.ts',
         api: [
             'src/api/**/*.*',
             'src/api/.htaccess',
@@ -93,22 +94,14 @@ gulp.task('scss', () => {
 gulp.task('tsc', () => {
     del('build/');
 
-    let tsProject = tsc.createProject('tsconfig.json'),
-        tsResult = tsProject.src()
-            .pipe(tsc(tsProject));
+    let tsProject = tsc.createProject('tsconfig.json');
 
-    return tsResult.js
+    return gulp.src(paths.app)
+        .pipe(tsProject())
         .pipe(gulp.dest('build/'));
 });
 
-gulp.task('sourceMaps', () => {
-    return gulp.src([
-            'node_modules/reflect-metadata/Reflect.js.map'
-        ])
-        .pipe(gulp.dest('dist/js/'));
-});
-
-gulp.task('vendor', ['sourceMaps'], () => {
+gulp.task('vendor', () => {
     return gulp.src([
             'node_modules/core-js/client/shim.js',
             'node_modules/zone.js/dist/zone.js',
