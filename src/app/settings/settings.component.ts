@@ -16,6 +16,8 @@ import {
 })
 export class Settings {
     constructor(private settings: SettingsService, private title: Title) {
+        // SettingsService is loaded here so the same instance is available
+        // to all child components.
         title.setTitle('TaskBoard - Settings');
     }
 }
