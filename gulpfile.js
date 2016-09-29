@@ -16,6 +16,7 @@ let gulp = require('gulp'),
     composer = require('gulp-composer'),
 
     tsc = require('gulp-typescript'),
+    tsProject = tsc.createProject('tsconfig.json'),
     jsMinify = require('gulp-uglify'),
 
     scssLint = require('gulp-scss-lint'),
@@ -48,6 +49,7 @@ let gulp = require('gulp'),
             '!src/api/composer.*'
         ]
     };
+
 
 gulp.task('clean', () => {
     return del('dist');
@@ -93,8 +95,6 @@ gulp.task('scss', () => {
 
 gulp.task('tsc', () => {
     del('build/');
-
-    let tsProject = tsc.createProject('tsconfig.json');
 
     return gulp.src(paths.app)
         .pipe(tsProject())
