@@ -123,6 +123,7 @@ export class UserAdmin {
                 }
 
                 this.settings.updateBoards(this.boards);
+
                 this.updateUserList();
                 this.loading = false;
             });
