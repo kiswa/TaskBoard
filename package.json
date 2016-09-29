@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "test": "gulp test-api && gulp test-app",
-    "postinstall": "gulp composer && typings i"
+    "postinstall": "gulp composer"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,8 @@
     "@angular/platform-browser": "2.0.0",
     "@angular/platform-browser-dynamic": "2.0.0",
     "@angular/router": "3.0.0",
+    "@types/chartist": "^0.9.33",
+    "@types/core-js": "^0.9.34",
     "bourbon": "^4.2.7",
     "bourbon-neat": "^1.8.0",
     "chai": "^3.5.0",
@@ -66,11 +68,10 @@
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-beta.12",
     "scss-base": "^1.1.6",
-    "systemjs": "0.19.38",
-    "systemjs-builder": "0.15.31",
+    "systemjs": "0.19.39",
+    "systemjs-builder": "0.15.32",
     "touch": "^1.0.0",
     "typescript": "^2.0.3",
-    "typings": "^1.4.0",
     "zone.js": "^0.6.23"
   }
 }

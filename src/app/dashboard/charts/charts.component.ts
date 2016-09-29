@@ -1,4 +1,5 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
+import * as Chartist from 'chartist';
 
 @Component({
     selector: 'tb-charts',
@@ -67,11 +68,11 @@ export class Charts implements AfterViewInit {
             },
             low: 0,
             height: '300px',
-            plugins: [ Chartist.plugins.tooltip({
-                transformTooltipTextFnc: (value) => {
-                    return value + ' points remaining'
-                }
-            }) ]
+            // plugins: [ Chartist.plugins.tooltip({
+            //     transformTooltipTextFnc: (value) => {
+            //         return value + ' points remaining'
+            //     }
+            // }) ]
         };
 
         new Chartist.Line('#' + this.chartName, data, options);
