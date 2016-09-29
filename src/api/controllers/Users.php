@@ -186,6 +186,11 @@ class Users extends BaseController {
             $newId = $update->default_board_id;
 
             $this->addUserToBoard($newId, $user, $request);
+
+            if (isset($data->boardAccess) &&
+                    !in_array($newId, $data->boardAccess)) {
+                $data->boardAccess[] = $newId;
+            }
         }
 
         $this->updateBoardAccess($data, $request);
