@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
 <body>
-%username% created new item at board %boardname%:<br>
-%title%<br>
-%description%<br>
-%duedate%<br>
-%assignee%<br>
-%category%<br>
-%points%<br>
-%position%<br>
-<a href="http://%hostname%/#/boards/%boardid%">Navigate to board!</a>
+Hello there! This is to notify you that <b>%username%</b> created a new task/item.
+<br><br>
+<b>Board:</b> <a href="%baseurl%/#/boards/%boardid%">%boardname%</a><br>
+<b>Title:</b> %title%<br>
+<b>Description:</b><br>
+<i>%description%</i><br><br>
+
+<b>Assigned to:</b> %assignee%<br><br>
+<b>Due:</b> %duedate%<br>
+
+<b>Category:</b> %category%<br>
+<b>Points:</b> %points%<br>
+<b>Position:</b> %position%<br>
 
 </body>
 </html>
