@@ -102,6 +102,8 @@ export class BoardAdmin {
     }
 
     addEditBoard(): void {
+        let isAdd = this.modalProps.title === 'Add';
+
         this.saving = true;
         this.setBoardUsers();
 
@@ -110,16 +112,21 @@ export class BoardAdmin {
             return;
         }
 
-        this.boardService.addBoard(this.modalProps)
-            .subscribe((response: ApiResponse) => {
-                response.alerts.forEach(note => this.notes.add(note));
+        if (isAdd) {
+            this.boardService.addBoard(this.modalProps)
+                .subscribe(this.handleResponse);
+            return;
+        }
 
-                if (response.status === 'success') {
-                    this.modal.close(this.MODAL_ID);
-                    this.settings.updateBoards(response.data[1]);
-                    this.saving = false;
-                }
-            });
+        this.boardService.editBoard(this.modalProps)
+            .subscribe(this.handleResponse);
+    }
+
+    removeBoard() {
+        this.saving = true;
+
+        this.boardService.removeBoard(this.boardToRemove.id)
+            .subscribe(this.handleResponse);
     }
 
     private validateBoard(): boolean {
@@ -136,6 +143,18 @@ export class BoardAdmin {
         }
 
         return true;
+    }
+
+    private handleResponse = (response: ApiResponse) => {
+        response.alerts.forEach(note => this.notes.add(note));
+
+        if (response.status === 'success') {
+            this.modal.close(this.MODAL_ID);
+            this.modal.close(this.MODAL_CONFIRM_ID);
+
+            this.settings.updateBoards(response.data[1]);
+            this.saving = false;
+        }
     }
 
     private setBoardUsers(): void {
@@ -175,6 +194,7 @@ export class BoardAdmin {
                 user.selected = false;
             });
         } else {
+            this.modalProps.id = board.id;
             this.modalProps.boardName = board.name;
             this.modalProps.columns = board.columns;
             this.modalProps.categories = board.categories;

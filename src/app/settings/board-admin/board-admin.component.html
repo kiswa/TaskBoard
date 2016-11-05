@@ -105,8 +105,12 @@
     modal-id="{{ MODAL_CONFIRM_ID }}">
     <div class="center">Removing a board cannot be undone.<br>Continue?</div>
     <div class="buttons">
-        <button class="flat" (click)="removeBoard()">Yes</button>
-        <button (click)="modal.close(MODAL_CONFIRM_ID)">No</button>
+        <button class="flat"
+            (click)="removeBoard()"
+            [disabled]="saving">Yes</button>
+        <button
+            (click)="modal.close(MODAL_CONFIRM_ID)"
+            [disabled]="saving">No</button>
     </div>
 </tb-modal>
 

@@ -1,5 +1,6 @@
 export class BoardData {
     constructor(public title = '',
+        public id = 0,
         public boardName = '',
         public columns = [],
         public categories = [],
@@ -16,7 +17,7 @@ export class BoardData {
             return;
         }
 
-        this.columns.push({ name: this.newColumnName });
+        this.columns.push({ name: this.newColumnName, tasks: [] });
         this.newColumnName = '';
     }
 

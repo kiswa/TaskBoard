@@ -61,12 +61,7 @@ class Boards extends BaseController {
         $board = new Board($this->container);
         $board->loadFromJson($request->getBody());
 
-        // All admins are members of every added board
-        $admins = R::findAll('user', ' WHERE security_level = 1 ');
-        foreach($admins as $admin) {
-            $user = new User($this->container, $admin->id);
-            $board->users[] = $user;
-        }
+        $this->includeAdmins($board);
 
         if (!$board->save()) {
             $this->logger->addError('Add Board: ', [$board]);
@@ -96,13 +91,22 @@ class Boards extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
+        $data = json_decode($request->getBody());
         $board = new Board($this->container, (int)$args['id']);
 
         if (!$this->checkBoardAccess($board->id, $request)) {
             return $this->jsonResponse($response, 403);
         }
 
-        $update = new Board($this->container);
+        if (!property_exists($data, 'id')) {
+            $this->logger->addError('Update Board: ', [$board, $data]);
+            $this->apiJson->addAlert('error', 'Error updating board. ' .
+                'Please check your entries and try again.');
+
+            return $this->jsonResponse($response);
+        }
+
+        $update = new Board($this->container, (int)$args['id']);
         $update->loadFromJson($request->getBody());
 
         if ($board->id !== $update->id) {
@@ -113,6 +117,7 @@ class Boards extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        $this->includeAdmins($update);
         $update->save();
 
         $actor = new User($this->container, Auth::GetUserId($request));
@@ -124,6 +129,7 @@ class Boards extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'Board ' . $update->name . ' updated.');
+        $this->apiJson->addData($this->loadAllBoards($request));
 
         return $this->jsonResponse($response);
     }
@@ -157,8 +163,21 @@ class Boards extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'Board ' . $before->name . ' removed.');
+        $this->apiJson->addData($this->loadAllBoards($request));
 
         return $this->jsonResponse($response);
+    }
+
+    private function includeAdmins($board) {
+        $admins = R::findAll('user', ' WHERE security_level = 1 ');
+
+        foreach($admins as $admin) {
+            $user = new User($this->container, $admin->id);
+
+            if (!in_array($user, $board->users)) {
+                $board->users[] = $user;
+            }
+        }
     }
 
     private function loadAllBoards($request) {

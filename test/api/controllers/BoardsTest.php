@@ -171,11 +171,23 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $response->status);
     }
 
+    /**
+     * @group single
+     */
     public function testUpdateBoard() {
         $this->createBoard();
 
         $board = DataMock::getBoard();
         $board->is_active = false;
+
+        $column = new stdClass();
+        $column->id = 0;
+        $column->name = 'col2';
+        $column->position = 1;
+        $column->board_id = 0;
+        $column->tasks = [];
+
+        $board->columns[] = $column;
 
         $args = [];
         $args['id'] = $board->id;
@@ -189,8 +201,21 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
             new ResponseMock(), $args);
         $this->assertEquals('success', $response->status);
 
+        $board = $response->data[1][0];
+        var_dump($board);
+        $this->assertEquals(2, count($board->columns));
+
         $this->boards = new Boards(new ContainerMock());
         $request->payload = new stdClass();
+        $request->header = [DataMock::getJwt()];
+
+        $response = $this->boards->updateBoard($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('error', $response->alerts[0]['type']);
+
+        $this->boards = new Boards(new ContainerMock());
+        $board->id = 3;
+        $request->payload = $board;
         $request->header = [DataMock::getJwt()];
 
         $response = $this->boards->updateBoard($request,

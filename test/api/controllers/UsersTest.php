@@ -229,8 +229,8 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 
         $user = DataMock::getUser();
         $user->username = 'newname';
-        $user->default_board_id = 0;
-        $user->boardAccess = [1];
+        $user->default_board_id = 1;
+        $user->boardAccess = [2];
 
         $args = [];
         $args['id'] = $user->id;
@@ -295,6 +295,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->users = new Users(new ContainerMock());
 
         $user->default_board_id = 1;
+        $user->boardAccess = [0];
         $request->payload = $user;
         $request->header = [DataMock::getJwt(2)];
 
