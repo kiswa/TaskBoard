@@ -125,8 +125,8 @@ Language     |  Files |    Blank | Comment |     Code
 PHP          |     26 |      672 |      21 |     2161
 TypeScript   |     45 |      391 |      17 |     1704
 HTML         |     15 |       93 |       0 |     1014
-SASS         |     13 |      199 |      10 |      899
-__SUM:__     | __99__ | __1355__ |  __48__ | __5778__
+SASS         |     13 |      200 |      11 |      905
+__SUM:__     | __99__ | __1356__ |  __49__ | __5784__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 

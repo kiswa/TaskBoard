@@ -67,6 +67,15 @@ button.flat,
 }
 // scss-lint:enable QualifyingElement
 
+// Override normalize.css font styles
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: "Pontano Sans", sans-serif;
+}
+
 button {
     transition: background .3s;
 }
