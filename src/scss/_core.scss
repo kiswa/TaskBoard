@@ -56,6 +56,7 @@ table {
 }
 
 // Override scss-base flat styles
+// scss-lint:disable QualifyingElement
 [type="reset"].flat,
 [type="button"].flat,
 [type="submit"].flat,
@@ -64,6 +65,7 @@ button.flat,
     background-color: $white;
     color: $color-primary;
 }
+// scss-lint:enable QualifyingElement
 
 button {
     transition: background .3s;
