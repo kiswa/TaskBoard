@@ -202,7 +202,6 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('success', $response->status);
 
         $board = $response->data[1][0];
-        var_dump($board);
         $this->assertEquals(2, count($board->columns));
 
         $this->boards = new Boards(new ContainerMock());
