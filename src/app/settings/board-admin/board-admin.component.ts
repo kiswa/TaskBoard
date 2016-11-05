@@ -196,9 +196,9 @@ export class BoardAdmin {
         } else {
             this.modalProps.id = board.id;
             this.modalProps.boardName = board.name;
-            this.modalProps.columns = board.columns;
-            this.modalProps.categories = board.categories;
-            this.modalProps.issueTrackers = board.issue_trackers;
+            this.modalProps.columns = board.columns.slice();
+            this.modalProps.categories = board.categories.slice();
+            this.modalProps.issueTrackers = board.issue_trackers.slice();
 
             this.users.forEach((user: SelectableUser) => {
                 let filtered = board.users.filter(u => u.id === user.id);
