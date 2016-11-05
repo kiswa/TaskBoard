@@ -26,9 +26,9 @@ describe('ApiHttp', () => {
 
         var headers = apiHttp.getRequestOptionArgs().headers;
 
-        expect(headers._headersMap.get('content-type')[0])
+        expect(headers._headers.get('content-type')[0])
             .to.equal('application/json');
-        expect(headers._headersMap.get('authorization')[0])
+        expect(headers._headers.get('authorization')[0])
             .to.equal('testjwt');
     });
 
