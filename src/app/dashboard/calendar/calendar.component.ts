@@ -17,8 +17,8 @@ export class Calendar {
     private today: Date;
     private month: number;
     private year: number;
-    private calendarDays;
-    private tasks;
+    private calendarDays: Array<Array<string>>;
+    private tasks: Array<any>; // TODO: Use Task model when created
 
     constructor() {
         this.today = new Date();
@@ -71,7 +71,7 @@ export class Calendar {
         this.generateCalendar();
     }
 
-    private getColor(task) {
+    private getColor(task: any) { // TODO: Use Task model
         return task.color;
     }
 
@@ -85,11 +85,11 @@ export class Calendar {
         this.calendarDays = [];
 
         for (let i = 0; i < rows; ++i) {
-            let weekDays = [];
+            let weekDays: Array<string> = [];
 
             for (let j = 0; j < 7; ++j) {
                 if (day <= monthLength && (j >= startingDay || i > 0)) {
-                    weekDays.push(day);
+                    weekDays.push('' + day);
                     day++;
                 } else {
                     weekDays.push('');

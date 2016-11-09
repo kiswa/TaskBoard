@@ -1,11 +1,13 @@
+import { User } from '../../shared/index';
+
 export class BoardData {
     constructor(public title = '',
         public id = 0,
         public boardName = '',
-        public columns = [],
-        public categories = [],
-        public issueTrackers = [],
-        public users = [],
+        public columns: Array<any> = [],
+        public categories: Array<any> = [],
+        public issueTrackers: Array<any> = [],
+        public users: Array<User> = [],
         public categoryDefaultColor = '#ffffe0',
         public newColumnName = '',
         public newCategoryName = '',
@@ -21,7 +23,7 @@ export class BoardData {
         this.newColumnName = '';
     }
 
-    removeColumn(column): void {
+    removeColumn(column: any): void {
         let index = this.columns.indexOf(column);
 
         if (index === -1) {
@@ -43,7 +45,7 @@ export class BoardData {
         this.newCategoryName = '';
     }
 
-    removeCategory(category): void {
+    removeCategory(category: any): void {
         let index = this.categories.indexOf(category);
 
         if (index === -1) {
@@ -66,7 +68,7 @@ export class BoardData {
         this.issueTrackerBugId = '';
     }
 
-    removeIssueTracker(tracker): void {
+    removeIssueTracker(tracker: any): void {
         let index = this.issueTrackers.indexOf(tracker);
 
         if (index === -1) {

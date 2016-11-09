@@ -41,7 +41,7 @@ export class Charts implements AfterViewInit {
         options = {
             donut: true,
             donutWidth: 100,
-            labelInterpolationFnc: (label, index) => {
+            labelInterpolationFnc: (label: string, index: number) => {
                 let value = this.data[index],
                     percent = Math.round(value /
                         this.data.reduce(Chartist.sum) * 100);
@@ -79,7 +79,7 @@ export class Charts implements AfterViewInit {
     }
 
     private convertToNumberArray(arr: string[]): number[] {
-        let nums = [];
+        let nums: Array<number> = [];
 
         for (let i = 0, len = arr.length; i < len; ++i) {
             nums.push(Number(arr[i]));

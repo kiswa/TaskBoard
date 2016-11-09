@@ -94,7 +94,7 @@ export class BoardAdmin {
         let ul = document.getElementsByClassName('modal-list')[0];
 
         this.dragula.setOptions('columns-bag', {
-            moves: (el, container, handle) => {
+            moves: (el: any, container: any, handle: any) => {
                 return handle.classList.contains('icon-resize-vertical');
             },
             mirrorContainer: ul

@@ -3,7 +3,7 @@ export class Column {
             public name: string = '',
             public position: number = 0,
             public board_id: number = 0,
-            public tasks = []) {
+            public tasks: Array<any> = []) { // TODO: Use Task model
     }
 }
 

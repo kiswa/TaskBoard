@@ -18,7 +18,7 @@ export class Modal implements OnInit {
     @Input() blocking = false;
     @Input() wide = false;
 
-    @ContentChild('focusMe') focusElement;
+    @ContentChild('focusMe') focusElement: any;
 
     isOpen = false;
     animate = true;
