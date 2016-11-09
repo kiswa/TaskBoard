@@ -184,6 +184,20 @@ export class BoardAdmin {
         return category.defaultColor;
     }
 
+    private deepCopy(source: any) {
+        var output: any, value: any, key: any;
+
+        output = Array.isArray(source) ? [] : {};
+
+        for (key in source) {
+            value = source[key];
+            output[key] = (typeof value === "object") ?
+                this.deepCopy(value) : value;
+        }
+
+        return output;
+    }
+
     private showModal(title: string, board?: Board): void {
         let isAdd = (title === 'Add');
 
@@ -196,16 +210,14 @@ export class BoardAdmin {
         } else {
             this.modalProps.id = board.id;
             this.modalProps.boardName = board.name;
-            this.modalProps.columns = board.columns.slice();
-            this.modalProps.categories = board.categories.slice();
-            this.modalProps.issueTrackers = board.issue_trackers.slice();
+            this.modalProps.columns = this.deepCopy(board.columns);
+            this.modalProps.categories = this.deepCopy(board.categories);
+            this.modalProps.issueTrackers = this.deepCopy(board.issue_trackers);
 
             this.users.forEach((user: SelectableUser) => {
                 let filtered = board.users.filter(u => u.id === user.id);
 
-                if (filtered.length) {
-                    user.selected = true;
-                }
+                user.selected = filtered.length > 0;
             });
         }
 
