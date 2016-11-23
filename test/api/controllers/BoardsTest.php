@@ -189,6 +189,8 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
         $board->columns[] = $column;
 
+        $board->columns[0]->name = 'edited';
+
         $args = [];
         $args['id'] = $board->id;
 
@@ -202,7 +204,10 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('success', $response->status);
 
         $board = $response->data[1][0];
+        var_dump($board);
+        return;
         $this->assertEquals(2, count($board->columns));
+        $this->assertEquals('edited', $board->columns[0]->name);
 
         $this->boards = new Boards(new ContainerMock());
         $request->payload = new stdClass();

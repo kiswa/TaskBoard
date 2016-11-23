@@ -107,10 +107,13 @@ class DataMock {
         $board->issue_trackers = [];
         $board->users = [];
 
-        $column = self::getColumn();
+        $column = new stdClass();
         $column->id = 0;
+        $column->name = 'test';
         $column->position = 0;
+        $column->board_id = 0;
         $column->tasks = [];
+
         $board->columns[] = $column;
 
         return $board;
