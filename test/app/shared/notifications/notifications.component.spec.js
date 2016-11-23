@@ -20,7 +20,7 @@ describe('Notifications', () => {
         expect(notifications.notes[0]).to.equal(true);
     });
 
-    it('hides a specific note', (done) => {
+    it('hides a specific note', done => {
         var note = { test: 'test note', type: '' };
 
         notificationsService.add(note);

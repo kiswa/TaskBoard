@@ -18,7 +18,7 @@ describe('AuthService', () => {
         expect(authService.userChanged).to.be.an('object');
     });
 
-    it('notifies subscribers when the active user changes', (done) => {
+    it('notifies subscribers when the active user changes', done => {
         authService.updateUser(true);
 
         authService.userChanged.subscribe(user => {
@@ -27,7 +27,7 @@ describe('AuthService', () => {
         });
     });
 
-    it('updates user options when the active user changes', (done) => {
+    it('updates user options when the active user changes', done => {
         authService.updateUser('', true);
 
         authService.userChanged.subscribe(user => {
@@ -36,14 +36,14 @@ describe('AuthService', () => {
         });
     });
 
-    it('calls the API to authenticate a JWT', (done) => {
+    it('calls the API to authenticate a JWT', done => {
         authService.authenticate().subscribe(test => {
             expect(test).to.equal(true);
             done();
         });
     });
 
-    it('calls the API to log in', (done) => {
+    it('calls the API to log in', done => {
         authService.login('user', 'pass', false).subscribe(res => {
             expect(res.status).to.equal('success');
             expect(res.endpoint).to.equal('api/login');
@@ -51,7 +51,7 @@ describe('AuthService', () => {
         });
     });
 
-    it('calls the API to log out', (done) => {
+    it('calls the API to log out', done => {
         authService.logout().subscribe(res => {
             expect(res.status).to.equal('success');
             expect(res.endpoint).to.equal('api/logout');

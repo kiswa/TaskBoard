@@ -15,7 +15,7 @@ describe('NotificationsService', () => {
         expect(notificationsService.noteAdded.subscribe).to.be.a('function');
     });
 
-    it('has a method to add notifications', (done) => {
+    it('has a method to add notifications', done => {
         notificationsService.noteAdded.subscribe(note => {
             expect(note).to.equal(true);
             done();

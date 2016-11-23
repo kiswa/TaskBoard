@@ -32,7 +32,7 @@ describe('Login', () => {
        expect(login.isSubmitted) .to.equal(false);
     });
 
-    it('requires both username and password to log in', (done) => {
+    it('requires both username and password to log in', done => {
         login.notes.noteAdded.subscribe(note => {
             expect(note.type).to.equal('error');
             done();
@@ -42,7 +42,7 @@ describe('Login', () => {
         login.login();
     });
 
-    it('calls the AuthService to log in and navigates the router', (done) => {
+    it('calls the AuthService to log in and navigates the router', done => {
         login.username = 'test';
         login.password = 'test';
         login.login();
@@ -53,7 +53,7 @@ describe('Login', () => {
         }, 10);
     });
 
-    it('calls the AuthService during ngOnInit', (done) => {
+    it('calls the AuthService during ngOnInit', done => {
         expect(login.ngOnInit).to.be.a('function');
 
         login.ngOnInit();

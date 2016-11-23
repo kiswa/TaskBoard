@@ -92,7 +92,7 @@ describe('UserAdmin', () => {
     });
 
     it('has a showConfirmModal function', done => {
-        modalService.openCalled.subscribe((modalId) => {
+        modalService.openCalled.subscribe(modalId => {
             expect(modalId).to.equal(userAdmin.MODAL_CONFIRM_ID);
             expect(userAdmin.userToRemove).to.equal(true);
             done();

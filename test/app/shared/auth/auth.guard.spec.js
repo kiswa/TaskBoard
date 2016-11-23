@@ -9,8 +9,8 @@ describe('AuthGuard', () => {
         authGuard = new AuthGuard(AuthServiceMock);
     });
 
-    it('checks a route can activate via the auth service', (done) => {
-        authGuard.canActivate().subscribe((isAuth) => {
+    it('checks a route can activate via the auth service', done => {
+        authGuard.canActivate().subscribe(isAuth => {
             expect(isAuth).to.equal(true);
             done();
         });
