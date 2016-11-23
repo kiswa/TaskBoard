@@ -42,7 +42,6 @@ let gulp = require('gulp'),
         images: 'src/images/**/*.*',
         scss: 'src/scss/**/*.scss',
         scssMain: 'src/scss/main.scss',
-        app: 'src/app/**/*.ts',
         api: [
             'src/api/**/*.*',
             'src/api/.htaccess',
@@ -50,9 +49,16 @@ let gulp = require('gulp'),
         ]
     };
 
-
 gulp.task('clean', () => {
-    return del('dist');
+    return del([
+        'dist',
+        'build',
+        'tests.db',
+        '.coverrun',
+        '.coverdata',
+        'api-coverage',
+        'coverage.html'
+    ]);
 });
 
 gulp.task('html', () => {
@@ -96,13 +102,16 @@ gulp.task('scss', () => {
 gulp.task('tsc', () => {
     del('build/');
 
-    return gulp.src(paths.app)
+    return gulp.src(paths.ts)
         .pipe(tsProject())
         .pipe(gulp.dest('build/'));
 });
 
 gulp.task('vendor', () => {
-    return gulp.src([
+    let map = gulp.src('node_modules/reflect-metadata/Reflect.js.map')
+        .pipe(gulp.dest('dist/js/'));
+
+    let js = gulp.src([
             'node_modules/core-js/client/shim.js',
             'node_modules/zone.js/dist/zone.js',
             'node_modules/reflect-metadata/Reflect.js',
@@ -111,6 +120,8 @@ gulp.task('vendor', () => {
         ])
         .pipe(concat('vendor.js'))
         .pipe(gulp.dest('dist/js/'));
+
+    return merge(map, js);
 });
 
 gulp.task('system-build', ['tsc'], () => {
@@ -122,11 +133,8 @@ gulp.task('system-build', ['tsc'], () => {
 });
 
 gulp.task('minify', () => {
-    // jsMinify options object is temporary due to problem in Angular RC5
     let js = gulp.src('dist/js/**/*.js')
-        .pipe(jsMinify({
-            mangle: { screw_ie8 : true, keep_fnames: true }
-        }))
+        .pipe(jsMinify())
         .pipe(gulp.dest('dist/js/'));
 
     let css = gulp.src('dist/css/styles.css')
