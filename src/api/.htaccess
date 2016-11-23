@@ -3,7 +3,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI}::$1 ^(.*?/)(.*)::\2$
 RewriteRule ^(.*)$ - [E=BASE:%1]
 
-RewriteRule ^recipes.db$ %{ENV_BASE}index.php [QSA,L]
+RewriteRule ^taskboard.sqlite$ %{ENV_BASE}index.php [QSA,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ %{ENV:BASE}index.php [QSA,L]
