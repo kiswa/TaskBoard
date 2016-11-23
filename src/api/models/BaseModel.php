@@ -75,6 +75,7 @@ abstract class BaseModel {
             foreach($objList as $obj) {
                 if ($obj->bean->id == $bean->id) {
                     $found = true;
+                    break;
                 }
             }
 
