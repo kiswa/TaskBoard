@@ -36,11 +36,10 @@
     });
 
     var config = {
-        map: map,
-        packages: packages
+        map,
+        packages
     };
 
   System.config(config);
-
 })(this);
 
