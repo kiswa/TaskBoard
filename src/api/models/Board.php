@@ -110,12 +110,21 @@ class Board extends BaseModel {
 
         foreach($fromArray as $item) {
             $obj = $ctor($item->id);
+            $obj->loadFromJson(json_encode($item));
 
-            if ($obj->id === 0) {
-                $obj->loadFromJson(json_encode($item));
+            $i = -1;
+            foreach($toArray as $index => $existing) {
+                if ($existing->id === $obj->id) {
+                    $i = $index;
+                    break;
+                }
             }
 
-            $toArray[] = $obj;
+            if ($i !== -1) {
+                $toArray[$i] = $obj;
+            } else {
+                $toArray[] = $obj;
+            }
         }
     }
 
