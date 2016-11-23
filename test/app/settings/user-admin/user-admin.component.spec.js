@@ -14,7 +14,7 @@ describe('UserAdmin', () => {
             new SettingsServiceMock(), modalService);
     });
 
-    it('has a function to add or edit a user - Add', (done) => {
+    it('has a function to add or edit a user - Add', done => {
         userAdmin.modalProps.title = 'Add';
         userAdmin.modalProps.user = {
             username: 'testing',
@@ -31,7 +31,7 @@ describe('UserAdmin', () => {
         }, 10);
     });
 
-    it('has a function to add or edit a user - Edit', (done) => {
+    it('has a function to add or edit a user - Edit', done => {
         userAdmin.modalProps.title = 'Edit';
         userAdmin.modalProps.user = {
             id: 1,
@@ -72,7 +72,7 @@ describe('UserAdmin', () => {
         expect(userAdmin.validateModalUser()).to.equal(true);
     });
 
-    it('has a function to remove a user', (done) => {
+    it('has a function to remove a user', done => {
         userAdmin.userToRemove = { id: 1 };
         userAdmin.removeUser();
 
@@ -82,8 +82,8 @@ describe('UserAdmin', () => {
         }, 10);
     });
 
-    it('has a showModal function', (done) => {
-        modalService.openCalled.subscribe((modalId) => {
+    it('has a showModal function', done => {
+        modalService.openCalled.subscribe(modalId => {
             expect(modalId).to.equal(userAdmin.MODAL_ID);
             done();
         });
@@ -91,7 +91,7 @@ describe('UserAdmin', () => {
         userAdmin.showModal('Add');
     });
 
-    it('has a showConfirmModal function', (done) => {
+    it('has a showConfirmModal function', done => {
         modalService.openCalled.subscribe((modalId) => {
             expect(modalId).to.equal(userAdmin.MODAL_CONFIRM_ID);
             expect(userAdmin.userToRemove).to.equal(true);

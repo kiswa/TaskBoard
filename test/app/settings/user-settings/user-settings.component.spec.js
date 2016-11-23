@@ -35,7 +35,7 @@ describe('UserSettings', () => {
         expect(userSettings.userOptions.show_assignee).to.equal(true);
     });
 
-    it('has a function to update default board', (done) => {
+    it('has a function to update default board', done => {
         notifications.noteAdded.subscribe(note => {
             expect(note.type).to.equal('success');
             done();
@@ -44,7 +44,7 @@ describe('UserSettings', () => {
         userSettings.updateDefaultBoard('1');
     });
 
-    it('has a function to update password', (done) => {
+    it('has a function to update password', done => {
         userSettings.changePassword = {
             current: ''
         };
@@ -80,7 +80,7 @@ describe('UserSettings', () => {
         userSettings.updatePassword();
     });
 
-    it('has a function to update username', (done) => {
+    it('has a function to update username', done => {
         userSettings.changeUsername = { newName: '' };
 
         var first = true;
@@ -99,7 +99,7 @@ describe('UserSettings', () => {
         userSettings.updateUsername();
     });
 
-    it('has a function to update email', (done) => {
+    it('has a function to update email', done => {
         userSettings.changeEmail = { newEmail: 'asdf' };
 
         var first = true;

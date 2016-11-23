@@ -9,7 +9,7 @@ describe('InlineEdit', () => {
         inlineEdit = new InlineEdit();
     });
 
-    it('has a beginEdit method', (done) => {
+    it('has a beginEdit method', done => {
         expect(inlineEdit.beginEdit).to.be.a('function');
 
         var called = false,
@@ -28,10 +28,10 @@ describe('InlineEdit', () => {
         }, 110);
     });
 
-    it('has an editDone function', (done) => {
+    it('has an editDone function', done => {
         expect(inlineEdit.editDone).to.be.a('function');
 
-        inlineEdit.edit.subscribe((text) => {
+        inlineEdit.edit.subscribe(text => {
             expect(text).to.equal('test');
             done();
         });

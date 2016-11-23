@@ -27,7 +27,7 @@ describe('Modal', () => {
         expect(modal.isOpen).to.be.a('boolean');
     });
 
-    it('registers itself with the modal service on init', (done) => {
+    it('registers itself with the modal service on init', done => {
         modalService.registerCalled.subscribe(called => {
             expect(called).to.equal(true);
             done();
@@ -35,7 +35,7 @@ describe('Modal', () => {
         modal.ngOnInit();
     });
 
-    it('calls the close function on the service', (done) => {
+    it('calls the close function on the service', done => {
         modalService.closeCalled.subscribe(called => {
             expect(called).to.equal(true);
             done();
@@ -43,7 +43,7 @@ describe('Modal', () => {
         modal.close();
     });
 
-    it('calls close on Escape keypress', (done) => {
+    it('calls close on Escape keypress', done => {
         modalService.closeCalled.subscribe(called => {
             expect(called).to.equal(true);
             done();

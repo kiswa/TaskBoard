@@ -32,7 +32,7 @@ global.TitleMock = function() {
         getTitle: () => {
             return title;
         },
-        setTitle: (text) => {
+        setTitle: text => {
             title = text;
         }
     };
@@ -58,7 +58,7 @@ global.AuthServiceMock = {
         default_board_id: 0,
         security_level: 2
     }),
-    updateUser: (user) => {
+    updateUser: user => {
     },
     login: () => {
         return RxJs.Observable.of({
@@ -81,7 +81,7 @@ global.NotificationsServiceMock = function() {
 
     return {
         noteAdded: notes.asObservable(),
-        add: (note) => {
+        add: note => {
             notes.next(note);
         }
     };
@@ -94,7 +94,7 @@ global.ResponseMock = function(endpoint) {
                 alerts: [],
                 data: [ 'jwt', 'true', 'true' ],
                 status: 'success',
-                endpoint: endpoint
+                endpoint
             };
         }
     };
@@ -110,7 +110,7 @@ global.ModalServiceMock = function() {
         openCalled: opened.asObservable(),
         registerCalled: register.asObservable(),
 
-        open: (id) => {
+        open: id => {
             opened.next(id);
         },
         close: () => {
@@ -135,7 +135,7 @@ global.SettingsServiceMock = function() {
         usersChanged: RxJs.Observable.of(userList),
         boardsChanged: RxJs.Observable.of(boardsList),
 
-        updateUsers: (users) => {
+        updateUsers: users => {
             userList = users;
         },
         getUsers: () => {
@@ -146,7 +146,7 @@ global.SettingsServiceMock = function() {
             });
         },
 
-        updateBoards: (boards) => {
+        updateBoards: boards => {
             boardsList = boards;
         },
         getBoards: () => {
@@ -166,7 +166,7 @@ global.UserAdminServiceMock = function() {
         ];
 
     return {
-        addUser: (user) => {
+        addUser: user => {
             return RxJs.Observable.of({
                 status: 'success',
                 alerts: [],
@@ -176,7 +176,7 @@ global.UserAdminServiceMock = function() {
                 ]
             });
         },
-        editUser: (user) => {
+        editUser: user => {
             return RxJs.Observable.of({
                 status: 'success',
                 alerts: [],
@@ -190,7 +190,7 @@ global.UserAdminServiceMock = function() {
                 ]
             });
         },
-        removeUser: (userId) => {
+        removeUser: userId => {
             return RxJs.Observable.of({
                 status: 'success',
                 alerts: [],
@@ -204,28 +204,28 @@ global.UserAdminServiceMock = function() {
 };
 
 global.UserSettingsServiceMock = {
-    changeUserOptions: (opts) => {
+    changeUserOptions: opts => {
         return RxJs.Observable.of({
             alerts: []
         });
     },
-    changeDefaultBoard: (boardId) => {
+    changeDefaultBoard: boardId => {
         return RxJs.Observable.of({
             alerts: [{ type: 'success', text: '' }],
             data: [ '', '{}' ]
         });
     },
-    changeUsername: (newName) => {
+    changeUsername: newName => {
         return RxJs.Observable.of({
             alerts: [{ type: 'success', text: '' }]
         });
     },
-    changePassword: (newPass) => {
+    changePassword: newPass => {
         return RxJs.Observable.of({
             alerts: [{ type: 'success', text: '' }]
         });
     },
-    changeEmail: (newEmail) => {
+    changeEmail: newEmail => {
         return RxJs.Observable.of({
             alerts: [{ type: 'success', text: '' }]
         });
@@ -237,11 +237,11 @@ global.HttpMock = {
         var response = new global.ResponseMock(url);
         return RxJs.Observable.of(response);
     },
-    get: (url) => {
+    get: url => {
         var response = new global.ResponseMock(url);
         return RxJs.Observable.of(response);
     },
-    delete: (url) => {
+    delete: url => {
         var response = new global.ResponseMock(url);
         return RxJs.Observable.of(response);
     }
