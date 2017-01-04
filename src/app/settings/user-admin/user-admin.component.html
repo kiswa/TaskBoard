@@ -20,11 +20,11 @@
                     <td>{{ user.default_board_name }}</td>
                     <td>
                         <span *ngIf="user.can_admin">
-                            <a href="javascript:" title="Edit User"
+                            <a class="padded" href="javascript:" title="Edit User"
                                 (click)="showModal('Edit', user)">
                                 <i class="icon icon-edit color-primary"></i>
                             </a>
-                            <a href="javascript:" title="Remove User"
+                            <a class="padded" href="javascript:" title="Remove User"
                                 (click)="showConfirmModal(user)">
                                 <i class="icon icon-trash-empty color-secondary"></i>
                             </a>

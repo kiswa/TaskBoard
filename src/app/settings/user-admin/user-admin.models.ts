@@ -12,11 +12,11 @@ export class ModalUser extends UserDisplay {
     public boardAccess: Array<string> = [];
 
     constructor(user: User) {
-        super(user.default_board_id, user.email, user.id,
-              user.last_login, user.security_level, user.user_option_id,
+        super(+user.default_board_id, user.email, +user.id,
+              user.last_login, +user.security_level, +user.user_option_id,
               user.username, user.board_access);
 
-        user.board_access.forEach((id) => {
+        user.board_access.forEach(id => {
             this.boardAccess.push('' + id);
         });
     }

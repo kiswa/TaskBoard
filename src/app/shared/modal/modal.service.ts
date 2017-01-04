@@ -28,7 +28,7 @@ export class ModalService {
         var modal = this.findModal(modalId);
 
         if (modal) {
-            modal.animate = this.userOptions.show_animations;
+            modal.animate = (this.userOptions.show_animations);
             modal.isOpen = true;
             document.querySelector('body').classList.add('no-scroll');
 

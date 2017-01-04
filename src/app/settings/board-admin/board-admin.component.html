@@ -50,12 +50,12 @@
                         <ul>
                             <li *ngFor="let col of board.columns">
                                 {{ col.name }}
-                                <span class="badge" title="Task Count">{{ col.tasks.length }}</span>
+                                <span class="badge" title="Task Count">{{ col.tasks ? col.tasks.length : 0 }}</span>
                             </li>
                         </ul>
                     </td>
                     <td>
-                        <ul *ngIf="board.categories.length">
+                        <ul *ngIf="board.categories && board.categories.length">
                             <li *ngFor="let cat of board.categories">
                                 {{ cat.name }}
                                 <span class="badge" title="Default Task Color"
@@ -73,15 +73,15 @@
                         </ul>
                     </td>
                     <td>
-                        <a href="javascript:" title="Edit Board"
+                        <a class="padded" href="javascript:" title="Edit Board"
                             (click)="showModal('Edit', board)">
                             <i class="icon icon-edit color-primary"></i>
                         </a>
-                        <a href="javascript:" title="Remove Board"
+                        <a class="padded" href="javascript:" title="Remove Board"
                             (click)="showConfirmModal(board)">
                             <i class="icon icon-trash-empty color-secondary"></i>
                         </a>
-                        <label>
+                        <label class="padded">
                             <input type="checkbox" class="hidden" [ngModel]="board.is_active">
                             <span class="toggle"></span>
                             Active
@@ -119,7 +119,7 @@
     <label>
         Board Name
         <input #focusMe type="text" name="board-name" placeholder="Board Name"
-            [(ngModel)]="modalProps.boardName">
+            [(ngModel)]="modalProps.name">
     </label>
 
     <div class="half-modal">
@@ -190,16 +190,16 @@
                 alt="Example URL: https://github.com/kiswa/TaskBoard/issues/%BUGID\1%
                      Example RegExp: (?:Issue)?#(\d+)"></i>
         </label>
-        <ul *ngIf="modalProps.issueTrackers.length" class="modal-list">
+        <ul *ngIf="modalProps.issue_trackers.length" class="modal-list">
             <li class="double-edit"
-                *ngFor="let tracker of modalProps.issueTrackers; let i = index">
+                *ngFor="let tracker of modalProps.issue_trackers; let i = index">
                 <inline-edit class="first"
-                    [text]="getPropertyValue('issueTrackers', 'url', i)"
-                    (edit)="onPropertyEdit('issueTrackers', 'url', i, $event)">
+                    [text]="getPropertyValue('issue_trackers', 'url', i)"
+                    (edit)="onPropertyEdit('issue_trackers', 'url', i, $event)">
                 </inline-edit>
                 <inline-edit class="last"
-                    [text]="getPropertyValue('issueTrackers', 'regex', i)"
-                    (edit)="onPropertyEdit('issueTrackers', 'regex', i, $event)">
+                    [text]="getPropertyValue('issue_trackers', 'regex', i)"
+                    (edit)="onPropertyEdit('issue_trackers', 'regex', i, $event)">
                 </inline-edit>
                 <span class="actions">
                     <i class="icon icon-trash-empty color-secondary"

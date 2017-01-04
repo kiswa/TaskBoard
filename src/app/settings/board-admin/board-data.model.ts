@@ -3,10 +3,11 @@ import { User } from '../../shared/index';
 export class BoardData {
     constructor(public title = '',
         public id = 0,
-        public boardName = '',
+        public name = '',
+        public is_active = true,
         public columns: Array<any> = [],
         public categories: Array<any> = [],
-        public issueTrackers: Array<any> = [],
+        public issue_trackers: Array<any> = [],
         public users: Array<User> = [],
         public categoryDefaultColor = '#ffffe0',
         public newColumnName = '',
@@ -19,7 +20,10 @@ export class BoardData {
             return;
         }
 
-        this.columns.push({ name: this.newColumnName, tasks: [] });
+        this.columns.push({
+            name: this.newColumnName,
+            position: this.columns.length
+        });
         this.newColumnName = '';
     }
 
@@ -40,7 +44,7 @@ export class BoardData {
 
         this.categories.push({
             name: this.newCategoryName,
-            defaultColor: this.categoryDefaultColor
+            default_task_color: this.categoryDefaultColor
         });
         this.newCategoryName = '';
     }
@@ -60,7 +64,7 @@ export class BoardData {
             return;
         }
 
-        this.issueTrackers.push({
+        this.issue_trackers.push({
             url: this.issueTrackerUrl,
             regex: this.issueTrackerBugId
         });
@@ -69,13 +73,13 @@ export class BoardData {
     }
 
     removeIssueTracker(tracker: any): void {
-        let index = this.issueTrackers.indexOf(tracker);
+        let index = this.issue_trackers.indexOf(tracker);
 
         if (index === -1) {
             return;
         }
 
-        this.issueTrackers.splice(index, 1);
+        this.issue_trackers.splice(index, 1);
     }
 }
 

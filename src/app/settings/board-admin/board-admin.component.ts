@@ -5,6 +5,7 @@ import { DragulaService } from 'ng2-dragula/ng2-dragula';
 import {
     ApiResponse,
     Board,
+    Column,
     User,
     InlineEdit,
     Modal,
@@ -57,12 +58,15 @@ export class BoardAdmin {
 
         auth.userChanged
             .subscribe(activeUser => {
-                this.activeUser = activeUser;
+                this.activeUser = new User(+activeUser.default_board_id,
+                    activeUser.email, +activeUser.id, activeUser.last_login,
+                    +activeUser.security_level, +activeUser.user_option_id,
+                    activeUser.username, activeUser.board_access);
 
                 this.noBoardsMessage = 'You are not assigned to any boards. ' +
                     'Contact an admin user to be added to a board.';
 
-                if (activeUser.security_level === 1) {
+                if (+activeUser.security_level === 1) {
                     this.noBoardsMessage = 'There are no current boards. ' +
                         'Use the <strong>Add Board</strong> button below to add one.';
                 }
@@ -86,18 +90,40 @@ export class BoardAdmin {
 
         settings.boardsChanged.subscribe(boards => {
             this.boards = boards;
+
+            this.boards.forEach(board => {
+                board.columns.sort((a: Column, b: Column) => {
+                    return +a.position < +b.position
+                        ? -1
+                        : +a.position > b.position
+                            ? 1
+                            : 0;
+                });
+            });
+
             this.loading = false;
         });
     }
 
     ngAfterContentInit() {
         let ul = document.getElementsByClassName('modal-list')[0];
+        let bag = this.dragula.find('columns-bag');
+
+        if (bag !== undefined) {
+            this.dragula.destroy('columns-bag');
+        }
 
         this.dragula.setOptions('columns-bag', {
             moves: (el: any, container: any, handle: any) => {
                 return handle.classList.contains('icon-resize-vertical');
             },
             mirrorContainer: ul
+        });
+
+        this.dragula.dragend.subscribe(() => {
+            this.modalProps.columns.forEach((item, index) => {
+                item.position = "" + index;
+            });
         });
     }
 
@@ -130,7 +156,7 @@ export class BoardAdmin {
     }
 
     private validateBoard(): boolean {
-        if (this.modalProps.boardName === '') {
+        if (this.modalProps.name === '') {
             this.notes.add(new Notification('error',
                 'Board name is required.'));
             return false;
@@ -152,7 +178,15 @@ export class BoardAdmin {
             this.modal.close(this.MODAL_ID);
             this.modal.close(this.MODAL_CONFIRM_ID);
 
-            this.settings.updateBoards(response.data[1]);
+            let boards = Array<Board>();
+            response.data[1].forEach((board: any) => {
+                boards.push(new Board(+board.id, board.name,
+                    board.is_active === '1', board.ownColumn,
+                    board.ownCategory, board.ownAutoAction,
+                    board.ownIssuetracker, board.sharedUser));
+            });
+
+            this.settings.updateBoards(boards);
             this.saving = false;
         }
     }
@@ -209,13 +243,13 @@ export class BoardAdmin {
             });
         } else {
             this.modalProps.id = board.id;
-            this.modalProps.boardName = board.name;
+            this.modalProps.name = board.name;
             this.modalProps.columns = this.deepCopy(board.columns);
             this.modalProps.categories = this.deepCopy(board.categories);
-            this.modalProps.issueTrackers = this.deepCopy(board.issue_trackers);
+            this.modalProps.issue_trackers = this.deepCopy(board.issue_trackers);
 
             this.users.forEach((user: SelectableUser) => {
-                let filtered = board.users.filter(u => u.id === user.id);
+                let filtered = board.users.filter(u => +u.id === user.id);
 
                 user.selected = filtered.length > 0;
             });

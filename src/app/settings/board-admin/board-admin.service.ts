@@ -22,9 +22,7 @@ export class BoardAdminService {
     }
 
     addBoard(board: BoardData): Observable<ApiResponse> {
-        let newBoard = this.convertForApi(board);
-
-        return this.http.post('api/boards', newBoard)
+        return this.http.post('api/boards', board)
             .map(res => {
                 let response: ApiResponse = res.json();
                 return response;
@@ -36,9 +34,7 @@ export class BoardAdminService {
     }
 
     editBoard(board: BoardData): Observable<ApiResponse> {
-        let updateBoard = this.convertForApi(board);
-
-        return this.http.post('api/boards/' + updateBoard.id, updateBoard)
+        return this.http.post('api/boards/' + board.id, board)
             .map(res => {
                 let response: ApiResponse = res.json();
                 return response;
@@ -61,48 +57,5 @@ export class BoardAdminService {
             });
     }
 
-    private convertForApi(board: BoardData): Board {
-        let newBoard = new Board();
-
-        newBoard.id = board.id;
-        newBoard.name = board.boardName;
-
-        board.columns.forEach((column, index) => {
-            if (column.id) {
-                let existing = new Column(column.id, column.name, index,
-                                          board.id, column.tasks);
-                newBoard.columns.push(existing);
-            } else {
-                newBoard.addColumn(column.name);
-            }
-        });
-
-        board.categories.forEach(category => {
-            if (category.id) {
-                let existing = new Category(category.id, category.name,
-                                            category.default_task_color,
-                                            board.id);
-                newBoard.categories.push(existing);
-            } else {
-                newBoard.addCategory(category.name, category.defaultColor);
-            }
-        });
-
-        board.issueTrackers.forEach(tracker => {
-            if (tracker.id) {
-                let existing = new IssueTracker(tracker.id, tracker.url,
-                                                tracker.regex);
-                newBoard.issue_trackers.push(existing);
-            } else {
-                newBoard.addIssueTracker(tracker.url, tracker.regex);
-            }
-        });
-
-        board.users.forEach(user => {
-            newBoard.users.push(user);
-        });
-
-        return newBoard;
-    }
 }
 

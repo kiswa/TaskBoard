@@ -51,7 +51,7 @@ export class UserSettings implements OnInit {
     onOptionChange(option: string, event: any) {
         switch (option) {
             case 'new_tasks':
-                this.userOptions.new_tasks_at_bottom = (event === 'true');
+                this.userOptions.new_tasks_at_bottom = event === 'true';
             break;
             case 'mult_tasks':
                 this.userOptions.multiple_tasks_per_row = event;

@@ -46,7 +46,10 @@ export class UserAdmin {
 
         auth.userChanged
             .subscribe(activeUser => {
-                this.activeUser = activeUser;
+                this.activeUser = new User(+activeUser.default_board_id,
+                    activeUser.email, +activeUser.id, activeUser.last_login,
+                    +activeUser.security_level, +activeUser.user_option_id,
+                    activeUser.username, activeUser.board_access);
                 this.replaceUser(activeUser);
             });
 
@@ -57,7 +60,12 @@ export class UserAdmin {
 
         settings.getUsers()
             .subscribe((response: ApiResponse) => {
-                this.users = response.data[1];
+                if (response.data[1]) {
+                    response.data[1].forEach((user: any) => {
+                        this.users.push(this.convertUser(user));
+                    });
+                }
+
                 this.getBoards();
             });
     }
@@ -118,8 +126,15 @@ export class UserAdmin {
         this.settings.getBoards()
             .subscribe((response: ApiResponse) => {
                 let boards = response.data[1];
+                this.boards = [];
+
                 if (boards) {
-                    this.boards = boards;
+                    boards.forEach((board: any) => {
+                         this.boards.push(new Board(+board.id, board.name,
+                            board.is_active === '1', board.ownColumn,
+                            board.ownCategory, board.ownAutoAction,
+                            board.ownIssuetracker, board.sharedUser));
+                    });
                 }
 
                 this.settings.updateBoards(this.boards);
@@ -129,10 +144,17 @@ export class UserAdmin {
             });
     }
 
+    private convertUser(user: any): UserDisplay {
+        return new UserDisplay(+user.default_board_id, user.email,
+            +user.id, user.last_login, +user.security_level,
+            +user.user_option_id, user.username,
+            user.board_access);
+    }
+
     private replaceUser(newUser: User) {
         this.users.forEach((user, index) => {
-            if (user.id === newUser.id) {
-                this.users[index] = <UserDisplay> newUser;
+            if (user.id === +newUser.id) {
+                this.users[index] = this.convertUser(newUser);
                 this.updateUserList();
             }
         });
@@ -140,7 +162,12 @@ export class UserAdmin {
 
     private replaceUserList(response: ApiResponse): void {
         if (response.status === 'success') {
-            this.users = response.data[1];
+            this.users = [];
+
+            response.data[1].forEach((user: any) => {
+                this.users.push(this.convertUser(user));
+            });
+
             this.updateUserList();
         }
     }
@@ -204,27 +231,20 @@ export class UserAdmin {
     }
 
     private updateUserList(): void {
-        for (var user of this.users) {
-            user = <UserDisplay> user;
-
+        this.users.forEach((user: UserDisplay) => {
             user.default_board_name = this.getDefaultBoardName(user);
-
-            user.security_level_name = user.security_level === 1 ?
-                'Admin' :
-                user.security_level === 2 ?
-                    'Board Admin' :
-                    'User';
-
+            user.security_level_name = +user.security_level === 1
+                ? 'Admin'
+                : +user.security_level === 2
+                    ? 'Board Admin'
+                    : 'User';
             user.can_admin = true;
 
-            // TODO: Determine ability to edit a given user
-            // This may actually be it, as the API only returns users
-            // by board access.
-            if (user.id === this.activeUser.id ||
-                    this.activeUser.security_level === 3) {
+            if (+user.id === +this.activeUser.id ||
+                    +this.activeUser.security_level === 3) {
                 user.can_admin = false;
             }
-        }
+        });
 
         this.settings.updateUsers(<Array<User>> this.users);
     }
