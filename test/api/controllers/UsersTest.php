@@ -1,40 +1,41 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
+use RedBeanPHP\R;
 
 class UsersTest extends PHPUnit_Framework_TestCase {
     private $users;
 
     public static function setupBeforeClass() {
         try {
-            RedBeanPHP\R::setup('sqlite:tests.db');
+            R::setup('sqlite:tests.db');
         } catch (Exception $ex) { }
     }
 
     public function setUp() {
-        RedBeanPHP\R::nuke();
-
+        R::nuke();
         Auth::CreateInitialAdmin(new ContainerMock());
 
         $this->users = new Users(new ContainerMock());
     }
 
+    /**
+     * @group single
+     */
     public function testGetAllUsers() {
         $this->createUser();
-        $this->users = new Users(new ContainerMock());
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
 
         $actual = $this->users->getAllUsers($request,
             new ResponseMock(), null);
         $this->assertEquals(2, count($actual->data[1]));
 
-        $res = DataMock::createUnpriviligedUser();
-        $this->assertEquals('success', $res->status);
+        DataMock::CreateUnprivilegedUser();
 
         $this->users = new Users(new ContainerMock());
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt(3)];
+        $request->header = [DataMock::GetJwt(3)];
 
         $actual = $this->users->getAllUsers($request,
             new ResponseMock(), null);
@@ -43,56 +44,30 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
-    public function testSecureRoute() {
-        $request = new RequestMock();
-        $request->hasHeader = false;
-
-        $actual = $this->users->getAllUsers($request,
-            new ResponseMock(), null);
-
-        $this->assertEquals('Authorization header missing.',
-            $actual->alerts[0]['text']);
-
-        $this->users = new Users(new ContainerMock());
-        $actual = $this->users->getAllUsers(new RequestMock(),
-            new ResponseMock(), null);
-
-        $this->assertEquals('Invalid API token.', $actual->alerts[0]['text']);
-
-        $request->throwInHeader = true;
-        $actual = Auth::GetUserId($request);
-        $this->assertEquals(-1, $actual);
-    }
-
     public function testGetUser() {
+        $this->createUser();
+
         $args = [];
         $args['id'] = 2;
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
-
-        $actual = $this->users->getUser($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('No user found for ID 2.',
-            $actual->alerts[0]['text']);
-
-        $this->createUser();
-        $this->users = new Users(new ContainerMock());
-
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
 
         $actual = $this->users->getUser($request,
             new ResponseMock(), $args);
 
         $this->assertEquals('success', $actual->status);
         $this->assertEquals(2, count($actual->data));
+    }
 
-        $res = DataMock::createUnpriviligedUser();
-        $this->assertEquals('success', $res->status);
+    public function testGetUserUnprivileged() {
+        DataMock::CreateUnprivilegedUser();
 
-        $this->users = new Users(new ContainerMock());
+        $args = [];
+        $args['id'] = 2;
+
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt(3)];
+        $request->header = [DataMock::GetJwt(2)];
 
         $actual = $this->users->getUser($request,
             new ResponseMock(), $args);
@@ -100,15 +75,28 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
+    public function testGetUserNotFound() {
+        $args = [];
+        $args['id'] = 2;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
+
+        $actual = $this->users->getUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('No user found for ID 2.',
+            $actual->alerts[0]['text']);
+    }
+
     public function testGetUserForbidden() {
         $this->createUser();
-        DataMock::createStandardUser('nono');
+        DataMock::CreateStandardUser('nono');
 
         $args = [];
         $args['id'] = 1;
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt(3)];
+        $request->header = [DataMock::GetJwt(3)];
 
         $this->users = new Users(new ContainerMock());
 
@@ -118,17 +106,15 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
-    public function testAddUserFrontend() {
-        $user = DataMock::getUser();
-        $user->id = 0;
-        $user->user_option_id = 0;
-        $user->default_board_id = 1;
+    public function testAddUser() {
+        $board = R::dispense('board');
+        R::store($board);
 
-        $user->password = 'test';
-        $user->password_verify = 'test';
+        $user = $this->getUserData();
+        $user->default_board_id = $board->id;
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
         $request->payload = $user;
 
         $actual = $this->users->addUser($request,
@@ -137,16 +123,11 @@ class UsersTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testAddDuplicateUser() {
-        $user = DataMock::getUser();
-        $user->id = 0;
-        $user->user_option_id = 0;
-        $user->default_board_id = 0;
+        $user = $this->getUserData();
         $user->username = 'admin';
-        $user->password = 'test';
-        $user->password_verify = 'test';
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
         $request->payload = $user;
 
         $actual = $this->users->addUser($request,
@@ -154,35 +135,11 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $actual->status);
     }
 
-    public function testAddRemoveUser() {
-        $expected = new ApiJson();
-
-        $actual = $this->createUser();
-
-        $this->assertEquals('User standard added.',
-            $actual->alerts[0]['text']);
-
-        $args = [];
-        $args['id'] = 2;
+    public function testAddUserUnprivileged() {
+        DataMock::CreateUnprivilegedUser();
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
-
-        $actual = $this->users->removeUser($request,
-            new ResponseMock(), $args);
-
-        $this->assertEquals('User standard removed.',
-            $actual->alerts[0]['text']);
-    }
-
-    public function testAddRemoveUserUnpriviliged() {
-        $res = DataMock::createUnpriviligedUser();
-        $this->assertEquals('success', $res->status);
-
-        $this->users = new Users(new ContainerMock());
-
-        $request = new RequestMock();
-        $request->header = [DataMock::getJwt(2)];
+        $request->header = [DataMock::GetJwt(2)];
 
         $args = [];
         $args['id'] = 1;
@@ -191,45 +148,28 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             new ResponseMock(), $args);
         $this->assertEquals('Insufficient privileges.',
             $actual->alerts[0]['text']);
-
-        $this->users = new Users(new ContainerMock());
-
-        $request->header = [DataMock::getJwt(2)];
-
-        $actual = $this->users->removeUser($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('Insufficient privileges.',
-            $actual->alerts[0]['text']);
     }
 
-    public function testAddRemoveBadUser() {
+    public function testAddBadUser() {
         $request = new RequestMock();
         $request->invalidPayload = true;
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
 
         $response = $this->users->addUser($request,
             new ResponseMock(), null);
 
         $this->assertEquals('failure', $response->status);
         $this->assertEquals('error', $response->alerts[0]['type']);
-
-        $args = [];
-        $args['id'] = 5; // No such user
-
-        $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
-
-        $response = $this->users->removeUser($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('failure', $response->status);
     }
 
     public function testUpdateUser() {
         $this->createUser();
 
-        $user = DataMock::getUser();
+        $user = $this->getUserData();
+        $user->id = 2;
         $user->username = 'newname';
         $user->default_board_id = 1;
+        $user->password = 'test';
         $user->boardAccess = [2];
 
         $args = [];
@@ -237,36 +177,121 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 
         $request = new RequestMock();
         $request->payload = $user;
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
 
         $response = $this->users->updateUser($request,
             new ResponseMock(), $args);
         $this->assertEquals('success', $response->status);
+    }
 
-        $this->users = new Users(new ContainerMock());
+    public function testUpdateUserPassword() {
+        $this->createUser();
+
+        $board = R::dispense('board');
+        R::store($board);
+
+        $user = $this->getUserData();
+        $user->id = 2;
+        $user->new_password = 'updated';
+        $user->old_password = 'test';
+        $user->default_board_id = 2;
+        $user->boardAccess = [];
+
+        $args = [];
         $args['id'] = $user->id;
-        $request->header = [DataMock::getJwt()];
-        $request->payload = new stdClass();
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::GetJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+    }
+
+    public function testUpdateUserBadPassword() {
+        $this->createUser();
+
+        $user = $this->getUserData();
+        $user->id = 2;
+        $user->new_password = 'updated';
+        $user->old_password = 'wrong';
+
+        $args = [];
+        $args['id'] = $user->id;
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::GetJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $response->status);
+    }
+
+    public function testUpdateUserInvalid() {
+        $this->createUser();
+
+        $user = $this->getUserData();
+        $user->id = 2;
+        $user->username = 'newname';
+        $user->default_board_id = 1;
+
+        $args = [];
+        $args['id'] = $user->id;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
+        $request->invalidPayload = true;
 
         $response = $this->users->updateUser($request,
             new ResponseMock(), $args);
         $this->assertEquals('error', $response->alerts[0]['type']);
+    }
 
-        $res = DataMock::createUnpriviligedUser();
-        $this->assertEquals('success', $res->status);
+    public function testUpdateUserUnprivileged() {
+        DataMock::CreateUnprivilegedUser();
 
-        $this->users = new Users(new ContainerMock());
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt(3)];
+        $request->header = [DataMock::GetJwt(2)];
+
+        $actual = $this->users->updateUser($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testUpdateUserRestricted() {
+        $this->createUser();
+
+        $user = $this->getUserData();
+        $user->id = 1;
+
+        $args = [];
+        $args['id'] = $user->id;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt(2)];
+        $request->payload = $user;
 
         $actual = $this->users->updateUser($request,
             new ResponseMock(), $args);
-        $this->assertEquals('Insufficient privileges.',
-            $actual->alerts[0]['text']);
+        $this->assertEquals('failure', $actual->status);
+    }
 
-        $this->users = new Users(new ContainerMock());
-        $request->header = [DataMock::getJwt(1)];
+    public function testUpdateUserBadId() {
+        $this->createUser();
+
+        $user = $this->getUserData();
+        $user->id = 2;
+        $user->username = 'newname';
+        $user->default_board_id = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
         $request->payload = $user;
+
+        $args = [];
         $args['id'] = $user->id + 1;
 
         $response = $this->users->updateUser($request,
@@ -274,75 +299,52 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $response->status);
     }
 
-    public function testUpdateUserDefaultBoard() {
-        $this->createUser(false);
+    public function testUpdateUserNameInUse() {
+        $this->createUser();
 
-        $user = DataMock::getUser();
-        $user->username = 'newname';
-        $user->default_board_id = 0;
+        $user = $this->getUserData();
+        $user->id = 2;
+        $user->username = 'admin';
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt(2)];
+        $request->payload = $user;
 
         $args = [];
         $args['id'] = $user->id;
 
-        $request = new RequestMock();
-        $request->payload = $user;
-        $request->header = [DataMock::getJwt()];
-
-        $response = $this->users->updateUser($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('success', $response->status);
-
-        $this->users = new Users(new ContainerMock());
-
-        $user->default_board_id = 1;
-        $user->boardAccess = [0];
-        $request->payload = $user;
-        $request->header = [DataMock::getJwt(2)];
-
-        $response = $this->users->updateUser($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('success', $response->status);
-    }
-
-    public function testUpdateUserForbidden() {
-        $this->createUser();
-
-        $request = new RequestMock();
-        $request->header = [DataMock::getJwt(2)];
-
-        $args = [];
-        $args['id'] = 1;
-
         $response = $this->users->updateUser($request,
             new ResponseMock(), $args);
         $this->assertEquals('failure', $response->status);
-        $this->assertEquals('Access restricted.',
-            $response->alerts[0]['text']);
     }
 
     public function testUpdateUserOptions() {
-        DataMock::createStandardUser();
-        $user = new User(new ContainerMock(), 2);
-        $opts = new UserOptions(new ContainerMock);
-        $opts->save();
-        $user->user_option_id = $opts->id;
-        $user->save();
+        $this->createUser();
 
         $args = [];
         $args['id'] = 2;
 
+        $opts = $this->getUserOptionData();
+        $opts->id = 2;
         $opts->new_tasks_at_bottom = false;
 
         $request = new RequestMock();
         $request->payload = $opts;
-        $request->header = [DataMock::getJwt(2)];
+        $request->header = [DataMock::GetJwt(2)];
 
         $response = $this->users->updateUserOptions($request,
             new ResponseMock(), $args);
         $this->assertEquals('success', $response->status);
+    }
 
+    public function testUpdateUserOptionsRestricted() {
+        $this->createUser();
+
+        $args = [];
         $args['id'] = 1;
-        $request->header = [DataMock::getJwt(2)];
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt(2)];
 
         $this->users = new Users(new ContainerMock());
         $response = $this->users->updateUserOptions($request,
@@ -353,190 +355,129 @@ class UsersTest extends PHPUnit_Framework_TestCase {
             $response->alerts[0]['text']);
     }
 
-    public function testUpdateUserOptionsInvalid() {
-        DataMock::createStandardUser();
-        $user = new User(new ContainerMock(), 2);
-        $opts = new UserOptions(new ContainerMock);
-        $opts->save();
-        $user->user_option_id = $opts->id;
-        $user->save();
+    public function testUpdateUserOptionsUnprivileged() {
+        DataMock::createUnprivilegedUser();
 
-        $data = DataMock::getUserOptions();
+        $data = $this->getUserOptionData();
         $data->id = 2;
 
-        DataMock::createUnpriviligedUser();
-
         $args = [];
         $args['id'] = 2;
 
         $request = new RequestMock();
         $request->payload = $data;
-        $request->header = [DataMock::getJwt(3)];
-
-        $response = $this->users->updateUserOptions($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('failure', $response->status);
-
-        $args['id'] = 2;
-        $data->id = 4; // No such user options
-        $request->payload = $data;
-        $request->header = [DataMock::getJwt(2)];
-        $this->users = new Users(new ContainerMock());
+        $request->header = [DataMock::GetJwt(2)];
 
         $response = $this->users->updateUserOptions($request,
             new ResponseMock(), $args);
         $this->assertEquals('failure', $response->status);
     }
 
-    public function testChangePasswordOverride() {
+    public function testUpdateUserOptionsBadId() {
         $this->createUser();
 
-        $tmp = RedBeanPHP\R::load('user', 2);
-        $this->assertEquals(2, $tmp->id);
-
-        $tmp->password_hash = password_hash('testpass', PASSWORD_BCRYPT);
-        RedBeanPHP\R::store($tmp);
-
-        $user = DataMock::getUser();
-        $user->password = 'newpassword';
+        $data = new stdClass();
+        $data->id = 2; // No such user options
 
         $args = [];
-        $args['id'] = $user->id;
+        $args['id'] = 2;
 
         $request = new RequestMock();
-        $request->payload = $user;
-        $request->header = [DataMock::getJwt()];
+        $request->payload = $data;
+        $request->header = [DataMock::GetJwt(2)];
 
-        $response = $this->users->updateUser($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('success', $response->status);
-    }
-
-    public function testChangePassword() {
-        $this->createUser();
-
-        $tmp = RedBeanPHP\R::load('user', 2);
-        $this->assertEquals(2, $tmp->id);
-
-        $tmp->password_hash = password_hash('testpass', PASSWORD_BCRYPT);
-        RedBeanPHP\R::store($tmp);
-
-        $user = DataMock::getUser();
-        $user->new_password = 'test';
-        $user->old_password = 'testpass';
-
-        $args = [];
-        $args['id'] = $user->id;
-
-        $request = new RequestMock();
-        $request->payload = $user;
-        $request->header = [DataMock::getJwt()];
-
-        $response = $this->users->updateUser($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('success', $response->status);
-
-        $this->users = new Users(new ContainerMock());
-        $user->old_password = 'test1';
-        $user->new_password = 'test';
-
-        $request = new RequestMock();
-        $request->payload = $user;
-        $request->header = [DataMock::getJwt()];
-
-        $response = $this->users->updateUser($request,
+        $response = $this->users->updateUserOptions($request,
             new ResponseMock(), $args);
         $this->assertEquals('failure', $response->status);
     }
 
-    public function testChangeUsername() {
+    public function testRemoveUser() {
         $this->createUser();
 
-        $user = DataMock::getUser();
-        $user->username = 'newusername';
+        $args = [];
+        $args['id'] = 2;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
+
+        $actual = $this->users->removeUser($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('User tester removed.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testRemoveUserUnprivileged() {
+        DataMock::CreateUnprivilegedUser();
 
         $args = [];
-        $args['id'] = $user->id;
+        $args['id'] = 2;
 
         $request = new RequestMock();
-        $request->payload = $user;
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt(2)];
 
-        $response = $this->users->updateUser($request,
+        $actual = $this->users->removeUser($request,
             new ResponseMock(), $args);
-        $this->assertEquals('success', $response->status);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
 
-        $this->users = new Users(new ContainerMock());
-        $user->username = 'admin';
+    public function testRemoveBadUser() {
+        $args = [];
+        $args['id'] = 2; // No such user
 
         $request = new RequestMock();
-        $request->payload = $user;
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
 
-        $response = $this->users->updateUser($request,
+        $response = $this->users->removeUser($request,
             new ResponseMock(), $args);
         $this->assertEquals('failure', $response->status);
     }
 
-    public function testUpdateBoardAccess() {
-        $this->createUser();
-        $this->createBoard();
+    private function getUserData() {
+        $data = new stdClass();
 
-        $user = new User(new ContainerMock(), 2);
-        $this->assertEquals(1, count($user->board_access));
+        $data->security_level = SecurityLevel::USER;
+        $data->username = 'tester';
+        $data->email = '';
+        $data->default_board_id = 0;
+        $data->user_option_id = 0;
+        $data->last_login = 0;
+        $data->active_token = '';
 
-        $user->boardAccess = [1, 2];
-        $args = ['id' => $user->id];
+        $data->password = 'test';
+        $data->password_verify = 'test';
 
-        $request = new RequestMock();
-        $request->payload = $user;
-        $request->header = [DataMock::getJwt()];
-
-        $response = $this->users->updateUser($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('success', $response->status);
-
-        $this->users = new Users(new ContainerMock());
-
-        $user = new User(new ContainerMock(), 2);
-        $this->assertEquals(2, count($user->board_access));
-
-        $user->boardAccess = [2];
-        $request->payload = $user;
-        $request->header = [DataMock::getJwt()];
-
-        $response = $this->users->updateUser($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('success', $response->status);
-
-        $user = new User(new ContainerMock(), 2);
-        $this->assertEquals(1, count($user->board_access));
+        return $data;
     }
 
-    private function createBoard() {
-        $board = DataMock::getBoardForDb();
+    private function getUserOptionData() {
+        $data = new stdClass();
 
-        $request = new RequestMock();
-        $request->payload = $board;
-        $request->header = [DataMock::getJwt()];
+        $data->new_tasks_at_bottom = true;
+        $data->show_animations = true;
+        $data->show_assignee = true;
+        $data->multiple_tasks_per_row = false;
 
-        $boards = new Boards(new ContainerMock());
-        $boards->addBoard($request, new ResponseMock(), null);
+        return $data;
     }
 
-    private function createUser($addToBoard = true) {
-        $this->createBoard();
+    private function createUser() {
+        $opts = R::dispense('useroption');
+        R::store($opts);
 
-        $response = DataMock::createStandardUser();
-        $this->assertEquals('success', $response->status);
+        $user = R::dispense('user');
+        $user->security_level = SecurityLevel::USER;
+        $user->username = 'tester';
+        $user->password_hash = password_hash('test', PASSWORD_BCRYPT);
+        $user->user_option_id = $opts->id;
 
-        if ($addToBoard) {
-            $board = new Board(new ContainerMock(), 1);
-            $board->users[] = new User(new ContainerMock(), 2);
-            $board->save();
-        }
-
-        return $response;
+        $admin = R::load('user', 1);
+        $board = R::dispense('board');
+        $board->sharedUserList[] = $admin;
+        $board->sharedUserList[] = $user;
+        R::store($board);
     }
+
 }
 

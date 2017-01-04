@@ -8,10 +8,6 @@ class ApiJson {
         $this->status = 'success';
     }
 
-    function setFailure() {
-        $this->status = 'failure';
-    }
-
     function addData($obj) {
         $this->data[] = $obj;
     }

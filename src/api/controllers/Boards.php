@@ -5,7 +5,7 @@ class Boards extends BaseController {
 
     public function getAllBoards($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
@@ -25,12 +25,12 @@ class Boards extends BaseController {
 
     public function getBoard($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $board = new Board($this->container, (int)$args['id']);
+        $board = R::load('board', (int)$args['id']);
 
         if ($board->id === 0) {
             $this->logger->addError('Attempt to load board ' . $args['id'] .
@@ -46,24 +46,26 @@ class Boards extends BaseController {
         }
 
         $this->apiJson->setSuccess();
-        $this->apiJson->addData($board);
+        $this->apiJson->addData(R::exportAll($board));
 
         return $this->jsonResponse($response);
     }
 
     public function addBoard($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::Admin);
+            SecurityLevel::ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $board = new Board($this->container);
-        $board->loadFromJson($request->getBody());
+        $board = R::dispense('board');
+        if (!BeanLoader::LoadBoard($board, $request->getBody())) {
+            $board->id = -1;
+        }
 
         $this->includeAdmins($board);
 
-        if (!$board->save()) {
+        if ($board->id === -1) {
             $this->logger->addError('Add Board: ', [$board]);
             $this->apiJson->addAlert('error', 'Error adding board. ' .
                 'Please check your entries and try again.');
@@ -71,7 +73,9 @@ class Boards extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        R::store($board);
+
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' added board ' . $board->name . '.',
             '', json_encode($board), 'board', $board->id);
@@ -86,13 +90,13 @@ class Boards extends BaseController {
 
     public function updateBoard($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::BoardAdmin);
+            SecurityLevel::BOARD_ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
         $data = json_decode($request->getBody());
-        $board = new Board($this->container, (int)$args['id']);
+        $board = R::load('board', (int)$args['id']);
 
         if (!$this->checkBoardAccess($board->id, $request)) {
             return $this->jsonResponse($response, 403);
@@ -106,10 +110,12 @@ class Boards extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        $update = new Board($this->container, (int)$args['id']);
-        $update->loadFromJson($request->getBody());
+        $update = R::load('board', (int)$args['id']);
+        $update->id = BeanLoader::LoadBoard($update, $request->getBody())
+            ? $board->id
+            : 0;
 
-        if ($board->id !== $update->id) {
+        if ($update->id === 0 || ($board->id !== $update->id)) {
             $this->logger->addError('Update Board: ', [$board, $update]);
             $this->apiJson->addAlert('error', 'Error updating board. ' .
                 'Please check your entries and try again.');
@@ -118,13 +124,13 @@ class Boards extends BaseController {
         }
 
         $this->includeAdmins($update);
-        $update->save();
+        R::store($update);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' updated board ' . $update->name,
-            json_encode($board), json_encode($update),
-            'board', $update->id);
+            json_encode(R::exportAll($board)),
+            json_encode(R::exportAll($update)), 'board', $update->id);
 
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
@@ -136,15 +142,15 @@ class Boards extends BaseController {
 
     public function removeBoard($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::Admin);
+            SecurityLevel::ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
         $id = (int)$args['id'];
-        $board = new Board($this->container, $id);
+        $board = R::load('board', $id);
 
-        if ($board->id !== $id) {
+        if ((int)$board->id !== $id) {
             $this->logger->addError('Remove Board: ', [$board]);
             $this->apiJson->addAlert('error', 'Error removing board. ' .
                 'No board found for ID ' . $id  . '.');
@@ -153,9 +159,9 @@ class Boards extends BaseController {
         }
 
         $before = $board;
-        $board->delete();
+        R::trash($board);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' removed board ' . $before->name,
             json_encode($before), '', 'board', $id);
@@ -172,10 +178,8 @@ class Boards extends BaseController {
         $admins = R::findAll('user', ' WHERE security_level = 1 ');
 
         foreach($admins as $admin) {
-            $user = new User($this->container, $admin->id);
-
-            if (!in_array($user, $board->users)) {
-                $board->users[] = $user;
+            if (!in_array($admin, $board->sharedUserList)) {
+                $board->sharedUserList[] = $admin;
             }
         }
     }
@@ -186,25 +190,21 @@ class Boards extends BaseController {
 
         if (count($boardBeans)) {
             foreach($boardBeans as $bean) {
-                $board = new Board($this->container);
-                $board->loadFromBean($bean);
-
                 if (Auth::HasBoardAccess($this->container,
-                        $request, $board->id)) {
-                    foreach($board->users as $user) {
+                                         $request, $bean->id)) {
+                    foreach($bean->sharedUserList as $user) {
                         $user = $this->cleanUser($user);
                     }
 
-                    $boards[] = $board;
+                    $boards[] = $bean;
                 }
             }
         }
 
-        return $boards;
+        return R::exportAll($boards);
     }
 
     private function cleanUser($user) {
-        $user->security_level = $user->security_level->getValue();
         unset($user->password_hash);
         unset($user->active_token);
 

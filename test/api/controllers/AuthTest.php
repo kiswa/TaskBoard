@@ -17,25 +17,66 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $this->auth = new Auth(new ContainerMock());
     }
 
+    public function testHasBoardAccess() {
+        $user = R::dispense('user');
+
+        $board = R::dispense('board');
+        $board->sharedUserList[] = $user;
+        R::store($board);
+
+        $hasAccess = Auth::HasBoardAccess(new ContainerMock(),
+            new RequestMock(), 1, 1);
+        $this->assertEquals(true, $hasAccess);
+
+        $user->security_level = SecurityLevel::ADMIN;
+        R::store($user);
+
+        $hasAccess = Auth::HasBoardAccess(new ContainerMock(),
+            new RequestMock(), 1, 1);
+        $this->assertEquals(true, $hasAccess);
+    }
+
+    public function testCreateInitialAdmin() {
+        Auth::CreateInitialAdmin(new ContainerMock());
+
+        $admin = R::load('user', 1);
+
+        $this->assertEquals(1, (int) $admin->id);
+        $this->assertEquals('admin', $admin->username);
+
+        // Call again to verify only one is created
+        Auth::CreateInitialAdmin(new ContainerMock());
+        $this->assertEquals(1, R::count('user'));
+    }
+
+    public function testCreateJwtSigningKey() {
+        Auth::CreateJwtSigningKey();
+
+        $jwt = R::load('jwt', 1);
+
+        $this->assertEquals(1, (int) $jwt->id);
+        $this->assertTrue(strlen($jwt->secret) > 1);
+
+        // Call again to verify only one is created
+        Auth::CreateJwtSigningKey();
+        $this->assertEquals(1, R::count('jwt'));
+    }
+
     public function testRefreshTokenFailures() {
         $request = new RequestMock();
         $request->hasHeader = false;
 
         $actual = Auth::RefreshToken($request, new ResponseMock(), null);
-
         $this->assertEquals(400, $actual->status);
 
         $actual = Auth::RefreshToken(new RequestMock(),
             new ResponseMock(), null);
-
         $this->assertEquals(401, $actual->status);
     }
 
     public function testRefreshToken() {
         Auth::CreateInitialAdmin(new ContainerMock());
-        // Called twice to verify coverage of the check for existing admin
-        Auth::CreateInitialAdmin(new ContainerMock());
-        Auth::CreateJwtKey();
+        Auth::CreateJwtSigningKey();
 
         $jwtKey = R::load('jwt', 1);
         $admin = R::load('user', 1);
@@ -64,6 +105,27 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(401, $actual->status);
     }
 
+    public function testGetUserId() {
+        Auth::CreateJwtSigningKey();
+        $jwtKey = R::load('jwt', 1);
+
+        $token = JWT::encode(array(
+            'exp' => time() + 600,
+            'uid' => 1,
+            'mul' => 1
+            ), $jwtKey->secret);
+
+        $request = new RequestMock();
+        $request->header = [$token];
+
+        $actual = Auth::GetUserId($request);
+        $this->assertEquals(1, $actual);
+
+        $request->throwInHeader = true;
+        $actual = Auth::GetUserId($request);
+        $this->assertEquals(-1, $actual);
+    }
+
     public function testLogin() {
         $data = new stdClass();
         $data->username = 'admin';
@@ -78,7 +140,7 @@ class AuthTest extends PHPUnit_Framework_TestCase {
 
         $this->auth = new Auth(new ContainerMock());
         Auth::CreateInitialAdmin(new ContainerMock());
-        Auth::CreateJwtKey();
+        Auth::CreateJwtSigningKey();
 
         $actual = $this->auth->login($request, new ResponseMock(), null);
         $this->assertEquals('success', $actual->status);
@@ -135,7 +197,7 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $request->payload = $data;
 
         Auth::CreateInitialAdmin(new ContainerMock());
-        Auth::CreateJwtKey();
+        Auth::CreateJwtSigningKey();
 
         $actual = $this->auth->login($request, new ResponseMock(), null);
         $this->assertEquals('success', $actual->status);

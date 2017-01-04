@@ -5,14 +5,14 @@ class Tasks extends BaseController {
 
     public function getTask($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $task = new Task($this->container, (int)$args['id']);
+        $task = R::load('task', (int)$args['id']);
 
-        if ($task->id === 0) {
+        if ((int)$task->id === 0) {
             $this->logger->addError('Attemt to load task ' .
                 $args['id'] . ' failed.');
             $this->apiJson->addAlert('error', 'No task found for ID ' .
@@ -21,7 +21,8 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        if (!$this->checkBoardAccess($this->getBoardId($task->id), $request)) {
+        if (!$this->checkBoardAccess(
+                $this->getBoardId($task->column_id), $request)) {
             return $this->jsonResponse($response, 403);
         }
 
@@ -33,17 +34,17 @@ class Tasks extends BaseController {
 
     public function addTask($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $task = new Task($this->container);
-        $task->loadFromJson($request->getBody());
+        $task = R::dispense('task');
+        BeanLoader::LoadTask($task, $request->getBody());
 
-        $column = new Column($this->container, $task->column_id);
+        $column = R::load('column', $task->column_id);
 
-        if ($column->id === 0) {
+        if ((int)$column->id === 0) {
             $this->logger->addError('Add Task: ', [$task]);
             $this->apiJson->addAlert('error', 'Error adding task. ' .
                 'Please check your entries and try again.');
@@ -55,10 +56,9 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response, 403);
         }
 
-        $task->save();
+        R::store($task);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
-
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' added task ' . $task->title . '.',
             '', json_encode($task), 'task', $task->id);
@@ -72,20 +72,19 @@ class Tasks extends BaseController {
 
     public function updateTask($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $task = R::load('task', (int)$args['id']);
 
-        $id = (int)$args['id'];
-        $task = new Task($this->container, $id);
+        $update = R::dispense('task');
+        $update->id = BeanLoader::LoadTask($update, $request->getBody())
+            ? $task->id
+            : 0;
 
-        $update = new Task($this->container);
-        $update->loadFromJson($request->getBody());
-
-        if ($task->id !== $update->id) {
+        if ($task->id === 0 || ((int)$task->id !== (int)$update->id)) {
             $this->logger->addError('Update Task: ', [$task, $update]);
             $this->apiJson->addAlert('error', 'Error updating task ' .
                 $task->title . '. Please try again.');
@@ -93,13 +92,14 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        if (!$this->checkBoardAccess($this->getBoardId($task->column_id),
-                $request)) {
+        if (!$this->checkBoardAccess(
+                $this->getBoardId($task->column_id), $request)) {
             return $this->jsonResponse($response, 403);
         }
 
-        $update->save();
+        R::store($update);
 
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' updated task ' . $task->title,
             json_encode($task), json_encode($update),
@@ -114,17 +114,15 @@ class Tasks extends BaseController {
 
     public function removeTask($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $actor = new User($this->container, Auth::GetUserId($request));
-
         $id = (int)$args['id'];
-        $task = new Task($this->container, $id);
+        $task = R::load('task', $id);
 
-        if ($task->id !== $id) {
+        if ((int)$task->id !== $id) {
             $this->logger->addError('Remove Task: ', [$task]);
             $this->apiJson->addAlert('error', 'Error removing task. ' .
                 'No task found for ID ' . $id . '.');
@@ -132,13 +130,15 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        if (!$this->checkBoardAccess($this->getBoardId($task->id), $request)) {
+        if (!$this->checkBoardAccess(
+                $this->getBoardId($task->column_id), $request)) {
             return $this->jsonResponse($response, 403);
         }
 
         $before = $task;
-        $task->delete();
+        R::trash($task);
 
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' removed task ' . $before->title,
             json_encode($before), '', 'task', $id);
@@ -150,10 +150,8 @@ class Tasks extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    private function getBoardId($taskId) {
-        $task = new Task($this->container, $taskId);
-
-        $column = new Column($this->container, $task->column_id);
+    private function getBoardId($columnId) {
+        $column = R::load('column', $columnId);
 
         return $column->board_id;
     }

@@ -8,7 +8,7 @@ $app = new Slim\App();
 require 'app-setup.php';
 
 Auth::CreateInitialAdmin($container);
-Auth::CreateJwtKey();
+Auth::CreateJwtSigningKey();
 
 // Request | Route               | Handler                         | Minimum Security Level
 //---------|---------------------|---------------------------------|---------------------------

@@ -5,12 +5,12 @@ class Attachments extends BaseController {
 
     public function getAttachment($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $attachment = new Attachment($this->container, (int)$args['id']);
+        $attachment = R::load('attachment', (int)$args['id']);
 
         if ($attachment->id === 0) {
             $this->logger->addError('Attempt to load attachment ' .
@@ -34,15 +34,17 @@ class Attachments extends BaseController {
 
     public function addAttachment($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $attachment = new Attachment($this->container);
-        $attachment->loadFromJson($request->getBody());
+        $attachment = R::dispense('attachment');
+        if (!BeanLoader::LoadAttachment($attachment, $request->getBody())) {
+            $attachment->task_id = 0;
+        }
 
-        $task = new Task($this->container, $attachment->task_id);
+        $task = R::load('task', $attachment->task_id);
 
         if ($task->id === 0) {
             $this->logger->addError('Add Attachment: ', [$attachment]);
@@ -56,12 +58,12 @@ class Attachments extends BaseController {
             return $this->jsonResponse($response, 403);
         }
 
-        $attachment->save();
+        R::store($attachment);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $actor = R::load('user', Auth::GetUserId($request));
 
-        $this->dbLogger->logChange($this->container, 0,
-            '$user->name added attachment.', '', json_encode($attachment),
+        $this->dbLogger->logChange($this->container, $actor->id,
+            $actor->username . ' added attachment.', '', json_encode($attachment),
             'attachment', $attachment->id);
 
         $this->apiJson->setSuccess();
@@ -72,19 +74,19 @@ class Attachments extends BaseController {
 
     public function removeAttachment($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $actor = R::load('user', Auth::GetUserId($request));
 
         $id = (int)$args['id'];
-        $attachment = new Attachment($this->container, $id);
+        $attachment = R::load('attachment', $id);
 
         // If User level, only the user that created the attachment
         // may delete it. If higher level, delete is allowed.
-        if ($actor->security_level->getValue() === SecurityLevel::User) {
+        if ((int)$actor->security_level === SecurityLevel::USER) {
             if ($actor->id !== $attachment->user_id) {
                 $this->apiJson->addAlert('error',
                     'You do not have sufficient permissions ' .
@@ -94,7 +96,7 @@ class Attachments extends BaseController {
             }
         } // @codeCoverageIgnore
 
-        if ($attachment->id !== $id) {
+        if ((int)$attachment->id !== $id) {
             $this->logger->addError('Remove Attachment: ', [$attachment]);
             $this->apiJson->addAlert('error', 'Error removing attachment. ' .
                 'No attachment found for ID ' . $id . '.');
@@ -122,9 +124,8 @@ class Attachments extends BaseController {
     }
 
     private function getBoardId($taskId) {
-        $task = new Task($this->container, $taskId);
-
-        $column = new Column($this->container, $task->column_id);
+        $task = R::load('task', $taskId);
+        $column = R::load('column', $task->column_id);
 
         return $column->board_id;
     }

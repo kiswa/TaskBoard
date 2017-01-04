@@ -5,14 +5,14 @@ class Columns extends BaseController {
 
     public function getColumn($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $column = new Column($this->container, (int)$args['id']);
+        $column = R::load('column', (int)$args['id']);
 
-        if ($column->id === 0) {
+        if ((int)$column->id === 0) {
             $this->logger->addError('Attempt to load column ' .
                 $args['id'] . ' failed.');
             $this->apiJson->addAlert('error', 'No column found for ID ' .
@@ -33,17 +33,19 @@ class Columns extends BaseController {
 
     public function addColumn($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::BoardAdmin);
+            SecurityLevel::BOARD_ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $column = new Column($this->container);
-        $column->loadFromJson($request->getBody());
+        $column = R::dispense('column');
+        if (!BeanLoader::LoadColumn($column, $request->getBody())) {
+            $column->board_id = 0;
+        }
 
-        $board = new Board($this->container, $column->board_id);
+        $board = R::load('board', $column->board_id);
 
-        if ($board->id === 0) {
+        if ((int)$board->id === 0) {
             $this->logger->addError('Add Column: ', [$column]);
             $this->apiJson->addAlert('error', 'Error adding column. ' .
                 'Please try again.');
@@ -55,10 +57,9 @@ class Columns extends BaseController {
             return $this->jsonResponse($response, 403);
         }
 
-        $column->save();
+        R::store($column);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
-
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' added column ' . $column->name . '.',
             '', json_encode($column), 'column', $column->id);
@@ -72,21 +73,19 @@ class Columns extends BaseController {
 
     public function updateColumn($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::BoardAdmin);
+            SecurityLevel::BOARD_ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $column = new Column($this->container, (int)$args['id']);
+        $column = R::load('column', (int)$args['id']);
 
-        if (!$this->checkBoardAccess($column->board_id, $request)) {
-            return $this->jsonResponse($response, 403);
-        }
+        $update = R::dispense('column');
+        $update->id = BeanLoader::LoadColumn($update, $request->getBody())
+            ? $column->id
+            : 0;
 
-        $update = new Column($this->container);
-        $update->loadFromJson($request->getBody());
-
-        if ($column->id !== $update->id) {
+        if ($column->id === 0 || (int)$column->id !== (int)$update->id) {
             $this->logger->addError('Update Column: ', [$column, $update]);
             $this->apiJson->addAlert('error', 'Error updating column ' .
                 $update->name . '. Please try again.');
@@ -94,9 +93,13 @@ class Columns extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        $update->save();
+        if (!$this->checkBoardAccess($column->board_id, $request)) {
+            return $this->jsonResponse($response, 403);
+        }
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        R::store($update);
+
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' updated column ' . $update->name,
             json_encode($column), json_encode($update),
@@ -111,15 +114,15 @@ class Columns extends BaseController {
 
     public function removeColumn($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::BoardAdmin);
+            SecurityLevel::BOARD_ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
         $id = (int)$args['id'];
-        $column = new Column($this->container, $id);
+        $column = R::load('column', $id);
 
-        if ($column->id !== $id) {
+        if ((int)$column->id !== $id) {
             $this->logger->addError('Remove Column: ', [$column]);
             $this->apiJson->addAlert('error', 'Error removing column. ' .
                 'No column found for ID ' . $id . '.');
@@ -132,9 +135,9 @@ class Columns extends BaseController {
         }
 
         $before = $column;
-        $column->delete();
+        R::trash($column);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' removed column ' . $before->name,
             json_encode($before), '', 'column', $id);

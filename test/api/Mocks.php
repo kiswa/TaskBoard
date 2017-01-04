@@ -1,4 +1,6 @@
 <?php
+use RedBeanPHP\R;
+use Firebase\JWT\JWT;
 
 class AppMock {
 
@@ -11,236 +13,63 @@ class AppMock {
 $app = new AppMock();
 
 class DataMock {
-    public static function getJwt($userId = 1) {
-        Auth::CreateJwtKey();
+    public static function GetJwt($userId = 1) {
+        Auth::CreateJwtSigningKey();
 
-        $key = RedBeanPHP\R::load('jwt', 1);
+        $key = R::load('jwt', 1);
 
-        $jwt = Firebase\JWT\JWT::encode(array(
+        $jwt = JWT::encode(array(
             'exp' => time() + (60 * 30), // 30 minutes
             'uid' => $userId,
             'mul' => 1
         ), $key->secret);
 
-        $user = RedBeanPHP\R::load('user', $userId);
+        $user = R::load('user', $userId);
         $user->active_token = $jwt;
-        RedBeanPHP\R::store($user);
+        R::store($user);
 
         return $jwt;
     }
 
-    public static function createStandardUser($username = 'standard') {
-        $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
-
-        $user = DataMock::getUser();
-        $user->id = 0;
-        $user->username = $username;
-        $user->security_level = SecurityLevel::User;
-
-        $request->payload = $user;
-
-        $users = new Users(new ContainerMock());
-        $response = $users->addUser($request, new ResponseMock(), null);
-
-        return $response;
+    public static function CreateStandardUser($username = 'standard') {
+        $user = R::dispense('user');
+        self::setUserDefaults($user);
+        R::store($user);
     }
 
-    public static function createBoardAdminUser() {
-        $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
+    public static function CreateBoardAdminUser() {
+        $user = R::dispense('user');
+        self::setUserDefaults($user);
 
-        $user = DataMock::getUser();
-        $user->id = 0;
         $user->username = 'boardadmin';
-        $user->security_level = SecurityLevel::BoardAdmin;
-
-        $request->payload = $user;
-
-        $users = new Users(new ContainerMock());
-        $response = $users->addUser($request, new ResponseMock(), null);
-
-        return $response;
+        $user->security_level = SecurityLevel::BOARD_ADMIN;
+        R::store($user);
     }
 
-    public static function createUnpriviligedUser() {
-        $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
+    public static function CreateUnprivilegedUser() {
+        $user = R::dispense('user');
+        self::setUserDefaults($user);
 
-        $user = DataMock::getUser();
-        $user->id = 0;
         $user->username = 'badtester';
-        $user->security_level = SecurityLevel::Unprivileged;
-
-        $request->payload = $user;
-
-        $users = new Users(new ContainerMock());
-        $response = $users->addUser($request, new ResponseMock(), null);
-
-        return $response;
+        $user->security_level = SecurityLevel::UNPRIVILEGED;
+        R::store($user);
     }
 
-    public static function getBoard() {
-        $board = new stdClass();
-        $board->id = 1;
+    public static function CreateBoard() {
+        $board = R::dispense('board');
         $board->name = 'test';
         $board->is_active = true;
-        $board->columns[] = DataMock::getColumn();
-        $board->categories[] = DataMock::getCategory();
-        $board->auto_actions[] = DataMock::getAutoAction();
-        $board->issue_trackers[] = DataMock::getIssueTracker();
-        $user = DataMock::getUser();
-        $user->id = 1;
-        $board->users[] = $user;
-
-        return $board;
     }
 
-    public static function getBoardForDb() {
-        $board = new stdClass();
-        $board->id = 0;
-        $board->name = 'test';
-        $board->is_active = true;
-        $board->columns = [];
-        $board->categories = [];
-        $board->auto_actions = [];
-        $board->issue_trackers = [];
-        $board->users = [];
-
-        $column = new stdClass();
-        $column->id = 0;
-        $column->name = 'test';
-        $column->position = 0;
-        $column->board_id = 0;
-        $column->tasks = [];
-
-        $board->columns[] = $column;
-
-        return $board;
-    }
-
-    public static function getColumn() {
-        $column = new stdClass();
-        $column->id = 1;
-        $column->name = 'col1';
-        $column->position = 1;
-        $column->board_id = 1;
-        $column->tasks[] = DataMock::getTask();
-
-        return $column;
-    }
-
-    public static function getCategory() {
-        $category = new stdClass();
-        $category->id = 1;
-        $category->name = 'cat1';
-        $category->default_task_color = '#ffffe0';
-        $category->board_id = 1;
-
-        return $category;
-    }
-
-    public static function getAutoAction() {
-        $auto_action = new stdClass();
-        $auto_action->id = 1;
-        $auto_action->board_id = 1;
-        $auto_action->trigger = ActionTrigger::SetToCategory;
-        $auto_action->source_id = 1;
-        $auto_action->type = ActionType::ClearDueDate;
-        $auto_action->change_to = 'null';
-
-        return $auto_action;
-    }
-
-    public static function getIssueTracker() {
-        $issue_tracker = new stdClass();
-        $issue_tracker->id = 1;
-        $issue_tracker->board_id = 1;
-        $issue_tracker->url = 'testUrl';
-        $issue_tracker->regex = 'testRegex';
-
-        return $issue_tracker;
-    }
-
-    public static function getUser() {
-        $user = new stdClass();
-        $user->id = 2;
-        $user->security_level = SecurityLevel::BoardAdmin;
+    private static function setUserDefaults(&$user) {
         $user->username = 'tester';
+        $user->security_level = SecurityLevel::USER;
         $user->password_hash = 'hashpass1234';
         $user->email = 'user@example.com';
         $user->default_board_id = 0;
         $user->user_option_id = 0;
         $user->last_login = 123456789;
         $user->active_token = '';
-
-        return $user;
-    }
-
-    public static function getActivity() {
-        $activity = new stdClass();
-        $activity->id = 1;
-        $activity->user_id = 1;
-        $activity->log_text = 'Log test.';
-        $activity->before = '';
-        $activity->after = '';
-        $activity->item_type = 'test';
-        $activity->item_id = 1;
-
-        return $activity;
-    }
-
-    public static function getAttachment() {
-        $attachment = new stdClass();
-        $attachment->id = 1;
-        $attachment->filename = 'file';
-        $attachment->name = 'file.png';
-        $attachment->type = 'image';
-        $attachment->user_id = 1;
-        $attachment->task_id = 1;
-        $attachment->timestamp = 1234567890;
-
-        return $attachment;
-    }
-
-    public static function getComment() {
-        $comment = new stdClass();
-
-        $comment->id = 1;
-        $comment->text = 'test comment';
-        $comment->user_id = 1;
-        $comment->task_id = 1;
-
-        return $comment;
-    }
-
-    public static function getTask() {
-        $task = new stdClass();
-        $task->id = 1;
-        $task->title = 'test';
-        $task->description = 'description';
-        $task->assignee = 1;
-        $task->category_id = 1;
-        $task->column_id = 1;
-        $task->color = '#ffffff';
-        $task->due_date = 1234567890;
-        $task->points = 3;
-        $task->position = 1;
-        $task->attachments[] = DataMock::getAttachment();
-        $task->comments[] = DataMock::getComment();
-
-        return $task;
-    }
-
-    public static function getUserOptions() {
-        $options = new stdClass();
-        $options->id = 1;
-        $options->new_tasks_at_bottom = false;
-        $options->show_animations = false;
-        $options->show_assignee = false;
-        $options->multiple_tasks_per_row = true;
-
-        return $options;
     }
 }
 
@@ -293,7 +122,7 @@ class RequestMock {
             return json_encode($this->payload);
         }
 
-        return json_encode(DataMock::getBoard());
+        return '';
     }
 
     public function hasHeader() {

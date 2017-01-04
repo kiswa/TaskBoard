@@ -1,38 +1,31 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
+use RedBeanPHP\R;
 
 class ColumnsTest extends PHPUnit_Framework_TestCase {
     private $columns;
 
     public static function setupBeforeClass() {
         try {
-            RedBeanPHP\R::setup('sqlite:tests.db');
-            // RedBeanPHP\R::fancyDebug(true);
+            R::setup('sqlite:tests.db');
         } catch (Exception $ex) { }
     }
 
     public function setUp() {
-        RedBeanPHP\R::nuke();
-
+        R::nuke();
         Auth::CreateInitialAdmin(new ContainerMock());
 
         $this->columns = new Columns(new ContainerMock());
     }
 
     public function testGetColumn() {
+        $this->createColumn();
+
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
 
         $args = [];
         $args['id'] = 1;
-
-        $actual = $this->columns->getColumn($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('failure', $actual->status);
-
-        $this->createColumn();
-        $this->columns = new Columns(new ContainerMock());
-        $request->header = [DataMock::getJwt()];
 
         $actual = $this->columns->getColumn($request,
             new ResponseMock(), $args);
@@ -40,12 +33,23 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(2, count($actual->data));
     }
 
+    public function testGetColumnNotFound() {
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
+
+        $args = [];
+        $args['id'] = 1;
+
+        $actual = $this->columns->getColumn($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $actual->status);
+    }
+
     public function testGetColumnUnprivileged() {
-        $res = DataMock::createUnpriviligedUser();
-        $this->assertEquals('success', $res->status);
+        DataMock::CreateUnprivilegedUser();
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt(2)];
+        $request->header = [DataMock::GetJwt(2)];
 
         $actual = $this->columns->getColumn($request,
             new ResponseMock(), null);
@@ -56,16 +60,13 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
 
     public function testGetColumnForbidden() {
         $this->createColumn();
-
-        DataMock::createBoardAdminUser();
+        DataMock::CreateBoardAdminUser();
 
         $args = [];
         $args['id'] = 1;
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt(2)];
-
-        $this->columns = new Columns(new ContainerMock());
+        $request->header = [DataMock::GetJwt(2)];
 
         $actual = $this->columns->getColumn($request,
             new ResponseMock(), $args);
@@ -73,54 +74,38 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
-    public function testAddRemoveColumn() {
-        $actual = $this->createColumn();
-        $this->assertEquals('success', $actual->status);
+    public function testAddColumn() {
+        $board = R::dispense('board');
+        R::store($board);
 
-        $args = [];
-        $args['id'] = 1;
+        $this->createColumn();
+        $data = $this->getColumnData();
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
+        $request->payload = $data;
 
-        $actual = $this->columns->removeColumn($request,
-            new ResponseMock(), $args);
-
+        $actual = $this->columns->addColumn($request,
+            new ResponseMock(), null);
         $this->assertEquals('success', $actual->status);
     }
 
-    public function testAddRemoveColumnUnprivileged() {
-        $res = DataMock::createUnpriviligedUser();
-        $this->assertEquals('success', $res->status);
+    public function testAddColumnUnprivileged() {
+        DataMock::CreateUnprivilegedUser();
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt(2)];
-
-        $column = DataMock::getColumn();
-        $column->id = 0;
-
-        $request->payload = $column;
+        $request->header = [DataMock::GetJwt(2)];
 
         $actual = $this->columns->addColumn($request,
             new ResponseMock(), null);
         $this->assertEquals('Insufficient privileges.',
             $actual->alerts[0]['text']);
-
-        $args = [];
-        $args['id'] = 1;
-
-        $request->header = [DataMock::getJwt(2)];
-
-        $actual = $this->columns->removeColumn($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('Insufficient privileges.',
-            $actual->alerts[0]['text']);
     }
 
-    public function testAddBadColumn() {
+    public function testAddColumnInvalid() {
         $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
         $request->invalidPayload = true;
-        $request->header = [DataMock::getJwt()];
 
         $response = $this->columns->addColumn($request,
             new ResponseMock(), null);
@@ -129,120 +114,68 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('error', $response->alerts[0]['type']);
     }
 
-    public function testRemoveBadColumn() {
-        $args = [];
-        $args['id'] = 5; // No such column
-
-        $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
-
-        $response = $this->columns->removeColumn($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('failure', $response->status);
-    }
-
     public function testAddColumnForbidden() {
         $this->createColumn();
+        DataMock::CreateBoardAdminUser();
 
-        DataMock::createBoardAdminUser();
-
-        $column = DataMock::getColumn();
+        $column = $this->getColumnData();
         $column->id = 0;
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt(2)];
+        $request->header = [DataMock::GetJwt(2)];
         $request->payload = $column;
-
-        $this->columns = new Columns(new ContainerMock());
 
         $actual = $this->columns->addColumn($request,
             new ResponseMock(), null);
-        $this->assertEquals('Access restricted.',
-            $actual->alerts[0]['text']);
-    }
-
-    public function testRemoveColumnForbidden() {
-        $this->createColumn();
-
-        DataMock::createBoardAdminUser();
-
-        $args = [];
-        $args['id'] = 1;
-
-        $request = new RequestMock();
-        $request->header = [DataMock::getJwt(2)];
-
-        $this->columns = new Columns(new ContainerMock());
-
-        $actual = $this->columns->removeColumn($request,
-            new ResponseMock(), $args);
         $this->assertEquals('Access restricted.',
             $actual->alerts[0]['text']);
     }
 
     public function testUpdateColumn() {
         $this->createColumn();
-        $this->columns = new Columns(new ContainerMock());
 
-        $column = DataMock::getColumn();
+        $column = $this->getColumnData();
+        $column->id = 1;
         $column->name = 'updated';
 
         $args = [];
         $args['id'] = $column->id;
 
         $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
         $request->payload = $column;
-        $request->header = [DataMock::getJwt()];
 
         $response = $this->columns->updateColumn($request,
             new ResponseMock(), $args);
         $this->assertEquals('success', $response->status);
-
-        $this->columns = new Columns(new ContainerMock());
-        $request->payload = new stdClass();
-        $request->header = [DataMock::getJwt()];
-
-        $response = $this->columns->updateColumn($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('error', $response->alerts[0]['type']);
     }
 
     public function testUpdateColumnUnprivileged() {
-        $res = DataMock::createUnpriviligedUser();
-        $this->assertEquals('success', $res->status);
-
         $this->createColumn();
-        $this->columns = new Columns(new ContainerMock());
-
-        $column = DataMock::getColumn();
-        $column->name = 'updated';
-
-        $args = [];
-        $args['id'] = $column->id;
+        DataMock::CreateUnprivilegedUser();
 
         $request = new RequestMock();
-        $request->payload = $column;
-        $request->header = [DataMock::getJwt(2)];
+        $request->header = [DataMock::GetJwt(2)];
 
         $actual = $this->columns->updateColumn($request,
-            new ResponseMock(), $args);
+            new ResponseMock(), null);
         $this->assertEquals('Insufficient privileges.',
             $actual->alerts[0]['text']);
     }
 
     public function testUpdateColumnForbidden() {
         $this->createColumn();
+        DataMock::CreateBoardAdminUser();
 
-        DataMock::createBoardAdminUser();
-
-        $column = DataMock::getColumn();
+        $column = $this->getColumnData();
+        $column->id = 1;
         $column->name = 'test';
 
         $args = [];
         $args['id'] = $column->id;
 
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt(2)];
+        $request->header = [DataMock::GetJwt(2)];
         $request->payload = $column;
 
         $this->columns = new Columns(new ContainerMock());
@@ -253,40 +186,87 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
-    private function createBoard() {
+    public function testUpdateColumnInvalid() {
         $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
+        $request->header = [DataMock::GetJwt()];
+        $request->invalidPayload = true;
 
-        $board = DataMock::getBoardForDb();
-        $request->payload = $board;
-
-        $boards = new Boards(new ContainerMock());
-
-        $response = $boards->addBoard($request,
+        $response = $this->columns->updateColumn($request,
             new ResponseMock(), null);
-        $this->assertEquals('success', $response->status);
+        $this->assertEquals('error', $response->alerts[0]['type']);
+    }
 
-        return $response;
+    public function testRemoveColumn() {
+        $this->createColumn();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
+
+        $actual = $this->columns->removeColumn($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $actual->status);
+    }
+
+    public function testRemoveColumnUnprivileged() {
+        DataMock::CreateUnprivilegedUser();
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt(2)];
+
+        $actual = $this->columns->removeColumn($request,
+            new ResponseMock(), null);
+        $this->assertEquals('Insufficient privileges.',
+            $actual->alerts[0]['text']);
+    }
+
+    public function testRemoveColumnInvalid() {
+        $args = [];
+        $args['id'] = 1; // No such column
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
+
+        $response = $this->columns->removeColumn($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('failure', $response->status);
+    }
+
+    public function testRemoveColumnForbidden() {
+        $this->createColumn();
+        DataMock::CreateBoardAdminUser();
+
+        $args = [];
+        $args['id'] = 1;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt(2)];
+
+        $actual = $this->columns->removeColumn($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('Access restricted.',
+            $actual->alerts[0]['text']);
+    }
+
+    private function getColumnData() {
+        $data = new stdClass();
+
+        $data->name = 'test';
+        $data->position = 0;
+        $data->board_id = 1;
+
+        return $data;
     }
 
     private function createColumn() {
-        $this->createBoard();
+        $column = R::dispense('column');
 
-        $request = new RequestMock();
-        $request->header = [DataMock::getJwt()];
+        $board = R::dispense('board');
+        $board->xownColumnList[] = $column;
 
-        $column = DataMock::getColumn();
-        $column->id = 0;
-        $column->name = 'testing';
-        $column->tasks = [];
-
-        $request->payload = $column;
-
-        $response = $this->columns->addColumn($request,
-            new ResponseMock(), null);
-        $this->assertEquals('success', $response->status);
-
-        return $response;
+        R::store($board);
     }
 }
 

@@ -5,20 +5,17 @@ class AutoActions extends BaseController {
 
     public function getAllActions($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+            SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $actionBeans = R::findAll('auto_action');
+        $autoActions = R::findAll('autoaction');
 
-        if(count($actionBeans)) {
+        if (count($autoActions)) {
             $this->apiJson->setSuccess();
 
-            foreach($actionBeans as $bean) {
-                $action = new AutoAction($this->container);
-                $action->loadFromBean($bean);
-
+            foreach($autoActions as $action) {
                 if (Auth::HasBoardAccess($this->container,
                         $request, $action->board_id)) {
                     $this->apiJson->addData($action);
@@ -35,15 +32,17 @@ class AutoActions extends BaseController {
 
     public function addAction($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::BoardAdmin);
+            SecurityLevel::BOARD_ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $action = new AutoAction($this->container);
-        $action->loadFromJson($request->getBody());
+        $action = R::dispense('autoaction');
+        if (!BeanLoader::LoadAutoAction($action, $request->getBody())) {
+            $action->board_id = 0;
+        }
 
-        $board = new Board($this->container, $action->board_id);
+        $board = R::load('board', $action->board_id);
 
         if ($board->id === 0) {
             $this->logger->addError('Add Action: ', [$action]);
@@ -58,9 +57,9 @@ class AutoActions extends BaseController {
             return $this->jsonResponse($response, 403);
         }
 
-        $action->save();
+        R::store($action);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $actor = R::load('user', Auth::GetUserId($request));
 
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' added automatic action.',
@@ -74,15 +73,15 @@ class AutoActions extends BaseController {
 
     public function removeAction($request, $response, $args) {
         $status = $this->secureRoute($request, $response,
-            SecurityLevel::BoardAdmin);
+            SecurityLevel::BOARD_ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
         $id = (int)$args['id'];
-        $action = new AutoAction($this->container, $id);
+        $action = R::load('autoaction', $id);
 
-        if ($action->id !== $id) {
+        if ((int)$action->id !== $id) {
             $this->logger->addError('Remove Action: ', [$action]);
             $this->apiJson->addAlert('error', 'Error removing action. ' .
                 'No action found for ID ' . $id . '.');
@@ -95,9 +94,9 @@ class AutoActions extends BaseController {
         }
 
         $before = $action;
-        $action->delete();
+        R::trash($action);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $actor = R::load('user', Auth::GetUserId($request));
 
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username .' removed action ' . $before->id . '.',

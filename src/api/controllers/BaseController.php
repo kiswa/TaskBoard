@@ -1,4 +1,5 @@
 <?php
+use RedBeanPHP\R;
 
 abstract class BaseController {
     protected $apiJson;
@@ -43,8 +44,8 @@ abstract class BaseController {
             return $status;
         }
 
-        $user = new User($this->container, Auth::GetUserId($request));
-        if ($user->security_level->getValue() > $securityLevel) {
+        $user = R::load('user', Auth::GetUserId($request));
+        if ((int)$user->security_level > $securityLevel) {
             $this->apiJson->addAlert('error', 'Insufficient privileges.');
 
             return 403;

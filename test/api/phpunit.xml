@@ -7,7 +7,7 @@
     <filter>
         <whitelist>
             <directory>../../src/api/controllers</directory>
-            <directory>../../src/api/models</directory>
+            <directory>../../src/api/helpers</directory>
         </whitelist>
     </filter>
     <logging>

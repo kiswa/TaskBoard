@@ -12,18 +12,17 @@ class Auth extends BaseController {
             $userId = self::GetUserId($request);
         }
 
-        $user = new User($container, $userId);
-        if ($user->security_level->getValue() === SecurityLevel::Admin) {
+        $user = R::load('user', $userId);
+        if ((int)$user->security_level === SecurityLevel::ADMIN) {
             return true;
         }
 
-        $board = new Board($container, $boardId);
+        $board = R::load('board', $boardId);
 
-        foreach($board->users as $user) {
-            if ($user->id === $userId) {
-                // These lines are covered by multiple tests - false negative
-                $hasAccess = true; // @codeCoverageIgnore
-                break;             // @codeCoverageIgnore
+        foreach($board->sharedUserList as $check) {
+            if ((int)$check->id === $userId) {
+                $hasAccess = true;
+                break;
             }
         }
 
@@ -31,20 +30,34 @@ class Auth extends BaseController {
     }
 
     public static function CreateInitialAdmin($container) {
-        $admin = new User($container, 1);
+        $admin = R::load('user', 1);
 
         // Don't create more than one admin
         if ($admin->id) {
             return;
         }
 
-        $admin->security_level = new SecurityLevel(SecurityLevel::Admin);
+        $admin->security_level = SecurityLevel::ADMIN()->getValue();
         $admin->username = 'admin';
         $admin->password_hash = password_hash('admin', PASSWORD_BCRYPT);
-        $admin->save();
+        $admin->email = '';
+        $admin->default_board_id = 0;
+        $admin->user_option_id = 0;
+        $admin->last_login = 0;
+        $admin->active_token = '';
+
+        $opts = R::dispense('useroption');
+        $opts->new_tasks_at_bottom = true;
+        $opts->show_animations = true;
+        $opts->show_assignee = true;
+        $opts->multiple_tasks_per_row = false;
+
+        R::store($opts);
+        $admin->user_option_id = $opts->id;
+        R::store($admin);
     }
 
-    public static function CreateJwtKey() {
+    public static function CreateJwtSigningKey() {
         $key = R::load('jwt', 1);
 
         // Don't create more than one secret key
@@ -70,17 +83,17 @@ class Auth extends BaseController {
             return $response->withStatus(401);
         }
 
-        $user = new User($container, (int) $payload->uid);
+        $user = R::load('user', $payload->uid);
         if ($user->active_token !== $jwt) {
             $user->active_token = '';
-            $user->save();
+            R::store($user);
 
             return $response->withStatus(401);
         }
 
-        $jwt = self::createJwt($payload->uid, (int) $payload->mul);
+        $jwt = self::createJwt($payload->uid, (int)$payload->mul);
         $user->active_token = $jwt;
-        $user->save();
+        R::store($user);
 
         $response->getBody()->write($jwt);
 
@@ -124,9 +137,9 @@ class Auth extends BaseController {
         }
 
         $jwt = self::createJwt($user->id, ($data->remember ? 200 : 1));
-        $user = new User($this->container, $user->id);
+        $user = R::load('user', $user->id);
 
-        if ($user->username === 'admin' && $user->last_login === 0) {
+        if ($user->username === 'admin' && (int)$user->last_login === 0) {
             $this->apiJson->addAlert('warn',
                 'This is your first login, go to Settings ' .
                 'to change your password.');
@@ -136,7 +149,7 @@ class Auth extends BaseController {
 
         $user->active_token = $jwt;
         $user->last_login = time();
-        $user->save();
+        R::store($user);
 
         $this->dbLogger->logChange($this->container, $user->id,
             $user->username . ' logged in', null, null, 'user', $user->id);
@@ -162,11 +175,11 @@ class Auth extends BaseController {
             return $this->jsonResponse($response, 401);
         }
 
-        $user = new User($this->container, $payload->uid);
+        $user = R::load('user', $payload->uid);
 
         if ($user->id) {
             $user->active_token = '';
-            $user->save();
+            R::store($user);
         }
 
         $this->dbLogger->logChange($this->container, $user->id,
@@ -191,8 +204,8 @@ class Auth extends BaseController {
             return $this->jsonResponse($response, 401);
         }
 
-        $user = new User($this->container, $payload->uid);
-        $opts = new UserOptions($this->container, $user->user_option_id);
+        $user = R::load('user', $payload->uid);
+        $opts = R::load('useroption', $user->user_option_id);
 
         $this->apiJson->setSuccess();
         $this->apiJson->addData($jwt);
@@ -203,7 +216,6 @@ class Auth extends BaseController {
     }
 
     private function sanitizeUser($user) {
-        $user->security_level = $user->security_level->getValue();
         unset($user->password_hash);
         unset($user->active_token);
 
@@ -224,13 +236,13 @@ class Auth extends BaseController {
         // If 'remember me' feature is desired, set the multiplier higher
         return JWT::encode(array(
                     'exp' => time() + (60 * 30) * $mult, // 30 minutes * $mult
-                    'uid' => (int) $userId,
+                    'uid' => (int)$userId,
                     'mul' => $mult
                 ), Auth::getJwtKey());
     }
 
     private static function getJwtKey() {
-        self::CreateJwtKey();
+        self::CreateJwtSigningKey();
         $key = R::load('jwt', 1);
 
         return $key->secret;

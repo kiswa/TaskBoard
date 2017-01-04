@@ -4,8 +4,7 @@ use RedBeanPHP\R;
 class Users extends BaseController {
 
     public function getAllUsers($request, $response, $args) {
-        $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+        $status = $this->secureRoute($request, $response, SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
@@ -18,8 +17,7 @@ class Users extends BaseController {
     }
 
     public function getUser($request, $response, $args) {
-        $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+        $status = $this->secureRoute($request, $response, SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
@@ -27,7 +25,7 @@ class Users extends BaseController {
         $id = (int)$args['id'];
 
         $userIds = $this->getUserIdsByBoardAccess(Auth::GetUserId($request));
-        $user = new User($this->container, $id);
+        $user = R::load('user', $id);
 
         if ($user->id === 0) {
             $this->logger->addError('Attempt to load user ' . $id .
@@ -51,14 +49,13 @@ class Users extends BaseController {
     }
 
     public function addUser($request, $response, $args) {
-        $status = $this->secureRoute($request, $response,
-            SecurityLevel::Admin);
+        $status = $this->secureRoute($request, $response, SecurityLevel::ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
         $data = json_decode($request->getBody());
-        $user = new User($this->container);
+        $user = R::dispense('user');
 
         if (isset($data->username)) {
             $existing = R::findOne('user', 'username = ?', [ $data->username ]);
@@ -71,15 +68,19 @@ class Users extends BaseController {
             }
         }
 
-        if (isset($data->password)) {
+        if (isset($data->password) &&
+                $data->password === $data->password_verify) {
             $data->password_hash =
                 password_hash($data->password, PASSWORD_BCRYPT);
             unset($data->password);
             unset($data->password_verify);
         }
-        $user->loadFromJson(json_encode($data));
 
-        if (!$user->save()) {
+        if (!BeanLoader::LoadUser($user, json_encode($data))) {
+            $user->id = -1;
+        }
+
+        if ($user->id === -1) {
             $this->logger->addError('Add User: ', [$user]);
             $this->apiJson->addAlert('error', 'Error adding user. ' .
                 'Please check your entries and try again.');
@@ -87,13 +88,21 @@ class Users extends BaseController {
             return $this->jsonResponse($response);
         }
 
+        $opts = R::dispense('useroption');
+        R::store($opts);
+
+        $user->user_option_id = $opts->id;
+        R::store($user);
+        $data->id = $user->id;
+
         if ($data->default_board_id) {
             $this->addUserToBoard($data->default_board_id, $user, $request);
         }
 
         $this->updateBoardAccess($data, $request);
+        R::store($user);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
              $actor->username . ' added user ' . $user->username . '.',
             '', json_encode($user), 'user', $user->id);
@@ -107,14 +116,13 @@ class Users extends BaseController {
     }
 
     public function updateUser($request, $response, $args) {
-        $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+        $status = $this->secureRoute($request, $response, SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
         $data = json_decode($request->getBody());
-        $user = new User($this->container, (int)$args['id']);
+        $user = R::load('user', (int)$args['id']);
 
         if (!property_exists($data, 'id')) {
             $this->logger->addError('Update User: ', [$user, $data]);
@@ -124,11 +132,11 @@ class Users extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        $update = new User($this->container, $data->id);
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $update = R::load('user', $data->id);
+        $actor = R::load('user', Auth::GetUserId($request));
 
-        if ($actor->id !== $user->id) {
-            if ($actor->security_level->getValue() === SecurityLevel::User) {
+        if ((int)$actor->id !== (int)$user->id) {
+            if ((int)$actor->security_level  > SecurityLevel::BOARD_ADMIN) {
                 $this->apiJson->addAlert('error', 'Access restricted.');
 
                 return $this->jsonResponse($response, 403);
@@ -154,15 +162,15 @@ class Users extends BaseController {
         }
         $data->active_token = $user->active_token;
 
-        if (isset($data->password)) {
+        if (isset($data->password) && $data->password !== '') {
             $data->password_hash =
                 password_hash($data->password, PASSWORD_BCRYPT);
             unset($data->password);
         }
 
-        $update->loadFromJson(json_encode($data));
+        BeanLoader::LoadUser($update, json_encode($data));
 
-        if ($user->id !== $update->id) {
+        if ((int)$user->id !== (int)$update->id) {
             $this->logger->addError('Update User: ', [$user, $update]);
             $this->apiJson->addAlert('error', 'Error updating user. ' .
                 'Please check your entries and try again.');
@@ -195,7 +203,7 @@ class Users extends BaseController {
 
         $this->updateBoardAccess($data, $request);
 
-        $update->save();
+        R::store($update);
 
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' updated user ' . $update->username,
@@ -211,14 +219,13 @@ class Users extends BaseController {
     }
 
     public function updateUserOptions($request, $response, $args) {
-        $status = $this->secureRoute($request, $response,
-            SecurityLevel::User);
+        $status = $this->secureRoute($request, $response, SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $user = new User($this->container, (int)$args['id']);
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $user = R::load('user', (int)$args['id']);
+        $actor = R::load('user', Auth::GetUserId($request));
 
         if ($actor->id !== $user->id) {
             $this->apiJson->addAlert('error', 'Access restricted.');
@@ -228,10 +235,12 @@ class Users extends BaseController {
 
         $data = $request->getBody();
 
-        $userOpts = new UserOptions($this->container, $user->user_option_id);
-        $update = new UserOptions($this->container, json_decode($data)->id);
+        $userOpts = R::load('useroption', $user->user_option_id);
+        $update = R::load('useroption', json_decode($data)->id);
 
-        $update->loadFromJson($data);
+        if (!BeanLoader::LoadUserOption($update, $data)) {
+            $update->id = -1;
+        }
 
         if ($userOpts->id !== $update->id) {
             $this->logger->addError('Update User Options: ',
@@ -242,7 +251,7 @@ class Users extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        $update->save();
+        R::store($update);
 
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' updated user options',
@@ -258,16 +267,15 @@ class Users extends BaseController {
     }
 
     public function removeUser($request, $response, $args) {
-        $status = $this->secureRoute($request, $response,
-            SecurityLevel::Admin);
+        $status = $this->secureRoute($request, $response, SecurityLevel::ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
         $id = (int)$args['id'];
-        $user = new User($this->container, $id);
+        $user = R::load('user', $id);
 
-        if ($user->id !== $id) {
+        if ((int)$user->id !== $id) {
             $this->logger->addError('Remove User: ', [$user]);
             $this->apiJson->addAlert('error', 'Error removing user. ' .
                 'No user found for ID ' . $id . '.');
@@ -276,9 +284,9 @@ class Users extends BaseController {
         }
 
         $before = $user;
-        $user->delete();
+        R::trash($user);
 
-        $actor = new User($this->container, Auth::GetUserId($request));
+        $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($this->container, $actor->id,
             $actor->username . ' removed user ' . $before->username,
             json_encode($before), '', 'user', $id);
@@ -295,7 +303,7 @@ class Users extends BaseController {
         $boardIds = $this->getBoardIdsByAccess($userData->id);
 
         if (isset($userData->boardAccess)) {
-            $user = new User($this->container, $userData->id);
+            $user = R::load('user', $userData->id);
 
             foreach($userData->boardAccess as $boardId) {
                 if (!in_array($boardId, $boardIds)) {
@@ -316,19 +324,19 @@ class Users extends BaseController {
     }
 
     private function addUserToBoard($boardId, $user, $request) {
-        if ($boardId > 0 && !Auth::HasBoardAccess($this->container, $request,
+        if ((int)$boardId > 0 && !Auth::HasBoardAccess($this->container, $request,
                 $boardId, $user->id)) {
-            $board = new Board($this->container, $boardId);
-            $board->users[] = $user;
-            $board->save();
+            $board = R::load('board', $boardId);
+            $board->sharedUserList[] = $user;
+            R::store($board);
         }
     }
 
     private function removeUserFromBoard($boardId, $user) {
         if ($boardId > 0) {
-            $board = new Board($this->container, $boardId);
-            unset($board->users[$user->id - 1]);
-            $board->save();
+            $board = R::load('board', $boardId);
+            unset($board->sharedUserList[$user->id]);
+            R::store($board);
         }
     }
 
@@ -343,14 +351,11 @@ class Users extends BaseController {
             $userIds[] = $userId;
         }
 
-        $actor = new User($this->container, $userId);
-        $isAdmin = ($actor->security_level->getValue() === SecurityLevel::Admin);
+        $actor = R::load('user', $userId);
+        $isAdmin = ((int)$actor->security_level === SecurityLevel::ADMIN);
 
         $data = [];
-        foreach($userBeans as $bean) {
-            $user = new User($this->container);
-            $user->loadFromBean($bean);
-
+        foreach($userBeans as $user) {
             if (in_array($user->id, $userIds) || $isAdmin) {
                 $data[] = $this->cleanUser($user);
             }
@@ -367,7 +372,7 @@ class Users extends BaseController {
             [':user_id' => $userId]);
 
         foreach($boards as $board) {
-            $boardIds[] = (int) $board['board_id'];
+            $boardIds[] = (int)$board['board_id'];
         }
 
         return $boardIds;
@@ -391,11 +396,24 @@ class Users extends BaseController {
     }
 
     private function cleanUser($user) {
-        $user->security_level = $user->security_level->getValue();
         unset($user->password_hash);
         unset($user->active_token);
 
+        $this->setBoardAccess($user);
+
         return $user;
+    }
+
+    private function setBoardAccess(&$user) {
+        $user->board_access = [];
+        $boards = RedBeanPHP\R::getAll('select bu.board_id, bu.user_id from ' .
+            'board_user bu join board b on b.id = bu.board_id');
+
+        foreach($boards as $item) {
+            if ((int)$user->id === (int)$item['user_id']) {
+                $user->board_access[] = (int)$item['board_id'];
+            }
+        }
     }
 }
 
