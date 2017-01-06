@@ -184,42 +184,48 @@ class BeanLoader {
         return true;
     }
 
-    private static function updateBoardList($type, $loadFunc,
-                                            &$boardList = [], &$dataList = []) {
-        // Remove objects not in data
-        if (count($boardList) && count($dataList)) {
-            $dataIds = [];
+    private static function removeObjectsNotInData(&$dataList, &$boardList) {
+        $dataIds = [];
 
-            foreach ($dataList as $data) {
-                if (isset($data->id)) {
-                    $dataIds[] = (int)$data->id;
-                }
-            }
-
-            foreach ($boardList as $existing) {
-                if (!in_array((int)$existing->id, $dataIds)) {
-                    $remove = R::load($type, $existing->id);
-                    R::trash($remove);
-                }
+        foreach ($dataList as $data) {
+            if (isset($data->id)) {
+                $dataIds[] = (int)$data->id;
             }
         }
 
-        // Update boardList from dataList
-        if (count($dataList)) {
-            // Load object from data
-            foreach ($dataList as $obj) {
-                $object = R::load($type, (isset($obj->id) ? $obj->id : 0));
-
-                if ((int)$object->id === 0) {
-                    call_user_func_array($loadFunc, array(&$object,
-                                                          json_encode($obj)));
-                    $boardList[] = $object;
-                    continue;
-                }
-
-                call_user_func_array($loadFunc, array(&$boardList[$object->id],
-                                                      json_encode($obj)));
+        foreach ($boardList as $existing) {
+            if (!in_array((int)$existing->id, $dataIds)) {
+                $remove = R::load($type, $existing->id);
+                R::trash($remove);
             }
+        }
+    }
+
+    private static function loadObjectsFromData($type, $loadFunc, &$dataList,
+                                                &$boardList) {
+        foreach ($dataList as $obj) {
+            $object = R::load($type, (isset($obj->id) ? $obj->id : 0));
+
+            if ((int)$object->id === 0) {
+                call_user_func_array($loadFunc, array(&$object,
+                                                      json_encode($obj)));
+                $boardList[] = $object;
+                continue;
+            }
+
+            call_user_func_array($loadFunc, array(&$boardList[$object->id],
+                                                  json_encode($obj)));
+        }
+    }
+
+    private static function updateBoardList($type, $loadFunc,
+                                            &$boardList = [], &$dataList = []) {
+        if (count($boardList) && count($dataList)) {
+            self::removeObjectsNotInData($dataList, $boardList);
+        }
+
+        if (count($dataList)) {
+            self::loadObjectsFromData();
         }
 
         // Remove all objects from existing boardlist when none in datalist
