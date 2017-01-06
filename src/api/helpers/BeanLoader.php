@@ -184,7 +184,7 @@ class BeanLoader {
         return true;
     }
 
-    private static function removeObjectsNotInData(&$dataList, &$boardList) {
+    private static function removeObjectsNotInData($type, &$dataList, &$boardList) {
         $dataIds = [];
 
         foreach ($dataList as $data) {
@@ -221,7 +221,7 @@ class BeanLoader {
     private static function updateBoardList($type, $loadFunc,
                                             &$boardList = [], &$dataList = []) {
         if (count($boardList) && count($dataList)) {
-            self::removeObjectsNotInData($dataList, $boardList);
+            self::removeObjectsNotInData($type, $dataList, $boardList);
         }
 
         if (count($dataList)) {
