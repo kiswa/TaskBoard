@@ -104,7 +104,7 @@ button {
 .icon-help-circled {
     position: relative;
 
-    &:hover:after {
+    &:hover::after {
         @include shadow-high;
 
         background-color: $white;

@@ -42,8 +42,8 @@
         margin-bottom: -1em;
     }
 
-    &:before,
-    &:after {
+    &::before,
+    &::after {
         @include shadow-low();
 
         background: $color-table-row;
@@ -57,7 +57,7 @@
         z-index: -1;
     }
 
-    &:after {
+    &::after {
         background-color: darken($color-table-row, 5%);
         transform: rotate(-3deg);
         z-index: -2;

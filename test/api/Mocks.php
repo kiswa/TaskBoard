@@ -31,7 +31,7 @@ class DataMock {
         return $jwt;
     }
 
-    public static function CreateStandardUser($username = 'standard') {
+    public static function CreateStandardUser() {
         $user = R::dispense('user');
         self::setUserDefaults($user);
         R::store($user);

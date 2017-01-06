@@ -17,7 +17,7 @@ $ct-text-color: $color-text;
     position: absolute;
     transition: opacity .2s;
 
-    &:before {
+    &::before {
         border: 10px solid transparent;
         border-top-color: $color-text;
         content: '';
