@@ -58,7 +58,8 @@ gulp.task('clean', () => {
         '.coverrun',
         '.coverdata',
         'api-coverage',
-        'coverage.html'
+        'coverage.html',
+        'src/api/vendor/'
     ]);
 });
 
