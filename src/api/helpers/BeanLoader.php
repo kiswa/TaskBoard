@@ -225,7 +225,7 @@ class BeanLoader {
         }
 
         if (count($dataList)) {
-            self::loadObjectsFromData();
+            self::loadObjectsFromData($type, $loadFunc, $dataList, $boardList);
         }
 
         // Remove all objects from existing boardlist when none in datalist
