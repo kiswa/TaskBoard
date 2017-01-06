@@ -21,7 +21,7 @@ export class Login implements OnInit {
     isSubmitted = false;
 
     constructor(constants: Constants, private authService: AuthService,
-            private router: Router, private notes: NotificationsService) {
+                private router: Router, private notes: NotificationsService) {
         this.version = constants.VERSION;
     }
 
@@ -36,8 +36,9 @@ export class Login implements OnInit {
 
     login(): void {
         if (this.username === '' || this.password === '') {
-            this.notes.add(new Notification('error',
-                'Username and password are required.'));
+            this.notes
+                .add(new Notification('error',
+                                      'Username and password are required.'));
             return;
         }
 

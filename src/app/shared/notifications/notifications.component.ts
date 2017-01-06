@@ -8,7 +8,7 @@ import { NotificationsService } from './notifications.service';
     templateUrl: 'app/shared/notifications/notifications.component.html'
 })
 export class Notifications {
-    private notes: Notification[];
+    private notes: Array<Notification>;
 
     constructor(private notifications: NotificationsService) {
         this.notes = new Array<Notification>();
@@ -16,7 +16,7 @@ export class Notifications {
         notifications.noteAdded
             .subscribe(note => {
                 this.notes.push(note);
-                setTimeout(() => { this.hide.bind(this)(note) }, 3000);
+                setTimeout(() => { this.hide.bind(this)(note); }, 3000);
             });
     }
 
@@ -24,11 +24,11 @@ export class Notifications {
         let index = this.notes.indexOf(note);
 
         if (index >= 0) {
-            note.type += " clicked";
+            note.type += ' clicked';
 
             setTimeout(() => {
                 this.notes.splice(index, 1);
-            }, 500); // 500ms is the fade out transition time
+            },         500); // 500ms is the fade out transition time
         }
     }
 }

@@ -14,7 +14,7 @@ export class ModalService {
     }
 
     registerModal(newModal: Modal): void {
-        var modal = this.findModal(newModal.modalId);
+        let modal = this.findModal(newModal.modalId);
 
         // Delete existing to replace the modal
         if (modal) {
@@ -25,7 +25,7 @@ export class ModalService {
     }
 
     open(modalId: string): void {
-        var modal = this.findModal(modalId);
+        let modal = this.findModal(modalId);
 
         if (modal) {
             modal.animate = (this.userOptions.show_animations);
@@ -36,12 +36,12 @@ export class ModalService {
                 if (modal.focusElement) {
                     modal.focusElement.nativeElement.focus();
                 }
-            }, 100);
+            },         100);
         }
     }
 
     close(modalId: string, checkBlocking = false): void {
-        var modal = this.findModal(modalId);
+        let modal = this.findModal(modalId);
 
         if (modal) {
             if (checkBlocking && modal.blocking) {
@@ -54,7 +54,7 @@ export class ModalService {
     }
 
     private findModal(modalId: string): Modal {
-        for (var modal of this.modals) {
+        for (let modal of this.modals) {
             if (modal.modalId === modalId) {
                 return modal;
             }

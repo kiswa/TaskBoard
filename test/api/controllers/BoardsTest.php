@@ -8,7 +8,8 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
     public static function setupBeforeClass() {
         try {
             R::setup('sqlite:tests.db');
-        } catch (Exception $ex) { }
+        } catch (Exception $ex) {
+        }
     }
 
     public function setUp() {
@@ -37,7 +38,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $actual = $this->boards->getAllBoards($request,
             new ResponseMock(), null);
         $this->assertEquals('No boards in database.',
-            $actual->alerts[0]['text']);;
+            $actual->alerts[0]['text']);
     }
 
     public function testGetAllBoardsUnprivileged() {

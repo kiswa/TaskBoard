@@ -32,7 +32,7 @@ class Tasks extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    public function addTask($request, $response, $args) {
+    public function addTask($request, $response) {
         $status = $this->secureRoute($request, $response,
             SecurityLevel::USER);
         if ($status !== 200) {
@@ -59,7 +59,7 @@ class Tasks extends BaseController {
         R::store($task);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' added task ' . $task->title . '.',
             '', json_encode($task), 'task', $task->id);
 
@@ -100,7 +100,7 @@ class Tasks extends BaseController {
         R::store($update);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' updated task ' . $task->title,
             json_encode($task), json_encode($update),
             'task', $update->id);
@@ -139,7 +139,7 @@ class Tasks extends BaseController {
         R::trash($task);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' removed task ' . $before->title,
             json_encode($before), '', 'task', $id);
 

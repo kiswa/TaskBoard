@@ -16,8 +16,8 @@ export class TopNav {
     username: string = '';
 
     constructor(constants: Constants, private router: Router,
-            private authService: AuthService,
-            private notes: NotificationsService) {
+                private authService: AuthService,
+                private notes: NotificationsService) {
         this.version = constants.VERSION;
 
         authService.userChanged
@@ -27,7 +27,7 @@ export class TopNav {
     logout(): void {
         this.authService.logout().subscribe(res => {
             let alert = res.alerts[0];
-            this.notes.add(new Notification(alert.type, alert.text))
+            this.notes.add(new Notification(alert.type, alert.text));
 
             this.router.navigate(['']);
         });

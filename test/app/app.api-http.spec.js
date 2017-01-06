@@ -34,7 +34,7 @@ describe('ApiHttp', () => {
 
     it('intercepts observable responses', () => {
         var response = {
-            json: function() {
+            json() {
                 return {
                     data: ['testjwt']
                 };

@@ -41,7 +41,7 @@ export class Modal implements OnInit {
     }
 
     private filterClick(event: Event): void {
-        event = event || window.event
+        event = event || window.event;
 
         if (event.stopPropagation) {
             event.stopPropagation();

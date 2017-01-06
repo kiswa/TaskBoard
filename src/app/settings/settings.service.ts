@@ -49,7 +49,7 @@ export class SettingsService {
             .catch((res, caught) => {
                 let response: ApiResponse = res.json();
                 return Observable.of(response);
-            })
+            });
     }
 }
 

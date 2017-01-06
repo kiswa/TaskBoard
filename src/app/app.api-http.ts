@@ -1,4 +1,3 @@
-import { Provider } from '@angular/core';
 import {
     Http,
     Request,
@@ -31,36 +30,36 @@ export class ApiHttp extends Http {
     private JWT_KEY = 'taskboard.jwt';
 
     constructor(backend: ConnectionBackend, defaultOptions: RequestOptions,
-            private router: Router) {
+                private router: Router) {
         super(backend, defaultOptions);
     }
 
     request(url: string | Request,
             options?: RequestOptionsArgs): Observable<Response> {
-        return this.intercept(super.request(url,
-            this.getRequestOptionArgs(options)));
+        return this.intercept(
+            super.request(url, this.getRequestOptionArgs(options)));
     }
 
     get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-        return this.intercept(super.get(url,
-            this.getRequestOptionArgs(options)));
+        return this.intercept(
+            super.get(url, this.getRequestOptionArgs(options)));
     }
 
     post(url: string, body: string,
-            options?: RequestOptionsArgs): Observable<Response> {
-        return this.intercept(super.post(url, body,
-            this.getRequestOptionArgs(options, body)));
+         options?: RequestOptionsArgs): Observable<Response> {
+        return this.intercept(
+            super.post(url, body, this.getRequestOptionArgs(options, body)));
     }
 
     put(url: string, body: string,
-            options?: RequestOptionsArgs): Observable<Response> {
-        return this.intercept(super.put(url, body,
-            this.getRequestOptionArgs(options, body)));
+        options?: RequestOptionsArgs): Observable<Response> {
+        return this.intercept(
+            super.put(url, body, this.getRequestOptionArgs(options, body)));
     }
 
     delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-        return this.intercept(super.delete(url,
-            this.getRequestOptionArgs(options)));
+        return this.intercept(
+            super.delete(url, this.getRequestOptionArgs(options)));
     }
 
     getRequestOptionArgs(options?: RequestOptionsArgs, body?: string): RequestOptionsArgs {

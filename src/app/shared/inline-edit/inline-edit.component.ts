@@ -18,9 +18,7 @@ export class InlineEdit {
     beginEdit(el: HTMLElement): void {
         this.isDisplay = false;
 
-        setTimeout(() => {
-            el.focus();
-        }, 100);
+        setTimeout(() => { el.focus(); }, 100);
     }
 
     editDone(newText: string): void {

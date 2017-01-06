@@ -6,15 +6,15 @@ import * as Chartist from 'chartist';
     templateUrl: 'app/dashboard/charts/charts.component.html'
 })
 export class Charts implements AfterViewInit {
+    private percentages: Array<number>;
+    private data: Array<number>;
+    private words: Array<string>;
+
     @Input('chart-name') chartName = '';
     @Input('chart-type') chartType = 'pie';
     @Input('series') series = '';
     @Input('labels') labels = '';
     @Input('table-head') tableHead = '';
-
-    private percentages: number[];
-    private data: number[];
-    private words: string[];
 
     constructor() {
         this.percentages = [];
@@ -52,9 +52,8 @@ export class Charts implements AfterViewInit {
 
                 return label + ' ' + percent + '%';
             }
-        };
-
-        new Chartist.Pie('#' + this.chartName, data, options)
+        },
+        pie = new Chartist.Pie('#' + this.chartName, data, options);
     }
 
     private createLineChart() {
@@ -67,18 +66,17 @@ export class Charts implements AfterViewInit {
                 onlyInteger: true
             },
             low: 0,
-            height: '300px',
+            height: '300px'// ,
             // plugins: [ Chartist.plugins.tooltip({
             //     transformTooltipTextFnc: (value) => {
             //         return value + ' points remaining'
             //     }
             // }) ]
-        };
-
-        new Chartist.Line('#' + this.chartName, data, options);
+        },
+        line = new Chartist.Line('#' + this.chartName, data, options);
     }
 
-    private convertToNumberArray(arr: string[]): number[] {
+    private convertToNumberArray(arr: Array<string>): Array<number> {
         let nums: Array<number> = [];
 
         for (let i = 0, len = arr.length; i < len; ++i) {

@@ -1,7 +1,7 @@
 <?php
 class Invalid extends BaseController {
 
-    public function noApi($request, $response, $args) {
+    public function noApi($request, $response) {
         $this->apiJson->addAlert('error',
             'No API functionality at this endpoint.');
 

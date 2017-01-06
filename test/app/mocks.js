@@ -11,10 +11,10 @@ global.document = mockBrowser.getDocument();
 global.localStorage = mockBrowser.getLocalStorage();
 
 global.Chartist = {
-    Pie: function(id, data, opts) {
+    Pie(id, data, opts) {
         this.sum = function() { return 100; };
     },
-    Line: function(id, data, opts) {
+    Line(id, data, opts) {
         this.plugins = {
             tooltip: () => {}
         };
@@ -42,7 +42,7 @@ global.RouterMock = function() {
     return {
         path: 'test',
         url: 'test',
-        navigate: function(arr) {
+        navigate(arr) {
             this.path = arr[0];
         }
     };

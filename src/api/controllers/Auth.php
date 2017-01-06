@@ -4,8 +4,7 @@ use Firebase\JWT\JWT;
 
 class Auth extends BaseController {
 
-    public static function HasBoardAccess($container, $request,
-            $boardId, $userId = null) {
+    public static function HasBoardAccess($request, $boardId, $userId = null) {
         $hasAccess = false;
 
         if ($userId === null) {
@@ -19,7 +18,7 @@ class Auth extends BaseController {
 
         $board = R::load('board', $boardId);
 
-        foreach($board->sharedUserList as $check) {
+        foreach ($board->sharedUserList as $check) {
             if ((int)$check->id === $userId) {
                 $hasAccess = true;
                 break;
@@ -29,7 +28,7 @@ class Auth extends BaseController {
         return $hasAccess;
     }
 
-    public static function CreateInitialAdmin($container) {
+    public static function CreateInitialAdmin() {
         $admin = R::load('user', 1);
 
         // Don't create more than one admin
@@ -71,7 +70,7 @@ class Auth extends BaseController {
         R::store($key);
     }
 
-    public static function RefreshToken($request, $response, $container) {
+    public static function RefreshToken($request, $response) {
         if (!$request->hasHeader('Authorization')) {
             return $response->withStatus(400);
         }
@@ -118,7 +117,7 @@ class Auth extends BaseController {
         return $uid;
     }
 
-    public function login($request, $response, $args) {
+    public function login($request, $response) {
         $data = json_decode($request->getBody());
         $user = R::findOne('user', 'username = ?', [$data->username]);
 
@@ -151,8 +150,8 @@ class Auth extends BaseController {
         $user->last_login = time();
         R::store($user);
 
-        $this->dbLogger->logChange($this->container, $user->id,
-            $user->username . ' logged in', null, null, 'user', $user->id);
+        $this->dbLogger->logChange($user->id, $user->username . ' logged in',
+            null, null, 'user', $user->id);
 
         $this->apiJson->setSuccess();
         $this->apiJson->addData($jwt);
@@ -161,7 +160,7 @@ class Auth extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    public function logout($request, $response, $args) {
+    public function logout($request, $response) {
         if (!$request->hasHeader('Authorization')) {
             return $this->jsonResponse($response, 400);
         }
@@ -182,15 +181,15 @@ class Auth extends BaseController {
             R::store($user);
         }
 
-        $this->dbLogger->logChange($this->container, $user->id,
-            $user->username . ' logged out', null, null, 'user', $user->id);
+        $this->dbLogger->logChange($user->id, $user->username . ' logged out',
+            null, null, 'user', $user->id);
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success', 'You have been logged out.');
 
         return $this->jsonResponse($response);
     }
 
-    public function authenticate($request, $response, $args) {
+    public function authenticate($request, $response) {
         if (!$request->hasHeader('Authorization')) {
             return $this->jsonResponse($response, 400);
         }

@@ -44,11 +44,11 @@ export class BoardAdmin {
     private MODAL_CONFIRM_ID: string;
 
     constructor(private auth: AuthService,
-            private modal: ModalService,
-            private settings: SettingsService,
-            private boardService: BoardAdminService,
-            private notes: NotificationsService,
-            private dragula: DragulaService) {
+                private modal: ModalService,
+                private settings: SettingsService,
+                private boardService: BoardAdminService,
+                private notes: NotificationsService,
+                private dragula: DragulaService) {
         this.MODAL_ID = 'board-addedit-form';
         this.MODAL_CONFIRM_ID = 'board-remove-confirm';
 
@@ -59,9 +59,13 @@ export class BoardAdmin {
         auth.userChanged
             .subscribe(activeUser => {
                 this.activeUser = new User(+activeUser.default_board_id,
-                    activeUser.email, +activeUser.id, activeUser.last_login,
-                    +activeUser.security_level, +activeUser.user_option_id,
-                    activeUser.username, activeUser.board_access);
+                                           activeUser.email,
+                                           +activeUser.id,
+                                           activeUser.last_login,
+                                           +activeUser.security_level,
+                                           +activeUser.user_option_id,
+                                           activeUser.username,
+                                           activeUser.board_access);
 
                 this.noBoardsMessage = 'You are not assigned to any boards. ' +
                     'Contact an admin user to be added to a board.';
@@ -122,7 +126,7 @@ export class BoardAdmin {
 
         this.dragula.dragend.subscribe(() => {
             this.modalProps.columns.forEach((item, index) => {
-                item.position = "" + index;
+                item.position = '' + index;
             });
         });
     }
@@ -157,14 +161,16 @@ export class BoardAdmin {
 
     private validateBoard(): boolean {
         if (this.modalProps.name === '') {
-            this.notes.add(new Notification('error',
-                'Board name is required.'));
+            this.notes
+                .add(new Notification('error',
+                                      'Board name is required.'));
             return false;
         }
 
         if (this.modalProps.columns.length === 0) {
-            this.notes.add(new Notification('error',
-                'At least one column is required.'));
+            this.notes
+                .add(new Notification('error',
+                                      'At least one column is required.'));
             return false;
         }
 
@@ -181,9 +187,9 @@ export class BoardAdmin {
             let boards = Array<Board>();
             response.data[1].forEach((board: any) => {
                 boards.push(new Board(+board.id, board.name,
-                    board.is_active === '1', board.ownColumn,
-                    board.ownCategory, board.ownAutoAction,
-                    board.ownIssuetracker, board.sharedUser));
+                                      board.is_active === '1', board.ownColumn,
+                                      board.ownCategory, board.ownAutoAction,
+                                      board.ownIssuetracker, board.sharedUser));
             });
 
             this.settings.updateBoards(boards);
@@ -206,7 +212,7 @@ export class BoardAdmin {
     }
 
     private onPropertyEdit(obj: string, prop: string,
-            i: number, value: any): void {
+                           i: number, value: any): void {
         this.modalProps[obj][i][prop] = value;
     }
 
@@ -219,14 +225,16 @@ export class BoardAdmin {
     }
 
     private deepCopy(source: any) {
-        var output: any, value: any, key: any;
+        let output: any, value: any, key: any;
 
         output = Array.isArray(source) ? [] : {};
 
         for (key in source) {
-            value = source[key];
-            output[key] = (typeof value === "object") ?
-                this.deepCopy(value) : value;
+            if (source.hasOwnProperty(key)) {
+                value = source[key];
+                output[key] = (typeof value === 'object') ?
+                    this.deepCopy(value) : value;
+            }
         }
 
         return output;

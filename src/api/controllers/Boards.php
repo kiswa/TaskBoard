@@ -3,7 +3,7 @@ use RedBeanPHP\R;
 
 class Boards extends BaseController {
 
-    public function getAllBoards($request, $response, $args) {
+    public function getAllBoards($request, $response) {
         $status = $this->secureRoute($request, $response,
             SecurityLevel::USER);
         if ($status !== 200) {
@@ -12,13 +12,15 @@ class Boards extends BaseController {
 
         $boards = $this->loadAllBoards($request);
 
-        if (count($boards)) {
-            $this->apiJson->setSuccess();
-            $this->apiJson->addData($boards);
-        } else {
+        if (!count($boards)) {
             $this->logger->addInfo('No boards in database.');
             $this->apiJson->addAlert('info', 'No boards in database.');
+
+            return $this->jsonResponse($response);
         }
+
+        $this->apiJson->setSuccess();
+        $this->apiJson->addData($boards);
 
         return $this->jsonResponse($response);
     }
@@ -51,7 +53,7 @@ class Boards extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    public function addBoard($request, $response, $args) {
+    public function addBoard($request, $response) {
         $status = $this->secureRoute($request, $response,
             SecurityLevel::ADMIN);
         if ($status !== 200) {
@@ -76,7 +78,7 @@ class Boards extends BaseController {
         R::store($board);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' added board ' . $board->name . '.',
             '', json_encode($board), 'board', $board->id);
 
@@ -127,7 +129,7 @@ class Boards extends BaseController {
         R::store($update);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' updated board ' . $update->name,
             json_encode(R::exportAll($board)),
             json_encode(R::exportAll($update)), 'board', $update->id);
@@ -162,7 +164,7 @@ class Boards extends BaseController {
         R::trash($board);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' removed board ' . $before->name,
             json_encode($before), '', 'board', $id);
 
@@ -177,7 +179,7 @@ class Boards extends BaseController {
     private function includeAdmins($board) {
         $admins = R::findAll('user', ' WHERE security_level = 1 ');
 
-        foreach($admins as $admin) {
+        foreach ($admins as $admin) {
             if (!in_array($admin, $board->sharedUserList)) {
                 $board->sharedUserList[] = $admin;
             }
@@ -189,10 +191,9 @@ class Boards extends BaseController {
         $boardBeans = R::findAll('board');
 
         if (count($boardBeans)) {
-            foreach($boardBeans as $bean) {
-                if (Auth::HasBoardAccess($this->container,
-                                         $request, $bean->id)) {
-                    foreach($bean->sharedUserList as $user) {
+            foreach ($boardBeans as $bean) {
+                if (Auth::HasBoardAccess($request, $bean->id)) {
+                    foreach ($bean->sharedUserList as $user) {
                         $user = $this->cleanUser($user);
                     }
 

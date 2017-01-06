@@ -43,19 +43,24 @@ class BeanLoader {
             $board->name = $data->name;
             $board->is_active = $data->is_active;
 
-            self::updateBoardList($board->xownCategoryList, $data->categories,
-                                  'category', 'self::LoadCategory');
-            self::updateBoardList($board->xownColumnList, $data->columns,
-                                  'column', 'self::LoadColumn');
-            self::updateBoardList($board->xownIssueTrackerList,
-                                  $data->issue_trackers, 'issuetracker',
-                                  'self::LoadIssueTracker');
+            self::updateBoardList('category',
+                                  'self::LoadCategory',
+                                  $board->xownCategoryList,
+                                  $data->categories);
+            self::updateBoardList('column',
+                                  'self::LoadColumn',
+                                  $board->xownColumnList,
+                                  $data->columns);
+            self::updateBoardList('issuetracker',
+                                  'self::LoadIssueTracker',
+                                  $board->xownIssueTrackerList,
+                                  $data->issue_trackers);
 
             // Users do not get deleted when removed from a board
             if (isset($data->users)) {
                 $board->sharedUserList = [];
 
-                foreach($data->users as $userData) {
+                foreach ($data->users as $userData) {
                     $user = R::load('user', $userData->id);
 
                     if ((int)$user->id > 0) {
@@ -179,19 +184,19 @@ class BeanLoader {
         return true;
     }
 
-    private static function updateBoardList(&$boardList = [], &$dataList = [],
-                                            $type, $loadFunc) {
+    private static function updateBoardList($type, $loadFunc,
+                                            &$boardList = [], &$dataList = []) {
         // Remove objects not in data
         if (count($boardList) && count($dataList)) {
             $dataIds = [];
 
-            foreach($dataList as $data) {
+            foreach ($dataList as $data) {
                 if (isset($data->id)) {
                     $dataIds[] = (int)$data->id;
                 }
             }
 
-            foreach($boardList as $existing) {
+            foreach ($boardList as $existing) {
                 if (!in_array((int)$existing->id, $dataIds)) {
                     $remove = R::load($type, $existing->id);
                     R::trash($remove);
@@ -202,21 +207,24 @@ class BeanLoader {
         // Update boardList from dataList
         if (count($dataList)) {
             // Load object from data
-            foreach($dataList as $obj) {
+            foreach ($dataList as $obj) {
                 $object = R::load($type, (isset($obj->id) ? $obj->id : 0));
 
                 if ((int)$object->id === 0) {
                     call_user_func_array($loadFunc, array(&$object,
                                                           json_encode($obj)));
                     $boardList[] = $object;
-                } else {
-                    call_user_func_array($loadFunc, array(&$boardList[$object->id],
-                                                          json_encode($obj)));
+                    continue;
                 }
+
+                call_user_func_array($loadFunc, array(&$boardList[$object->id],
+                                                      json_encode($obj)));
             }
-        } else if (count($boardList)) {
-            // Remove all objects from existing boardlist
-            foreach($boardList as $obj) {
+        }
+
+        // Remove all objects from existing boardlist when none in datalist
+        if (!count($dataList) && count($boardList)) {
+            foreach ($boardList as $obj) {
                 R::trash($obj);
             }
         }

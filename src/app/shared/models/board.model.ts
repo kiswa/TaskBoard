@@ -5,13 +5,14 @@ import { User } from './user.model';
 
 export class Board {
     constructor(public id: number = 0,
-            public name: string = '',
-            public is_active: boolean = true,
-            public columns: Array<Column> = [],
-            public categories: Array<Category> = [],
-            public auto_actions: Array<any> = [], // TODO: Add typing
-            public issue_trackers: Array<IssueTracker> = [],
-            public users: Array<User> = []) {
+                public name: string = '',
+                public is_active: boolean = true, // tslint:disable-line
+                public columns: Array<Column> = [],
+                public categories: Array<Category> = [],
+                // TODO: Add typing
+                public auto_actions: Array<any> = [], // tslint:disable-line
+                public issue_trackers: Array<IssueTracker> = [], // tslint:disable-line
+                public users: Array<User> = []) {
     }
 
     addColumn(name: string): void {

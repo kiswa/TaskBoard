@@ -27,9 +27,9 @@ export class UserSettings implements OnInit {
     private changeEmail: EmailForm;
 
     constructor(private auth: AuthService,
-            private notes: NotificationsService,
-            private settings: SettingsService,
-            private users: UserSettingsService) {
+                private notes: NotificationsService,
+                private settings: SettingsService,
+                private users: UserSettingsService) {
         this.boards = [];
         this.changeEmail = new EmailForm();
 
@@ -74,7 +74,7 @@ export class UserSettings implements OnInit {
     }
 
     updateDefaultBoard(boardId: string) {
-        this.user.default_board_id = parseInt(boardId);
+        this.user.default_board_id = parseInt(boardId, 10);
 
         this.users.changeDefaultBoard(this.user)
             .subscribe((response: ApiResponse) => {
@@ -91,7 +91,7 @@ export class UserSettings implements OnInit {
         }
 
         this.users.changePassword(this.changePassword.current,
-                this.changePassword.newPass)
+                                  this.changePassword.newPass)
             .subscribe((response: ApiResponse) => {
                 this.addAlerts(response.alerts);
                 this.resetPasswordForm();
@@ -104,7 +104,7 @@ export class UserSettings implements OnInit {
 
         if (this.changeUsername.newName === '') {
             this.notes.add(new Notification('error',
-                'New Username cannot be blank.'));
+                                            'New Username cannot be blank.'));
             this.changeUsername.submitted = false;
 
             return;
@@ -126,8 +126,7 @@ export class UserSettings implements OnInit {
         let match = this.changeEmail.newEmail.match(emailRegex);
 
         if (!match && this.changeEmail.newEmail !== '') {
-            this.notes.add(new Notification('error',
-                'Invalid email address.'));
+            this.notes.add(new Notification('error', 'Invalid email address.'));
             this.changeEmail.submitted = false;
 
             return;
@@ -169,7 +168,8 @@ export class UserSettings implements OnInit {
         if (this.changePassword.current === '' ||
                 this.changePassword.newPass === '' ||
                 this.changePassword.verPass === '') {
-            this.notes.add(new Notification('error',
+            this.notes.add(new Notification(
+                'error',
                 'All fields are required to change your password.'));
             this.changePassword.submitted = false;
 
@@ -177,7 +177,8 @@ export class UserSettings implements OnInit {
         }
 
         if (this.changePassword.newPass !== this.changePassword.verPass) {
-            this.notes.add(new Notification('error',
+            this.notes.add(new Notification(
+                'error',
                 'New password and verify password do not match.'));
             this.changePassword.submitted = false;
 

@@ -3,7 +3,7 @@ use RedBeanPHP\R;
 
 class AutoActions extends BaseController {
 
-    public function getAllActions($request, $response, $args) {
+    public function getAllActions($request, $response) {
         $status = $this->secureRoute($request, $response,
             SecurityLevel::USER);
         if ($status !== 200) {
@@ -12,25 +12,25 @@ class AutoActions extends BaseController {
 
         $autoActions = R::findAll('autoaction');
 
-        if (count($autoActions)) {
-            $this->apiJson->setSuccess();
-
-            foreach($autoActions as $action) {
-                if (Auth::HasBoardAccess($this->container,
-                        $request, $action->board_id)) {
-                    $this->apiJson->addData($action);
-                }
-            }
-        } else {
+        if (!count($autoActions)) {
             $this->logger->addInfo('No automatic actions in database.');
             $this->apiJson->addAlert('info',
                 'No automatic actions in database.');
+
+            return $this->jsonResponse($response);
         }
 
+        foreach ($autoActions as $action) {
+            if (Auth::HasBoardAccess($request, $action->board_id)) {
+                $this->apiJson->addData($action);
+            }
+        }
+
+        $this->apiJson->setSuccess();
         return $this->jsonResponse($response);
     }
 
-    public function addAction($request, $response, $args) {
+    public function addAction($request, $response) {
         $status = $this->secureRoute($request, $response,
             SecurityLevel::BOARD_ADMIN);
         if ($status !== 200) {
@@ -61,7 +61,7 @@ class AutoActions extends BaseController {
 
         $actor = R::load('user', Auth::GetUserId($request));
 
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' added automatic action.',
             '', json_encode($action), 'action', $action->id);
 
@@ -98,7 +98,7 @@ class AutoActions extends BaseController {
 
         $actor = R::load('user', Auth::GetUserId($request));
 
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username .' removed action ' . $before->id . '.',
             json_encode($before), '', 'action', $id);
 

@@ -19,7 +19,7 @@ export class AuthService {
     public userChanged = this.activeUser.asObservable();
 
     constructor(constants: Constants, private http: Http,
-            private router: Router) {
+                private router: Router) {
     }
 
     updateUser(user: User, userOpts?: UserOptions): void {
@@ -44,11 +44,11 @@ export class AuthService {
     }
 
     login(username: string, password: string,
-            remember: boolean): Observable<ApiResponse> {
+          remember: boolean): Observable<ApiResponse> {
         let json = JSON.stringify({
-            username: username,
-            password: password,
-            remember: remember
+            username,
+            password,
+            remember
         });
 
         return this.http.post('api/login', json)
@@ -76,7 +76,7 @@ export class AuthService {
     }
 
     private convertOpts(opts: any): UserOptions {
-        let converted = <UserOptions>{};
+        let converted = <UserOptions> {};
 
         converted.id = +opts.id;
         converted.new_tasks_at_bottom = opts.new_tasks_at_bottom === '1';

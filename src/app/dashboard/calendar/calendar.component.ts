@@ -5,8 +5,6 @@ import { Component, Input } from '@angular/core';
     templateUrl: 'app/dashboard/calendar/calendar.component.html'
 })
 export class Calendar {
-    @Input('board-id') boardId: number;
-
     private dayLabels = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
     private monthLabels = [
         'January', 'February', 'March', 'April',
@@ -19,6 +17,8 @@ export class Calendar {
     private year: number;
     private calendarDays: Array<Array<string>>;
     private tasks: Array<any>; // TODO: Use Task model when created
+
+    @Input('board-id') boardId: number;
 
     constructor() {
         this.today = new Date();

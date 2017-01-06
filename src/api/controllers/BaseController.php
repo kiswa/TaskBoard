@@ -19,8 +19,7 @@ abstract class BaseController {
     }
 
     public function checkBoardAccess($boardId, $request) {
-        if (!Auth::HasBoardAccess($this->container, $request,
-                $boardId)) {
+        if (!Auth::HasBoardAccess($request, $boardId)) {
             $this->apiJson->addAlert('error', 'Access restricted.');
 
             return false;
@@ -30,17 +29,17 @@ abstract class BaseController {
     }
 
     public function secureRoute($request, $response, $securityLevel) {
-        $response = Auth::RefreshToken($request, $response, $this->container);
+        $response = Auth::RefreshToken($request, $response);
         $status = $response->getStatusCode();
 
         if ($status !== 200) {
             if ($status === 400) {
                 $this->apiJson->addAlert('error',
                     'Authorization header missing.');
-            } else {
-                $this->apiJson->addAlert('error', 'Invalid API token.');
+                return $status;
             }
 
+            $this->apiJson->addAlert('error', 'Invalid API token.');
             return $status;
         }
 

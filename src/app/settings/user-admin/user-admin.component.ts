@@ -33,10 +33,10 @@ export class UserAdmin {
     private MODAL_CONFIRM_ID: string;
 
     constructor(private userService: UserAdminService,
-            private notes: NotificationsService,
-            private auth: AuthService,
-            private settings: SettingsService,
-            private modal: ModalService) {
+                private notes: NotificationsService,
+                private auth: AuthService,
+                private settings: SettingsService,
+                private modal: ModalService) {
         this.MODAL_ID = 'user-addEdit-form';
         this.MODAL_CONFIRM_ID = 'user-remove-confirm';
 
@@ -47,9 +47,13 @@ export class UserAdmin {
         auth.userChanged
             .subscribe(activeUser => {
                 this.activeUser = new User(+activeUser.default_board_id,
-                    activeUser.email, +activeUser.id, activeUser.last_login,
-                    +activeUser.security_level, +activeUser.user_option_id,
-                    activeUser.username, activeUser.board_access);
+                                           activeUser.email,
+                                           +activeUser.id,
+                                           activeUser.last_login,
+                                           +activeUser.security_level,
+                                           +activeUser.user_option_id,
+                                           activeUser.username,
+                                           activeUser.board_access);
                 this.replaceUser(activeUser);
             });
 
@@ -110,7 +114,7 @@ export class UserAdmin {
                     this.modal.close(this.MODAL_CONFIRM_ID);
                     this.getBoards();
                 }
-            })
+            });
     }
 
     private closeModal(status: string): void {
@@ -131,9 +135,12 @@ export class UserAdmin {
                 if (boards) {
                     boards.forEach((board: any) => {
                          this.boards.push(new Board(+board.id, board.name,
-                            board.is_active === '1', board.ownColumn,
-                            board.ownCategory, board.ownAutoAction,
-                            board.ownIssuetracker, board.sharedUser));
+                                                    board.is_active === '1',
+                                                    board.ownColumn,
+                                                    board.ownCategory,
+                                                    board.ownAutoAction,
+                                                    board.ownIssuetracker,
+                                                    board.sharedUser));
                     });
                 }
 
@@ -146,9 +153,9 @@ export class UserAdmin {
 
     private convertUser(user: any): UserDisplay {
         return new UserDisplay(+user.default_board_id, user.email,
-            +user.id, user.last_login, +user.security_level,
-            +user.user_option_id, user.username,
-            user.board_access);
+                               +user.id, user.last_login, +user.security_level,
+                               +user.user_option_id, user.username,
+                               user.board_access);
     }
 
     private replaceUser(newUser: User) {
@@ -186,7 +193,8 @@ export class UserAdmin {
         }
 
         if (user.password !== user.verifyPassword) {
-            this.notes.add(new Notification('error',
+            this.notes.add(new Notification(
+                'error',
                 'New password and verify password do not match.'));
             return false;
         }
@@ -195,7 +203,8 @@ export class UserAdmin {
         let match = user.email.match(emailRegex);
 
         if (!match && user.email !== '') {
-            this.notes.add(new Notification('error', 'Invalid email address.'));
+            this.notes.add(new Notification('error',
+                                            'Invalid email address.'));
             return false;
         }
 
@@ -206,10 +215,10 @@ export class UserAdmin {
         let isAdd = (title === 'Add');
 
         this.modalProps = {
-            title: title,
+            title,
             prefix: isAdd ? '' : 'Change',
             user: isAdd ? new ModalUser(new User()) : new ModalUser(user)
-        }
+        };
 
         this.modal.open(this.MODAL_ID);
     }

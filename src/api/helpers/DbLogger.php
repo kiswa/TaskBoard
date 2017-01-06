@@ -2,7 +2,7 @@
 use RedBeanPHP\R;
 
 class DbLogger {
-    public static function logChange($container, $user_id, $log_text, $before,
+    public static function logChange($user_id, $log_text, $before,
                                      $after, $item_type, $item_id) {
         $activity = R::dispense('activity');
 

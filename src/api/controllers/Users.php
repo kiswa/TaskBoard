@@ -3,7 +3,7 @@ use RedBeanPHP\R;
 
 class Users extends BaseController {
 
-    public function getAllUsers($request, $response, $args) {
+    public function getAllUsers($request, $response) {
         $status = $this->secureRoute($request, $response, SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
@@ -48,7 +48,7 @@ class Users extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    public function addUser($request, $response, $args) {
+    public function addUser($request, $response) {
         $status = $this->secureRoute($request, $response, SecurityLevel::ADMIN);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
@@ -103,7 +103,7 @@ class Users extends BaseController {
         R::store($user);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
              $actor->username . ' added user ' . $user->username . '.',
             '', json_encode($user), 'user', $user->id);
 
@@ -143,11 +143,10 @@ class Users extends BaseController {
             }
         }
 
+        $data->password_hash = $user->password_hash;
+
         if (isset($data->new_password) && isset($data->old_password)) {
-            if (password_verify($data->old_password, $user->password_hash)) {
-                $data->password_hash =
-                    password_hash($data->new_password, PASSWORD_BCRYPT);
-            } else {
+            if (!password_verify($data->old_password, $user->password_hash)) {
                 $this->logger->addError('Update User: ', [$user, $update]);
                 $this->apiJson->addAlert('error', 'Error updating user. ' .
                     'Incorrect current password.');
@@ -155,11 +154,12 @@ class Users extends BaseController {
                 return $this->jsonResponse($response);
             }
 
+            $data->password_hash =
+                password_hash($data->new_password, PASSWORD_BCRYPT);
             unset($data->new_password);
             unset($data->old_password);
-        } else {
-            $data->password_hash = $user->password_hash;
         }
+
         $data->active_token = $user->active_token;
 
         if (isset($data->password) && $data->password !== '') {
@@ -205,7 +205,7 @@ class Users extends BaseController {
 
         R::store($update);
 
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' updated user ' . $update->username,
             json_encode($user), json_encode($update),
             'user', $update->id);
@@ -253,7 +253,7 @@ class Users extends BaseController {
 
         R::store($update);
 
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' updated user options',
             json_encode($userOpts), json_encode($update),
             'user_option', $update->id);
@@ -287,7 +287,7 @@ class Users extends BaseController {
         R::trash($user);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' removed user ' . $before->username,
             json_encode($before), '', 'user', $id);
 
@@ -305,14 +305,14 @@ class Users extends BaseController {
         if (isset($userData->boardAccess)) {
             $user = R::load('user', $userData->id);
 
-            foreach($userData->boardAccess as $boardId) {
+            foreach ($userData->boardAccess as $boardId) {
                 if (!in_array($boardId, $boardIds)) {
                     $this->addUserToBoard($boardId, $user, $request);
                 }
             }
 
             if (count($userData->boardAccess) !== count($boardIds)) {
-                foreach($boardIds as $removeId) {
+                foreach ($boardIds as $removeId) {
                     if (!in_array($removeId, $userData->boardAccess)) {
                         $this->removeUserFromBoard($removeId, $user);
                     }
@@ -324,8 +324,8 @@ class Users extends BaseController {
     }
 
     private function addUserToBoard($boardId, $user, $request) {
-        if ((int)$boardId > 0 && !Auth::HasBoardAccess($this->container, $request,
-                $boardId, $user->id)) {
+        if ((int)$boardId > 0 &&
+                !Auth::HasBoardAccess($request, $boardId, $user->id)) {
             $board = R::load('board', $boardId);
             $board->sharedUserList[] = $user;
             R::store($board);
@@ -355,7 +355,7 @@ class Users extends BaseController {
         $isAdmin = ((int)$actor->security_level === SecurityLevel::ADMIN);
 
         $data = [];
-        foreach($userBeans as $user) {
+        foreach ($userBeans as $user) {
             if (in_array($user->id, $userIds) || $isAdmin) {
                 $data[] = $this->cleanUser($user);
             }
@@ -371,7 +371,7 @@ class Users extends BaseController {
             'WHERE user_id = :user_id',
             [':user_id' => $userId]);
 
-        foreach($boards as $board) {
+        foreach ($boards as $board) {
             $boardIds[] = (int)$board['board_id'];
         }
 
@@ -382,10 +382,10 @@ class Users extends BaseController {
         $userIds = [];
         $boardIds = $this->getBoardIdsByAccess($userId);
 
-        foreach($boardIds as $id) {
+        foreach ($boardIds as $id) {
             $board = R::load('board', $id);
 
-            foreach($board->sharedUserList as $user) {
+            foreach ($board->sharedUserList as $user) {
                 if (!in_array((int) $user->id, $userIds)) {
                     $userIds[] = (int) $user->id;
                 }
@@ -409,7 +409,7 @@ class Users extends BaseController {
         $boards = RedBeanPHP\R::getAll('select bu.board_id, bu.user_id from ' .
             'board_user bu join board b on b.id = bu.board_id');
 
-        foreach($boards as $item) {
+        foreach ($boards as $item) {
             if ((int)$user->id === (int)$item['user_id']) {
                 $user->board_access[] = (int)$item['board_id'];
             }

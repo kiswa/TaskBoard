@@ -34,14 +34,14 @@ class Comments extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    public function addComment($request, $response, $args) {
+    public function addComment($request, $response) {
         $status = $this->secureRoute($request, $response,
             SecurityLevel::USER);
         if ($status !== 200) {
             return $this->jsonResponse($response, $status);
         }
 
-        $comment = R::dispense('comment');;
+        $comment = R::dispense('comment');
         if (!BeanLoader::LoadComment($comment, $request->getBody())) {
             $comment->task_id = 0;
         }
@@ -62,7 +62,7 @@ class Comments extends BaseController {
         R::store($comment);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' added comment ' . $comment->id . '.',
             '', json_encode($comment), 'comment', $comment->id);
 
@@ -115,7 +115,7 @@ class Comments extends BaseController {
 
         R::store($update);
 
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' updated comment ' . $update->id,
             json_encode($comment), json_encode($update),
             'comment', $update->id);
@@ -166,7 +166,7 @@ class Comments extends BaseController {
         $before = $comment;
         R::trash($comment);
 
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' removed comment ' . $before->id,
             json_encode($before), '', 'comment', $id);
 

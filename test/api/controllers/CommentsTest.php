@@ -8,7 +8,8 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
     public static function setupBeforeClass() {
         try {
             R::setup('sqlite:tests.db');
-        } catch (Exception $ex) { }
+        } catch (Exception $ex) {
+        }
     }
 
     public function setUp() {

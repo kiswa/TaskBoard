@@ -1,9 +1,11 @@
 import { User }  from '../../shared/index';
 
 export class UserDisplay extends User {
+    /* tslint:disable:variable-name */
     public default_board_name: string;
     public security_level_name: string;
     public can_admin: boolean;
+    /* tslint:enable:variable-name */
 }
 
 export class ModalUser extends UserDisplay {
@@ -24,8 +26,8 @@ export class ModalUser extends UserDisplay {
 
 export class ModalProperties {
     constructor(public title: string,
-        public prefix: string,
-        public user: ModalUser) {
+                public prefix: string,
+                public user: ModalUser) {
     }
 }
 

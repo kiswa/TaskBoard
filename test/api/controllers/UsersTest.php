@@ -8,7 +8,8 @@ class UsersTest extends PHPUnit_Framework_TestCase {
     public static function setupBeforeClass() {
         try {
             R::setup('sqlite:tests.db');
-        } catch (Exception $ex) { }
+        } catch (Exception $ex) {
+        }
     }
 
     public function setUp() {
@@ -18,9 +19,6 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->users = new Users(new ContainerMock());
     }
 
-    /**
-     * @group single
-     */
     public function testGetAllUsers() {
         $this->createUser();
 

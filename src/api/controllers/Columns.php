@@ -31,7 +31,7 @@ class Columns extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    public function addColumn($request, $response, $args) {
+    public function addColumn($request, $response) {
         $status = $this->secureRoute($request, $response,
             SecurityLevel::BOARD_ADMIN);
         if ($status !== 200) {
@@ -60,7 +60,7 @@ class Columns extends BaseController {
         R::store($column);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' added column ' . $column->name . '.',
             '', json_encode($column), 'column', $column->id);
 
@@ -100,7 +100,7 @@ class Columns extends BaseController {
         R::store($update);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' updated column ' . $update->name,
             json_encode($column), json_encode($update),
             'column', $update->id);
@@ -138,7 +138,7 @@ class Columns extends BaseController {
         R::trash($column);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' removed column ' . $before->name,
             json_encode($before), '', 'column', $id);
 

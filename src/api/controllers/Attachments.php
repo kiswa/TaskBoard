@@ -32,7 +32,7 @@ class Attachments extends BaseController {
         return $this->jsonResponse($response);
     }
 
-    public function addAttachment($request, $response, $args) {
+    public function addAttachment($request, $response) {
         $status = $this->secureRoute($request, $response,
             SecurityLevel::USER);
         if ($status !== 200) {
@@ -62,7 +62,7 @@ class Attachments extends BaseController {
 
         $actor = R::load('user', Auth::GetUserId($request));
 
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username . ' added attachment.', '', json_encode($attachment),
             'attachment', $attachment->id);
 
@@ -112,7 +112,7 @@ class Attachments extends BaseController {
         $before = $attachment;
         $attachment->delete();
 
-        $this->dbLogger->logChange($this->container, $actor->id,
+        $this->dbLogger->logChange($actor->id,
             $actor->username .' removed attachment ' . $before->name,
             json_encode($before), '', 'attachment', $id);
 

@@ -7,7 +7,9 @@ describe('Settings', () => {
 
     beforeEach(() => {
         title = new TitleMock();
-        new Settings(null, title);
+        // Just need to create Settings to set Title
+        var settings = new Settings(null, title);
+        settings;
     });
 
     it('sets the site title when constructed', () => {

@@ -2,18 +2,18 @@ import { User } from '../../shared/index';
 
 export class BoardData {
     constructor(public title = '',
-        public id = 0,
-        public name = '',
-        public is_active = true,
-        public columns: Array<any> = [],
-        public categories: Array<any> = [],
-        public issue_trackers: Array<any> = [],
-        public users: Array<User> = [],
-        public categoryDefaultColor = '#ffffe0',
-        public newColumnName = '',
-        public newCategoryName = '',
-        public issueTrackerUrl = '',
-        public issueTrackerBugId = '') { }
+                public id = 0,
+                public name = '',
+                public is_active = true, // tslint:disable-line
+                public columns: Array<any> = [],
+                public categories: Array<any> = [],
+                public issue_trackers: Array<any> = [], // tslint:disable-line
+                public users: Array<User> = [],
+                public categoryDefaultColor = '#ffffe0',
+                public newColumnName = '',
+                public newCategoryName = '',
+                public issueTrackerUrl = '',
+                public issueTrackerBugId = '') { }
 
     addColumn(): void {
         if (this.newColumnName === '') {

@@ -1,0 +1,75 @@
+{
+    "rules": {
+        "member-ordering": [ true, {
+            "order": [
+                "private-instance-field",
+                "public-instance-field",
+                "constructor",
+                "public-instance-method",
+                "private-instance-method"
+            ]
+        }],
+        "no-reference": true,
+        "only-arrow-functions": true,
+        "curly": true,
+        "forin": true,
+        "label-position": true,
+        "no-conditional-assignment": true,
+        "no-console": [true, "log", "error"],
+        "no-construct": true,
+        "no-debugger": true,
+        "no-duplicate-variable": true,
+        "no-empty": true,
+        "no-eval": true,
+        "no-invalid-this": true,
+        "no-shadowed-variable": true,
+        "no-string-literal": true,
+        "no-switch-case-fall-through": true,
+        "no-unsafe-finally": true,
+        "no-unused-expression": true,
+        "no-unused-new": true,
+        "no-use-before-declare": true,
+        "no-var-keyword": true,
+        "radix": true,
+        "triple-equals": [ true,
+            "allow-null-check",
+            "allow-undefined-check"
+        ],
+        "use-isnan": true,
+        "cyclomatic-complexity": true,
+        "eofline": true,
+        "indent": [ true, "spaces" ],
+        "linebreak-style": [ true, "LF" ],
+        "max-line-length": [ true, 120 ],
+        "trailing-comma": [ true, {
+            "multiline": "never",
+            "singleline": "never"
+        }],
+        "align": [ true,
+            "arguments",
+            "parameters",
+            "statements"
+        ],
+        "array-type": [ true, "generic" ],
+        "arrow-parens": [ true, "ban-single-arg-parens" ],
+        "class-name": true,
+        "comment-format": [ true, "check-space" ],
+        "new-parens": true,
+        "no-consecutive-blank-lines": [ true, 2 ],
+        "object-literal-key-quotes": [ true, "as-needed" ],
+        "object-literal-shorthand": true,
+        "one-line": [ true, "check-catch", "check-finally", "check-else" ],
+        "quotemark": [ true, "single", "avoid-escape" ],
+        "semicolon": [ true, "always" ],
+        "variable-name": [ true, "check-format", "ban-keywords" ],
+        "whitespace": [ true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-separator",
+            "check-type",
+            "check-typecast"
+        ]
+    }
+}
+

@@ -8,7 +8,8 @@ class AuthTest extends PHPUnit_Framework_TestCase {
     public static function setupBeforeClass() {
         try {
             R::setup('sqlite:tests.db');
-        } catch (Exception $ex) { }
+        } catch (Exception $ex) {
+        }
     }
 
     public function setUp() {
@@ -24,15 +25,13 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $board->sharedUserList[] = $user;
         R::store($board);
 
-        $hasAccess = Auth::HasBoardAccess(new ContainerMock(),
-            new RequestMock(), 1, 1);
+        $hasAccess = Auth::HasBoardAccess(new RequestMock(), 1, 1);
         $this->assertEquals(true, $hasAccess);
 
         $user->security_level = SecurityLevel::ADMIN;
         R::store($user);
 
-        $hasAccess = Auth::HasBoardAccess(new ContainerMock(),
-            new RequestMock(), 1, 1);
+        $hasAccess = Auth::HasBoardAccess(new RequestMock(), 1, 1);
         $this->assertEquals(true, $hasAccess);
     }
 
@@ -164,7 +163,6 @@ class AuthTest extends PHPUnit_Framework_TestCase {
 
         $actual = $this->auth->login($request, new ResponseMock(), null);
         $jwt = $actual->data[0];
-        $jwtKey = R::load('jwt', 1);
 
         $this->auth = new Auth(new ContainerMock());
         $request = new RequestMock();
