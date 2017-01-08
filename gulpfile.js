@@ -31,6 +31,7 @@ let gulp = require('gulp'),
         neat: 'node_modules/bourbon-neat/app/assets/stylesheets',
         scss_base: 'node_modules/scss-base/src',
         chartist: 'node_modules/chartist/dist/scss',
+        normalize: require('node-normalize-scss').includePaths,
 
         tests_app: 'test/app/**/*.spec.js',
         tests_api: 'test/api/**/*.php',
@@ -92,7 +93,8 @@ gulp.task('scss', () => {
                 paths.bourbon,
                 paths.neat,
                 paths.scss_base,
-                paths.chartist
+                paths.chartist,
+                paths.normalize
             ]
         }))
         .pipe(concat('styles.css'))
