@@ -93,14 +93,13 @@ class Users extends BaseController {
 
         $user->user_option_id = $opts->id;
         R::store($user);
-        $data->id = $user->id;
 
-        if ($data->default_board_id) {
-            $this->addUserToBoard($data->default_board_id, $user, $request);
+        if (isset($data->default_board_id)) {
+            $data->boardAccess[] = $data->default_board_id;
         }
 
+        $data->id = $user->id;
         $this->updateBoardAccess($data, $request);
-        R::store($user);
 
         $actor = R::load('user', Auth::GetUserId($request));
         $this->dbLogger->logChange($actor->id,
@@ -190,19 +189,24 @@ class Users extends BaseController {
             }
         }
 
-        if ($user->default_board_id !== $update->default_board_id) {
-            $newId = $update->default_board_id;
-
-            $this->addUserToBoard($newId, $user, $request);
-
+        if ($user->default_board_id !== $update->default_board_id &&
+                (int)$update->default_board_id !== 0) {
             if (isset($data->boardAccess) &&
-                    !in_array($newId, $data->boardAccess)) {
-                $data->boardAccess[] = $newId;
+                    !in_array($data->default_board_id, $data->boardAccess)) {
+                $data->boardAccess[] = $data->default_board_id;
+            }
+        }
+
+        if ((int)$user->default_board_id !== 0 &&
+                (int)$update->default_board_id === 0) {
+            $key = array_search($user->default_board_id, $data->boardAccess);
+
+            if ($key) {
+                unset($data->boardAccess[$key]);
             }
         }
 
         $this->updateBoardAccess($data, $request);
-
         R::store($update);
 
         $this->dbLogger->logChange($actor->id,
@@ -307,7 +311,7 @@ class Users extends BaseController {
 
             foreach ($userData->boardAccess as $boardId) {
                 if (!in_array($boardId, $boardIds)) {
-                    $this->addUserToBoard($boardId, $user, $request);
+                    $this->addUserToBoard((int)$boardId, $user, $request);
                 }
             }
 
@@ -319,12 +323,13 @@ class Users extends BaseController {
                 }
             }
 
+            R::store($user);
             unset($userData->boardAccess);
         }
     }
 
     private function addUserToBoard($boardId, $user, $request) {
-        if ((int)$boardId > 0 &&
+        if ($boardId > 0 &&
                 !Auth::HasBoardAccess($request, $boardId, $user->id)) {
             $board = R::load('board', $boardId);
             $board->sharedUserList[] = $user;
