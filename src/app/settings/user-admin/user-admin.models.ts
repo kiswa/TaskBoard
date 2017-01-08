@@ -10,7 +10,7 @@ export class UserDisplay extends User {
 
 export class ModalUser extends UserDisplay {
     public password: string = '';
-    public verifyPassword: string = '';
+    public password_verify: string = '';
     public boardAccess: Array<string> = [];
 
     constructor(user: User) {

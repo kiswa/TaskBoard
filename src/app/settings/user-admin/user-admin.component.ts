@@ -192,7 +192,7 @@ export class UserAdmin {
             return false;
         }
 
-        if (user.password !== user.verifyPassword) {
+        if (user.password !== user.password_verify) {
             this.notes.add(new Notification(
                 'error',
                 'New password and verify password do not match.'));
