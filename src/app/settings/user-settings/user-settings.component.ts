@@ -96,6 +96,8 @@ export class UserSettings implements OnInit {
                 this.addAlerts(response.alerts);
                 this.resetPasswordForm();
                 this.changePassword.submitted = false;
+
+                this.auth.updateUser(JSON.parse(response.data[1]));
             });
     }
 
