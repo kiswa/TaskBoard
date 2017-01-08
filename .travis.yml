@@ -6,7 +6,7 @@ php:
 before_script:
   - nvm install 4
   - nvm use 4
-  - npm i -g npm@3
+  - npm i -g npm@4
   - npm i -g gulp
   - npm i
   - touch tests.db
