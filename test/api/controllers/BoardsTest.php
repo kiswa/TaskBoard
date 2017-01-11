@@ -321,6 +321,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
         $column->name = 'col2';
         $column->position = 1;
+        $column->id = 1;
         $column->board_id = 1;
 
         $category->name = 'cat 1';

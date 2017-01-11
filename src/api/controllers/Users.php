@@ -58,12 +58,7 @@ class Users extends BaseController {
         $user = R::dispense('user');
 
         if (isset($data->username)) {
-            $existing = R::findOne('user', 'username = ?', [ $data->username ]);
-
-            if ($existing) {
-                $this->apiJson->addAlert('error', 'Username already exists. ' .
-                    'Change the username and try again.');
-
+            if ($this->checkUsernameExists($data)) {
                 return $this->jsonResponse($response);
             }
         }
@@ -134,22 +129,15 @@ class Users extends BaseController {
         $update = R::load('user', $data->id);
         $actor = R::load('user', Auth::GetUserId($request));
 
-        if ((int)$actor->id !== (int)$user->id) {
-            if ((int)$actor->security_level  > SecurityLevel::BOARD_ADMIN) {
-                $this->apiJson->addAlert('error', 'Access restricted.');
-
-                return $this->jsonResponse($response, 403);
-            }
+        if (!$this->checkUserAccess($actor, $user)) {
+            return $this->jsonResponse($response, 403);
         }
 
         $data->password_hash = $user->password_hash;
 
         if (isset($data->new_password) && isset($data->old_password)) {
-            if (!password_verify($data->old_password, $user->password_hash)) {
+            if (!$this->verifyPassword($data, $user)) {
                 $this->logger->addError('Update User: ', [$user, $update]);
-                $this->apiJson->addAlert('error', 'Error updating user. ' .
-                    'Incorrect current password.');
-
                 return $this->jsonResponse($response);
             }
 
@@ -178,33 +166,12 @@ class Users extends BaseController {
         }
 
         if ($user->username !== $update->username) {
-            $existing = R::findOne('user', 'username = ?', [ $update->username ]);
-
-            if ($existing !== null) {
-                $this->logger->addError('Update User: ', [$user, $update]);
-                $this->apiJson->addAlert('error', 'Error updating username. ' .
-                    'That username is already taken.');
-
+            if ($this->checkUsernameExists($update)){
                 return $this->jsonResponse($response);
             }
         }
 
-        if ($user->default_board_id !== $update->default_board_id &&
-                (int)$update->default_board_id !== 0) {
-            if (isset($data->boardAccess) &&
-                    !in_array($data->default_board_id, $data->boardAccess)) {
-                $data->boardAccess[] = $data->default_board_id;
-            }
-        }
-
-        if ((int)$user->default_board_id !== 0 &&
-                (int)$update->default_board_id === 0) {
-            $key = array_search($user->default_board_id, $data->boardAccess);
-
-            if ($key) {
-                unset($data->boardAccess[$key]);
-            }
-        }
+        $this->updateDefaultBoardId($data, $user, $update);
 
         $this->updateBoardAccess($data, $request);
         R::store($update);
@@ -417,6 +384,60 @@ class Users extends BaseController {
         foreach ($boards as $item) {
             if ((int)$user->id === (int)$item['user_id']) {
                 $user->board_access[] = (int)$item['board_id'];
+            }
+        }
+    }
+
+    private function checkUsernameExists($data) {
+        $existing = R::findOne('user', 'username = ?', [ $data->username ]);
+
+        if ($existing) {
+            $this->apiJson->addAlert('error', 'Username already exists. ' .
+                'Change the username and try again.');
+            return true;
+        }
+
+        return false;
+    }
+
+    private function checkUserAccess($actor, $user) {
+        if ((int)$actor->id !== (int)$user->id) {
+            if ((int)$actor->security_level === SecurityLevel::ADMIN) {
+                return true;
+            }
+
+            $this->apiJson->addAlert('error', 'Access restricted.');
+            return false;
+        }
+
+        return true;
+    }
+
+    private function verifyPassword($data, $user) {
+        if (!password_verify($data->old_password, $user->password_hash)) {
+            $this->apiJson->addAlert('error', 'Error updating user. ' .
+                'Incorrect current password.');
+            return false;
+        }
+
+        return true;
+    }
+
+    private function updateDefaultBoardId(&$data, $user, $update) {
+        if ($user->default_board_id !== $update->default_board_id &&
+                (int)$update->default_board_id !== 0) {
+            if (isset($data->boardAccess) &&
+                    !in_array($data->default_board_id, $data->boardAccess)) {
+                $data->boardAccess[] = $data->default_board_id;
+            }
+        }
+
+        if ((int)$user->default_board_id !== 0 &&
+                (int)$update->default_board_id === 0) {
+            $key = array_search($user->default_board_id, $data->boardAccess);
+
+            if ($key) {
+                unset($data->boardAccess[$key]);
             }
         }
     }

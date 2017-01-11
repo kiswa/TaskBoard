@@ -160,6 +160,9 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('error', $response->alerts[0]['type']);
     }
 
+    /**
+     * @group single
+     */
     public function testUpdateUser() {
         $this->createUser();
 
