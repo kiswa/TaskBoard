@@ -10,6 +10,7 @@ export class UserDisplay extends User {
 
 export class ModalUser extends UserDisplay {
     public password: string = '';
+    /* tslint:disable-next-line:variable-name */
     public password_verify: string = '';
     public boardAccess: Array<string> = [];
 
