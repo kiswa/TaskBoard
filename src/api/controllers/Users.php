@@ -166,7 +166,7 @@ class Users extends BaseController {
         }
 
         if ($user->username !== $update->username) {
-            if ($this->checkUsernameExists($update)){
+            if ($this->checkUsernameExists($update)) {
                 return $this->jsonResponse($response);
             }
         }
