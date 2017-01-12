@@ -57,7 +57,6 @@ class Boards extends BaseController {
         $status = $this->secureRoute($request, $response,
             SecurityLevel::ADMIN);
         if ($status !== 200) {
-            var_dump($status);
             return $this->jsonResponse($response, $status);
         }
 
@@ -65,10 +64,8 @@ class Boards extends BaseController {
         if (!BeanLoader::LoadBoard($board, $request->getBody())) {
             $board->id = -1;
         }
-        var_dump($board);
 
         $this->includeAdmins($board);
-        var_dump($board->sharedUserList);
 
         if ($board->id === -1) {
             $this->logger->addError('Add Board: ', [$board]);

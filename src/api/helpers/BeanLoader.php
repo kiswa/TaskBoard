@@ -83,6 +83,7 @@ class BeanLoader {
             $category->default_task_color = $data->default_task_color;
             $category->board_id = $data->board_id;
         } catch (Exception $ex) {
+            var_dump($ex);
             return false;
         }
 
@@ -97,6 +98,7 @@ class BeanLoader {
             $column->position = $data->position;
             $column->board_id = $data->board_id;
         } catch (Exception $ex) {
+            var_dump($ex);
             return false;
         }
 
@@ -125,6 +127,7 @@ class BeanLoader {
             $tracker->regex = $data->regex;
             $tracker->board_id = $data->board_id;
         } catch (Exception $ex) {
+            var_dump($ex);
             return false;
         }
 
