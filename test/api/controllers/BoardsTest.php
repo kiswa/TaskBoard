@@ -330,6 +330,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
         $tracker->url = 'testing';
         $tracker->regex = '';
+        $tracker->board_id = 1;
 
         $board->name = 'test';
         $board->is_active = true;
