@@ -133,7 +133,7 @@ class BeanLoader {
         return $loaded;
     }
 
-    public function LoadCategory(&$category, $json) {
+    public static function LoadCategory(&$category, $json) {
         $data = json_decode($json);
         $loaded = true;
 
