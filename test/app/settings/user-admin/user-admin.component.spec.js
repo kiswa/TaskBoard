@@ -4,7 +4,13 @@ var path = '../../../../build/settings/user-admin/',
 
 describe('UserAdmin', () => {
     var userAdmin,
-        modalService;
+        modalService,
+        newUser = {
+            username: 'testing',
+            password: 'test',
+            verifyPassword: 'test',
+            email: ''
+        };
 
     beforeEach(() => {
         modalService = new ModalServiceMock();
@@ -16,12 +22,7 @@ describe('UserAdmin', () => {
 
     it('has a function to add or edit a user - Add', done => {
         userAdmin.modalProps.title = 'Add';
-        userAdmin.modalProps.user = {
-            username: 'testing',
-            password: 'test',
-            verifyPassword: 'test',
-            email: ''
-        };
+        userAdmin.modalProps.user = newUser;
 
         userAdmin.addEditUser();
 
@@ -33,13 +34,8 @@ describe('UserAdmin', () => {
 
     it('has a function to add or edit a user - Edit', done => {
         userAdmin.modalProps.title = 'Edit';
-        userAdmin.modalProps.user = {
-            id: 1,
-            username: 'testing',
-            password: 'test',
-            verifyPassword: 'test',
-            email: ''
-        };
+        userAdmin.modalProps.user = newUser;
+        userAdmin.modalProps.user.id = 1;
 
         userAdmin.addEditUser();
 
