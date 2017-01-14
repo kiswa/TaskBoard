@@ -66,7 +66,6 @@ class Boards extends BaseController {
         }
 
         $this->includeAdmins($board);
-        var_dump(R::exportAll($board));
 
         if ($board->id === -1) {
             $this->logger->addError('Add Board: ', [$board]);

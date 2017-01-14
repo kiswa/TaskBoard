@@ -44,15 +44,15 @@ class BeanLoader {
             $board->is_active = $data->is_active;
 
             self::updateBoardList('category',
-                                  'self::LoadCategory',
+                                  'LoadCategory',
                                   $board->xownCategoryList,
                                   $data->categories);
             self::updateBoardList('column',
-                                  'self::LoadColumn',
+                                  'LoadColumn',
                                   $board->xownColumnList,
                                   $data->columns);
             self::updateBoardList('issuetracker',
-                                  'self::LoadIssueTracker',
+                                  'LoadIssueTracker',
                                   $board->xownIssueTrackerList,
                                   $data->issue_trackers);
 
@@ -207,14 +207,15 @@ class BeanLoader {
             $object = R::load($type, (isset($obj->id) ? $obj->id : 0));
 
             if ((int)$object->id === 0) {
-                call_user_func_array($loadFunc, array(&$object,
-                                                      json_encode($obj)));
+                call_user_func_array(array(__CLASS__, $loadFunc),
+                                     array(&$object, json_encode($obj)));
                 $boardList[] = $object;
                 continue;
             }
 
-            call_user_func_array($loadFunc, array(&$boardList[$object->id],
-                                                  json_encode($obj)));
+            call_user_func_array(array(__CLASS__, $loadFunc),
+                                 array(&$boardList[$object->id],
+                                       json_encode($obj)));
         }
     }
 
