@@ -193,10 +193,14 @@ class BeanLoader {
     public static function LoadUserOption(&$opts, $json) {
         $data = json_decode($json);
 
-        $opts->new_tasks_at_bottom = (boolean)$data->new_tasks_at_bottom;
-        $opts->show_animations = (boolean)$data->show_animations;
-        $opts->show_assignee = (boolean)$data->show_assignee;
-        $opts->multiple_tasks_per_row = (boolean)$data->multiple_tasks_per_row;
+        $opts->new_tasks_at_bottom = isset($data->new_tasks_at_bottom)
+            ? (boolean)$data->new_tasks_at_bottom : '';
+        $opts->show_animations = isset($data->show_animations)
+            ? (boolean)$data->show_animations : '';
+        $opts->show_assignee = isset($data->show_assignee)
+            ? (boolean)$data->show_assignee : '';
+        $opts->multiple_tasks_per_row = isset($data->multiple_tasks_per_row)
+            ? (boolean)$data->multiple_tasks_per_row : '';
 
         if (!isset($data->new_tasks_at_bottom) ||
             !isset($data->show_animations) || !isset($data->show_assignee) ||
@@ -204,7 +208,7 @@ class BeanLoader {
             return false;
         }
 
-        return $loaded;
+        return true;
     }
 
     private static function removeObjectsNotInData($type, &$dataList, &$boardList) {
