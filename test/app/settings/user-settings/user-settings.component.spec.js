@@ -6,6 +6,19 @@ describe('UserSettings', () => {
     var userSettings,
         notifications;
 
+    function checkNotifications(done) {
+        var first = true;
+        notifications.noteAdded.subscribe(note => {
+            if (first) {
+                expect(note.type).to.equal('error');
+                first = false;
+            } else {
+                expect(note.type).to.equal('success');
+                done();
+            }
+        });
+    }
+
     beforeEach(() => {
         notifications = new NotificationsServiceMock();
         userSettings = new UserSettings(AuthServiceMock,
@@ -99,18 +112,5 @@ describe('UserSettings', () => {
         userSettings.changeEmail.newEmail = 'test@example.com';
         userSettings.updateEmail();
     });
-
-    function checkNotifications(done) {
-        var first = true;
-        notifications.noteAdded.subscribe(note => {
-            if (first) {
-                expect(note.type).to.equal('error');
-                first = false;
-            } else {
-                expect(note.type).to.equal('success');
-                done();
-            }
-        });
-    }
 });
 
