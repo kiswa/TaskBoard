@@ -122,11 +122,13 @@ global.ModalServiceMock = function() {
     };
 };
 
-global.SettingsServiceMock = function() {
-    var userList = [
+var users = [
             { id: 1, username: 'tester', security_level: 2 },
             { id: 2, username: 'test', security_level: 3, default_board_id: 0 }
-        ],
+];
+
+global.SettingsServiceMock = function() {
+    var userList = users,
         boardsList = [
             { id: 1, name: 'Testing' }
         ];
@@ -160,10 +162,7 @@ global.SettingsServiceMock = function() {
 };
 
 global.UserAdminServiceMock = function() {
-    var userList = [
-            { id: 1, username: 'tester', security_level: 2 },
-            { id: 2, username: 'test', security_level: 3, default_board_id: 0 }
-        ];
+    var userList = users;
 
     return {
         addUser: user => {

@@ -83,16 +83,7 @@ describe('UserSettings', () => {
     it('has a function to update username', done => {
         userSettings.changeUsername = { newName: '' };
 
-        var first = true;
-        notifications.noteAdded.subscribe(note => {
-            if (first) {
-                expect(note.type).to.equal('error');
-                first = false;
-            } else {
-                expect(note.type).to.equal('success');
-                done();
-            }
-        });
+        checkNotifications(done);
         userSettings.updateUsername();
 
         userSettings.changeUsername = { newName: 'test' };
@@ -102,6 +93,14 @@ describe('UserSettings', () => {
     it('has a function to update email', done => {
         userSettings.changeEmail = { newEmail: 'asdf' };
 
+        checkNotifications(done);
+        userSettings.updateEmail();
+
+        userSettings.changeEmail.newEmail = 'test@example.com';
+        userSettings.updateEmail();
+    });
+
+    function checkNotifications(done) {
         var first = true;
         notifications.noteAdded.subscribe(note => {
             if (first) {
@@ -112,10 +111,6 @@ describe('UserSettings', () => {
                 done();
             }
         });
-        userSettings.updateEmail();
-
-        userSettings.changeEmail.newEmail = 'test@example.com';
-        userSettings.updateEmail();
-    });
+    }
 });
 
