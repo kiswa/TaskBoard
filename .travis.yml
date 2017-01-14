@@ -12,7 +12,7 @@ before_script:
   - touch tests.db
   - chmod a+w tests.db
 script:
-  - ./src/api/vendor/phpunit/phpunit/phpunit -c test/api/travis.xml
+  - ./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml
   - gulp test-app && gulp coverage
 after_success:
   - echo -e "<?php\n  print phpversion();" > version.php
