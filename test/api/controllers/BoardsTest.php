@@ -109,6 +109,9 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
+    /**
+     * @group single
+     */
     public function testAddBoard() {
         $data = $this->getBoardData();
 
