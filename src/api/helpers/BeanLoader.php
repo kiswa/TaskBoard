@@ -160,8 +160,8 @@ class BeanLoader {
         $task->position = isset($data->position) ? $data->position : '';
         $task->column_id = isset($data->column_id) ? $data->column_id : '';
 
-        if (!isset($data->title) || !isset($data->description) ||
-            !isset($data->position) || !isset($data->column_id)) {
+        if (!isset($data->title) || !isset($data->position) ||
+            !isset($data->column_id)) {
             return false;
         }
 
