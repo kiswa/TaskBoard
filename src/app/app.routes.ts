@@ -7,7 +7,8 @@ import {
     Settings,
     UserAdmin,
     BoardAdmin,
-    UserSettings
+    UserSettings,
+    AutoActions
 } from './settings/index';
 import { Dashboard, Charts, Calendar } from './dashboard/index';
 
@@ -40,6 +41,7 @@ export const ROUTE_COMPONENTS = [
     UserAdmin,
     BoardAdmin,
     UserSettings,
+    AutoActions,
     Dashboard,
     Charts,
     Calendar
