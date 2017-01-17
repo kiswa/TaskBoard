@@ -73,19 +73,21 @@
                         </ul>
                     </td>
                     <td>
-                        <a class="padded" href="javascript:" title="Edit Board"
-                            (click)="showModal('Edit', board)">
-                            <i class="icon icon-edit color-primary"></i>
-                        </a>
-                        <a class="padded" href="javascript:" title="Remove Board"
-                            (click)="showConfirmModal(board)">
-                            <i class="icon icon-trash-empty color-secondary"></i>
-                        </a>
-                        <label class="padded">
-                            <input type="checkbox" class="hidden" [ngModel]="board.is_active">
-                            <span class="toggle"></span>
-                            Active
-                        </label>
+                        <span *ngIf="activeUser.security_level < 3">
+                            <a class="padded" href="javascript:" title="Edit Board"
+                                (click)="showModal('Edit', board)">
+                                <i class="icon icon-edit color-primary"></i>
+                            </a>
+                            <a class="padded" href="javascript:" title="Remove Board"
+                                (click)="showConfirmModal(board)">
+                                <i class="icon icon-trash-empty color-secondary"></i>
+                            </a>
+                            <label class="padded">
+                                <input type="checkbox" class="hidden" [ngModel]="board.is_active">
+                                <span class="toggle"></span>
+                                Active
+                            </label>
+                        </span>
                     </td>
                 </tr>
             </tbody>
