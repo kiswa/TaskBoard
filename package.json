@@ -70,7 +70,7 @@
     "reflect-metadata": "^0.1.9",
     "rxjs": "5.0.3",
     "scss-base": "^1.2.3",
-    "systemjs": "0.19.41",
+    "systemjs": "0.19.42",
     "systemjs-builder": "0.15.34",
     "touch": "^1.0.0",
     "tslint": "^4.3.1",
