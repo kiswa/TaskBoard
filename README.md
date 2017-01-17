@@ -140,5 +140,5 @@ __SUM:__     | __36__ |  __939__ |  __44__ | __3073__
 
 Command: `cloc --exclude-ext=xml test/`
 
-Counts last updated Jan 174, 2017
+Counts last updated Jan 17, 2017
 
