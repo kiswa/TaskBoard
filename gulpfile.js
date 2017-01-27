@@ -139,7 +139,10 @@ gulp.task('system-build', ['tsc'], () => {
     var builder = new SystemBuilder();
 
     return builder.loadConfig('system.config.js')
-        .then(() => builder.buildStatic('app', 'dist/js/bundle.js'))
+        .then(() => builder.buildStatic('app', 'dist/js/bundle.js', {
+            production: false,
+            rollup: false
+        }))
         .then(() => del('build'));
 });
 
