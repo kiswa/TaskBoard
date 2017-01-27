@@ -282,7 +282,7 @@ class Users extends BaseController {
                 }
             }
 
-            if (count($userData->boardAccess) !== count($boardIds)) {
+            if (count(array_diff($userData->boardAccess, $boardIds))) {
                 foreach ($boardIds as $removeId) {
                     if (!in_array($removeId, $userData->boardAccess)) {
                         $this->removeUserFromBoard($removeId, $user);
@@ -424,21 +424,14 @@ class Users extends BaseController {
     }
 
     private function updateDefaultBoardId(&$data, $user, $update) {
-        if ($user->default_board_id !== $update->default_board_id &&
-                (int)$update->default_board_id !== 0) {
-            if (isset($data->boardAccess) &&
-                    !in_array($data->default_board_id, $data->boardAccess)) {
-                $data->boardAccess[] = $data->default_board_id;
-            }
+        if ($user->default_board_id === $update->default_board_id ||
+            (int)$update->default_board_id === 0) {
+            return;
         }
 
-        if ((int)$user->default_board_id !== 0 &&
-                (int)$update->default_board_id === 0) {
-            $key = array_search($user->default_board_id, $data->boardAccess);
-
-            if ($key) {
-                unset($data->boardAccess[$key]);
-            }
+        if (isset($data->boardAccess) &&
+            !in_array($data->default_board_id, $data->boardAccess)) {
+            $data->boardAccess[] = $data->default_board_id;
         }
     }
 }

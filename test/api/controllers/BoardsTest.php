@@ -109,9 +109,6 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
-    /**
-     * @group travis-exclude
-     */
     public function testAddBoard() {
         $data = $this->getBoardData();
 
@@ -214,6 +211,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $board = $this->getBoardData();
         $board->id = 3;
         unset($board->categories[0]->board_id);
+        unset($board->issue_trackers[0]->board_id);
 
         $args = [];
         $args['id'] = $board->id;

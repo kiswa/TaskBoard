@@ -182,6 +182,25 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('success', $response->status);
     }
 
+    public function testUpdateUserRemoveDefaultBoard() {
+        $this->createUser();
+
+        $user = $this->getUserData();
+        $user->id = 2;
+        $user->boardAccess = [1];
+
+        $args = [];
+        $args['id'] = $user->id;
+
+        $request = new RequestMock();
+        $request->payload = $user;
+        $request->header = [DataMock::GetJwt()];
+
+        $response = $this->users->updateUser($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+    }
+
     public function testUpdateUserPassword() {
         $this->createUser();
 
@@ -467,6 +486,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $user = R::dispense('user');
         $user->security_level = SecurityLevel::USER;
         $user->username = 'tester';
+        $user->default_board_id = 1;
         $user->password_hash = password_hash('test', PASSWORD_BCRYPT);
         $user->user_option_id = $opts->id;
 
