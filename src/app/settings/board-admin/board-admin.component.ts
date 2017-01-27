@@ -31,10 +31,15 @@ class SelectableUser extends User {
 export class BoardAdmin {
     private users: Array<User>;
     private boards: Array<Board>;
+    private displayBoards: Array<Board>;
     private activeUser: User;
     private modalProps: BoardData;
     private noBoardsMessage: string;
     private boardToRemove: Board;
+
+    private userFilter: string;
+    private statusFilter: string;
+    private sortFilter: string;
 
     private hasBAUsers = false;
     private loading = true;
@@ -54,59 +59,21 @@ export class BoardAdmin {
 
         this.users = [];
         this.boards = [];
+        this.displayBoards = [];
         this.modalProps = new BoardData();
+        this.userFilter = '-1'; // Any User
+        this.statusFilter = '-1'; // Any active status
+        this.sortFilter = 'name-asc';
 
-        auth.userChanged
-            .subscribe(activeUser => {
-                this.activeUser = new User(+activeUser.default_board_id,
-                                           activeUser.email,
-                                           +activeUser.id,
-                                           activeUser.last_login,
-                                           +activeUser.security_level,
-                                           +activeUser.user_option_id,
-                                           activeUser.username,
-                                           activeUser.board_access);
-
-                this.noBoardsMessage = 'You are not assigned to any boards. ' +
-                    'Contact an admin user to be added to a board.';
-
-                if (+activeUser.security_level === 1) {
-                    this.noBoardsMessage = 'There are no current boards. ' +
-                        'Use the <strong>Add Board</strong> button below to add one.';
-                }
+        auth.userChanged.subscribe((user: User) => {
+                this.updateActiveUser(user)
             });
-
-        settings.usersChanged.subscribe(users => {
-            this.users = [];
-            this.hasBAUsers = false;
-
-            users.forEach(user => {
-                // Don't include admin users
-                if (user.security_level > 1) {
-                    this.users.push(user);
-
-                    if (user.security_level === 2) {
-                        this.hasBAUsers = true;
-                    }
-                }
+        settings.usersChanged.subscribe((users: Array<User>) => {
+                this.updateUsersList(users);
             });
-        });
-
-        settings.boardsChanged.subscribe(boards => {
-            this.boards = boards;
-
-            this.boards.forEach(board => {
-                board.columns.sort((a: Column, b: Column) => {
-                    return +a.position < +b.position
-                        ? -1
-                        : +a.position > b.position
-                            ? 1
-                            : 0;
-                });
+        settings.boardsChanged.subscribe((boards: Array<Board>) => {
+                this.updateBoardsList(boards);
             });
-
-            this.loading = false;
-        });
     }
 
     ngAfterContentInit() {
@@ -144,19 +111,149 @@ export class BoardAdmin {
 
         if (isAdd) {
             this.boardService.addBoard(this.modalProps)
-                .subscribe(this.handleResponse);
+                .subscribe((response: ApiResponse) => {
+                    this.handleResponse(response)
+                });
             return;
         }
 
         this.boardService.editBoard(this.modalProps)
-            .subscribe(this.handleResponse);
+            .subscribe((response: ApiResponse) => {
+                    this.handleResponse(response)
+                });
     }
 
-    removeBoard() {
+    removeBoard(): void {
         this.saving = true;
 
         this.boardService.removeBoard(this.boardToRemove.id)
-            .subscribe(this.handleResponse);
+            .subscribe((response: ApiResponse) => {
+                    this.handleResponse(response)
+                });
+    }
+
+    toggleBoardStatus(board: Board): void {
+        let boardData = new BoardData('', board.id, board.name,
+                                      !board.is_active, board.columns,
+                                      board.categories, board.issue_trackers,
+                                      board.users);
+
+        this.boardService.editBoard(boardData)
+            .subscribe((response: ApiResponse) => {
+                    this.handleResponse(response)
+                });
+    }
+
+    filterBoards(): void {
+        let userBoards = this.filterBoardsByUser(),
+            statusBoards = this.filterBoardsByStatus();
+
+        this.displayBoards = [];
+
+        this.boards.forEach((board: Board) => {
+            let foundInUserBoards = false,
+                foundInStatusBoards = false;
+
+            userBoards.forEach((userBoard: Board) => {
+                if (userBoard.id === board.id) {
+                    foundInUserBoards = true;
+                }
+            });
+
+            statusBoards.forEach((statusBoard: Board) => {
+                if (statusBoard.id === board.id) {
+                    foundInStatusBoards = true;
+                }
+            });
+
+            if (foundInUserBoards && foundInStatusBoards) {
+                this.displayBoards.push(board);
+            }
+        });
+
+        // Always sort the filtered boards
+        this.sortBoards();
+    }
+
+    private sortBoards(): void {
+        switch (this.sortFilter) {
+            case 'name-asc':
+                this.displayBoards.sort((a: Board, b: Board) => {
+                    let nameA = a.name.toUpperCase(),
+                        nameB = b.name.toUpperCase();
+
+                    return nameA < nameB
+                        ? -1
+                        : nameA > nameB
+                            ? 1
+                            : 0;
+                });
+            break;
+            case 'name-desc':
+                this.displayBoards.sort((a: Board, b: Board) => {
+                    let nameA = a.name.toUpperCase(),
+                        nameB = b.name.toUpperCase();
+
+                    return nameB < nameA
+                        ? -1
+                        : nameB > nameA
+                            ? 1
+                            : 0;
+                });
+            break;
+            case 'id-desc':
+                this.displayBoards.sort((a: Board, b: Board) => {
+                    return b.id - a.id;
+                });
+            break;
+            case 'id-asc':
+                this.displayBoards.sort((a: Board, b: Board) => {
+                    return a.id - b.id;
+                });
+            break;
+        }
+    }
+
+    private filterBoardsByUser(): Array<Board> {
+        if (+this.userFilter === -1) {
+            return this.deepCopy(this.boards);
+        }
+
+        let filteredBoards: Array<Board> = [];
+
+        this.boards.forEach((board: Board) => {
+            let userFound = false;
+
+            board.users.forEach(user => {
+                if (+user.id === +this.userFilter) {
+                    userFound = true;
+                }
+            });
+
+            if (userFound) {
+                filteredBoards.push(board);
+            }
+        });
+
+        return filteredBoards;
+    }
+
+    private filterBoardsByStatus(): Array<Board> {
+        if (+this.statusFilter === -1) {
+            return this.deepCopy(this.boards);
+        }
+
+        let filteredBoards: Array<Board> = [];
+
+        this.boards.forEach((board: Board) => {
+            if ((board.is_active && +this.statusFilter === 1) ||
+                (!board.is_active && +this.statusFilter === 0)) {
+
+                filteredBoards.push(board);
+            }
+        });
+
+        return filteredBoards;
     }
 
     private validateBoard(): boolean {
@@ -177,7 +274,7 @@ export class BoardAdmin {
         return true;
     }
 
-    private handleResponse = (response: ApiResponse) => {
+    private handleResponse(response: ApiResponse): void {
         response.alerts.forEach(note => this.notes.add(note));
 
         if (response.status === 'success') {
@@ -207,6 +304,55 @@ export class BoardAdmin {
         });
     }
 
+    private updateActiveUser(activeUser: User): void {
+        this.activeUser = new User(+activeUser.default_board_id,
+                                   activeUser.email,
+                                   +activeUser.id,
+                                   activeUser.last_login,
+                                   +activeUser.security_level,
+                                   +activeUser.user_option_id,
+                                   activeUser.username,
+                                   activeUser.board_access);
+
+        this.noBoardsMessage = 'You are not assigned to any boards. ' +
+            'Contact an admin user to be added to a board.';
+
+        if (+activeUser.security_level === 1) {
+            this.noBoardsMessage = 'There are no current boards. ' +
+                'Use the <strong>Add Board</strong> button below to add one.';
+        }
+    }
+
+    private updateUsersList(users: Array<any>): void {
+        this.users = [];
+        this.hasBAUsers = false;
+
+        users.forEach(user => {
+            // Don't include admin users
+            if (user.security_level > 1) {
+                this.users.push(user);
+
+                if (user.security_level === 2) {
+                    this.hasBAUsers = true;
+                }
+            }
+        });
+    }
+
+    private updateBoardsList(boards: Array<Board>): void {
+        this.boards = boards;
+
+        this.boards.forEach(board => {
+            board.columns.sort((a: Column, b: Column) => {
+                return +a.position - +b.position;
+            });
+        });
+
+        this.displayBoards = this.deepCopy(this.boards);
+        this.filterBoards();
+        this.loading = false;
+    }
+
     private getPropertyValue(obj: string, prop: string, i: number): string {
         return this.modalProps[obj][i][prop];
     }
@@ -224,7 +370,7 @@ export class BoardAdmin {
         return category.defaultColor;
     }
 
-    private deepCopy(source: any) {
+    private deepCopy(source: any): any {
         let output: any, value: any, key: any;
 
         output = Array.isArray(source) ? [] : {};

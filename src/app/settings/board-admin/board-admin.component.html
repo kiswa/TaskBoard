@@ -7,24 +7,34 @@
         <div class="small right filters" *ngIf="boards.length">
             <label class="inline right">
                 Show By User:
-                <select class="autosize">
-                    <option>Any User</option>
-                    <option>admin</option>
+                <select class="autosize" [(ngModel)]="userFilter"
+                    (change)="filterBoards()">
+                    <option value="-1">Any User</option>
+                    <option *ngFor="let user of users"
+                        [value]="user.id">
+                        {{ user.username }}
+                    </option>
                 </select>
             </label>
+
             <label class="inline right">
                 Filter By:
-                <select class="autosize">
-                    <option>All Boards</option>
-                    <option>Active</option>
-                    <option>Inactive</option>
+                <select class="autosize" [(ngModel)]="statusFilter"
+                    (change)="filterBoards()">
+                    <option value="-1">All Boards</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
                 </select>
             </label>
+
             <label class="inline right">
                 Sort By:
-                <select class="autosize">
-                    <option>Board Name</option>
-                    <option>Creation Date</option>
+                <select class="autosize" [(ngModel)]="sortFilter"
+                    (change)="filterBoards()">
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                    <option value="id-desc">Creation (New First)</option>
+                    <option value="id-asc">Creation (Old First)</option>
                 </select>
             </label>
         </div>
@@ -39,13 +49,15 @@
                     <th>Actions</th>
                 </tr>
             </thead>
+
             <tbody *ngIf="!loading">
                 <tr *ngIf="boards.length === 0">
                     <td colspan="5" class="center"
                         [innerHTML]="noBoardsMessage"></td>
                 </tr>
-                <tr *ngFor="let board of boards">
+                <tr *ngFor="let board of displayBoards">
                     <td><a href="boards/{{ board.id }}">{{ board.name }}</a></td>
+
                     <td>
                         <ul>
                             <li *ngFor="let col of board.columns">
@@ -54,6 +66,7 @@
                             </li>
                         </ul>
                     </td>
+
                     <td>
                         <ul *ngIf="board.categories && board.categories.length">
                             <li *ngFor="let cat of board.categories">
@@ -65,6 +78,7 @@
                             </li>
                         </ul>
                     </td>
+
                     <td>
                         <ul>
                             <li *ngFor="let user of board.users">
@@ -72,31 +86,38 @@
                             </li>
                         </ul>
                     </td>
+
                     <td>
                         <span *ngIf="activeUser.security_level < 3">
-                            <a class="padded" href="javascript:" title="Edit Board"
+                            <a class="padded" href="javascript:"
+                                title="Edit Board"
                                 (click)="showModal('Edit', board)">
                                 <i class="icon icon-edit color-primary"></i>
                             </a>
-                            <a class="padded" href="javascript:" title="Remove Board"
+                            <a class="padded" href="javascript:"
+                                title="Remove Board"
                                 (click)="showConfirmModal(board)">
-                                <i class="icon icon-trash-empty color-secondary"></i>
+                                <i class="icon icon-trash-empty
+                                    color-secondary"></i>
                             </a>
                             <label class="padded">
-                                <input type="checkbox" class="hidden" [ngModel]="board.is_active">
+                                <input type="checkbox" class="hidden"
+                                    (change)="toggleBoardStatus(board)"
+                                    [ngModel]="board.is_active">
                                 <span class="toggle"></span>
-                                Active
+                                {{ board.is_active ? 'Active' : 'Inactive' }}
                             </label>
                         </span>
                     </td>
                 </tr>
             </tbody>
         </table>
+
         <div *ngIf="loading" class="center">
             <div class="spinner"></div>
         </div>
 
-        <button *ngIf="activeUser.security_level === 1"
+        <button *ngIf="activeUser && activeUser.security_level === 1"
             (click)="showModal('Add')">
             <i class="icon icon-plus"></i> Add Board
         </button>
@@ -105,7 +126,11 @@
 
 <tb-modal modal-title="Confirm Board Removal" blocking="true"
     modal-id="{{ MODAL_CONFIRM_ID }}">
-    <div class="center">Removing a board cannot be undone.<br>Continue?</div>
+
+    <div class="center">
+        Removing a board cannot be undone.<br>Continue?
+    </div>
+
     <div class="buttons">
         <button class="flat"
             (click)="removeBoard()"
@@ -120,8 +145,8 @@
     modal-id="{{ MODAL_ID }}" wide="true">
     <label>
         Board Name
-        <input #focusMe type="text" name="board-name" placeholder="Board Name"
-            [(ngModel)]="modalProps.name">
+        <input #focusMe type="text" name="board-name"
+            placeholder="Board Name" [(ngModel)]="modalProps.name">
     </label>
 
     <div class="half-modal">
@@ -139,6 +164,7 @@
                 </span>
             </li>
         </ul>
+
         <div class="quick-add">
             <form>
                 <input type="text" name="new-column"
@@ -167,6 +193,7 @@
                 </span>
             </li>
         </ul>
+
         <div class="quick-add categories">
             <form>
                 <input type="text" name="new-category"
@@ -192,6 +219,7 @@
                 alt="Example URL: https://github.com/kiswa/TaskBoard/issues/%BUGID\1%
                      Example RegExp: (?:Issue)?#(\d+)"></i>
         </label>
+
         <ul *ngIf="modalProps.issue_trackers.length" class="modal-list">
             <li class="double-edit"
                 *ngFor="let tracker of modalProps.issue_trackers; let i = index">
@@ -209,6 +237,7 @@
                 </span>
             </li>
         </ul>
+
         <div>
             <form>
                 <input type="text" name="issue-tracker"
@@ -233,6 +262,7 @@
                 {{ user.username }}
                 <span *ngIf="user.security_level === 2">*</span>
         </label>
+
         <div>
             <em *ngIf="hasBAUsers"><strong>*</strong> Including a Board Admin,
             makes them an admin of this board.<br></em>
