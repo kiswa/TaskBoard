@@ -66,7 +66,7 @@ export class BoardAdmin {
         this.sortFilter = 'name-asc';
 
         auth.userChanged.subscribe((user: User) => {
-                this.updateActiveUser(user)
+                this.updateActiveUser(user);
             });
         settings.usersChanged.subscribe((users: Array<User>) => {
                 this.updateUsersList(users);
@@ -112,14 +112,14 @@ export class BoardAdmin {
         if (isAdd) {
             this.boardService.addBoard(this.modalProps)
                 .subscribe((response: ApiResponse) => {
-                    this.handleResponse(response)
+                    this.handleResponse(response);
                 });
             return;
         }
 
         this.boardService.editBoard(this.modalProps)
             .subscribe((response: ApiResponse) => {
-                    this.handleResponse(response)
+                    this.handleResponse(response);
                 });
     }
 
@@ -128,7 +128,7 @@ export class BoardAdmin {
 
         this.boardService.removeBoard(this.boardToRemove.id)
             .subscribe((response: ApiResponse) => {
-                    this.handleResponse(response)
+                    this.handleResponse(response);
                 });
     }
 
@@ -140,7 +140,7 @@ export class BoardAdmin {
 
         this.boardService.editBoard(boardData)
             .subscribe((response: ApiResponse) => {
-                    this.handleResponse(response)
+                    this.handleResponse(response);
                 });
     }
 

@@ -119,19 +119,19 @@ export class UserSettings implements OnInit {
                 this.changeUsername.submitted = false;
 
                 this.settings.getBoards()
-                    .subscribe((response: ApiResponse) => {
-                        let boardData = response.data[1],
+                    .subscribe((apiResponse: ApiResponse) => {
+                        let boardData = apiResponse.data[1],
                             boards: Array<Board> = [];
 
                         if (boardData) {
                             boardData.forEach((board: any) => {
                                 boards.push(new Board(+board.id, board.name,
-                                            board.is_active === '1',
-                                            board.ownColumn,
-                                            board.ownCategory,
-                                            board.ownAutoAction,
-                                            board.ownIssuetracker,
-                                            board.sharedUser));
+                                                      board.is_active === '1',
+                                                      board.ownColumn,
+                                                      board.ownCategory,
+                                                      board.ownAutoAction,
+                                                      board.ownIssuetracker,
+                                                      board.sharedUser));
                             });
 
                             this.settings.updateBoards(boards);
