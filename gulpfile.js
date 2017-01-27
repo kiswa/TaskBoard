@@ -8,7 +8,7 @@ let gulp = require('gulp'),
     SystemBuilder = require('systemjs-builder'),
 
     mocha = require('gulp-mocha'),
-    coverage = require('gulp-coverage'),
+    coverage = require('gulp-istanbul'),
     phpunit = require('gulp-phpunit'),
 
     concat = require('gulp-concat'),
@@ -33,7 +33,7 @@ let gulp = require('gulp'),
         chartist: 'node_modules/chartist/dist/scss',
         normalize: require('node-normalize-scss').includePaths,
 
-        tests_app: 'test/app/**/*.spec.js',
+        tests_app: 'test/app/**/*.spec.ts',
         tests_api: 'test/api/**/*.php',
 
         ts: 'src/app/**/*.ts',
@@ -59,7 +59,8 @@ gulp.task('clean', () => {
         '.coverrun',
         '.coverdata',
         'api-coverage',
-        'coverage.html',
+        'coverage',
+        'temp',
         'src/api/vendor/'
     ]);
 });
@@ -167,24 +168,43 @@ gulp.task('api', () => {
 
 gulp.task('test', ['test-app', 'test-api']);
 
-gulp.task('test-app', ['tsc'], () => {
-    return;// gulp.src(paths.tests_app)
+gulp.task('test-app', () => {
+    return; // gulp.src(paths.tests_app)
         // .pipe(mocha({
-        //     require: ['./test/app/mocks.js']
+        //     require: [
+        //         'ts-node/register',
+        //         'core-js/es7/reflect',
+        //         './test/app/mocks.js'
+        //     ]
         // }));
 });
 
-gulp.task('coverage', ['tsc'], () => {
-    return;// gulp.src(paths.tests_app)
-        // .pipe(coverage.instrument({
-        //     pattern: ['build/**/*.js']
-        // }))
+gulp.task('coverage-tsc-app', () => {
+    return gulp.src(paths.ts)
+        .pipe(tsProject())
+        .pipe(gulp.dest('temp/src/app/'));
+});
+
+gulp.task('coverage-tsc-tests', ['coverage-tsc-app'], () => {
+    return gulp.src(paths.tests_app)
+        .pipe(tsProject())
+        .pipe(gulp.dest('temp/test/app/'));
+});
+
+gulp.task('coverage-prep', ['coverage-tsc-tests'], () => {
+    return gulp.src('temp/src/**/*.js')
+        .pipe(coverage())
+        .pipe(coverage.hookRequire());
+});
+
+gulp.task('coverage', /*['coverage-prep'],*/ () => {
+    return; // gulp.src('temp/**/*.spec.js')
         // .pipe(mocha({
-        //     require: ['./test/app/mocks.js']
+        //     require: [
+        //         './test/app/mocks.js'
+        //     ]
         // }))
-        // .pipe(coverage.gather())
-        // .pipe(coverage.format())
-        // .pipe(gulp.dest('./'));
+        // .pipe(coverage.writeReports());
 });
 
 gulp.task('api-test-db', () => {
