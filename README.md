@@ -123,10 +123,10 @@ Because I like seeing the numbers.
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
 TypeScript   |     47 |      407 |      18 |     1812
-PHP          |     18 |      525 |      17 |     1639
-HTML         |     16 |       93 |       0 |     1017
+PHP          |     18 |      524 |      17 |     1633
+HTML         |     16 |       93 |       0 |     1021
 SASS         |     13 |      201 |      11 |      908
-__SUM:__     | __94__ | __1226__ |  __46__ | __5376__
+__SUM:__     | __94__ | __1225__ |  __46__ | __5374__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
@@ -134,11 +134,11 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
-PHP          |     10 |      650 |      17 |     1903
+PHP          |     10 |      655 |      14 |     1919
 JavaScript   |     26 |      289 |      27 |     1170
-__SUM:__     | __36__ |  __939__ |  __44__ | __3073__
+__SUM:__     | __36__ |  __944__ |  __41__ | __3089__
 
 Command: `cloc --exclude-ext=xml test/`
 
-Counts last updated Jan 17, 2017
+Counts last updated Jan 26, 2017
 
