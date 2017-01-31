@@ -119,8 +119,8 @@ export class UserSettings implements OnInit {
                 this.changeUsername.submitted = false;
 
                 this.settings.getBoards()
-                    .subscribe((apiResponse: ApiResponse) => {
-                        let boardData = apiResponse.data[1],
+                    .subscribe((response: ApiResponse) => {
+                        let boardData = response.data[1],
                             boards: Array<Board> = [];
 
                         if (boardData) {
