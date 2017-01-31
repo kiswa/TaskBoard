@@ -147,6 +147,16 @@ export class UserAdmin {
                 this.settings.updateBoards(this.boards);
 
                 this.updateUserList();
+                this.getActions();
+            });
+    }
+
+    private getActions(): void {
+        this.settings.getActions()
+            .subscribe((response: ApiResponse) => {
+                this.settings.updateActions(response.status === 'success'
+                                            ? response.data[1]
+                                            : []);
                 this.loading = false;
             });
     }

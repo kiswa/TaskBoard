@@ -7,15 +7,22 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { ApiResponse, User, Board } from '../shared/index';
+import {
+    ApiResponse,
+    User,
+    Board,
+    AutoAction
+} from '../shared/index';
 
 @Injectable()
 export class SettingsService {
     private users = new BehaviorSubject<Array<User>>([]);
     private boards = new BehaviorSubject<Array<Board>>([]);
+    private actions = new BehaviorSubject<Array<AutoAction>>([]);
 
     public usersChanged = this.users.asObservable();
     public boardsChanged = this.boards.asObservable();
+    public actionsChanged = this.actions.asObservable();
 
     constructor(private http: Http) {
     }
@@ -42,6 +49,22 @@ export class SettingsService {
 
     getBoards(): Observable<ApiResponse> {
         return this.http.get('api/boards')
+            .map(res => {
+                let response: ApiResponse = res.json();
+                return response;
+            })
+            .catch((res, caught) => {
+                let response: ApiResponse = res.json();
+                return Observable.of(response);
+            });
+    }
+
+    updateActions(actions: Array<AutoAction>): void {
+        this.actions.next(actions);
+    }
+
+    getActions(): Observable<ApiResponse> {
+        return this.http.get('api/autoactions')
             .map(res => {
                 let response: ApiResponse = res.json();
                 return response;

@@ -1,10 +1,8 @@
-<section *ngIf="showActions">
+<section>
     <h2>Automatic Actions</h2>
 
     <div class="row">
         <h3>Current Actions</h3>
-
-        <pre>{{ autoActions | json }}</pre>
 
         <table class="alternating no-bottom-margin">
             <thead>
@@ -15,32 +13,35 @@
                     <th>Remove</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>Example Board</td>
-                    <td>Item assigned to user: admin</td>
-                    <td>Set item color: #debee8</td>
-                    <td>
-                        <a href="#" title="Remove Automatic Action">
-                            <i class="icon icon-trash-empty color-secondary"></i>
-                        </a>
-                    </td>
+            <tbody *ngIf="!loading">
+                <tr *ngIf="autoActions.length === 0">
+                    <td colspan="4" class="center"
+                        [innerHTML]="noActionsMessage"></td>
                 </tr>
-                <tr>
-                    <td>Example Board</td>
-                    <td>Item moved to column: Col3</td>
-                    <td>Set item color: #debee8</td>
+                <tr *ngFor="let action of autoActions">
+                    <td>{{ getBoardName(action.board_id) }}</td>
+                    <td>{{ getTriggerDescription(action) }}</td>
+                    <td>{{ getTypeDescription(action) }}</td>
                     <td>
-                        <a href="#" title="Remove Automatic Action">
-                            <i class="icon icon-trash-empty color-secondary"></i>
-                        </a>
+                        <span *ngIf="activeUser && activeUser.security_level < 3">
+                            <a href="javascript:"
+                                title="Remove Automatic Action"
+                                (click)="showConfirmModal(action)">
+                                <i class="icon icon-trash-empty
+                                    color-secondary"></i>
+                            </a>
+                        </span>
                     </td>
                 </tr>
             </tbody>
         </table>
+
+        <div *ngIf="loading" class="center">
+            <div class="spinner"></div>
+        </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="activeUser && activeUser.security_level < 3">
         <h3>Add Action</h3>
 
         <table>
@@ -54,17 +55,24 @@
             <tbody>
                 <tr class="borderless">
                     <td>
-                        <select>
-                            <option>Select Board...</option>
+                        <select [(ngModel)]="newAction.board_id">
+                            <option value="null">Select Board...</option>
+                            <option *ngFor="let board of boards"
+                                [value]="board.id">
+                                {{ board.name }}
+                            </option>
                         </select>
                     </td>
                     <td>
-                        <select>
-                            <option>Item moves to column</option>
+                        <select [disabled]="newAction.board_id === null"
+                            [ngModel]="newAction.trigger"
+                            (change)="updateTriggerSources()">
+                            <option *ngFor="let trigger of triggers"
+                                [value]="trigger[0]">{{ trigger[1] }}</option>
                         </select>
                     </td>
                     <td>
-                        <select>
+                        <select [disabled]="newAction.board_id === null">
                             <option>Set item color</option>
                         </select>
                     </td>
@@ -72,12 +80,15 @@
                 <tr class="borderless">
                     <td></td>
                     <td>
-                        <select>
-                            <option>Select Column</option>
+                        <select [disabled]="newAction.board_id === null"
+                            *ngIf="triggerSources.length"
+                            [(ngModel)]="newAction.source_id">
+                            <option *ngFor="let source of triggerSources"
+                                [value]="source[0]">{{ source[1] }}</option>
                         </select>
                     </td>
                     <td>
-                        <select>
+                        <select [disabled]="newAction.board_id === null">
                             <option>Select Color</option>
                         </select>
                     </td>
@@ -85,10 +96,27 @@
             </tbody>
         </table>
 
-        <button class="right" disabled>
+        <button class="right">
             <i class="icon icon-plus"></i>
             Add Action
         </button>
     </div>
 </section>
+
+<tb-modal modal-title="Confirm Automatic Action Removal" blocking="true"
+    modal-id="{{ MODAL_CONFIRM_ID }}">
+
+    <div class="center">
+        Removing an automatic action cannot be undone.<br>Continue?
+    </div>
+
+    <div class="buttons">
+        <button class="flat"
+            (click)="removeAutoAction()"
+            [disabled]="saving">Yes</button>
+        <button #defaultAction
+            (click)="modal.close(MODAL_CONFIRM_ID)"
+            [disabled]="saving">No</button>
+    </div>
+</tb-modal>
 

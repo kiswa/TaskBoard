@@ -14,11 +14,11 @@ export enum ActionType {
 }
 
 export class AutoAction {
-    constructor(public trigger: ActionTrigger,
-               public source_id: number, // tslint:disable-line
-               public type: ActionType,
-               public change_to: string, // tslint:disable-line
-               public board_id: number) { // tslint:disable-line
+    constructor(public trigger: ActionTrigger = ActionTrigger.MoveToColumn,
+                public source_id: number = null, // tslint:disable-line
+                public type: ActionType = ActionType.SetColor,
+                public change_to: string = null, // tslint:disable-line
+                public board_id: number = null) { // tslint:disable-line
    }
 }
 

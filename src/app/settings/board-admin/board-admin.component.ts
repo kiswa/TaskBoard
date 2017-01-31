@@ -43,6 +43,7 @@ export class BoardAdmin {
 
     private hasBAUsers = false;
     private loading = true;
+    private firstRun = true;
     private saving = false;
 
     private MODAL_ID: string;
@@ -350,6 +351,12 @@ export class BoardAdmin {
 
         this.displayBoards = this.deepCopy(this.boards);
         this.filterBoards();
+
+        if (this.firstRun) {
+            this.firstRun = false;
+            return;
+        }
+
         this.loading = false;
     }
 
