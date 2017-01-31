@@ -21,10 +21,17 @@ export class InlineEdit {
         setTimeout(() => { el.focus(); }, 100);
     }
 
-    editDone(newText: string): void {
+    editDone(newText: string, event: Event): void {
         this.isDisplay = true;
         this.text = newText;
         this.edit.emit(this.text);
+
+        // Prevent Enter key from propagating to parent controls
+        if (event.stopPropagation) {
+            event.stopPropagation();
+        } else {
+            event.cancelBubble = true;
+        }
     }
 }
 

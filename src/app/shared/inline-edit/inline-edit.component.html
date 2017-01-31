@@ -6,7 +6,7 @@
     </span>
     <span [hidden]="isDisplay">
         <input #editText type="text"
-            [value]="text" (keyup.enter)="editDone(editText.value)">
+            [value]="text" (keyup.enter)="editDone(editText.value, $event)">
         <i class="icon icon-floppy color-primary" title="Save"
             (click)="editDone(editText.value)"></i>
     </span>
