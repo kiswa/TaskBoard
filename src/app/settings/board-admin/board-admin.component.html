@@ -135,7 +135,7 @@
         <button class="flat"
             (click)="removeBoard()"
             [disabled]="saving">Yes</button>
-        <button
+        <button #defaultAction
             (click)="modal.close(MODAL_CONFIRM_ID)"
             [disabled]="saving">No</button>
     </div>
@@ -272,7 +272,7 @@
     </div>
 
     <div class="buttons">
-        <button (click)="addEditBoard()" [disabled]="saving">
+        <button #defaultAction (click)="addEditBoard()" [disabled]="saving">
             <i class="icon"
                 [ngClass]="{ 'icon-plus': modalProps.title === 'Add', 'icon-floppy': modalProps.title !== 'Add' }"></i>
             {{ modalProps.title === 'Add' ? 'Add' : 'Save' }}

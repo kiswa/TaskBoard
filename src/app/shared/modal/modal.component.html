@@ -4,7 +4,8 @@
 
     <div class="modal"
         [ngClass]="{ wide: wide, animated: animate, 'modal-closed': !isOpen }"
-        (click)="filterClick($event)">
+        (click)="filterClick($event)"
+        (keyup.enter)="clickDefaultAction()">
         <div class="title" *ngIf="modalTitle">
             <h2>
                 {{ modalTitle }}

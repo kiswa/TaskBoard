@@ -33,6 +33,7 @@
                 </tr>
             </tbody>
         </table>
+
         <div *ngIf="loading" class="center">
             <div class="spinner"></div>
         </div>
@@ -48,8 +49,10 @@
     modal-id="{{ MODAL_CONFIRM_ID }}">
     <div class="center">Removing a user cannot be undone.<br>Continue?</div>
     <div class="buttons">
-        <button class="flat" (click)="removeUser()">Yes</button>
-        <button (click)="modal.close(MODAL_CONFIRM_ID)">No</button>
+        <button class="flat"
+            (click)="removeUser()">Yes</button>
+        <button #defaultAction
+            (click)="modal.close(MODAL_CONFIRM_ID)">No</button>
     </div>
 </tb-modal>
 
@@ -110,7 +113,8 @@
     </label>
 
     <div class="buttons">
-        <button (click)="addEditUser()" [disabled]="saving">
+        <button #defaultAction
+            (click)="addEditUser()" [disabled]="saving">
             <i class="icon"
                 [ngClass]="{ 'icon-plus': modalProps.prefix === '',
                     'icon-floppy': modalProps.prefix !== '' }"></i>

@@ -19,6 +19,7 @@ export class Modal implements OnInit {
     @Input() wide = false;
 
     @ContentChild('focusMe') focusElement: any;
+    @ContentChild('defaultAction') defaulActionElement: any;
 
     isOpen = false;
     animate = true;
@@ -43,10 +44,17 @@ export class Modal implements OnInit {
     private filterClick(event: Event): void {
         event = event || window.event;
 
+        // Prevent click from propagating to modal container
         if (event.stopPropagation) {
             event.stopPropagation();
         } else {
             event.cancelBubble = true;
+        }
+    }
+
+    private clickDefaultAction(): void {
+        if (this.defaulActionElement) {
+            this.defaulActionElement.nativeElement.click();
         }
     }
 }
