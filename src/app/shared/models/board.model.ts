@@ -1,3 +1,4 @@
+import { AutoAction } from './auto-actions.model';
 import { Column } from './column.model';
 import { Category } from './category.model';
 import { IssueTracker } from './issue-tracker.model';
@@ -9,8 +10,7 @@ export class Board {
                 public is_active: boolean = true, // tslint:disable-line
                 public columns: Array<Column> = [],
                 public categories: Array<Category> = [],
-                // TODO: Add typing
-                public auto_actions: Array<any> = [], // tslint:disable-line
+                public auto_actions: Array<AutoAction> = [], // tslint:disable-line
                 public issue_trackers: Array<IssueTracker> = [], // tslint:disable-line
                 public users: Array<User> = []) {
     }

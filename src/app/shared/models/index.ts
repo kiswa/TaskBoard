@@ -1,4 +1,5 @@
 export * from './api-response.model';
+export * from './auto-actions.model';
 export * from './board.model';
 export * from './category.model';
 export * from './column.model';

@@ -14,5 +14,17 @@ import {
 export class AutoActionsService {
     constructor(private http: Http) {
     }
+
+    getActions(): Observable<ApiResponse> {
+        return this.http.get('api/autoactions')
+            .map(res => {
+                let response: ApiResponse = res.json();
+                return Observable.of(response);
+            })
+            .catch((res, caught) => {
+                let response: ApiResponse = res.json();
+                return Observable.of(response);
+            });
+    }
 }
 
