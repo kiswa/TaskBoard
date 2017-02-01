@@ -176,7 +176,7 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
     private function getDefaultAction() {
         $data = new stdClass();
         $data->board_id = 1;
-        $data->trigger = ActionTrigger::SET_TO_CATEGORY;
+        $data->trigger = ActionTrigger::ADDED_TO_CATEGORY;
         $data->source_id = 1;
         $data->type = ActionType::CLEAR_DUE_DATE;
         $data->change_to = 'null';
@@ -186,7 +186,7 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
 
     private function createAutoAction() {
         $auto_action = R::dispense('autoaction');
-        $auto_action->trigger = ActionTrigger::SET_TO_CATEGORY;
+        $auto_action->trigger = ActionTrigger::ADDED_TO_CATEGORY;
         $auto_action->source_id = 1;
         $auto_action->type = ActionType::CLEAR_DUE_DATE;
         $auto_action->change_to = 'null';
