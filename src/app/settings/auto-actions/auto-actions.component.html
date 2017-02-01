@@ -55,25 +55,29 @@
             <tbody>
                 <tr class="borderless">
                     <td>
-                        <select [(ngModel)]="newAction.board_id">
-                            <option value="null">Select Board...</option>
+                        <select [(ngModel)]="newAction.board_id"
+                            (change)="updateTriggerSources()">
+                            <option [ngValue]="null">Select Board...</option>
                             <option *ngFor="let board of boards"
-                                [value]="board.id">
+                                [ngValue]="board.id">
                                 {{ board.name }}
                             </option>
                         </select>
                     </td>
                     <td>
                         <select [disabled]="newAction.board_id === null"
-                            [ngModel]="newAction.trigger"
+                            [(ngModel)]="newAction.trigger"
                             (change)="updateTriggerSources()">
                             <option *ngFor="let trigger of triggers"
-                                [value]="trigger[0]">{{ trigger[1] }}</option>
+                                [ngValue]="trigger[0]">{{ trigger[1] }}</option>
                         </select>
                     </td>
                     <td>
-                        <select [disabled]="newAction.board_id === null">
-                            <option>Set item color</option>
+                        <select [disabled]="newAction.board_id === null"
+                            [(ngModel)]="newAction.type"
+                            (change)="updateActionSources()">
+                            <option *ngFor="let type of types"
+                                [ngValue]="type[0]">{{ type[1] }}</option>
                         </select>
                     </td>
                 </tr>
@@ -82,21 +86,33 @@
                     <td>
                         <select [disabled]="newAction.board_id === null"
                             *ngIf="triggerSources.length"
-                            [(ngModel)]="newAction.source_id">
+                            [(ngModel)]="newAction.source_id"
+                            (change)="checkAddDisabled()">
                             <option *ngFor="let source of triggerSources"
-                                [value]="source[0]">{{ source[1] }}</option>
+                                [ngValue]="source[0]">{{ source[1] }}</option>
                         </select>
                     </td>
                     <td>
-                        <select [disabled]="newAction.board_id === null">
-                            <option>Select Color</option>
+                        <select [disabled]="newAction.board_id === null"
+                            [(ngModel)]="newAction.change_to"
+                            (change)="checkAddDisabled()"
+                            *ngIf="newAction.type === 2 ||
+                                   newAction.type === 3 ||
+                                   newAction.type === 5">
+                            <option *ngFor="let source of actionSources"
+                                [ngValue]="source[0]">{{ source[1] }}</option>
                         </select>
+                        <input type="color" name="change-to-color"
+                            [disabled]="newAction.board_id === null"
+                            *ngIf="newAction.type == 1"
+                            [(ngModel)]="newAction.change_to"
+                            (change)="checkAddDisabled()">
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <button class="right">
+        <button class="right" [disabled]="isAddDisabled">
             <i class="icon icon-plus"></i>
             Add Action
         </button>
