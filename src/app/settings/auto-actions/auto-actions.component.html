@@ -67,6 +67,7 @@
                     <td>
                         <select [disabled]="newAction.board_id === null"
                             [(ngModel)]="newAction.trigger"
+
                             (change)="updateTriggerSources()">
                             <option *ngFor="let trigger of triggers"
                                 [ngValue]="trigger[0]">{{ trigger[1] }}</option>
@@ -98,7 +99,8 @@
                             (change)="checkAddDisabled()"
                             *ngIf="newAction.type === 2 ||
                                    newAction.type === 3 ||
-                                   newAction.type === 5">
+                                   newAction.type === 5 ||
+                                   newAction.type === 6">
                             <option *ngFor="let source of actionSources"
                                 [ngValue]="source[0]">{{ source[1] }}</option>
                         </select>

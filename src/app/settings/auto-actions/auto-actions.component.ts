@@ -63,6 +63,7 @@ export class AutoActions {
             [ ActionType.AddCategory, 'Add item category' ],
             [ ActionType.ClearAllCategories, 'Clear item categories' ],
             [ ActionType.SetAssignee, 'Set item assignee' ],
+            [ ActionType.AddAssignee, 'Add item assignee' ],
             [ ActionType.ClearDueDate, 'Clear item due date' ]
         ];
         this.types = this.typesList;
@@ -93,6 +94,7 @@ export class AutoActions {
     updateTriggerSources(): void {
         this.triggerSources = [];
         this.newAction.source_id = null;
+        this.newAction.change_to = '#000000';
 
         this.types = this.typesList;
 
@@ -134,6 +136,7 @@ export class AutoActions {
                                        'Category', 'categories');
             break;
             case ActionType.SetAssignee:
+            case ActionType.AddAssignee:
                 this.buildSourcesArray('actionSources',
                                        'Assignee', 'users', 'username');
             break;
@@ -148,17 +151,20 @@ export class AutoActions {
     checkAddDisabled(): void {
         this.isAddDisabled = false;
 
-        if (this.newAction.board_id !== null) {
-            if (this.newAction.source_id === null) {
-                this.isAddDisabled =
-                    (this.newAction.trigger !== ActionTrigger.PointsChanged);
-            }
+        if (this.newAction.board_id === null) {
+            this.isAddDisabled = true;
+            return;
+        }
 
-            if (!this.isAddDisabled && this.newAction.change_to === null) {
-                this.isAddDisabled =
-                    (this.newAction.type !== ActionType.ClearAllCategories &&
-                    this.newAction.type !== ActionType.ClearDueDate);
-            }
+        if (this.newAction.source_id === null) {
+            this.isAddDisabled =
+                (this.newAction.trigger !== ActionTrigger.PointsChanged);
+        }
+
+        if (!this.isAddDisabled && this.newAction.change_to === null) {
+            this.isAddDisabled =
+                (this.newAction.type !== ActionType.ClearAllCategories &&
+                 this.newAction.type !== ActionType.ClearDueDate);
         }
     }
 

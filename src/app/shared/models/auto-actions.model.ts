@@ -11,6 +11,7 @@ export enum ActionType {
     AddCategory,
     ClearAllCategories,
     SetAssignee,
+    AddAssignee,
     ClearDueDate,
     AlterColorByPoints
 }
