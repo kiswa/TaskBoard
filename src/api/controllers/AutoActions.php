@@ -107,10 +107,9 @@ class AutoActions extends BaseController {
             json_encode($before), '', 'action', $id);
 
         $autoActions = R::findAll('autoaction');
+        $data = [];
 
         foreach ($autoActions as $action) {
-            $data = [];
-
             if (Auth::HasBoardAccess($request, $action->board_id)) {
                 $data[] = $action;
             }

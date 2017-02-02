@@ -33,7 +33,7 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
 
         $actual = $this->actions->getAllActions($request,
             new ResponseMock(), null);
-        $this->assertEquals(2, count($actual->data));
+        $this->assertEquals(1, count($actual->data[1]));
         $this->assertEquals('success', $actual->status);
 
         DataMock::CreateStandardUser();
@@ -42,7 +42,7 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
 
         $actual = $this->actions->getAllActions($request,
             new ResponseMock(), null);
-        $this->assertEquals(1, count($actual->data));
+        $this->assertEquals(0, count($actual->data[1]));
         $this->assertEquals('success', $actual->status);
     }
 
