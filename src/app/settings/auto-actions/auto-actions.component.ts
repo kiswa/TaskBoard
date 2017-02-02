@@ -14,10 +14,12 @@ import {
     NotificationsService
 } from '../../shared/index';
 import { SettingsService } from '../settings.service';
+import { AutoActionsService } from './auto-actions.service';
 
 @Component({
     selector: 'tb-auto-actions',
-    templateUrl: 'app/settings/auto-actions/auto-actions.component.html'
+    templateUrl: 'app/settings/auto-actions/auto-actions.component.html',
+    providers: [ AutoActionsService ]
 })
 export class AutoActions {
     private noActionsMessage: string;
@@ -44,6 +46,7 @@ export class AutoActions {
     constructor(private auth: AuthService,
                 private modal: ModalService,
                 private settings: SettingsService,
+                private actions: AutoActionsService,
                 private notes: NotificationsService) {
         this.newAction = new AutoAction();
         this.boards = [];
@@ -79,8 +82,8 @@ export class AutoActions {
             });
 
         settings.actionsChanged
-            .subscribe((actions: Array<AutoAction>) => {
-                this.autoActions = actions;
+            .subscribe((actionList: Array<AutoAction>) => {
+                this.autoActions = actionList;
 
                 if (this.firstRun) {
                     this.firstRun = false;
@@ -88,6 +91,15 @@ export class AutoActions {
                 }
 
                 this.loading = false;
+            });
+    }
+
+    addNewAction(): void {
+        this.actions.addAction(this.newAction)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(alert => {
+                    this.notes.add(alert);
+                });
             });
     }
 
@@ -168,6 +180,35 @@ export class AutoActions {
         }
     }
 
+    getBoardName(id: number): string {
+        let board = this.getBoard(+id);
+
+        return board ? board.name : '';
+    }
+
+    getTriggerDescription(action: AutoAction): string {
+        let desc = '';
+
+        return desc;
+    }
+
+    getTypeDescription(action: AutoAction): string {
+        let desc = '';
+
+        return desc;
+    }
+
+    removeAutoAction(): void {
+        this.saving = true;
+
+        this.actions.removeAction(this.actionToRemove)
+            .subscribe((response: ApiResponse) => {
+                this.actions = response.data[1];
+                this.saving = false;
+                this.modal.close(this.MODAL_CONFIRM_ID);
+            });
+    }
+
     private buildSourcesArray(sourceArray: string,
                               name: string,
                               arrayName: string,
@@ -183,30 +224,6 @@ export class AutoActions {
                 this[sourceArray].push([ item.id, item[prop] ]);
             });
         }
-    }
-
-    private removeAutoAction(): void {
-        this.saving = true;
-        // TODO remove this.actionToRemove
-        this.saving = false;
-    }
-
-    private getBoardName(id: number): string {
-        let board = this.getBoard(id);
-
-        return board ? board.name : '';
-    }
-
-    private getTriggerDescription(action: AutoAction): string {
-        let desc = '';
-
-        return desc;
-    }
-
-    private getTypeDescription(action: AutoAction): string {
-        let desc = '';
-
-        return desc;
     }
 
     private getBoard(id: number): Board {

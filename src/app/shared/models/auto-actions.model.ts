@@ -17,7 +17,8 @@ export enum ActionType {
 }
 
 export class AutoAction {
-    constructor(public trigger: ActionTrigger = ActionTrigger.MovedToColumn,
+    constructor(public id: number = 0,
+                public trigger: ActionTrigger = ActionTrigger.MovedToColumn,
                 public source_id: number = null, // tslint:disable-line
                 public type: ActionType = ActionType.SetColor,
                 public change_to: string = null, // tslint:disable-line

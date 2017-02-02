@@ -21,12 +21,16 @@ class AutoActions extends BaseController {
         }
 
         foreach ($autoActions as $action) {
+            $data = [];
+
             if (Auth::HasBoardAccess($request, $action->board_id)) {
-                $this->apiJson->addData($action);
+                $data[] = $action;
             }
         }
 
         $this->apiJson->setSuccess();
+        $this->apiJson->addData($data);
+
         return $this->jsonResponse($response);
     }
 
@@ -102,7 +106,18 @@ class AutoActions extends BaseController {
             $actor->username .' removed action ' . $before->id . '.',
             json_encode($before), '', 'action', $id);
 
+        $autoActions = R::findAll('autoaction');
+
+        foreach ($autoActions as $action) {
+            $data = [];
+
+            if (Auth::HasBoardAccess($request, $action->board_id)) {
+                $data[] = $action;
+            }
+        }
+
         $this->apiJson->setSuccess();
+        $this->apiJson->addData($data);
         $this->apiJson->addAlert('success', 'Automatic action removed.');
 
         return $this->jsonResponse($response);

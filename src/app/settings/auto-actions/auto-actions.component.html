@@ -44,6 +44,8 @@
     <div class="row" *ngIf="activeUser && activeUser.security_level < 3">
         <h3>Add Action</h3>
 
+        <pre>{{ autoActions | json  }}</pre>
+
         <table>
             <thead>
                 <tr class="borderless">
@@ -114,7 +116,9 @@
             </tbody>
         </table>
 
-        <button class="right" [disabled]="isAddDisabled">
+        <button class="right"
+            [disabled]="isAddDisabled"
+            (click)="addNewAction()">
             <i class="icon icon-plus"></i>
             Add Action
         </button>
