@@ -32,6 +32,16 @@ Go to the `Settings` page to update your user (username, email, password, *etc.*
 
 ## Features
 
+### Users & Settings
+
+There are three types of users, and the settings page is slightly different for each.
+
+ * User - View boards assigned to them and update their own settings and options.
+ * Board Admin - Same as above, with the ability to manage boards they are added to.
+ * Admin - Same as above, with the ability to add/remove users and boards.
+
+![Settings Page](./.github/settings.png)
+
 ### Boards
 
 Each board may have as many columns as needed. For example, a software project might have columns like:
@@ -122,11 +132,11 @@ Because I like seeing the numbers.
 
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
-TypeScript   |     47 |      407 |      18 |     1812
-PHP          |     18 |      524 |      17 |     1633
-HTML         |     16 |       93 |       0 |     1021
-SASS         |     13 |      201 |      11 |      908
-__SUM:__     | __94__ | __1225__ |  __46__ | __5374__
+TypeScript   |     49 |      516 |      21 |     2400
+PHP          |     18 |      530 |      17 |     1649
+HTML         |     16 |      117 |       0 |     1095
+SASS         |     13 |      202 |      11 |      911
+__SUM:__     | __96__ | __1365__ |  __49__ | __6055__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
@@ -140,5 +150,5 @@ __SUM:__     | __36__ |  __944__ |  __41__ | __3089__
 
 Command: `cloc --exclude-ext=xml test/`
 
-Counts last updated Jan 26, 2017
+Counts last updated Feb 3, 2017
 
