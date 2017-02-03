@@ -31,8 +31,7 @@ class BeanLoader {
         $action->change_to = isset($data->change_to) ? $data->change_to: '';
         $action->board_id = isset($data->board_id) ? $data->board_id: '';
 
-        if (!isset($data->trigger) || !isset($data->source_id) ||
-            !isset($data->type) || !isset($data->change_to) ||
+        if (!isset($data->trigger) || !isset($data->type) ||
             !isset($data->board_id)) {
             return false;
         }

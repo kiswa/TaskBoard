@@ -42,6 +42,7 @@ export class AutoActions {
     private firstRun = true;
     private isAddDisabled = true;
     private saving = false;
+    private hasInactiveBoards = false;
 
     constructor(private auth: AuthService,
                 private modal: ModalService,
@@ -64,7 +65,6 @@ export class AutoActions {
             [ ActionType.SetColor, 'Set item color'],
             [ ActionType.SetCategory, 'Set item category' ],
             [ ActionType.AddCategory, 'Add item category' ],
-            [ ActionType.ClearAllCategories, 'Clear item categories' ],
             [ ActionType.SetAssignee, 'Set item assignee' ],
             [ ActionType.AddAssignee, 'Add item assignee' ],
             [ ActionType.ClearDueDate, 'Clear item due date' ]
@@ -84,6 +84,14 @@ export class AutoActions {
         settings.actionsChanged
             .subscribe((actionList: Array<AutoAction>) => {
                 this.autoActions = actionList;
+                this.hasInactiveBoards = false;
+
+                this.autoActions.sort((a, b) => {
+                    let nameA = this.getBoardName(a.board_id),
+                        nameB = this.getBoardName(b.board_id);
+
+                    return nameA.localeCompare(nameB);
+                });
 
                 if (this.firstRun) {
                     this.firstRun = false;
@@ -97,9 +105,9 @@ export class AutoActions {
     addNewAction(): void {
         this.actions.addAction(this.newAction)
             .subscribe((response: ApiResponse) => {
-                response.alerts.forEach(alert => {
-                    this.notes.add(alert);
-                });
+                this.handleResponse(response);
+
+                this.newAction = new AutoAction();
             });
     }
 
@@ -175,25 +183,89 @@ export class AutoActions {
 
         if (!this.isAddDisabled && this.newAction.change_to === null) {
             this.isAddDisabled =
-                (this.newAction.type !== ActionType.ClearAllCategories &&
-                 this.newAction.type !== ActionType.ClearDueDate);
+                (this.newAction.type !== ActionType.ClearDueDate);
         }
     }
 
     getBoardName(id: number): string {
         let board = this.getBoard(+id);
 
-        return board ? board.name : '';
+        if (board) {
+            let note = +board.is_active ? '' : '*';
+
+            if (!(+board.is_active)) {
+                this.hasInactiveBoards = true;
+            }
+
+            return board.name + note;
+        }
+
+        return '';
     }
 
     getTriggerDescription(action: AutoAction): string {
-        let desc = '';
+        let desc = 'Item ',
+            board = this.getBoard(action.board_id);
+
+        switch (+action.trigger) {
+            case ActionTrigger.MovedToColumn:
+                desc += 'moves to column: ';
+                desc += this.getNameFromArray(board.columns, action.source_id);
+            break;
+            case ActionTrigger.AssignedToUser:
+                desc += 'assigned to user: ';
+                desc += this.getNameFromArray(board.users,
+                                              action.source_id, 'username');
+            break;
+            case ActionTrigger.AddedToCategory:
+                desc += 'added to category: ';
+                desc += this.getNameFromArray(board.categories,
+                                              action.source_id);
+            break;
+            case ActionTrigger.PointsChanged:
+                desc += 'points changed.';
+            break;
+        }
 
         return desc;
     }
 
     getTypeDescription(action: AutoAction): string {
-        let desc = '';
+        let desc = '',
+            board = this.getBoard(action.board_id);
+
+        switch (+action.type) {
+            case ActionType.SetColor:
+                desc = 'Set item color: <span style="color: ' +
+                    action.change_to + '";>' + action.change_to + '</span>';
+            break;
+            case ActionType.SetCategory:
+                desc = 'Set item category: ';
+                desc += this.getNameFromArray(board.categories,
+                                              +action.change_to);
+            break;
+            case ActionType.AddCategory:
+                desc = 'Add item category: ';
+                desc += this.getNameFromArray(board.categories,
+                                              +action.change_to);
+            break;
+            case ActionType.SetAssignee:
+                desc = 'Set item assignee: ';
+                desc += this.getNameFromArray(board.users,
+                                              +action.change_to, 'username');
+            break;
+            case ActionType.AddAssignee:
+                desc = 'Add item assignee: ';
+                desc += this.getNameFromArray(board.users,
+                                              +action.change_to, 'username');
+            break;
+            case ActionType.ClearDueDate:
+                desc = 'Clear item due date.';
+            break;
+            case ActionType.AlterColorByPoints:
+                desc = 'Alter item color by points.';
+            break;
+        }
 
         return desc;
     }
@@ -203,10 +275,18 @@ export class AutoActions {
 
         this.actions.removeAction(this.actionToRemove)
             .subscribe((response: ApiResponse) => {
-                this.actions = response.data[1];
-                this.saving = false;
-                this.modal.close(this.MODAL_CONFIRM_ID);
+                this.handleResponse(response);
             });
+    }
+
+    private handleResponse(response: ApiResponse): void {
+        response.alerts.forEach(alert => {
+            this.notes.add(alert);
+        });
+
+        this.settings.updateActions(response.data[1]);
+        this.saving = false;
+        this.modal.close(this.MODAL_CONFIRM_ID);
     }
 
     private buildSourcesArray(sourceArray: string,
@@ -230,13 +310,29 @@ export class AutoActions {
         let board: Board = null;
 
         for (let i = 0; i < this.boards.length; ++i) {
-            if (this.boards[i].id === id) {
+            if (+this.boards[i].id === +id) {
                 board = this.boards[i];
                 break;
             }
         }
 
         return board;
+    }
+
+    private getNameFromArray(boardArray: Array<any>,
+                             arrayItemId: number,
+                             prop: string = 'name') {
+        let name = '';
+
+        boardArray.forEach(item => {
+            if (+item.id !== +arrayItemId) {
+                return;
+            }
+
+            name = item[prop];
+        });
+
+        return name;
     }
 
     private updateActiveUser(activeUser: User) {

@@ -35,14 +35,14 @@
     background-color: $white;
     margin: auto;
     max-width: 100%;
-    width: 400px;
+    width: 450px;
 
     &.animated {
         transition: all .3s;
     }
 
     &.wide {
-        width: 600px;
+        width: 650px;
     }
 
     &.modal-closed {

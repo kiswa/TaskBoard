@@ -14,14 +14,14 @@
                 </tr>
             </thead>
             <tbody *ngIf="!loading">
-                <tr *ngIf="autoActions.length === 0">
+                <tr *ngIf="autoActions && autoActions.length === 0">
                     <td colspan="4" class="center"
                         [innerHTML]="noActionsMessage"></td>
                 </tr>
                 <tr *ngFor="let action of autoActions">
                     <td>{{ getBoardName(action.board_id) }}</td>
                     <td>{{ getTriggerDescription(action) }}</td>
-                    <td>{{ getTypeDescription(action) }}</td>
+                    <td [innerHTML]="getTypeDescription(action)"></td>
                     <td>
                         <span *ngIf="activeUser && activeUser.security_level < 3">
                             <a href="javascript:"
@@ -36,6 +36,10 @@
             </tbody>
         </table>
 
+        <div *ngIf="!loading && hasInactiveBoards">
+            <em>* Inactive board.</em>
+        </div>
+
         <div *ngIf="loading" class="center">
             <div class="spinner"></div>
         </div>
@@ -43,8 +47,6 @@
 
     <div class="row" *ngIf="activeUser && activeUser.security_level < 3">
         <h3>Add Action</h3>
-
-        <pre>{{ autoActions | json  }}</pre>
 
         <table>
             <thead>
@@ -99,10 +101,7 @@
                         <select [disabled]="newAction.board_id === null"
                             [(ngModel)]="newAction.change_to"
                             (change)="checkAddDisabled()"
-                            *ngIf="newAction.type === 2 ||
-                                   newAction.type === 3 ||
-                                   newAction.type === 5 ||
-                                   newAction.type === 6">
+                            *ngIf="newAction.type > 1 && newAction.type < 6">
                             <option *ngFor="let source of actionSources"
                                 [ngValue]="source[0]">{{ source[1] }}</option>
                         </select>

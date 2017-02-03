@@ -43,7 +43,7 @@ class AutoActionsTest extends PHPUnit_Framework_TestCase {
         $actual = $this->actions->getAllActions($request,
             new ResponseMock(), null);
         $this->assertEquals(0, count($actual->data[1]));
-        $this->assertEquals('success', $actual->status);
+        $this->assertEquals('failure', $actual->status);
     }
 
     public function testGetAllActionsUnprivileged() {

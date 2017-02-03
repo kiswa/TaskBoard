@@ -10,26 +10,19 @@ class AutoActions extends BaseController {
             return $this->jsonResponse($response, $status);
         }
 
-        $autoActions = R::findAll('autoaction');
+        $autoActions = $this->getAll($request);
 
         if (!count($autoActions)) {
             $this->logger->addInfo('No automatic actions in database.');
             $this->apiJson->addAlert('info',
                 'No automatic actions in database.');
+            $this->apiJson->addData([]);
 
             return $this->jsonResponse($response);
         }
 
-        foreach ($autoActions as $action) {
-            $data = [];
-
-            if (Auth::HasBoardAccess($request, $action->board_id)) {
-                $data[] = $action;
-            }
-        }
-
         $this->apiJson->setSuccess();
-        $this->apiJson->addData($data);
+        $this->apiJson->addData($autoActions);
 
         return $this->jsonResponse($response);
     }
@@ -69,7 +62,10 @@ class AutoActions extends BaseController {
             $actor->username . ' added automatic action.',
             '', json_encode($action), 'action', $action->id);
 
-        $this->apiJson->setSuccess();
+        $actions = $this->getAll($request);
+
+        $this->apiJson->setSuccess($actions);
+        $this->apiJson->addData($actions);
         $this->apiJson->addAlert('success', 'Automatic action added.');
 
         return $this->jsonResponse($response);
@@ -97,15 +93,25 @@ class AutoActions extends BaseController {
             return $this->jsonResponse($response, 403);
         }
 
-        $before = $action;
+        $before = $action->export();
         R::trash($action);
 
         $actor = R::load('user', Auth::GetUserId($request));
 
         $this->dbLogger->logChange($actor->id,
-            $actor->username .' removed action ' . $before->id . '.',
+            $actor->username .' removed action ' . $before['id'] . '.',
             json_encode($before), '', 'action', $id);
 
+        $actions = $this->getAll($request);
+
+        $this->apiJson->setSuccess();
+        $this->apiJson->addData($actions);
+        $this->apiJson->addAlert('success', 'Automatic action removed.');
+
+        return $this->jsonResponse($response);
+    }
+
+    private function getAll($request) {
         $autoActions = R::findAll('autoaction');
         $data = [];
 
@@ -115,11 +121,7 @@ class AutoActions extends BaseController {
             }
         }
 
-        $this->apiJson->setSuccess();
-        $this->apiJson->addData($data);
-        $this->apiJson->addAlert('success', 'Automatic action removed.');
-
-        return $this->jsonResponse($response);
+        return $data;
     }
 }
 
