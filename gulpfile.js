@@ -115,6 +115,9 @@ gulp.task('tsc', () => {
 
     return gulp.src(paths.ts)
         .pipe(tsProject())
+        .once('error', function () {
+            this.once('finish', () => process.exit(1));
+        })
         .pipe(gulp.dest('build/'));
 });
 
