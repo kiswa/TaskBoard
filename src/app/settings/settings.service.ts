@@ -44,7 +44,10 @@ export class SettingsService {
     }
 
     updateBoards(boards: Array<Board>): void {
-        this.boards.next(boards);
+        this.getActions().subscribe((response: ApiResponse) => {
+            this.actions.next(response.data[1]);
+            this.boards.next(boards);
+        });
     }
 
     getBoards(): Observable<ApiResponse> {

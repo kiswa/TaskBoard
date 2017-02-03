@@ -20,6 +20,7 @@ import {
     InlineEdit,
     TopNav
 } from './shared/index';
+import { BoardService } from './board/board.service';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import {
         AuthService,
         NotificationsService,
         ModalService,
-        Constants
+        Constants,
+        BoardService
     ],
     declarations: [
         AppComponent,

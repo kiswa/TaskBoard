@@ -2,7 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from './shared/index';
 import { Login } from './login/login.component';
-import { Board } from './board/board.component';
+import { BoardDisplay } from './board/board.component';
 import {
     Settings,
     UserAdmin,
@@ -19,7 +19,12 @@ const ROUTES: Routes = [
     },
     {
         path: 'boards',
-        component: Board,
+        component: BoardDisplay,
+        canActivate: [ AuthGuard ]
+    },
+    {
+        path: 'boards/:id',
+        component: BoardDisplay,
         canActivate: [ AuthGuard ]
     },
     {
@@ -36,7 +41,7 @@ const ROUTES: Routes = [
 
 export const ROUTE_COMPONENTS = [
     Login,
-    Board,
+    BoardDisplay,
     Settings,
     UserAdmin,
     BoardAdmin,

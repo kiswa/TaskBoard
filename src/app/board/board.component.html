@@ -3,11 +3,16 @@
 <div class="board-nav">
     <label>
         Select Board:
-        <select>
-            <option>Board Name Here</option>
+        <select [(ngModel)]="boardNavId"
+            (change)="goToBoard()">
+            <option [ngValue]="null">Select Board...</option>
+            <option *ngFor="let board of boards"
+                [ngValue]="board.id">
+                {{ board.name }}
+            </option>
         </select>
     </label>
-    <div class="right">
+    <div class="right" *ngIf="activeBoard">
         <label>
             Hide Filtered Items:
             <input type="checkbox">
@@ -27,7 +32,24 @@
     </div>
 </div>
 
-<div class="board">
+<div class="no-boards center" *ngIf="!boards || boards.length === 0">
+    <h1>No Boards</h1>
+
+    <p>{{ noBoardsMessage }}</p>
+</div>
+
+<div class="no-boards center"
+    *ngIf="!activeBoard && !activeUser.default_board_id">
+    <h1>No Default Board</h1>
+
+    <p>
+        You have not selected a default board. You may select a
+        default board in your Settings.
+    </p>
+    <p>Until then, select a board from the list above.</p>
+</div>
+
+<div class="board" *ngIf="activeBoard">
     <div class="column">
         <h3>
             <span class="icon icon-minus-squared-alt" title="Collapse All Tasks"></span>
@@ -173,5 +195,7 @@
             <button class="flat"><i class="icon icon-plus"></i></button>
         </div>
     </div>
+    <pre><code>{{ activeUser | json }}</code></pre>
+    <pre><code>{{ activeBoard | json }}</code></pre>
 </div>
 

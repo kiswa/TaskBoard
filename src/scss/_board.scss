@@ -11,6 +11,16 @@
     }
 }
 
+.no-boards {
+    @include shadow-low;
+
+    background-color: $white;
+    margin: 1em auto;
+    padding: 1em;
+    padding-bottom: .1em;
+    width: 45%;
+}
+
 .board {
     display: flex;
     height: calc(100% - 96px);

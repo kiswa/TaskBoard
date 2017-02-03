@@ -130,6 +130,11 @@ export class BoardAdmin {
         this.boardService.removeBoard(this.boardToRemove.id)
             .subscribe((response: ApiResponse) => {
                     this.handleResponse(response);
+
+                    this.settings.getActions()
+                        .subscribe((res: ApiResponse) => {
+                            this.settings.updateActions(res.data[1]);
+                        });
                 });
     }
 
@@ -176,30 +181,24 @@ export class BoardAdmin {
         this.sortBoards();
     }
 
+    private cancelEnterKey(event: any): void {
+        if (event.stopPropagation) {
+            event.stopPropagation();
+        } else {
+            event.cancelBubble = true;
+        }
+    }
+
     private sortBoards(): void {
         switch (this.sortFilter) {
             case 'name-asc':
                 this.displayBoards.sort((a: Board, b: Board) => {
-                    let nameA = a.name.toUpperCase(),
-                        nameB = b.name.toUpperCase();
-
-                    return nameA < nameB
-                        ? -1
-                        : nameA > nameB
-                            ? 1
-                            : 0;
+                    return a.name.localeCompare(b.name);
                 });
             break;
             case 'name-desc':
                 this.displayBoards.sort((a: Board, b: Board) => {
-                    let nameA = a.name.toUpperCase(),
-                        nameB = b.name.toUpperCase();
-
-                    return nameB < nameA
-                        ? -1
-                        : nameB > nameA
-                            ? 1
-                            : 0;
+                    return b.name.localeCompare(a.name);
                 });
             break;
             case 'id-desc':

@@ -169,9 +169,10 @@
             <form>
                 <input type="text" name="new-column"
                     placeholder="Column Name"
+                    (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.newColumnName">
                 <button type="submit" class="flat" title="Add Column"
-                    (click)="modalProps.addColumn()">
+                    (click)="modalProps.addColumn($event)">
                     <i class="icon icon-plus"></i>
                 </button>
             </form>
@@ -198,12 +199,13 @@
             <form>
                 <input type="text" name="new-category"
                     placeholder="Category Name"
+                    (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.newCategoryName">
                 <input type="color" name="category-default-color"
                     title="Default Task Color"
                     [(ngModel)]="modalProps.categoryDefaultColor">
                 <button type="submit" class="flat" title="Add Category"
-                     (click)="modalProps.addCategory()">
+                     (click)="modalProps.addCategory($event)">
                     <i class="icon icon-plus"></i>
                 </button>
             </form>
@@ -242,12 +244,14 @@
             <form>
                 <input type="text" name="issue-tracker"
                     placeholder="Issue Tracker URL - use %BUGID% as placeholder"
+                    (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.issueTrackerUrl">
                 <input type="text" name="issue-tracker-bug-id"
                     placeholder="BUGID RegExp"
+                    (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.issueTrackerBugId">
                 <button type="submit" class="flat" title="Add Issue Tracker"
-                    (click)="modalProps.addIssueTracker()">
+                    (click)="modalProps.addIssueTracker($event)">
                     <i class="icon icon-plus"></i>
                 </button>
             </form>

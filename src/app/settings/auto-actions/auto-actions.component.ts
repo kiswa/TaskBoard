@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import {
     ApiResponse,
@@ -48,7 +49,8 @@ export class AutoActions {
                 private modal: ModalService,
                 private settings: SettingsService,
                 private actions: AutoActionsService,
-                private notes: NotificationsService) {
+                private notes: NotificationsService,
+                private sanitizer: DomSanitizer) {
         this.newAction = new AutoAction();
         this.boards = [];
         this.autoActions = [];
@@ -230,7 +232,7 @@ export class AutoActions {
         return desc;
     }
 
-    getTypeDescription(action: AutoAction): string {
+    getTypeDescription(action: AutoAction): SafeHtml {
         let desc = '',
             board = this.getBoard(action.board_id);
 
@@ -267,7 +269,7 @@ export class AutoActions {
             break;
         }
 
-        return desc;
+        return this.sanitizer.bypassSecurityTrustHtml(desc);
     }
 
     removeAutoAction(): void {
