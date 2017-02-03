@@ -93,7 +93,7 @@ class AutoActions extends BaseController {
             return $this->jsonResponse($response, 403);
         }
 
-        $before = $action->export();
+        $before = $action;
         R::trash($action);
 
         $actor = R::load('user', Auth::GetUserId($request));
