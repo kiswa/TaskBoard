@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
@@ -23,7 +23,7 @@ import { BoardService } from './board.service';
     selector: 'tb-board',
     templateUrl: 'app/board/board.component.html'
 })
-export class BoardDisplay {
+export class BoardDisplay implements OnInit {
     private activeUser: User;
     private activeBoard: Board;
     private boards: Array<Board>;
@@ -42,13 +42,6 @@ export class BoardDisplay {
         title.setTitle('TaskBoard - Kanban App');
         this.boardNavId = null;
 
-        active.params.subscribe(params => {
-            let id =  +params['id']; // tslint:disable-line
-
-            this.boardNavId = id ? id : null;
-            this.updateActiveBoard();
-        });
-
         boardService.getBoards().subscribe((response: ApiResponse) => {
             this.updateBoardsList(response.data[1]);
         });
@@ -56,6 +49,24 @@ export class BoardDisplay {
         auth.userChanged.subscribe((user: User) => {
             this.updateActiveUser(user);
         });
+
+        active.params.subscribe(params => {
+            let id = +params['id']; // tslint:disable-line
+
+            this.boardNavId = id ? id : null;
+            this.updateActiveBoard();
+        });
+    }
+
+    ngOnInit(): void {
+        if (this.boardNavId) {
+            return;
+        }
+
+        if (this.activeUser && this.activeUser.default_board_id) {
+            this.boardNavId = this.activeUser.default_board_id;
+            this.goToBoard();
+        }
     }
 
     goToBoard(): void {

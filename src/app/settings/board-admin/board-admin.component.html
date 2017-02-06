@@ -56,7 +56,10 @@
                         [innerHTML]="noBoardsMessage"></td>
                 </tr>
                 <tr *ngFor="let board of displayBoards">
-                    <td><a href="boards/{{ board.id }}">{{ board.name }}</a></td>
+                    <td>
+                        <a href="javscript:" [routerLink]="['/boards/' +  board.id]">
+                            {{ board.name }}</a>
+                    </td>
 
                     <td>
                         <ul>
