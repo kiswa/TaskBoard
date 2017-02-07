@@ -43,7 +43,7 @@ class Auth extends BaseController {
         $admin->default_board_id = 0;
         $admin->user_option_id = 0;
         $admin->last_login = 0;
-        $admin->active_token = '';
+        // $admin->active_token = '';
 
         $opts = R::dispense('useroption');
         $opts->new_tasks_at_bottom = true;
@@ -82,17 +82,17 @@ class Auth extends BaseController {
             return $response->withStatus(401);
         }
 
-        $user = R::load('user', $payload->uid);
-        if ($user->active_token !== $jwt) {
-            $user->active_token = '';
-            R::store($user);
-
-            return $response->withStatus(401);
-        }
+        // $user = R::load('user', $payload->uid);
+        // if ($user->active_token !== $jwt) {
+        //     $user->active_token = '';
+        //     R::store($user);
+        //
+        //     return $response->withStatus(401);
+        // }
 
         $jwt = self::createJwt($payload->uid, (int)$payload->mul);
-        $user->active_token = $jwt;
-        R::store($user);
+        // $user->active_token = $jwt;
+        // R::store($user);
 
         $response->getBody()->write($jwt);
 
@@ -146,7 +146,7 @@ class Auth extends BaseController {
                 'Go to Settings to create your first board.');
         }
 
-        $user->active_token = $jwt;
+        // $user->active_token = $jwt;
         $user->last_login = time();
         R::store($user);
 
@@ -176,10 +176,10 @@ class Auth extends BaseController {
 
         $user = R::load('user', $payload->uid);
 
-        if ($user->id) {
-            $user->active_token = '';
-            R::store($user);
-        }
+        // if ($user->id) {
+        //     $user->active_token = '';
+        //     R::store($user);
+        // }
 
         $this->dbLogger->logChange($user->id, $user->username . ' logged out',
             null, null, 'user', $user->id);
@@ -216,7 +216,7 @@ class Auth extends BaseController {
 
     private function sanitizeUser($user) {
         unset($user->password_hash);
-        unset($user->active_token);
+        // unset($user->active_token);
 
         return $user;
     }

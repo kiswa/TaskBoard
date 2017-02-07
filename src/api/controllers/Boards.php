@@ -212,7 +212,7 @@ class Boards extends BaseController {
 
     private function cleanUser($user) {
         unset($user->password_hash);
-        unset($user->active_token);
+        // unset($user->active_token);
 
         return $user;
     }

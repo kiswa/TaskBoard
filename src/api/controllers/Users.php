@@ -147,7 +147,7 @@ class Users extends BaseController {
             unset($data->old_password);
         }
 
-        $data->active_token = $user->active_token;
+        // $data->active_token = $user->active_token;
 
         if (isset($data->password) && $data->password !== '') {
             $data->password_hash =
@@ -369,7 +369,7 @@ class Users extends BaseController {
 
     private function cleanUser($user) {
         unset($user->password_hash);
-        unset($user->active_token);
+        // unset($user->active_token);
 
         $this->setBoardAccess($user);
 
