@@ -43,7 +43,7 @@ class Auth extends BaseController {
         $admin->default_board_id = 0;
         $admin->user_option_id = 0;
         $admin->last_login = 0;
-        // $admin->active_token = '';
+        $admin->active_token = '';
 
         $opts = R::dispense('useroption');
         $opts->new_tasks_at_bottom = true;
@@ -70,7 +70,7 @@ class Auth extends BaseController {
         R::store($key);
     }
 
-    public static function RefreshToken($request, $response) {
+    public static function ValidateToken($request, $response) {
         if (!$request->hasHeader('Authorization')) {
             return $response->withStatus(400);
         }
@@ -82,17 +82,14 @@ class Auth extends BaseController {
             return $response->withStatus(401);
         }
 
-        // $user = R::load('user', $payload->uid);
-        // if ($user->active_token !== $jwt) {
-        //     $user->active_token = '';
-        //     R::store($user);
-        //
-        //     return $response->withStatus(401);
-        // }
+        $user = R::load('user', $payload->uid);
 
-        $jwt = self::createJwt($payload->uid, (int)$payload->mul);
-        // $user->active_token = $jwt;
-        // R::store($user);
+        if ($user->active_token !== $jwt) {
+            $user->active_token = '';
+            R::store($user);
+
+            return $response->withStatus(401);
+        }
 
         $response->getBody()->write($jwt);
 
@@ -146,7 +143,7 @@ class Auth extends BaseController {
                 'Go to Settings to create your first board.');
         }
 
-        // $user->active_token = $jwt;
+        $user->active_token = $jwt;
         $user->last_login = time();
         R::store($user);
 
@@ -176,10 +173,10 @@ class Auth extends BaseController {
 
         $user = R::load('user', $payload->uid);
 
-        // if ($user->id) {
-        //     $user->active_token = '';
-        //     R::store($user);
-        // }
+        if ($user->id) {
+            $user->active_token = '';
+            R::store($user);
+        }
 
         $this->dbLogger->logChange($user->id, $user->username . ' logged out',
             null, null, 'user', $user->id);
@@ -190,18 +187,22 @@ class Auth extends BaseController {
     }
 
     public function authenticate($request, $response) {
-        if (!$request->hasHeader('Authorization')) {
-            return $this->jsonResponse($response, 400);
+        $response = self::ValidateToken($request, $response);
+        $status = $response->getStatusCode();
+
+        if ($status !== 200) {
+            if ($status === 400) {
+                $this->apiJson->addAlert('error',
+                    'Authorization header missing.');
+                return $this->jsonResponse($response, $status);
+            }
+
+            $this->apiJson->addAlert('error', 'Invalid API token.');
+            return $this->jsonResponse($response, $status);
         }
 
         $jwt = $request->getHeader('Authorization')[0];
         $payload = self::getJwtPayload($jwt);
-
-        if ($payload === null) {
-            $this->apiJson->addAlert('error', 'Invalid access token.');
-
-            return $this->jsonResponse($response, 401);
-        }
 
         $user = R::load('user', $payload->uid);
         $opts = R::load('useroption', $user->user_option_id);
@@ -214,9 +215,43 @@ class Auth extends BaseController {
         return $this->jsonResponse($response);
     }
 
+    public function refreshToken($request, $response) {
+        $response = self::ValidateToken($request, $response);
+        $status = $response->getStatusCode();
+
+        if ($status !== 200) {
+            if ($status === 400) {
+                $this->apiJson->addAlert('error',
+                    'Authorization header missing.');
+                return $this->jsonResponse($response, $status);
+            }
+
+            $this->apiJson->addAlert('error', 'Invalid API token.');
+            return $this->jsonResponse($response, $status);
+        }
+
+        $jwt = $request->getHeader('Authorization')[0];
+        $payload = self::getJwtPayload($jwt);
+
+        $user = R::load('user', $payload->uid);
+        $jwt = self::createJwt($user->id, (int)$payload->mul);
+
+        $user->active_token = $jwt;
+        R::store($user);
+
+        $opts = R::load('useroption', $user->user_option_id);
+
+        $this->apiJson->setSuccess();
+        $this->apiJson->addData($jwt);
+        $this->apiJson->addData($this->sanitizeUser($user));
+        $this->apiJson->addData($opts);
+
+        return $this->jsonResponse($response);
+    }
+
     private function sanitizeUser($user) {
         unset($user->password_hash);
-        // unset($user->active_token);
+        unset($user->active_token);
 
         return $user;
     }
@@ -232,7 +267,9 @@ class Auth extends BaseController {
     }
 
     private static function createJwt($userId, $mult = 1) {
-        // If 'remember me' feature is desired, set the multiplier higher
+        // If 'remember me' feature is desired, set the multiplier higher.
+        // By default, a token will expire after half an hour, but can be
+        // refreshed by a call to /api/refresh.
         return JWT::encode(array(
                     'exp' => time() + (60 * 30) * $mult, // 30 minutes * $mult
                     'uid' => (int)$userId,

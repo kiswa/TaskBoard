@@ -29,7 +29,7 @@ abstract class BaseController {
     }
 
     public function secureRoute($request, $response, $securityLevel) {
-        $response = Auth::RefreshToken($request, $response);
+        $response = Auth::ValidateToken($request, $response);
         $status = $response->getStatusCode();
 
         if ($status !== 200) {

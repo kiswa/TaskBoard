@@ -48,9 +48,10 @@ $app->post('/users/{id}', 'Users:updateUser'); // User (limited to self - Higher
 $app->post('/users/{id}/opts', 'Users:updateUserOptions'); // User (limited to self)
 $app->delete('/users/{id}', 'Users:removeUser'); // Admin
 
-$app->post('/login', 'Auth:login'); // Unsecured
-$app->post('/logout', 'Auth:logout'); // Unsecured
-$app->post('/authenticate', 'Auth:authenticate'); // Unsecured
+$app->post('/login', 'Auth:login'); // Unsecured (creates JWT)
+$app->post('/logout', 'Auth:logout'); // Unsecured (clears JWT)
+$app->post('/authenticate', 'Auth:authenticate'); // Unsecured (checks JWT)
+$app->post('/refresh', 'Auth:refreshToken'); // Unsecured (checks and updates JWT)
 
 $app->run();
 R::close();

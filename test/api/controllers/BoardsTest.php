@@ -243,6 +243,10 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
         $args = [];
         $args['id'] = 1;
 
+        $action = R::dispense('autoaction');
+        $action->board_id = 1;
+        R::store($action);
+
         $request = new RequestMock();
         $request->header = [DataMock::GetJwt()];
 

@@ -168,11 +168,6 @@ class Boards extends BaseController {
             $actor->username . ' removed board ' . $before->name,
             json_encode($before), '', 'board', $id);
 
-        $actions = R::find('autoaction', 'board_id = ?', [ $id ]);
-        foreach ($actions as $action) {
-            R::trash($action);
-        }
-
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'Board ' . $before->name . ' removed.');
@@ -212,7 +207,7 @@ class Boards extends BaseController {
 
     private function cleanUser($user) {
         unset($user->password_hash);
-        // unset($user->active_token);
+        unset($user->active_token);
 
         return $user;
     }
