@@ -28,5 +28,9 @@ export class BoardService {
                 return Observable.of(response);
             });
     }
+
+    refreshToken(): void {
+        this.http.post('api/refresh', {}).subscribe();
+    }
 }
 
