@@ -30,7 +30,9 @@ describe('BoardAdmin', () => {
             // Dragula throws when trying to subscribe to an event.
             // This is just a cheap way to get a little more coverage.
             boardAdmin.ngAfterContentInit();
-        } catch (ex) { }
+        } catch (ex) {
+            // Ignore errors
+        }
     });
 
     it('fails to add an invalid board', done => {
