@@ -12,89 +12,89 @@ describe('UserAdmin', () => {
             email: ''
         };
 
-    beforeEach(() => {
-        modalService = new ModalServiceMock();
+    // beforeEach(() => {
+    //     modalService = new ModalServiceMock();
 
-        userAdmin = new UserAdmin(new UserAdminServiceMock(),
-            new NotificationsServiceMock(), AuthServiceMock,
-            new SettingsServiceMock(), modalService);
-    });
+    //     userAdmin = new UserAdmin(new UserAdminServiceMock(),
+    //         new NotificationsServiceMock(), AuthServiceMock,
+    //         new SettingsServiceMock(), modalService);
+    // });
 
-    it('has a function to add or edit a user - Add', done => {
-        userAdmin.modalProps.title = 'Add';
-        userAdmin.modalProps.user = newUser;
+    // it('has a function to add or edit a user - Add', done => {
+    //     userAdmin.modalProps.title = 'Add';
+    //     userAdmin.modalProps.user = newUser;
 
-        userAdmin.addEditUser();
+    //     userAdmin.addEditUser();
 
-        setTimeout(() => {
-            expect(userAdmin.users.length).to.equal(3);
-            done();
-        }, 10);
-    });
+    //     setTimeout(() => {
+    //         expect(userAdmin.users.length).to.equal(3);
+    //         done();
+    //     }, 10);
+    // });
 
-    it('has a function to add or edit a user - Edit', done => {
-        userAdmin.modalProps.title = 'Edit';
-        userAdmin.modalProps.user = newUser;
-        userAdmin.modalProps.user.id = 1;
+    // it('has a function to add or edit a user - Edit', done => {
+    //     userAdmin.modalProps.title = 'Edit';
+    //     userAdmin.modalProps.user = newUser;
+    //     userAdmin.modalProps.user.id = 1;
 
-        userAdmin.addEditUser();
+    //     userAdmin.addEditUser();
 
-        setTimeout(() => {
-            expect(userAdmin.users.length).to.equal(2);
-            expect(userAdmin.users[0].username).to.equal('changed');
-            done();
-        }, 10);
-    });
+    //     setTimeout(() => {
+    //         expect(userAdmin.users.length).to.equal(2);
+    //         expect(userAdmin.users[0].username).to.equal('changed');
+    //         done();
+    //     }, 10);
+    // });
 
-    it('has a function to validate a user', () => {
-        userAdmin.modalProps.title = 'Add';
+    // it('has a function to validate a user', () => {
+    //     userAdmin.modalProps.title = 'Add';
 
-        userAdmin.modalProps.user = { username: '' };
-        expect(userAdmin.validateModalUser()).to.equal(false);
+    //     userAdmin.modalProps.user = { username: '' };
+    //     expect(userAdmin.validateModalUser()).to.equal(false);
 
-        userAdmin.modalProps.user.username = 'user';
-        userAdmin.modalProps.user.password = '';
-        expect(userAdmin.validateModalUser()).to.equal(false);
+    //     userAdmin.modalProps.user.username = 'user';
+    //     userAdmin.modalProps.user.password = '';
+    //     expect(userAdmin.validateModalUser()).to.equal(false);
 
-        userAdmin.modalProps.user.password = 'test';
-        userAdmin.modalProps.user.verifyPassword = '';
-        expect(userAdmin.validateModalUser()).to.equal(false);
+    //     userAdmin.modalProps.user.password = 'test';
+    //     userAdmin.modalProps.user.verifyPassword = '';
+    //     expect(userAdmin.validateModalUser()).to.equal(false);
 
-        userAdmin.modalProps.user.verifyPassword = 'test';
-        userAdmin.modalProps.user.email = 'invalid';
-        expect(userAdmin.validateModalUser()).to.equal(false);
+    //     userAdmin.modalProps.user.verifyPassword = 'test';
+    //     userAdmin.modalProps.user.email = 'invalid';
+    //     expect(userAdmin.validateModalUser()).to.equal(false);
 
-        userAdmin.modalProps.user.email = 'email@test.com';
-        expect(userAdmin.validateModalUser()).to.equal(true);
-    });
+    //     userAdmin.modalProps.user.email = 'email@test.com';
+    //     expect(userAdmin.validateModalUser()).to.equal(true);
+    // });
 
-    it('has a function to remove a user', done => {
-        userAdmin.userToRemove = { id: 1 };
-        userAdmin.removeUser();
+    // it('has a function to remove a user', done => {
+    //     userAdmin.userToRemove = { id: 1 };
+    //     userAdmin.removeUser();
 
-        setTimeout(() => {
-            expect(userAdmin.users.length).to.equal(1);
-            done();
-        }, 10);
-    });
+    //     setTimeout(() => {
+    //         expect(userAdmin.users.length).to.equal(1);
+    //         done();
+    //     }, 10);
+    // });
 
-    it('has a showModal function', done => {
-        modalService.openCalled.subscribe(modalId => {
-            expect(modalId).to.equal(userAdmin.MODAL_ID);
-            done();
-        });
+    // it('has a showModal function', done => {
+    //     modalService.openCalled.subscribe(modalId => {
+    //         expect(modalId).to.equal(userAdmin.MODAL_ID);
+    //         done();
+    //     });
 
-        userAdmin.showModal('Add');
-    });
+    //     userAdmin.showModal('Add');
+    // });
 
-    it('has a showConfirmModal function', done => {
-        modalService.openCalled.subscribe(modalId => {
-            expect(modalId).to.equal(userAdmin.MODAL_CONFIRM_ID);
-            expect(userAdmin.userToRemove).to.equal(true);
-            done();
-        });
+    // it('has a showConfirmModal function', done => {
+    //     modalService.openCalled.subscribe(modalId => {
+    //         expect(modalId).to.equal(userAdmin.MODAL_CONFIRM_ID);
+    //         expect(userAdmin.userToRemove).to.equal(true);
+    //         done();
+    //     });
 
-        userAdmin.showConfirmModal(true);
-    });
+    //     userAdmin.showConfirmModal(true);
+    // });
 });
 

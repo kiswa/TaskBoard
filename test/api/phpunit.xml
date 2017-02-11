@@ -11,7 +11,7 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-html" target="../../api-coverage/"
+        <log type="coverage-html" target="../../coverage/api/"
             lowUpperBound="40" highLowerBound="80" />
     </logging>
 </phpunit>

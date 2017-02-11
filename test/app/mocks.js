@@ -1,14 +1,19 @@
 /* global RxJs */
+
 var MockBrowser = require('mock-browser').mocks.MockBrowser,
     mockBrowser = new MockBrowser(),
     chai = require('chai');
 
-global.window = {};
+global.window = mockBrowser.getWindow();
+global.document = mockBrowser.getDocument();
+global.navigator = mockBrowser.getNavigator();
+global.localStorage = mockBrowser.getLocalStorage();
+
+require('reflect-metadata');
+global.window.Reflect = Reflect;
 
 global.RxJs = require('rxjs/Rx');
 global.expect = chai.expect;
-global.document = mockBrowser.getDocument();
-global.localStorage = mockBrowser.getLocalStorage();
 
 global.Chartist = {
     Pie(id, data, opts) {
@@ -123,22 +128,74 @@ global.ModalServiceMock = function() {
 };
 
 var users = [
-            { id: 1, username: 'tester', security_level: 2 },
-            { id: 2, username: 'test', security_level: 3, default_board_id: 0 }
+    { id: 1, username: 'tester', security_level: 2 },
+    { id: 2, username: 'test', security_level: 3, default_board_id: 0 }
+];
+
+var boards = [
+    {
+        id: 1,
+        name: 'testing',
+        is_active: true,
+        columns: [{
+            id: 1,
+            name: 'Column 1',
+            position: 0,
+            board_id: 1,
+            tasks: []
+        }],
+        categories: [],
+        issue_trackers: [],
+        users: [ users[1] ]
+    },
+    {
+        id: 2,
+        name: 'test',
+        is_active: false,
+        columns: [{
+            id: 2,
+            name: 'Column 1',
+            position: 0,
+            board_id: 2,
+            tasks: []
+        }],
+        categories: [],
+        issue_trackers: [],
+        users: users
+    }
+];
+
+var actions = [
+    {
+        id: 1,
+        trigger: 1,
+        source_id: 1,
+        type: 1,
+        change_to: 'test',
+        board_id: 1
+    },
+    {
+        id: 2,
+        trigger: 2,
+        source_id: 2,
+        type: 2,
+        change_to: 'testing',
+        board_id: 2
+    }
 ];
 
 global.SettingsServiceMock = function() {
-    var userList = users,
-        boardsList = [
-            { id: 1, name: 'Testing' }
-        ];
+    var userList = new RxJs.BehaviorSubject(users),
+        boardList = new RxJs.BehaviorSubject(boards),
+        actionList = new RxJs.BehaviorSubject(actions);
 
     return {
-        usersChanged: RxJs.Observable.of(userList),
-        boardsChanged: RxJs.Observable.of(boardsList),
+        usersChanged: userList.asObservable(),
+        boardsChanged: boardList.asObservable(),
+        actionsChanged: boardList.asObservable(),
 
         updateUsers: users => {
-            userList = users;
+            userList.next(users);
         },
         getUsers: () => {
             return RxJs.Observable.of({
@@ -149,13 +206,24 @@ global.SettingsServiceMock = function() {
         },
 
         updateBoards: boards => {
-            boardsList = boards;
+            boardList.next(boards);
         },
         getBoards: () => {
             return RxJs.Observable.of({
                 status: 'success',
                 alerts: [],
-                data: [ null, boardsList ]
+                data: [ null, boardList ]
+            });
+        },
+
+        updateActions: actions => {
+            actionList.next(actions);
+        },
+        getActions: () => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [ null, actionList ]
             });
         }
     };
@@ -196,6 +264,43 @@ global.UserAdminServiceMock = function() {
                 data: [
                     null,
                     userList.slice(1)
+                ]
+            });
+        }
+    };
+};
+
+global.BoardAdminServiceMock = function() {
+    var boardList = boards;
+
+    return {
+        addBoard: board => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [
+                    null,
+                    boardList.concat(board)
+                ]
+            });
+        },
+        editBoard: board => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [
+                    null,
+                    boardList
+                ]
+            });
+        },
+        removeBoard: boardId => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [
+                    null,
+                    boardList.slice(1)
                 ]
             });
         }

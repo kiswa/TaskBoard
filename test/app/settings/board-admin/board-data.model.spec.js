@@ -9,8 +9,20 @@ describe('BoardData', () => {
         boardData = new BoardData();
     });
 
-    it('has a boardName property', () => {
-        expect(boardData.boardName).to.be.a('string');
+    it('has a title property', () => {
+        expect(boardData.title).to.be.a('string');
+    });
+
+    it('has an id property', () => {
+        expect(boardData.id).to.be.a('number');
+    });
+
+    it('has a name property', () => {
+        expect(boardData.name).to.be.a('string');
+    });
+
+    it('has an is_active property', () => {
+        expect(boardData.is_active).to.be.a('boolean');
     });
 
     it('has a columns property', () => {
@@ -21,8 +33,8 @@ describe('BoardData', () => {
         expect(boardData.categories).to.be.an('array');
     });
 
-    it('has an issueTrackers property', () => {
-        expect(boardData.issueTrackers).to.be.an('array');
+    it('has an issue_trackers property', () => {
+        expect(boardData.issue_trackers).to.be.an('array');
     });
 
     it('has a users property', () => {
@@ -99,14 +111,14 @@ describe('BoardData', () => {
 
     it('allows an issue tracker to be added', () => {
         boardData.addIssueTracker();
-        expect(boardData.issueTrackers.length).to.equal(0);
+        expect(boardData.issue_trackers.length).to.equal(0);
 
         boardData.issueTrackerUrl = 'test';
         boardData.issueTrackerBugId = 'test';
         boardData.addIssueTracker();
 
-        expect(boardData.issueTrackers.length).to.equal(1);
-        expect(boardData.issueTrackers[0].url).to.equal('test');
+        expect(boardData.issue_trackers.length).to.equal(1);
+        expect(boardData.issue_trackers[0].url).to.equal('test');
         expect(boardData.issueTrackerUrl).to.equal('');
         expect(boardData.issueTrackerBugId).to.equal('');
     });
@@ -115,11 +127,11 @@ describe('BoardData', () => {
         var issueTracker = { url: 'test', bugId: 'test' };
         boardData.removeIssueTracker(issueTracker);
 
-        boardData.issueTrackers.push(issueTracker);
-        expect(boardData.issueTrackers.length).to.equal(1);
+        boardData.issue_trackers.push(issueTracker);
+        expect(boardData.issue_trackers.length).to.equal(1);
 
         boardData.removeIssueTracker(issueTracker);
-        expect(boardData.issueTrackers.length).to.equal(0);
+        expect(boardData.issue_trackers.length).to.equal(0);
     });
 });
 

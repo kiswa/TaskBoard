@@ -1,12 +1,8 @@
-.coverdata
-.coverrun
-api-coverage
 build
-coverage.html
+coverage
 dist
 node_modules
 src/api/vendor
 tests.db
 tests.log
-typings
 

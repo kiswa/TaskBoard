@@ -47,8 +47,6 @@ export class Modal implements OnInit {
         // Prevent click from propagating to modal container
         if (event.stopPropagation) {
             event.stopPropagation();
-        } else {
-            event.cancelBubble = true;
         }
     }
 

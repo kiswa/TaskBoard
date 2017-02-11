@@ -184,8 +184,6 @@ export class BoardAdmin {
     private cancelEnterKey(event: any): void {
         if (event.stopPropagation) {
             event.stopPropagation();
-        } else {
-            event.cancelBubble = true;
         }
     }
 

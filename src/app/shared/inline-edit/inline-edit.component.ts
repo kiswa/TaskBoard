@@ -29,8 +29,6 @@ export class InlineEdit {
         // Prevent Enter key from propagating to parent controls
         if (event.stopPropagation) {
             event.stopPropagation();
-        } else {
-            event.cancelBubble = true;
         }
     }
 }

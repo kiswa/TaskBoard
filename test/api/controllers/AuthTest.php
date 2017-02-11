@@ -104,7 +104,7 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $request = new RequestMock();
         $request->header = [$token];
 
-        $actual = Auth::ValidateToken($request, $response,
+        Auth::ValidateToken($request, $response,
             new ContainerMock());
         $this->assertEquals(200, $response->status);
     }

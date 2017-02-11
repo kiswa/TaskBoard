@@ -57,16 +57,10 @@ describe('Modal', () => {
                 stopPropagation: () => {
                     stopCalled = true;
                 }
-            },
-            eventCancel = {
-                cancelBubble: false
             };
 
         modal.filterClick(eventStop);
         expect(stopCalled).to.equal(true);
-
-        modal.filterClick(eventCancel);
-        expect(eventCancel.cancelBubble).to.equal(true);
     });
 });
 

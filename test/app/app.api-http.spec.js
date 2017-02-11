@@ -1,5 +1,4 @@
 /* globals expect RxJs localStorage */
-require('reflect-metadata/Reflect.js');
 
 var path = '../../build/app.',
     apihttp = require(path + 'api-http.js'),
