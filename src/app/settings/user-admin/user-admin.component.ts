@@ -46,6 +46,7 @@ export class UserAdmin {
 
         auth.userChanged
             .subscribe(activeUser => {
+                console.log('userChanged');
                 this.activeUser = new User(+activeUser.default_board_id,
                                            activeUser.email,
                                            +activeUser.id,
@@ -59,16 +60,19 @@ export class UserAdmin {
 
         settings.boardsChanged
             .subscribe(boards => {
+                console.log('boardsChanged');
                 this.boards = boards;
             });
 
         settings.getUsers()
             .subscribe((response: ApiResponse) => {
+                console.log('getUsers');
                 if (response.data[1]) {
                     response.data[1].forEach((user: any) => {
                         this.users.push(this.convertUser(user));
                     });
                 }
+                console.log(this.users);
 
                 this.getBoards();
             });
@@ -86,6 +90,7 @@ export class UserAdmin {
         if (isAdd) {
             this.userService.addUser(this.modalProps.user)
                 .subscribe((response: ApiResponse) => {
+                    console.log('addUser');
                     response.alerts.forEach(note => this.notes.add(note));
 
                     this.replaceUserList(response);
@@ -127,6 +132,7 @@ export class UserAdmin {
     }
 
     private getBoards(): void {
+        console.log('getBoards');
         this.settings.getBoards()
             .subscribe((response: ApiResponse) => {
                 let boards = response.data[1];
@@ -184,6 +190,7 @@ export class UserAdmin {
             response.data[1].forEach((user: any) => {
                 this.users.push(this.convertUser(user));
             });
+            console.log('replaceUserList', this.users);
 
             this.updateUserList();
         }
@@ -213,8 +220,7 @@ export class UserAdmin {
         let match = user.email.match(emailRegex);
 
         if (!match && user.email !== '') {
-            this.notes.add(new Notification('error',
-                                            'Invalid email address.'));
+            this.notes.add(new Notification('error', 'Invalid email address.'));
             return false;
         }
 
@@ -264,6 +270,7 @@ export class UserAdmin {
                 user.can_admin = false;
             }
         });
+        console.log('updateUserList', this.users);
 
         this.settings.updateUsers(<Array<User>> this.users);
     }

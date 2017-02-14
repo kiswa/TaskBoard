@@ -128,8 +128,22 @@ global.ModalServiceMock = function() {
 };
 
 var users = [
-    { id: 1, username: 'tester', security_level: 2 },
-    { id: 2, username: 'test', security_level: 3, default_board_id: 0 }
+    {
+        id: '1',
+        default_board_id: '0',
+        username: 'tester',
+        security_level: '2',
+        user_option_id: '0',
+        board_access: []
+    },
+    {
+        id: '2',
+        default_board_id: '0',
+        username: 'test',
+        security_level: '3',
+        user_option_id: '0',
+        board_access: []
+    }
 ];
 
 var boards = [
@@ -185,9 +199,9 @@ var actions = [
 ];
 
 global.SettingsServiceMock = function() {
-    var userList = new RxJs.BehaviorSubject(users),
-        boardList = new RxJs.BehaviorSubject(boards),
-        actionList = new RxJs.BehaviorSubject(actions);
+    var userList = new RxJs.BehaviorSubject([]),
+        boardList = new RxJs.BehaviorSubject([]),
+        actionList = new RxJs.BehaviorSubject([]);
 
     return {
         usersChanged: userList.asObservable(),

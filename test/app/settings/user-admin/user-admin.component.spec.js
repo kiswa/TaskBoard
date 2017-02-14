@@ -6,30 +6,35 @@ describe('UserAdmin', () => {
     var userAdmin,
         modalService,
         newUser = {
+            id: 3,
+            default_board_id: 0,
             username: 'testing',
+            security_level: 3,
+            user_option_id: 0,
             password: 'test',
-            verifyPassword: 'test',
-            email: ''
+            password_verify: 'test',
+            email: '',
+            board_access: []
         };
 
-    // beforeEach(() => {
-    //     modalService = new ModalServiceMock();
+    beforeEach(() => {
+        modalService = new ModalServiceMock();
 
-    //     userAdmin = new UserAdmin(new UserAdminServiceMock(),
-    //         new NotificationsServiceMock(), AuthServiceMock,
-    //         new SettingsServiceMock(), modalService);
-    // });
+        userAdmin = new UserAdmin(new UserAdminServiceMock(),
+            new NotificationsServiceMock(), AuthServiceMock,
+            new SettingsServiceMock(), modalService);
+    });
 
     // it('has a function to add or edit a user - Add', done => {
-    //     userAdmin.modalProps.title = 'Add';
-    //     userAdmin.modalProps.user = newUser;
-
-    //     userAdmin.addEditUser();
-
-    //     setTimeout(() => {
-    //         expect(userAdmin.users.length).to.equal(3);
-    //         done();
-    //     }, 10);
+        // userAdmin.modalProps.title = 'Add';
+        // userAdmin.modalProps.user = newUser;
+        //
+        // userAdmin.addEditUser();
+        //
+        // setTimeout(() => {
+        //     expect(userAdmin.users.length).to.equal(3);
+        //     done();
+        // }, 10);
     // });
 
     // it('has a function to add or edit a user - Edit', done => {
