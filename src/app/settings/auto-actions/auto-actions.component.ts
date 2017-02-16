@@ -239,7 +239,7 @@ export class AutoActions {
         switch (+action.type) {
             case ActionType.SetColor:
                 desc = 'Set item color: <span style="color: ' +
-                    action.change_to + '";>' + action.change_to + '</span>';
+                    action.change_to + ';">' + action.change_to + '</span>';
             break;
             case ActionType.SetCategory:
                 desc = 'Set item category: ';

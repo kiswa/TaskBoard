@@ -1,0 +1,27 @@
+<h3>
+    <span class="icon icon-minus-squared-alt"
+        title="Collapse All Tasks"></span>
+
+    {{ column.name }}
+
+    <span class="badge" title="Tasks in Column">
+        {{ taskCount }}
+    </span>
+
+    <span class="icon icon-angle-double-up"
+        title="Expand Column" (click)="toggleCollapsed()"></span>
+    <span class="right icon icon-angle-double-down"
+        title="Collapse Column" (click)="toggleCollapsed()"></span>
+</h3>
+
+<div class="quick-add">
+    <input type="text" placeholder="Quick Add Task - Title Only">
+    <button class="flat"><i class="icon icon-plus"></i></button>
+</div>
+
+<div class="tasks">
+    <div class="task">
+        <pre style="margin: 0">{{ column | json }}</pre>
+    </div>
+</div>
+

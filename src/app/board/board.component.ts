@@ -29,7 +29,11 @@ export class BoardDisplay implements OnInit {
     private boards: Array<Board>;
 
     private boardNavId: number;
+    private userFilter: number;
+    private categoryFilter: number;
     private noBoardsMessage: string;
+    private pageName: string;
+    private loading: boolean;
 
     constructor(private title: Title,
                 private router: Router,
@@ -41,9 +45,16 @@ export class BoardDisplay implements OnInit {
                 private dragula: DragulaService) {
         title.setTitle('TaskBoard - Kanban App');
         this.boardNavId = null;
+        this.userFilter = null;
+        this.categoryFilter = null;
+
+        this.pageName = 'Boards';
+        this.loading = true;
+
 
         boardService.getBoards().subscribe((response: ApiResponse) => {
             this.updateBoardsList(response.data[1]);
+            this.loading = false;
         });
 
         auth.userChanged.subscribe((user: User) => {
@@ -109,6 +120,7 @@ export class BoardDisplay implements OnInit {
         this.boards.forEach(board => {
             if (board.id === this.boardNavId) {
                 this.activeBoard = board;
+                this.pageName = board.name;
             }
         });
     }

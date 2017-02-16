@@ -1,4 +1,4 @@
-<tb-top-nav></tb-top-nav>
+<tb-top-nav page-name="{{ pageName }}"></tb-top-nav>
 
 <div class="board-nav">
     <label>
@@ -19,20 +19,28 @@
         </label>
         <label>
             User Filter:
-            <select>
-                <option>Any</option>
+            <select [(ngModel)]="userFilter">
+                <option [ngValue]="null">Any</option>
+                <option *ngFor="let user of activeBoard.users"
+                    [ngValue]="user.id">
+                    {{ user.username }}
+                </option>
             </select>
         </label>
         <label>
             Category Filter:
-            <select>
-                <option>Any</option>
+            <select [(ngModel)]="categoryFilter">
+                <option [ngValue]="null">Any</option>
+                <option *ngFor="let category of activeBoard.categories"
+                    [ngValue]="category.id">
+                    {{ category.name }}
+                </option>
             </select>
         </label>
     </div>
 </div>
 
-<div class="no-boards center" *ngIf="!boards || boards.length === 0">
+<div class="no-boards center" *ngIf="!loading && (!boards || boards.length === 0)">
     <h1>No Boards</h1>
 
     <p>{{ noBoardsMessage }}</p>
@@ -50,6 +58,10 @@
 </div>
 
 <div class="board" *ngIf="activeBoard">
+    <tb-column class="column"
+        *ngFor="let column of activeBoard.columns"
+        [column]="column"></tb-column>
+    <!--
     <div class="column">
         <h3>
             <span class="icon icon-minus-squared-alt" title="Collapse All Tasks"></span>
@@ -195,7 +207,6 @@
             <button class="flat"><i class="icon icon-plus"></i></button>
         </div>
     </div>
-    <pre><code>{{ activeUser | json }}</code></pre>
-    <pre><code>{{ activeBoard | json }}</code></pre>
+    -->
 </div>
 

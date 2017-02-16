@@ -43,6 +43,7 @@
         height: calc(100% - 7px);
         margin-left: 7px;
         overflow: auto;
+        position: relative;
         white-space: normal;
 
         h3 {
@@ -59,6 +60,11 @@
             .badge {
                 display: none;
             }
+        }
+
+        .quick-add {
+            padding: 6px;
+            padding-right: 5px;
         }
 
         &:last-of-type {
@@ -89,7 +95,7 @@
             .icon-angle-double-down,
             .icon-minus-squared-alt,
             .icon-plus-squared-alt,
-            .task,
+            .tasks,
             .quick-add {
                 display: none;
             }
@@ -101,8 +107,14 @@
     }
 
     .tasks {
+        bottom: 0;
+        left: 0;
+        overflow-y: auto;
         padding: 7px;
-        padding-bottom: 0;
+        padding-top: 0;
+        position: absolute;
+        right: 0;
+        top: 5.2em;
 
         div:last-of-type {
             margin-bottom: 0;

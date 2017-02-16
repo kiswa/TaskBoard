@@ -2,7 +2,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from './shared/index';
 import { Login } from './login/login.component';
-import { BoardDisplay } from './board/board.component';
+import {
+    BoardDisplay,
+    ColumnDisplay
+} from './board/index';
 import {
     Settings,
     UserAdmin,
@@ -42,6 +45,7 @@ const ROUTES: Routes = [
 export const ROUTE_COMPONENTS = [
     Login,
     BoardDisplay,
+    ColumnDisplay,
     Settings,
     UserAdmin,
     BoardAdmin,
