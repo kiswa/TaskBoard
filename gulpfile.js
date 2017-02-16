@@ -172,6 +172,10 @@ gulp.task('api', () => {
         .pipe(gulp.dest('dist/api/'));
 });
 
+gulp.task('app', ['html', 'system-build', 'ts-lint']);
+
+gulp.task('styles', ['html', 'scss-lint', 'scss']);
+
 gulp.task('test', ['coverage', 'test-api']);
 
 gulp.task('test-app', ['tsc'], () => {
