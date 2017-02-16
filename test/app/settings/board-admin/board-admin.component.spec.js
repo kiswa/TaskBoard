@@ -35,14 +35,14 @@ describe('BoardAdmin', () => {
         }
     });
 
-    // it('fails to add an invalid board', done => {
-    //     boardAdmin.addEditBoard();
-    //
-    //     setTimeout(() => {
-    //         expect(boardAdmin.boards.length).to.equal(2);
-    //         done();
-    //     }, 10);
-    // });
+    it('fails to add an invalid board', done => {
+        boardAdmin.addEditBoard();
+
+        setTimeout(() => {
+            expect(boardAdmin.boards.length).to.equal(2);
+            done();
+        }, 10);
+    });
 
     it('allows a board to be added', done => {
         boardAdmin.modalProps.title = 'Add';
@@ -145,37 +145,37 @@ describe('BoardAdmin', () => {
         });
     });
 
-    // it('filters the list of display boards by user', () => {
-    //     boardAdmin.userFilter = 1;
-    //
-    //     var boards = boardAdmin.filterBoardsByUser();
-    //
-    //     expect(boards.length).to.equal(1);
-    // });
-    //
-    // it('filters the list of display boards by status', () => {
-    //     boardAdmin.statusFilter = 1;
-    //
-    //     var boards = boardAdmin.filterBoardsByStatus();
-    //
-    //     expect(boards.length).to.equal(1);
-    // });
-    //
-    // it('displays a modal for adding or editing a board', () => {
-    //     boardAdmin.showModal('Add');
-    //     expect(boardAdmin.users[0].selected).to.equal(false);
-    //
-    //     var editBoard = {
-    //         id: 1,
-    //         name: 'test',
-    //         columns: [],
-    //         categories: [],
-    //         issue_trackers: [],
-    //         users: []
-    //     };
-    //
-    //     boardAdmin.showModal('Edit', editBoard);
-    //     expect(boardAdmin.modalProps.id).to.equal(1);
-    // });
+    it('filters the list of display boards by user', () => {
+        boardAdmin.userFilter = 1;
+
+        var boards = boardAdmin.filterBoardsByUser();
+
+        expect(boards.length).to.equal(1);
+    });
+
+    it('filters the list of display boards by status', () => {
+        boardAdmin.statusFilter = 1;
+
+        var boards = boardAdmin.filterBoardsByStatus();
+
+        expect(boards.length).to.equal(1);
+    });
+
+    it('displays a modal for adding or editing a board', () => {
+        boardAdmin.showModal('Add');
+        expect(boardAdmin.users[0].selected).to.equal(false);
+
+        var editBoard = {
+            id: 1,
+            name: 'test',
+            columns: [],
+            categories: [],
+            issue_trackers: [],
+            users: []
+        };
+
+        boardAdmin.showModal('Edit', editBoard);
+        expect(boardAdmin.modalProps.id).to.equal(1);
+    });
 });
 

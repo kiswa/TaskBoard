@@ -158,7 +158,10 @@ var boards = [
             board_id: 1,
             tasks: []
         }],
-        categories: [],
+        categories: [{
+            id: 1,
+            name: 'Category 1'
+        }],
         issue_trackers: [],
         users: [ users[1] ]
     },
@@ -199,14 +202,14 @@ var actions = [
 ];
 
 global.SettingsServiceMock = function() {
-    var userList = new RxJs.BehaviorSubject([]),
-        boardList = new RxJs.BehaviorSubject([]),
-        actionList = new RxJs.BehaviorSubject([]);
+    var userList = new RxJs.BehaviorSubject(users),
+        boardList = new RxJs.BehaviorSubject(boards),
+        actionList = new RxJs.BehaviorSubject(actions);
 
     return {
         usersChanged: userList.asObservable(),
         boardsChanged: boardList.asObservable(),
-        actionsChanged: boardList.asObservable(),
+        actionsChanged: actionList.asObservable(),
 
         updateUsers: users => {
             userList.next(users);
@@ -215,7 +218,7 @@ global.SettingsServiceMock = function() {
             return RxJs.Observable.of({
                 status: 'success',
                 alerts: [],
-                data: [ null, userList ]
+                data: [ null, users ]
             });
         },
 
@@ -226,7 +229,7 @@ global.SettingsServiceMock = function() {
             return RxJs.Observable.of({
                 status: 'success',
                 alerts: [],
-                data: [ null, boardList ]
+                data: [ null, boards ]
             });
         },
 
@@ -237,15 +240,13 @@ global.SettingsServiceMock = function() {
             return RxJs.Observable.of({
                 status: 'success',
                 alerts: [],
-                data: [ null, actionList ]
+                data: [ null, actions ]
             });
         }
     };
 };
 
 global.UserAdminServiceMock = function() {
-    var userList = users;
-
     return {
         addUser: user => {
             return RxJs.Observable.of({
@@ -253,7 +254,7 @@ global.UserAdminServiceMock = function() {
                 alerts: [],
                 data: [
                     null,
-                    userList.concat(user)
+                    users.concat(user)
                 ]
             });
         },
@@ -263,11 +264,8 @@ global.UserAdminServiceMock = function() {
                 alerts: [],
                 data: [
                     null,
-                    JSON.stringify({
-                        id: 1,
-                        username: 'changed',
-                        security_level: 3
-                    })
+                    JSON.stringify(users[1]),
+                    users
                 ]
             });
         },
@@ -277,7 +275,7 @@ global.UserAdminServiceMock = function() {
                 alerts: [],
                 data: [
                     null,
-                    userList.slice(1)
+                    users.slice(1)
                 ]
             });
         }
@@ -285,8 +283,6 @@ global.UserAdminServiceMock = function() {
 };
 
 global.BoardAdminServiceMock = function() {
-    var boardList = boards;
-
     return {
         addBoard: board => {
             return RxJs.Observable.of({
@@ -294,7 +290,7 @@ global.BoardAdminServiceMock = function() {
                 alerts: [],
                 data: [
                     null,
-                    boardList.concat(board)
+                    boards.concat(board)
                 ]
             });
         },
@@ -304,7 +300,7 @@ global.BoardAdminServiceMock = function() {
                 alerts: [],
                 data: [
                     null,
-                    boardList
+                    boards
                 ]
             });
         },
@@ -314,7 +310,32 @@ global.BoardAdminServiceMock = function() {
                 alerts: [],
                 data: [
                     null,
-                    boardList.slice(1)
+                    boards.slice(1)
+                ]
+            });
+        }
+    };
+};
+
+global.AutoActionsServiceMock = function() {
+    return {
+        addAction: action => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [
+                    null,
+                    actions.concat(action)
+                ]
+            });
+        },
+        removeAction: boardId => {
+            return RxJs.Observable.of({
+                status: 'success',
+                alerts: [],
+                data: [
+                    null,
+                    actions.slice(1)
                 ]
             });
         }
@@ -364,4 +385,11 @@ global.HttpMock = {
         return RxJs.Observable.of(response);
     }
 };
+
+global.SanitizerMock = {
+    bypassSecurityTrustHtml: html => {
+        return html;
+    }
+};
+
 
