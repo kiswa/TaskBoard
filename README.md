@@ -134,11 +134,11 @@ Because I like seeing the numbers.
 
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
-TypeScript   |     49 |      526 |      21 |     2439
+TypeScript   |     51 |      543 |      23 |     2521
 PHP          |     18 |      538 |      19 |     1672
-HTML         |     16 |      119 |       0 |     1108
-SASS         |     13 |      204 |      11 |      919
-__SUM:__     | __96__ | __1387__ |  __51__ | __6138__
+HTML         |     17 |      117 |       0 |     1061
+SASS         |     13 |      207 |      11 |      940
+__SUM:__     | __99__ | __1405__ |  __53__ | __61948__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
@@ -147,10 +147,10 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
 PHP          |     10 |      669 |      14 |     1955
-JavaScript   |     27 |      331 |     110 |     1342
-__SUM:__     | __37__ | __1000__ | __124__ | __3297__
+JavaScript   |     29 |      383 |      49 |     1584
+__SUM:__     | __39__ | __1052__ |  __63__ | __3539__
 
 Command: `cloc --exclude-ext=xml test/`
 
-Counts last updated Feb 10, 2017
+Counts last updated Feb 17, 2017
 
