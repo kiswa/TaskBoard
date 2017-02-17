@@ -71,6 +71,18 @@
             margin-right: 7px;
         }
 
+        &.double {
+            .tasks {
+                align-items: flex-start;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .task {
+                width: 49%;
+            }
+        }
+
         &.collapsed {
             background-color: $color-heading-bg;
             flex: 0 0 35px;

@@ -1,11 +1,17 @@
 <h3>
     <span class="icon icon-minus-squared-alt"
-        title="Collapse All Tasks"></span>
+        title="Collapse All Tasks"
+        *ngIf="!collapseTasks"
+        (click)="toggleTaskCollapse()"></span>
+    <span class="icon icon-plus-squared-alt"
+        title="Expand All Tasks"
+        *ngIf="collapseTasks"
+        (click)="toggleTaskCollapse()"></span>
 
-    {{ column.name }}
+    {{ columnData.name }}
 
     <span class="badge" title="Tasks in Column">
-        {{ taskCount }}
+        {{ tasks.length }}
     </span>
 
     <span class="icon icon-angle-double-up"
@@ -16,12 +22,65 @@
 
 <div class="quick-add">
     <input type="text" placeholder="Quick Add Task - Title Only">
-    <button class="flat"><i class="icon icon-plus"></i></button>
+    <button class="flat" (click)="showModal('Add')">
+        <i class="icon icon-plus"></i>
+    </button>
 </div>
 
 <div class="tasks">
-    <div class="task">
-        <pre style="margin: 0">{{ column | json }}</pre>
+    <div class="task" [ngClass]="{ 'compact': collapseTasks }">
+        <h4>
+            <span class="icon icon-minus-squared-alt" title="Collapse Task"></span>
+            Column Data
+            <span class="badge right" title="Points">0</span>
+        </h4>
+        <div class="description">
+            <pre style="margin: 0">{{ columnData | json }}</pre>
+            <p>Vertical scroll test<br><br><br><br><br></p>
+        </div>
+        <div class="stats">
+            Assigned To: admin
+            <span class="right">
+                <span class="icon icon-chat-empty" title="4 Comments"></span>
+                <span class="icon icon-attach" title="2 Attachments"></span>
+                <span class="category" title="Category"></span>
+            </span>
+        </div>
+    </div>
+    <div class="task" [ngClass]="{ 'compact': collapseTasks }">
+        <h4>
+            <span class="icon icon-minus-squared-alt" title="Collapse Task"></span>
+            Something to Get Done
+            <span class="badge right" title="Points">3</span>
+        </h4>
+        <div class="description">
+            <p>This is the thing that needs to get done.</p>
+        </div>
+        <div class="stats">
+            Assigned To: admin
+            <span class="right">
+                <span class="icon icon-chat-empty" title="4 Comments"></span>
+                <span class="icon icon-attach" title="2 Attachments"></span>
+                <span class="category" title="Category"></span>
+            </span>
+        </div>
     </div>
 </div>
+
+<tb-modal modal-title="{{ modalProps.title }} Task" modal-id="{{ MODAL_ID }}">
+
+    <div class="buttons">
+        <button #defaultAction
+            (click)="addEditTask()" [disabled]="saving">
+            <i class="icon"
+                [ngClass]="{ 'icon-plus': modalProps.prefix === '',
+                    'icon-floppy': modalProps.prefix !== '' }"></i>
+            {{ modalProps.prefix === '' ? 'Add' : 'Save' }}
+            Task
+        </button>
+        <button class="flat" (click)="modal.close(MODAL_ID)">
+            Cancel
+        </button>
+    </div>
+</tb-modal>
 

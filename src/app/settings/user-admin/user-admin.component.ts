@@ -3,16 +3,20 @@ import { Component } from '@angular/core';
 import { UserAdminService } from './user-admin.service';
 import { SettingsService } from '../settings.service';
 import {
-    User,
-    Board,
     ApiResponse,
+    Board,
     Modal,
     Notification,
+    User,
     AuthService,
-    NotificationsService,
-    ModalService
+    ModalService,
+    NotificationsService
 } from '../../shared/index';
-import { UserDisplay, ModalUser, ModalProperties } from './user-admin.models';
+import {
+    UserDisplay,
+    ModalUser,
+    ModalProperties
+} from './user-admin.models';
 
 @Component({
     selector: 'tb-user-admin',
