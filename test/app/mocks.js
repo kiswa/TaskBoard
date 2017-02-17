@@ -178,7 +178,7 @@ var boards = [
         }],
         categories: [],
         issue_trackers: [],
-        users: users
+        users
     }
 ];
 
