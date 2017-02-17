@@ -91,6 +91,8 @@ If you want to run a single API test, add the following comment block before the
  */
 ```
 
+If you want to run a single App test, change the test from `it('should do something', ...);` to `it.only('should do something', ...);` and Mocha will only run that test.
+
 These tests are run by [Travis CI](https://travis-ci.org/) on PRs and commits. A PR with failing or missing tests will not be merged.
 
 ## Contributing
