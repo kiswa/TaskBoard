@@ -138,7 +138,7 @@ TypeScript   |     51 |      543 |      23 |     2521
 PHP          |     18 |      538 |      19 |     1672
 HTML         |     17 |      117 |       0 |     1061
 SASS         |     13 |      207 |      11 |      940
-__SUM:__     | __99__ | __1405__ |  __53__ | __61948__
+__SUM:__     | __99__ | __1405__ |  __53__ | __6194__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
