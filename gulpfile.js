@@ -198,9 +198,7 @@ gulp.task('coverage-prep', ['tsc'], () => {
 gulp.task('coverage', ['coverage-prep'], () => {
     return gulp.src(paths.tests_app)
         .pipe(mocha({
-            require: [
-                './test/app/mocks.js'
-            ]
+            require: [ './test/app/mocks.js' ]
         }))
         .pipe(coverage.writeReports({
             dir: './coverage/app/',
