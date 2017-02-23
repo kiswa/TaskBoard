@@ -73,13 +73,15 @@
 
         &.double {
             .tasks {
+                align-content: flex-start;
                 align-items: flex-start;
                 display: flex;
+                flex-wrap: wrap;
                 justify-content: space-between;
             }
 
             .task {
-                width: 49%;
+                width: 49.3%;
             }
         }
 
