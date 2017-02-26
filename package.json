@@ -37,7 +37,7 @@
     "@angular/router": "3.4.8",
     "@types/chartist": "^0.9.34",
     "@types/core-js": "^0.9.35",
-    "bourbon": "^4.3.2",
+    "bourbon": "^4.3.3",
     "bourbon-neat": "^1.8.0",
     "chai": "^3.5.0",
     "chartist": "^0.10.1",
