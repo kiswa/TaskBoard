@@ -67,8 +67,40 @@
     </div>
 </div>
 
-<tb-modal modal-title="{{ modalProps.title }} Task" modal-id="{{ MODAL_ID }}">
+<!-- TODO Move to Task HTML once created -->
+<!--<tb-modal modal-title="Confirm Task Removal" blocking="true">-->
+<!--    <div class="center">Removing a task cannot be undone.<br>Continue?</div>-->
+<!--    <div class="buttons">-->
+<!--        <button class="flat"-->
+<!--            (click)="removeUser()">Yes</button>-->
+<!--        <button #defaultAction-->
+<!--            (click)="modal.close(MODAL_CONFIRM_ID)">No</button>-->
+<!--    </div>-->
+<!--</tb-modal>-->
 
+<tb-modal modal-title="Add Task" modal-id="{{ MODAL_ID }}">
+    <label>
+        Title
+        <input type="text" name="title" placeholder="Task Title"
+            [(ngModel)]="modalProps.title">
+    </label>
+
+    <label>
+        Description
+        <textarea name="description" rows="5"
+            placeholder="What needs to get done?"
+            [(ngModel)]="modalProps.description"></textarea>
+    </label>
+
+    <label *ngIf="activeBoard">
+        Assignees
+        <select name="assignees" multiple [(ngModel)]="modalProps.assignees">
+            <option *ngFor="let user of activeBoard.users"
+                [ngValue]="user">{{ user.username }}</option>
+        </select>
+    </label>
+
+    <pre>{{ modalProps | json }}</pre>
     <div class="buttons">
         <button #defaultAction
             (click)="addEditTask()" [disabled]="saving">

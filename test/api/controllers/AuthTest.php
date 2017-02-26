@@ -196,6 +196,11 @@ class AuthTest extends PHPUnit_Framework_TestCase {
         $data->password = 'admin';
         $data->remember = false;
 
+        $collapsed = R::dispense('collapsed');
+        $collapsed->user_id = 1;
+        $collapsed->column_id = 1;
+        R::store($collapsed);
+
         $request = new RequestMock();
         $request->payload = $data;
 

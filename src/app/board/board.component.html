@@ -60,7 +60,6 @@
 <div class="board" *ngIf="activeBoard">
     <tb-column class="column"
         *ngFor="let column of activeBoard.columns"
-        [column]="column"
-        [sideBySide]="userOptions.multiple_tasks_per_row"></tb-column>
+        [column]="column"></tb-column>
 </div>
 

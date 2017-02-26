@@ -206,6 +206,12 @@ class Auth extends BaseController {
 
         $user = R::load('user', $payload->uid);
         $opts = R::load('useroption', $user->user_option_id);
+        $collapsed = R::find('collapsed', ' user_id = ? ', [ $user->id ]);
+
+        $user->collapsed = [];
+        foreach ($collapsed as $collapse) {
+            $user->collapsed[] = $collapse->column_id;
+        }
 
         $this->apiJson->setSuccess();
         $this->apiJson->addData($jwt);

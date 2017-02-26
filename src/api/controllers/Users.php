@@ -237,6 +237,43 @@ class Users extends BaseController {
         return $this->jsonResponse($response);
     }
 
+    public function toggleCollapsed($request, $response, $args) {
+        $status = $this->secureRoute($request, $response, SecurityLevel::USER);
+        if ($status !== 200) {
+            return $this->jsonResponse($response, $status);
+        }
+
+        $user = R::load('user', (int)$args['id']);
+        $actor = R::load('user', Auth::GetUserId($request));
+
+        if ($actor->id !== $user->id) {
+            $this->apiJson->addAlert('error', 'Access restricted.');
+
+            return $this->jsonResponse($response, 403);
+        }
+
+        $data = json_decode($request->getBody());
+        $collapsed = R::findOne('collapsed', ' user_id = ? AND column_id = ? ',
+                                [ $user->id, $data->id ]);
+
+        if (!is_null($collapsed)) {
+            R::trash($collapsed);
+        } else {
+            $collapsed = R::dispense('collapsed');
+            $collapsed->user_id = $user->id;
+            $collapsed->column_id = $data->id;
+
+            R::store($collapsed);
+        }
+
+        $allCollapsed = R::find('collapsed', ' user_id = ? ', [ $user->id ]);
+
+        $this->apiJson->setSuccess();
+        $this->apiJson->addData(R::exportAll($allCollapsed));
+
+        return $this->jsonResponse($response);
+    }
+
     public function removeUser($request, $response, $args) {
         $status = $this->secureRoute($request, $response, SecurityLevel::ADMIN);
         if ($status !== 200) {

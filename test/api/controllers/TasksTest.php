@@ -248,13 +248,15 @@ class TasksTest extends PHPUnit_Framework_TestCase {
 
         $data->title = 'task';
         $data->description = 'the words';
-        $data->assignee = 0;
-        $data->category_id = 0;
         $data->column_id = 1;
         $data->color = '';
         $data->due_date = null;
         $data->points = null;
         $data->position = 0;
+        $data->comments = [];
+        $data->attachments = [];
+        $data->assignees = [];
+        $data->categories = [];
 
         return $data;
     }

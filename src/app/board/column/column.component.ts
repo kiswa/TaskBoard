@@ -6,13 +6,19 @@ import {
 } from '@angular/core';
 
 import {
+    ApiResponse,
+    Board,
     Column,
     Modal,
     Notification,
-    // Task, // TODO: Create Task model
+    Task,
+    User,
+    UserOptions,
+    AuthService,
     ModalService,
     NotificationsService
 } from '../../shared/index';
+import { BoardService } from '../board.service';
 
 @Component({
     selector: 'tb-column',
@@ -20,38 +26,77 @@ import {
 })
 export class ColumnDisplay implements OnInit {
     private templateElement: any;
-    private tasks: Array<any>; // TODO: Use Task model
     private collapseTasks: boolean;
-    private modalProps: any; // TODO: Create ModalProperties model
+
+    private activeUser: User;
+    private activeBoard: Board;
+    private userOptions: UserOptions;
+    private tasks: Array<Task>;
+    private modalProps: Task;
 
     private MODAL_ID: string;
     private MODAL_CONFIRM_ID: string;
 
     @Input('column') columnData: Column;
-    @Input('sideBySide') sideBySide: boolean;
 
     constructor(private elRef: ElementRef,
+                private auth: AuthService,
                 private notes: NotificationsService,
-                private modal: ModalService) {
+                private modal: ModalService,
+                private boardService: BoardService) {
         this.MODAL_ID = 'task-addEdit-form';
         this.MODAL_CONFIRM_ID = 'task-remove-confirm';
 
         this.templateElement = elRef.nativeElement;
         this.tasks = [];
         this.collapseTasks = false;
-        this.modalProps = { title: '' }; // TODO: Use model
+        this.modalProps = new Task();
+
+        boardService.activeBoardChanged.subscribe((board: Board) => {
+            this.activeBoard = board;
+        });
+
+        auth.userChanged.subscribe((user: User) => {
+            this.activeUser = new User(+user.default_board_id,
+                                       user.email,
+                                       +user.id,
+                                       user.last_login,
+                                       +user.security_level,
+                                       +user.user_option_id,
+                                       user.username,
+                                       user.board_access,
+                                       user.collapsed);
+            this.userOptions = auth.userOptions;
+        });
     }
 
     ngOnInit() {
         this.templateElement.classList.remove('double');
 
-        if (this.sideBySide) {
+        if (this.userOptions.multiple_tasks_per_row) {
             this.templateElement.classList.add('double');
+        }
+
+        let isCollapsed = false;
+
+        this.activeUser.collapsed.forEach(id => {
+            if (+id === +this.columnData.id) {
+                isCollapsed = true;
+            }
+        });
+
+        if (isCollapsed) {
+            this.templateElement.classList.add('collapsed');
         }
     }
 
     toggleCollapsed() {
         this.templateElement.classList.toggle('collapsed');
+
+        this.boardService.toggleCollapsed(this.activeUser.id, this.columnData.id)
+            .subscribe((apiResponse: ApiResponse) => {
+                this.activeUser.collapsed = apiResponse.data[1];
+            });
     }
 
     toggleTaskCollapse() {
@@ -62,15 +107,8 @@ export class ColumnDisplay implements OnInit {
         // TODO
     }
 
-    private showModal(title: string, task?: any): void { // TODO: Use Task model
-        let isAdd = (title === 'Add');
-
-        this.modalProps = {
-            title,
-            prefix: isAdd ? '' : 'Edit',
-            task: isAdd ? task /*new Task()*/ : task
-        };
-
+    private showModal(): void {
+        this.modalProps = new Task();
         this.modal.open(this.MODAL_ID);
     }
 }

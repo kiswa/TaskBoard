@@ -46,17 +46,17 @@ class BeanLoader {
         $board->is_active = isset($data->is_active) ? $data->is_active : '';
 
         if (isset($data->categories)) {
-            self::updateBoardList('category', 'LoadCategory',
+            self::updateObjectList('category', 'LoadCategory',
                 $board->xownCategoryList, $data->categories);
         }
 
         if (isset($data->columns)) {
-            self::updateBoardList('column', 'LoadColumn',
+            self::updateObjectList('column', 'LoadColumn',
                 $board->xownColumnList, $data->columns);
         }
 
         if (isset($data->issue_trackers)) {
-            self::updateBoardList('issuetracker', 'LoadIssueTracker',
+            self::updateObjectList('issuetracker', 'LoadIssueTracker',
                 $board->xownIssueTrackerList,
                 $data->issue_trackers);
         }
@@ -106,6 +106,11 @@ class BeanLoader {
         $column->position = isset($data->position) ? $data->position : '';
         $column->board_id = isset($data->board_id) ? $data->board_id : '';
 
+        if (isset($data->tasks)) {
+            self::updateObjectList('task', 'LoadTask',
+                $column->xownTaskList, $data->tasks);
+        }
+
         if (!isset($data->name) || !isset($data->position) ||
             !isset($data->board_id)) {
             return false;
@@ -150,14 +155,31 @@ class BeanLoader {
         $task->title = isset($data->title) ? $data->title : '';
         $task->description = isset($data->description)
             ? $data->description : '';
-        $task->assignee = isset($data->assignee) ? $data->assignee : '';
-        $task->category_id = isset($data->category_id)
-            ? $data->category_id : '';
         $task->color = isset($data->color) ? $data->color : '';
         $task->due_date = isset($data->due_date) ? $data->due_date : '';
         $task->points = isset($data->points) ? $data->points : '';
         $task->position = isset($data->position) ? $data->position : '';
         $task->column_id = isset($data->column_id) ? $data->column_id : '';
+
+        if (isset($data->comments)) {
+            self::updateObjectList('comment', 'LoadComment',
+                $column->xownCommentList, $data->comments);
+        }
+
+        if (isset($data->attachments)) {
+            self::updateObjectList('attachment', 'LoadAttachment',
+                $column->xownAttachmentList, $data->attachments);
+        }
+
+        if (isset($data->assignees)) {
+            self::updateObjectList('user', 'LoadUser',
+                $column->xownAssigneeList, $data->assignees);
+        }
+
+        if (isset($data->categories)) {
+            self::updateObjectList('category', 'LoadCategory',
+                $column->xownCategoryList, $data->categories);
+        }
 
         if (!isset($data->title) || !isset($data->position) ||
             !isset($data->column_id)) {
@@ -210,7 +232,7 @@ class BeanLoader {
         return true;
     }
 
-    private static function removeObjectsNotInData($type, &$dataList, &$boardList) {
+    private static function removeObjectsNotInData($type, &$dataList, &$objectList) {
         $dataIds = [];
 
         foreach ($dataList as $data) {
@@ -219,7 +241,7 @@ class BeanLoader {
             }
         }
 
-        foreach ($boardList as $existing) {
+        foreach ($objectList as $existing) {
             if (!in_array((int)$existing->id, $dataIds)) {
                 $remove = R::load($type, $existing->id);
                 R::trash($remove);
@@ -228,36 +250,36 @@ class BeanLoader {
     }
 
     private static function loadObjectsFromData($type, $loadFunc, &$dataList,
-                                                &$boardList) {
+                                                &$objectList) {
         foreach ($dataList as $obj) {
             $object = R::load($type, (isset($obj->id) ? $obj->id : 0));
 
             if ((int)$object->id === 0) {
                 call_user_func_array(array(__CLASS__, $loadFunc),
                                      array(&$object, json_encode($obj)));
-                $boardList[] = $object;
+                $objectList[] = $object;
                 continue;
             }
 
             call_user_func_array(array(__CLASS__, $loadFunc),
-                                 array(&$boardList[$object->id],
+                                 array(&$objectList[$object->id],
                                        json_encode($obj)));
         }
     }
 
-    private static function updateBoardList($type, $loadFunc,
-                                            &$boardList = [], &$dataList = []) {
-        if (count($boardList) && count($dataList)) {
-            self::removeObjectsNotInData($type, $dataList, $boardList);
+    private static function updateObjectList($type, $loadFunc,
+                                            &$objectList = [], &$dataList = []) {
+        if (count($objectList) && count($dataList)) {
+            self::removeObjectsNotInData($type, $dataList, $objectList);
         }
 
         if (count($dataList)) {
-            self::loadObjectsFromData($type, $loadFunc, $dataList, $boardList);
+            self::loadObjectsFromData($type, $loadFunc, $dataList, $objectList);
         }
 
         // Remove all objects from existing boardlist when none in datalist
-        if (!count($dataList) && count($boardList)) {
-            foreach ($boardList as $obj) {
+        if (!count($dataList) && count($objectList)) {
+            foreach ($objectList as $obj) {
                 R::trash($obj);
             }
         }

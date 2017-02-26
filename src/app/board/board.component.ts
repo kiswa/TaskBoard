@@ -10,7 +10,6 @@ import {
     Board,
     Column,
     User,
-    UserOptions,
     InlineEdit,
     Modal,
     Notification,
@@ -26,7 +25,6 @@ import { BoardService } from './board.service';
 })
 export class BoardDisplay implements OnInit {
     private activeUser: User;
-    private userOptions: UserOptions;
     private activeBoard: Board;
     private boards: Array<Board>;
 
@@ -60,7 +58,6 @@ export class BoardDisplay implements OnInit {
 
         auth.userChanged.subscribe((user: User) => {
             this.updateActiveUser(user);
-            this.userOptions = auth.userOptions;
         });
 
         active.params.subscribe(params => {
@@ -122,6 +119,7 @@ export class BoardDisplay implements OnInit {
         this.boards.forEach(board => {
             if (board.id === this.boardNavId) {
                 this.activeBoard = board;
+                this.boardService.updateActiveBoard(board);
                 this.pageName = board.name;
             }
         });

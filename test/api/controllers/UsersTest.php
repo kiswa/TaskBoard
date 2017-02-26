@@ -408,6 +408,52 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('failure', $response->status);
     }
 
+    public function testToggleCollapsed() {
+        $this->createUser();
+
+        $data = new stdClass();
+        $data->id = 1;
+
+        $args = [];
+        $args['id'] = 2;
+
+        $request = new RequestMock();
+        $request->payload = $data;
+        $request->header = [DataMock::GetJwt(2)];
+
+        // Collapse the column
+        $response = $this->users->toggleCollapsed($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+
+        // Expand the column
+        $response = $this->users->toggleCollapsed($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+    }
+
+    public function testToggleCollapsedNoAccess() {
+        $response = $this->users->toggleCollapsed(new RequestMock(),
+            new ResponseMock(), null);
+
+        $this->assertEquals('failure', $response->status);
+
+        $data = new stdClass();
+        $data->id = 1;
+
+        $args = [];
+        $args['id'] = 2;
+
+        $request = new RequestMock();
+        $request->payload = $data;
+        $request->header = [DataMock::GetJwt(1)];
+
+        $response = $this->users->toggleCollapsed($request,
+            new ResponseMock(), $args);
+
+        $this->assertEquals('failure', $response->status);
+    }
+
     public function testRemoveUser() {
         $this->createUser();
 

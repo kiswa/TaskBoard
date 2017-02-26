@@ -257,6 +257,7 @@ class ColumnsTest extends PHPUnit_Framework_TestCase {
         $data->name = 'test';
         $data->position = 0;
         $data->board_id = 1;
+        $data->tasks = [];
 
         return $data;
     }

@@ -6,7 +6,8 @@ export class User {
                 public security_level: number = 3, // tslint:disable-line
                 public user_option_id: number = 0, // tslint:disable-line
                 public username: string = '',
-                public board_access: Array<number> = []) { // tslint:disable-line
+                public board_access: Array<number> = [], // tslint:disable-line
+                public collapsed: Array<number> = []) {
     }
 }
 
