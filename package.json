@@ -73,7 +73,7 @@
     "systemjs": "0.20.9",
     "systemjs-builder": "0.16.3",
     "touch": "^1.0.0",
-    "tslint": "^4.4.2",
+    "tslint": "^4.5.1",
     "typescript": "^2.2.1",
     "zone.js": "^0.7.7"
   }
