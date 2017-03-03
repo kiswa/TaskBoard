@@ -1,4 +1,4 @@
-/* global expect UserAdminServiceMock NotificationsServiceMock AuthServiceMock SettingsServiceMock ModalServiceMock */
+/* global expect UserAdminServiceMock NotificationsServiceMock AuthServiceMock SettingsServiceMock ModalServiceMock StringsServiceMock */
 var path = '../../../../build/settings/user-admin/',
     UserAdmin = require(path + 'user-admin.component.js').UserAdmin;
 
@@ -22,7 +22,7 @@ describe('UserAdmin', () => {
 
         userAdmin = new UserAdmin(new UserAdminServiceMock(),
             new NotificationsServiceMock(), AuthServiceMock,
-            new SettingsServiceMock(), modalService);
+            new SettingsServiceMock(), modalService, StringsServiceMock);
     });
 
     it('has a function to add or edit a user - Add', done => {

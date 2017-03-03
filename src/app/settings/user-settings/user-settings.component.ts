@@ -185,10 +185,6 @@ export class UserSettings implements OnInit {
         this.changeEmail = new EmailForm(this.user.email);
     }
 
-    private getString(key: string): string {
-        return this.strings.getString(key);
-    }
-
     private addAlerts(alerts: Array<Notification>) {
         alerts.forEach(msg => {
             this.notes.add(msg);

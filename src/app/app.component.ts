@@ -8,7 +8,8 @@ import { Notifications, StringsService } from './shared/index';
 })
 export class AppComponent {
     constructor(strings: StringsService) {
-        // Nothing needed
+        // StringsService loaded here so the same instance
+        // is availabe across the app.
     }
 }
 

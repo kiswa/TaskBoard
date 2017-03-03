@@ -40,7 +40,7 @@
             </select>
         </label>
         <label>
-            {{ strings['settings_defaultBoard'] }}:
+            {{ strings['settings_selectDefaultBoard'] }}:
             <select class="autosize"
                 [ngModel]="user.default_board_id"
                 (ngModelChange)="updateDefaultBoard($event)">

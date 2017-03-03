@@ -61,7 +61,7 @@ export class BoardDisplay implements OnInit {
         });
 
         active.params.subscribe(params => {
-            let id = +params['id']; // tslint:disable-line
+            let id = +params.id;
 
             this.boardNavId = id ? id : null;
             this.updateActiveBoard();

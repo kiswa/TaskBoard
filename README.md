@@ -132,13 +132,13 @@ Because I like seeing the numbers.
 
 ### `src`
 
-Language     |  Files |    Blank | Comment |     Code
--------------|-------:|---------:|--------:|---------:
-TypeScript   |     51 |      543 |      23 |     2521
-PHP          |     18 |      538 |      19 |     1672
-HTML         |     17 |      117 |       0 |     1061
-SASS         |     13 |      207 |      11 |      940
-__SUM:__     | __99__ | __1405__ |  __53__ | __6194__
+Language     |   Files |    Blank | Comment |     Code
+-------------|--------:|---------:|--------:|---------:
+TypeScript   |      53 |      565 |      24 |     2656
+PHP          |      18 |      554 |      19 |     1725
+HTML         |      17 |      120 |      10 |     1102
+SASS         |      13 |      207 |      11 |      942
+__SUM:__     | __101__ | __1446__ |  __64__ | __6425__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
@@ -146,11 +146,11 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
-PHP          |     10 |      669 |      14 |     1955
-JavaScript   |     29 |      383 |      49 |     1584
-__SUM:__     | __39__ | __1052__ |  __63__ | __3539__
+PHP          |     10 |      683 |      16 |     1994
+JavaScript   |     30 |      390 |      50 |     1610
+__SUM:__     | __40__ | __1073__ |  __66__ | __3604__
 
 Command: `cloc --exclude-ext=xml test/`
 
-Counts last updated Feb 17, 2017
+Counts last updated Mar 3, 2017
 

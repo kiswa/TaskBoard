@@ -1,4 +1,4 @@
-/* global expect ConstantsMock, HttpMock, RouterMock */
+/* global expect ConstantsMock, HttpMock, RouterMock, StringsServiceMock */
 var path = '../../../../build/shared/auth/',
     AuthService = require(path + 'auth.service.js').AuthService;
 
@@ -7,7 +7,7 @@ describe('AuthService', () => {
 
     beforeEach(() => {
         authService = new AuthService(ConstantsMock,
-            HttpMock, new RouterMock());
+            HttpMock, new RouterMock(), StringsServiceMock);
     });
 
     it('has userOptions', () => {

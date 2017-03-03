@@ -521,6 +521,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
         $data->show_animations = true;
         $data->show_assignee = true;
         $data->multiple_tasks_per_row = false;
+        $data->language = "en";
 
         return $data;
     }

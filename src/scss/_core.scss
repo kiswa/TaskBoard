@@ -109,7 +109,7 @@ button {
 
         background-color: $white;
         border: 1px solid $color-border;
-        content: attr(alt);
+        content: attr(data-help);
         left: 20px;
         min-width: 250px;
         padding: 7px;

@@ -1,4 +1,4 @@
-/* global expect AuthServiceMock NotificationsServiceMock SettingsServiceMock UserSettingsServiceMock */
+/* global expect AuthServiceMock NotificationsServiceMock SettingsServiceMock StringsServiceMock UserSettingsServiceMock */
 var path = '../../../../build/settings/user-settings/',
     UserSettings = require(path + 'user-settings.component.js').UserSettings;
 
@@ -23,7 +23,7 @@ describe('UserSettings', () => {
         notifications = new NotificationsServiceMock();
         userSettings = new UserSettings(AuthServiceMock,
             notifications, new SettingsServiceMock(),
-            UserSettingsServiceMock);
+            UserSettingsServiceMock, StringsServiceMock);
     });
 
     it('resets forms on init', () => {

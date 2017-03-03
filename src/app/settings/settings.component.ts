@@ -1,13 +1,8 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
-import { TopNav } from '../shared/index';
+import { StringsService } from '../shared/index';
 import { SettingsService } from './settings.service';
-import {
-    UserSettings,
-    UserAdmin,
-    BoardAdmin
-} from './index';
 
 @Component({
     selector: 'tb-settings',
@@ -15,10 +10,18 @@ import {
     providers: [ SettingsService ]
 })
 export class Settings {
-    constructor(private settings: SettingsService, private title: Title) {
+    private strings: any;
+
+    constructor(private settings: SettingsService,
+                private stringsService: StringsService,
+                private title: Title) {
         // SettingsService is loaded here so the same instance is available
         // to all child components.
-        title.setTitle('TaskBoard - Settings');
+
+        stringsService.stringsChanged.subscribe(newStrings => {
+            this.strings = newStrings;
+            title.setTitle('TaskBoard - ' + this.strings['settings']); // tslint:disable-line
+        });
     }
 }
 

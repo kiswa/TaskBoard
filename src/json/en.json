@@ -1,6 +1,12 @@
 {
     "reset": "Reset",
     "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "save": "Save",
+    "cancel": "Cancel",
+
+    "settings": "Settings",
     "settings_userSettings": "My Settings",
     "settings_changePassword": "Change Password",
     "settings_currentPassword": "Current Password",
@@ -13,12 +19,33 @@
     "settings_blank": "Blank to disable",
     "settings_globalOptions": "Global Options",
     "settings_displayLanguage": "Display Language",
-    "settings_defaultBoard": "Select default board",
+    "settings_selectDefaultBoard": "Select default board",
     "settings_newTasks": "New tasks appear at column",
     "settings_bottom": "bottom",
     "settings_top": "top",
     "settings_optionsDisplay": "Display tasks side-by-side in columns?",
     "settings_optionsAnimate": "Show animations?",
-    "settings_optionsAssignee": "Show Assignee on task cards?"
+    "settings_optionsAssignee": "Show Assignee on task cards?",
+
+    "settings_userAdmin": "User Administration",
+    "settings_user": "User",
+    "settings_email": "Email",
+    "settings_securityLevel": "Security Level",
+    "settings_defaultBoard": "Default Board",
+    "settings_actions": "Actions",
+    "settings_edit": "Edit",
+    "settings_removeUser": "Remove User",
+    "settings_add": "Add",
+    "settings_change": "Change",
+    "settings_confirmUserRemoval": "Confirm User Removal",
+    "settings_removeUserWarning": "Removing a user cannot be undone.",
+    "setings_continue": "Continue?",
+    "settings_username": "Username",
+    "settings_password": "Password",
+    "settings_emailPlaceholder": "New Email - Blank to disable",
+    "settings_defaultBoardHelp": "Selecting a default board adds the user to that board.",
+    "settings_boardAccess": "Board Access",
+    "settings_boardAdmin": "Board Admin",
+    "settings_admin": "Admin"
 }
 

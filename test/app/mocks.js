@@ -201,6 +201,13 @@ var actions = [
     }
 ];
 
+global.StringsServiceMock = {
+    stringsChanged: {
+        subscribe: function() {}
+    },
+    loadStrings: function() {}
+};
+
 global.SettingsServiceMock = function() {
     var userList = new RxJs.BehaviorSubject(users),
         boardList = new RxJs.BehaviorSubject(boards),

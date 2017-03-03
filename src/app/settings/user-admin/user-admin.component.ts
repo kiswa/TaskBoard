@@ -10,7 +10,8 @@ import {
     User,
     AuthService,
     ModalService,
-    NotificationsService
+    NotificationsService,
+    StringsService
 } from '../../shared/index';
 import {
     UserDisplay,
@@ -29,6 +30,7 @@ export class UserAdmin {
     private activeUser: User;
     private modalProps: ModalProperties;
     private userToRemove: UserDisplay;
+    private strings: any;
 
     private loading = true;
     private saving = false;
@@ -40,7 +42,8 @@ export class UserAdmin {
                 private notes: NotificationsService,
                 private auth: AuthService,
                 private settings: SettingsService,
-                private modal: ModalService) {
+                private modal: ModalService,
+                private stringsService: StringsService) {
         this.MODAL_ID = 'user-addEdit-form';
         this.MODAL_CONFIRM_ID = 'user-remove-confirm';
 
@@ -60,6 +63,10 @@ export class UserAdmin {
                                            activeUser.board_access);
                 this.replaceUser(activeUser);
             });
+
+        stringsService.stringsChanged.subscribe(newStrings => {
+            this.strings = newStrings;
+        });
 
         settings.boardsChanged
             .subscribe(boards => {
@@ -225,11 +232,11 @@ export class UserAdmin {
     }
 
     private showModal(title: string, user?: UserDisplay): void {
-        let isAdd = (title === 'Add');
+        let isAdd = (title === this.strings.settings_add);
 
         this.modalProps = {
             title,
-            prefix: isAdd ? '' : 'Change',
+            prefix: isAdd ? '' : this.strings.settings_change,
             user: isAdd ? new ModalUser(new User()) : new ModalUser(user)
         };
 
