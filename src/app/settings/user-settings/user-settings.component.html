@@ -1,100 +1,112 @@
 <section>
-    <h2>My Settings</h2>
+    <h2>{{ strings['settings_userSettings'] }}</h2>
 
     <div class="half">
-        <h3>Change Password</h3>
+        <h3>{{ strings['settings_changePassword'] }}</h3>
 
         <form>
-            <label for="currentPassword" class="hidden">Current Password</label>
+            <label for="currentPassword" class="hidden">
+                {{ strings['settings_currentPassword'] }}</label>
             <input type="password" id="currentPassword" name="currentPassword"
-                placeholder="Current Password"
+                placeholder="{{ strings['settings_currentPassword'] }}"
                 [(ngModel)]="changePassword.current">
 
-            <label for="newPassword" class="hidden">New Password</label>
+            <label for="newPassword" class="hidden">
+                {{ strings['settings_newPassword'] }}</label>
             <input type="password" id="newPassword" name="newPassword"
-                placeholder="New Password"
+                placeholder="{{ strings['settings_newPassword'] }}"
                 [(ngModel)]="changePassword.newPass">
 
-            <label for="verifyPassword" class="hidden">Verify Password</label>
+            <label for="verifyPassword" class="hidden">
+                {{ strings['settings_verifyPassword'] }}</label>
             <input type="password" id="verifyPassword" name="verifyPassword"
-                placeholder="Verify New Password"
+                placeholder="{{ strings['settings_verifyPassword'] }}"
                 [(ngModel)]="changePassword.verPass">
 
             <button type="submit" [disabled]="changePassword.submitted"
-                (click)="updatePassword()">Change Password</button>
+                (click)="updatePassword()">{{ strings['settings_changePassword'] }}</button>
             <button class="flat" [disabled] = "changePassword.submitted"
-                (click)="resetPasswordForm()">Reset</button>
+                (click)="resetPasswordForm()">{{ strings['reset'] }}</button>
         </form>
 
-        <h3 class="tall">Global Options</h3>
+        <h3 class="tall">{{ strings['settings_globalOptions'] }}</h3>
         <label>
-            Select default board:
+            {{ strings['settings_displayLanguage'] }}:
+            <select class="autosize"
+                [ngModel]="userOptions.language"
+                (ngModelChange)="onOptionChange('language', $event)">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+            </select>
+        </label>
+        <label>
+            {{ strings['settings_defaultBoard'] }}:
             <select class="autosize"
                 [ngModel]="user.default_board_id"
                 (ngModelChange)="updateDefaultBoard($event)">
-                <option value="0">None</option>
+                <option value="0">{{ strings['none'] }}</option>
                 <option *ngFor="let board of boards" value="{{ board.id }}">
                     {{ board.name }}
                 </option>
             </select>
         </label>
         <label>
-            New tasks appear at column
+            {{ strings['settings_newTasks'] }}:
             <select class="autosize"
                 [ngModel]="userOptions.new_tasks_at_bottom"
                 (ngModelChange)="onOptionChange('new_tasks', $event)">
-                <option value="true">bottom</option>
-                <option value="false">top</option>
+                <option value="true">{{ strings['settings_bottom'] }}</option>
+                <option value="false">{{ strings['settings_top'] }}</option>
             </select>
-        </label>
-        <label>
-            Display tasks side-by-side in colums?
-            <input type="checkbox" class="hidden"
-                [ngModel]="userOptions.multiple_tasks_per_row"
-                (ngModelChange)="onOptionChange('mult_tasks', $event)">
-            <span class="toggle"></span>
         </label>
     </div>
 
     <div class="half">
-        <h3>Change Username</h3>
+        <h3>{{ strings['settings_changeUsername'] }}</h3>
 
         <form>
-            <label for="username" class="hidden">New Username</label>
+            <label for="username" class="hidden">{{ strings['settings_newUsername'] }}</label>
             <input type="text" id="username" name="username"
-                placeholder="New Username"
+                placeholder="{{ strings['settings_newUsername'] }}"
                 [(ngModel)]="changeUsername.newName">
 
             <button type="submit" [disabled]="changeUsername.submitted"
-                (click)="updateUsername()">Change Username</button>
+                (click)="updateUsername()">{{ strings['settings_changeUsername'] }}</button>
             <button class="flat" [disabled]="changeUsername.submitted"
-                (click)="resetUsernameForm()">Reset</button>
+                (click)="resetUsernameForm()">{{ strings['reset'] }}</button>
         </form>
 
         <form>
-            <h3 class="tall">Change Email</h3>
+            <h3 class="tall">{{ strings['settings_changeEmail'] }}</h3>
 
-            <label for="email" class="hidden">New Email</label>
+            <label for="email" class="hidden">{{ strings['settings_newEmail'] }}</label>
             <input type="text" id="email" name="email"
-                placeholder="New Email - Blank to disable"
+                placeholder="{{ strings['settings_newEmail'] }} - {{ strings['settings_blank'] }}"
                 [(ngModel)]="changeEmail.newEmail">
 
             <button type="submit" [disabled]="changeEmail.submitted"
-                (click)="updateEmail()">Change Email</button>
+                (click)="updateEmail()">{{ strings['settings_changeEmail'] }}</button>
             <button class="flat" [disabled]="changeEmail.submitted"
-                (click)="resetEmailForm()">Reset</button>
+                (click)="resetEmailForm()">{{ strings['reset'] }}</button>
         </form>
 
         <div class="hold-bottom">
             <label>
-                Show animations?
+                {{ strings['settings_optionsDisplay'] }}
+                <input type="checkbox" class="hidden"
+                    [ngModel]="userOptions.multiple_tasks_per_row"
+                    (ngModelChange)="onOptionChange('mult_tasks', $event)">
+                <span class="toggle"></span>
+            </label>
+            <label>
+                {{ strings['settings_optionsAnimate'] }}
                 <input type="checkbox" class="hidden"
                     [ngModel]="userOptions.show_animations"
                     (ngModelChange)="onOptionChange('show_anim', $event)">
                 <span class="toggle"></span>
             </label>
             <label>
-                Show Assignee on task cards?
+                {{ strings['settings_optionsAssignee'] }}
                 <input type="checkbox" class="hidden"
                     [ngModel]="userOptions.show_assignee"
                     (ngModelChange)="onOptionChange('show_assign', $event)">

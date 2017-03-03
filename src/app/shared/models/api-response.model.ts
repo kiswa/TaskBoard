@@ -1,8 +1,9 @@
 import { Notification } from './notification.model';
 
-export interface ApiResponse {
-    alerts: Array<Notification>;
-    data: Array<any>;
-    status: string;
+export class ApiResponse {
+    constructor(public alerts: Array<Notification> = [],
+                public data: Array<any> = [],
+                public status: string = '') {
+    }
 }
 

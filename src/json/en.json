@@ -1,0 +1,24 @@
+{
+    "reset": "Reset",
+    "none": "None",
+    "settings_userSettings": "My Settings",
+    "settings_changePassword": "Change Password",
+    "settings_currentPassword": "Current Password",
+    "settings_newPassword": "New Password",
+    "settings_verifyPassword": "Verify Password",
+    "settings_changeUsername": "Change Username",
+    "settings_newUsername": "New Username",
+    "settings_changeEmail": "Change Email",
+    "settings_newEmail": "New Email",
+    "settings_blank": "Blank to disable",
+    "settings_globalOptions": "Global Options",
+    "settings_displayLanguage": "Display Language",
+    "settings_defaultBoard": "Select default board",
+    "settings_newTasks": "New tasks appear at column",
+    "settings_bottom": "bottom",
+    "settings_top": "top",
+    "settings_optionsDisplay": "Display tasks side-by-side in columns?",
+    "settings_optionsAnimate": "Show animations?",
+    "settings_optionsAssignee": "Show Assignee on task cards?"
+}
+

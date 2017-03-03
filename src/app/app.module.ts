@@ -12,13 +12,14 @@ import { API_HTTP_PROVIDERS } from './app.api-http';
 import { Constants } from './shared/constants';
 import {
     AuthGuard,
-    AuthService,
-    Notifications,
-    NotificationsService,
-    Modal,
-    ModalService,
     InlineEdit,
-    TopNav
+    Modal,
+    Notifications,
+    TopNav,
+    AuthService,
+    ModalService,
+    NotificationsService,
+    StringsService
 } from './shared/index';
 import { BoardService } from './board/board.service';
 
@@ -31,20 +32,21 @@ import { BoardService } from './board/board.service';
         DragulaModule
     ],
     providers: [
-        Title,
         API_HTTP_PROVIDERS,
         AuthGuard,
-        AuthService,
-        NotificationsService,
-        ModalService,
         Constants,
-        BoardService
+        Title,
+        AuthService,
+        BoardService,
+        ModalService,
+        NotificationsService,
+        StringsService
     ],
     declarations: [
         AppComponent,
-        Notifications,
-        Modal,
         InlineEdit,
+        Modal,
+        Notifications,
         TopNav,
         ...ROUTE_COMPONENTS
     ],

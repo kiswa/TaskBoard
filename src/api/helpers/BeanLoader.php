@@ -222,10 +222,12 @@ class BeanLoader {
             ? (boolean)$data->show_assignee : '';
         $opts->multiple_tasks_per_row = isset($data->multiple_tasks_per_row)
             ? (boolean)$data->multiple_tasks_per_row : '';
+        $opts->language = isset($data->language)
+            ? $data->language : '';
 
         if (!isset($data->new_tasks_at_bottom) ||
             !isset($data->show_animations) || !isset($data->show_assignee) ||
-            !isset($data->multiple_tasks_per_row)) {
+            !isset($data->multiple_tasks_per_row) || !isset($data->language)) {
             return false;
         }
 

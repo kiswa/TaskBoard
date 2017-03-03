@@ -103,8 +103,8 @@ export class UserSettingsService {
             .map(res => {
                 let response: ApiResponse = res.json();
 
-                this.auth.updateUser(JSON.parse(response.data[2]));
-
+                this.auth.updateUser(JSON.parse(response.data[2]),
+                                     JSON.parse(response.data[1]));
                 return response;
             })
             .catch((res, caught) => {

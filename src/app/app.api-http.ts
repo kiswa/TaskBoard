@@ -85,7 +85,10 @@ export class ApiHttp extends Http {
         return observable
             .map((res: Response) => {
                 let response: ApiResponse = res.json();
-                localStorage.setItem(this.JWT_KEY, response.data[0]);
+
+                if (response.data) {
+                    localStorage.setItem(this.JWT_KEY, response.data[0]);
+                }
 
                 return res;
             })

@@ -1,7 +1,7 @@
 <tb-top-nav page-name="{{ pageName }}"></tb-top-nav>
 
 <div class="board-nav">
-    <label>
+    <label *ngIf="boards && boards.length">
         Select Board:
         <select [(ngModel)]="boardNavId"
             (change)="goToBoard()">
@@ -40,14 +40,14 @@
     </div>
 </div>
 
-<div class="no-boards center" *ngIf="!loading && (!boards || boards.length === 0)">
+<div class="no-boards center" *ngIf="noBoards()">
     <h1>No Boards</h1>
 
     <p>{{ noBoardsMessage }}</p>
 </div>
 
 <div class="no-boards center"
-    *ngIf="!activeBoard && !activeUser.default_board_id">
+    *ngIf="!loading && !activeBoard && !noBoards() && !activeUser.default_board_id">
     <h1>No Default Board</h1>
 
     <p>

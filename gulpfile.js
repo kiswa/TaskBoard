@@ -41,6 +41,7 @@ let gulp = require('gulp'),
             'src/**/*.html',
             'src/.htaccess'
         ],
+        json: 'src/json/**/*.json',
         images: 'src/images/**/*.*',
         scss: 'src/scss/**/*.scss',
         scssMain: 'src/scss/main.scss',
@@ -56,11 +57,7 @@ gulp.task('clean', () => {
         'dist',
         'build',
         'tests.db',
-        '.coverrun',
-        '.coverdata',
-        'api-coverage',
         'coverage',
-        'temp',
         'src/api/vendor/'
     ]);
 });
@@ -68,6 +65,11 @@ gulp.task('clean', () => {
 gulp.task('html', () => {
     return gulp.src(paths.html)
         .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('json', () => {
+    return gulp.src(paths.json)
+        .pipe(gulp.dest('dist/strings/'));
 });
 
 gulp.task('fonts', () => {
@@ -172,7 +174,7 @@ gulp.task('api', () => {
         .pipe(gulp.dest('dist/api/'));
 });
 
-gulp.task('app', ['html', 'system-build', 'ts-lint']);
+gulp.task('app', ['html', 'json', 'system-build', 'ts-lint']);
 
 gulp.task('styles', ['html', 'scss-lint', 'scss']);
 
@@ -261,6 +263,7 @@ gulp.task('default', [
     'ts-lint',
     'system-build',
     'html',
+    'json',
     'images',
     'scss-lint',
     'fonts',

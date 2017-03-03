@@ -1,0 +1,24 @@
+{
+    "reset": "Reiniciar",
+    "none": "Nada",
+    "settings_userSettings": "Mi Configuración",
+    "settings_changePassword": "Cambia la Contraseña",
+    "settings_currentPassword": "Contraseña Actual",
+    "settings_newPassword": "Contraseña Nueva",
+    "settings_verifyPassword": "Verficar Contraseña",
+    "settings_changeUsername": "Cambia el Nombre de Usuario",
+    "settings_newUsername": "Nuevo Nombre de Usuario",
+    "settings_changeEmail": "Cambia Email",
+    "settings_newEmail": "Nuevo Email",
+    "settings_blank": "En blanco para desactivar",
+    "settings_globalOptions": "Opciones Globales",
+    "settings_displayLanguage": "Idioma de la Pantalla",
+    "settings_defaultBoard": "Seleccionar Tablero Predeterminada",
+    "settings_newTasks": "Nuevas tareas aparecen en la columna",
+    "settings_bottom": "parte inferior",
+    "settings_top": "parte superior",
+    "settings_optionsDisplay": "¿Mostrar tareas lado a lado en columnas?",
+    "settings_optionsAnimate": "¿Mostrar animaciones?",
+    "settings_optionsAssignee": "¿Mostrar al cesionario en las tarjetas de tarea?"
+}
+

@@ -9,12 +9,12 @@ describe('Notification', () => {
         notification = new Notification();
     });
 
-    it('has type', () => {
+    it('has a type string', () => {
         expect(notification.type).to.be.a('string');
         expect(notification.type).to.equal('');
     });
 
-    it('has text', () => {
+    it('has a text string', () => {
         expect(notification.text).to.be.a('string');
         expect(notification.text).to.equal('');
     });

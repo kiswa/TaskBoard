@@ -43,17 +43,17 @@ const ROUTES: Routes = [
 ];
 
 export const ROUTE_COMPONENTS = [
-    Login,
+    AutoActions,
+    BoardAdmin,
     BoardDisplay,
+    Calendar,
+    Charts,
     ColumnDisplay,
+    Dashboard,
+    Login,
     Settings,
     UserAdmin,
-    BoardAdmin,
-    UserSettings,
-    AutoActions,
-    Dashboard,
-    Charts,
-    Calendar
+    UserSettings
 ];
 
 export const APP_ROUTING = RouterModule.forRoot(ROUTES);

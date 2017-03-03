@@ -90,15 +90,20 @@ export class BoardDisplay implements OnInit {
     private updateBoardsList(boards: Array<any>): void {
         let activeBoards: Array<Board> = [];
 
-        boards.forEach((board: any) => {
-            let currentBoard = new Board(+board.id, board.name,
-                                         board.is_active === '1', board.ownColumn,
-                                         board.ownCategory, board.ownAutoAction,
-                                         board.ownIssuetracker, board.sharedUser);
-            if (currentBoard.is_active) {
-                activeBoards.push(currentBoard);
-            }
-        });
+        if (boards) {
+            boards.forEach((board: any) => {
+                let currentBoard = new Board(+board.id, board.name,
+                                             board.is_active === '1',
+                                             board.ownColumn,
+                                             board.ownCategory,
+                                             board.ownAutoAction,
+                                             board.ownIssuetracker,
+                                             board.sharedUser);
+                if (currentBoard.is_active) {
+                    activeBoards.push(currentBoard);
+                }
+            });
+        }
 
         this.boards = activeBoards;
 
@@ -141,6 +146,16 @@ export class BoardDisplay implements OnInit {
         if (+activeUser.security_level === 1) {
             this.noBoardsMessage = 'Go to Settings to create a board.';
         }
+    }
+
+    private noBoards(): boolean {
+        if (!this.loading) {
+            if (!this.boards || this.boards.length === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 

@@ -4,13 +4,14 @@ import { SettingsService } from '../settings.service';
 import { UserSettingsService } from './user-settings.service';
 import { PassForm, UsernameForm, EmailForm } from './user-settings.models';
 import {
+    ApiResponse,
+    Board,
+    Notification,
+    User,
+    UserOptions,
     AuthService,
     NotificationsService,
-    User,
-    Board,
-    UserOptions,
-    Notification,
-    ApiResponse
+    StringsService
 } from '../../shared/index';
 
 @Component({
@@ -25,18 +26,25 @@ export class UserSettings implements OnInit {
     private changePassword: PassForm;
     private changeUsername: UsernameForm;
     private changeEmail: EmailForm;
+    private strings: any;
 
     constructor(private auth: AuthService,
                 private notes: NotificationsService,
                 private settings: SettingsService,
-                private users: UserSettingsService) {
+                private users: UserSettingsService,
+                private stringsService: StringsService) {
         this.boards = [];
         this.changeEmail = new EmailForm();
+        this.strings = {};
 
         auth.userChanged.subscribe(user => {
             this.user = user;
             this.changeEmail.newEmail = user.email;
             this.userOptions = auth.userOptions;
+        });
+
+        stringsService.stringsChanged.subscribe(newStrings => {
+            this.strings = newStrings;
         });
 
         settings.boardsChanged.subscribe(boards => {
@@ -61,6 +69,9 @@ export class UserSettings implements OnInit {
             break;
             case 'show_assign':
                 this.userOptions.show_assignee = event;
+            break;
+            case 'language':
+                this.userOptions.language = event;
             break;
         }
         this.updateUserOptions();
@@ -172,6 +183,10 @@ export class UserSettings implements OnInit {
 
     resetEmailForm() {
         this.changeEmail = new EmailForm(this.user.email);
+    }
+
+    private getString(key: string): string {
+        return this.strings.getString(key);
     }
 
     private addAlerts(alerts: Array<Notification>) {

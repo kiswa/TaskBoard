@@ -4,5 +4,6 @@ export interface UserOptions {
     show_animations: boolean;
     show_assignee: boolean;
     multiple_tasks_per_row: boolean;
+    language: string;
 }
 

@@ -50,6 +50,7 @@ class Auth extends BaseController {
         $opts->show_animations = true;
         $opts->show_assignee = true;
         $opts->multiple_tasks_per_row = false;
+        $opts->language = 'en';
 
         R::store($opts);
         $admin->user_option_id = $opts->id;

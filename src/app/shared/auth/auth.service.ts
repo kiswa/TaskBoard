@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http } from '@angular/http';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -8,8 +8,13 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { User, UserOptions, ApiResponse } from '../index';
+import {
+    ApiResponse,
+    User,
+    UserOptions
+} from '../index';
 import { Constants } from '../constants';
+import { StringsService } from '../strings/strings.service';
 
 @Injectable()
 export class AuthService {
@@ -19,15 +24,16 @@ export class AuthService {
     public userChanged = this.activeUser.asObservable();
 
     constructor(constants: Constants, private http: Http,
-                private router: Router) {
+                private router: Router, private strings: StringsService) {
     }
 
     updateUser(user: User, userOpts?: UserOptions): void {
-        this.activeUser.next(user);
-
         if (userOpts) {
             this.userOptions = this.convertOpts(userOpts);
+            this.strings.loadStrings(this.userOptions.language);
         }
+
+        this.activeUser.next(user);
     }
 
     authenticate(): Observable<boolean> {
@@ -83,6 +89,7 @@ export class AuthService {
         converted.show_animations = opts.show_animations === '1';
         converted.show_assignee = opts.show_assignee === '1';
         converted.multiple_tasks_per_row = opts.multiple_tasks_per_row === '1';
+        converted.language = opts.language;
 
         return converted;
     }
