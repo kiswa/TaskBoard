@@ -3,25 +3,34 @@ import { Router } from '@angular/router';
 
 import { Constants } from '../constants';
 import { AuthService } from '../auth/index';
-import { NotificationsService } from '../notifications/index';
 import { Notification } from '../models/index';
+import { NotificationsService } from '../notifications/index';
+import { StringsService } from '../strings/strings.service';
 
 @Component({
     selector: 'tb-top-nav',
     templateUrl: 'app/shared/top-nav/top-nav.component.html'
 })
 export class TopNav {
+    private strings: any;
+
     @Input('page-name') pageName: string = '';
+
     version: string = '';
     username: string = '';
 
     constructor(constants: Constants, private router: Router,
                 private authService: AuthService,
-                private notes: NotificationsService) {
+                private notes: NotificationsService,
+                private stringsService: StringsService) {
         this.version = constants.VERSION;
 
         authService.userChanged
             .subscribe(user => this.username = user.username);
+
+        stringsService.stringsChanged.subscribe(newStrings => {
+            this.strings = newStrings;
+        });
     }
 
     logout(): void {

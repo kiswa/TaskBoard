@@ -21,8 +21,8 @@
                     <td>
                         <span *ngIf="user.can_admin">
                             <a class="padded" href="javascript:"
-                                title="{{ strings['settings_edit'] }} {{ strings['settings_user'] }}"
-                                (click)="showModal(strings['settings_edit'], user)">
+                                title="{{ strings['settings_editUser'] }}"
+                                (click)="showModal(false, user)">
                                 <i class="icon icon-edit color-primary"></i>
                             </a>
                             <a class="padded" href="javascript:"
@@ -41,9 +41,9 @@
         </div>
 
         <button *ngIf="activeUser.security_level < 3"
-            (click)="showModal(strings['settings_add'])">
+            (click)="showModal()">
             <i class="icon icon-plus"></i>
-            {{ strings['settings_add'] }} {{ strings['settings_user'] }}
+            {{ strings['settings_addUser'] }}
         </button>
     </div>
 </section>
@@ -62,17 +62,20 @@
     </div>
 </tb-modal>
 
-<tb-modal modal-title="{{ modalProps.title }} {{ strings['settings_user'] }}"
+<tb-modal modal-title="{{ modalProps.prefix ? strings['settings_addUser']
+                                            : strings['settings_editUser'] }}"
     modal-id="{{ MODAL_ID }}">
     <label>
-        {{ modalProps.prefix }} {{ strings['settings_username'] }}
+        {{ modalProps.prefix ? strings['settings_username']
+                             : strings['settings_changeUsername'] }}
         <input #focusMe type="text" name="new-username"
             placeholder="{{ strings['settings_username'] }}"
             [(ngModel)]="modalProps.user.username">
     </label>
 
     <label>
-        {{ modalProps.prefix }} {{ strings['settings_password'] }}
+        {{ modalProps.prefix ? strings['settings_password']
+                             : strings['settings_changePassword']}}
         <input type="password" name="new-password"
             placeholder="{{ strings['settings_password'] }}"
             [(ngModel)]="modalProps.user.password">
@@ -82,7 +85,8 @@
         [(ngModel)]="modalProps.user.password_verify">
 
     <label>
-        {{ modalProps.prefix }} {{ strings['settings_email'] }}
+        {{ modalProps.prefix ? strings['settings_email']
+                             : strings['settings_changeEmail']}}
         <input type="text" name="new-email"
             placeholder="{{ strings['settings_emailPlaceholder'] }}"
             [(ngModel)]="modalProps.user.email">
@@ -127,9 +131,8 @@
             <i class="icon"
                 [ngClass]="{ 'icon-plus': modalProps.prefix === '',
                     'icon-floppy': modalProps.prefix !== '' }"></i>
-            {{ modalProps.prefix === ''
-               ? strings['settings_add'] : strings['save'] }}
-            {{ strings['settings_user'] }}
+                {{ modalProps.prefix ? strings['settings_addUser']
+                                     : strings['settings_saveUser'] }}
         </button>
         <button class="flat" (click)="modal.close(MODAL_ID)">
             {{ strings['cancel'] }}

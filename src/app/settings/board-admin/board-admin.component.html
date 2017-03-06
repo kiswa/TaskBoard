@@ -1,15 +1,15 @@
 <section>
-    <h2>Board Administration</h2>
+    <h2>{{ strings['settings_boardAdmin'] }}</h2>
 
     <div class="row">
-        <h3>Current Boards</h3>
+        <h3>{{ strings['settings_currentBoards']  }}</h3>
 
         <div class="small right filters" *ngIf="boards.length">
             <label class="inline right">
-                Show By User:
+                {{ strings['settings_showByUser'] }}:
                 <select class="autosize" [(ngModel)]="userFilter"
                     (change)="filterBoards()">
-                    <option value="-1">Any User</option>
+                    <option value="-1">{{ strings['settings_anyUser'] }}</option>
                     <option *ngFor="let user of users"
                         [value]="user.id">
                         {{ user.username }}
@@ -18,23 +18,23 @@
             </label>
 
             <label class="inline right">
-                Filter By:
+                {{ strings['settings_filterBy'] }}:
                 <select class="autosize" [(ngModel)]="statusFilter"
                     (change)="filterBoards()">
-                    <option value="-1">All Boards</option>
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
+                    <option value="-1">{{ strings['settings_allBoards'] }}</option>
+                    <option value="1">{{ strings['settings_active'] }}</option>
+                    <option value="0">{{ strings['settings_inactive'] }}</option>
                 </select>
             </label>
 
             <label class="inline right">
-                Sort By:
+                {{ strings['settings_sortBy'] }}:
                 <select class="autosize" [(ngModel)]="sortFilter"
                     (change)="filterBoards()">
-                    <option value="name-asc">Name (A-Z)</option>
-                    <option value="name-desc">Name (Z-A)</option>
-                    <option value="id-desc">Creation (New First)</option>
-                    <option value="id-asc">Creation (Old First)</option>
+                    <option value="name-asc">{{ strings['settings_name'] }} (A-Z)</option>
+                    <option value="name-desc">{{ strings['settings_name'] }} (Z-A)</option>
+                    <option value="id-desc">{{ strings['settings_creationNew'] }}</option>
+                    <option value="id-asc">{{ strings['settings_creationOld'] }}</option>
                 </select>
             </label>
         </div>
@@ -42,11 +42,11 @@
         <table class="alternating">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Columns</th>
-                    <th>Categories</th>
-                    <th>Users</th>
-                    <th>Actions</th>
+                    <th>{{ strings['settings_name'] }}</th>
+                    <th>{{ strings['settings_columns'] }}</th>
+                    <th>{{ strings['settings_categories'] }}</th>
+                    <th>{{ strings['settings_users'] }}</th>
+                    <th>{{ strings['settings_actions'] }}</th>
                 </tr>
             </thead>
 
@@ -65,7 +65,8 @@
                         <ul>
                             <li *ngFor="let col of board.columns">
                                 {{ col.name }}
-                                <span class="badge" title="Task Count">{{ col.tasks ? col.tasks.length : 0 }}</span>
+                                <span class="badge" title="Task Count">
+                                    {{ col.tasks ? col.tasks.length : 0 }}</span>
                             </li>
                         </ul>
                     </td>
@@ -93,12 +94,12 @@
                     <td>
                         <span *ngIf="activeUser.security_level < 3">
                             <a class="padded" href="javascript:"
-                                title="Edit Board"
+                                title="{{ strings['settings_editBoard'] }}"
                                 (click)="showModal('Edit', board)">
                                 <i class="icon icon-edit color-primary"></i>
                             </a>
                             <a class="padded" href="javascript:"
-                                title="Remove Board"
+                                title="{{ strings['settings_removeBoard'] }}"
                                 (click)="showConfirmModal(board)">
                                 <i class="icon icon-trash-empty
                                     color-secondary"></i>
@@ -108,7 +109,9 @@
                                     (change)="toggleBoardStatus(board)"
                                     [ngModel]="board.is_active">
                                 <span class="toggle"></span>
-                                {{ board.is_active ? 'Active' : 'Inactive' }}
+                                {{ board.is_active
+                                   ? strings['settings_active']
+                                   : strings['settings_inactive'] }}
                             </label>
                         </span>
                     </td>
@@ -122,38 +125,39 @@
 
         <button *ngIf="activeUser && activeUser.security_level === 1"
             (click)="showModal('Add')">
-            <i class="icon icon-plus"></i> Add Board
+            <i class="icon icon-plus"></i> {{ strings['settings_addBoard'] }}
         </button>
     </div>
 </section>
 
-<tb-modal modal-title="Confirm Board Removal" blocking="true"
-    modal-id="{{ MODAL_CONFIRM_ID }}">
+<tb-modal modal-title="{{ strings['settings_confirmBoardRemoval'] }}"
+    blocking="true" modal-id="{{ MODAL_CONFIRM_ID }}">
 
     <div class="center">
-        Removing a board cannot be undone.<br>Continue?
+        {{ strings['settings_removeBoardWarning'] }}<br>{{ strings['settings_continue'] }}
     </div>
 
     <div class="buttons">
         <button class="flat"
             (click)="removeBoard()"
-            [disabled]="saving">Yes</button>
+            [disabled]="saving">{{ strings['yes'] }}</button>
         <button #defaultAction
             (click)="modal.close(MODAL_CONFIRM_ID)"
-            [disabled]="saving">No</button>
+            [disabled]="saving">{{ strings['no'] }}</button>
     </div>
 </tb-modal>
 
-<tb-modal modal-title="{{ modalProps.title }} Board"
+<tb-modal modal-title="{{ modalProps.title === 'Add' ?
+    strings['settings_addBoard'] : strings['settings_editBoard'] }}"
     modal-id="{{ MODAL_ID }}" wide="true">
     <label>
-        Board Name
+        {{ strings['settings_boardName'] }}
         <input #focusMe type="text" name="board-name"
             placeholder="Board Name" [(ngModel)]="modalProps.name">
     </label>
 
     <div class="half-modal">
-        <label>Columns</label>
+        <label>{{ strings['settings_columns'] }}</label>
         <ul class="modal-list" [hidden]="!modalProps.columns.length"
             [dragula]="'columns-bag'" [dragulaModel]="modalProps.columns">
             <li *ngFor="let column of modalProps.columns; let i = index">
@@ -162,7 +166,7 @@
                     (edit)="onPropertyEdit('columns', 'name', i, $event)"></inline-edit>
                 <span class="actions">
                     <i class="icon icon-trash-empty color-secondary"
-                        title="Remove"
+                        title="{{ strings['settings_removeColumn'] }}"
                         (click)="modalProps.removeColumn(column)"></i>
                 </span>
             </li>
@@ -171,11 +175,12 @@
         <div class="quick-add">
             <form>
                 <input type="text" name="new-column"
-                    placeholder="Column Name"
+                    placeholder="{{ strings['settings_columnName'] }}"
                     (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.newColumnName">
-                <button type="submit" class="flat" title="Add Column"
-                    (click)="modalProps.addColumn($event)">
+                    <button type="submit" class="flat"
+                        title="{{ strings['settings_addColumn'] }}"
+                        (click)="modalProps.addColumn($event)">
                     <i class="icon icon-plus"></i>
                 </button>
             </form>
@@ -183,7 +188,7 @@
     </div>
 
     <div class="half-modal">
-        <label>Categories</label>
+        <label>{{ strings['settings_categories'] }}</label>
         <ul *ngIf="modalProps.categories.length" class="modal-list">
             <li *ngFor="let category of modalProps.categories; let i = index">
                 <span class="badge" title="Default Task Color"
@@ -201,7 +206,7 @@
         <div class="quick-add categories">
             <form>
                 <input type="text" name="new-category"
-                    placeholder="Category Name"
+                    placeholder="{{ strings['settings_categoryName'] }}"
                     (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.newCategoryName">
                 <input type="color" name="category-default-color"

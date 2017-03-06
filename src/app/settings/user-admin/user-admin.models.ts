@@ -10,8 +10,7 @@ export class UserDisplay extends User {
 
 export class ModalUser extends UserDisplay {
     public password: string = '';
-    /* tslint:disable-next-line:variable-name */
-    public password_verify: string = '';
+    public password_verify: string = ''; // tslint:disable-line
     public boardAccess: Array<string> = [];
 
     constructor(user: User) {
@@ -26,8 +25,7 @@ export class ModalUser extends UserDisplay {
 }
 
 export class ModalProperties {
-    constructor(public title: string,
-                public prefix: string,
+    constructor(public prefix: boolean,
                 public user: ModalUser) {
     }
 }

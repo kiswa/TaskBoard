@@ -49,7 +49,7 @@ export class UserAdmin {
 
         this.users = [];
         this.boards = [];
-        this.modalProps = new ModalProperties('', '', new ModalUser(new User()));
+        this.modalProps = new ModalProperties(true, new ModalUser(new User()));
 
         auth.userChanged
             .subscribe(activeUser => {
@@ -86,7 +86,7 @@ export class UserAdmin {
     }
 
     addEditUser(): void {
-        let isAdd = (this.modalProps.title === 'Add');
+        let isAdd = this.modalProps.prefix;
         this.saving = true;
 
         if (!this.validateModalUser()) {
@@ -208,7 +208,7 @@ export class UserAdmin {
             return false;
         }
 
-        if (this.modalProps.title === 'Add' && user.password === '') {
+        if (this.modalProps.prefix && user.password === '') {
             this.notes.add(new Notification('error', 'Password is required.'));
             return false;
         }
@@ -231,12 +231,9 @@ export class UserAdmin {
         return true;
     }
 
-    private showModal(title: string, user?: UserDisplay): void {
-        let isAdd = (title === this.strings.settings_add);
-
+    private showModal(isAdd: boolean = true, user?: UserDisplay): void {
         this.modalProps = {
-            title,
-            prefix: isAdd ? '' : this.strings.settings_change,
+            prefix: isAdd,
             user: isAdd ? new ModalUser(new User()) : new ModalUser(user)
         };
 

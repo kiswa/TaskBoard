@@ -12,7 +12,8 @@ import {
     Notification,
     AuthService,
     ModalService,
-    NotificationsService
+    NotificationsService,
+    StringsService
 } from '../../shared/index';
 import { SettingsService } from '../settings.service';
 import { BoardAdminService } from './board-admin.service';
@@ -36,6 +37,7 @@ export class BoardAdmin {
     private modalProps: BoardData;
     private noBoardsMessage: string;
     private boardToRemove: Board;
+    private strings: any;
 
     private userFilter: string;
     private statusFilter: string;
@@ -54,6 +56,7 @@ export class BoardAdmin {
                 private settings: SettingsService,
                 private boardService: BoardAdminService,
                 private notes: NotificationsService,
+                private stringsService: StringsService,
                 private dragula: DragulaService) {
         this.MODAL_ID = 'board-addedit-form';
         this.MODAL_CONFIRM_ID = 'board-remove-confirm';
@@ -67,14 +70,17 @@ export class BoardAdmin {
         this.sortFilter = 'name-asc';
 
         auth.userChanged.subscribe((user: User) => {
-                this.updateActiveUser(user);
-            });
+            this.updateActiveUser(user);
+        });
         settings.usersChanged.subscribe((users: Array<User>) => {
-                this.updateUsersList(users);
-            });
+            this.updateUsersList(users);
+        });
         settings.boardsChanged.subscribe((boards: Array<Board>) => {
-                this.updateBoardsList(boards);
-            });
+            this.updateBoardsList(boards);
+        });
+        stringsService.stringsChanged.subscribe(newStrings => {
+            this.strings = newStrings;
+        });
     }
 
     ngAfterContentInit() {

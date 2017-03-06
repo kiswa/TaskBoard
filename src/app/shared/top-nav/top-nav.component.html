@@ -11,13 +11,13 @@
 
     <div class="buttons">
         <button [ngClass]="{ flat: !isActive('dashboard') }"
-            (click)="navigateTo('dashboard')">Dashboard</button>
+            (click)="navigateTo('dashboard')">{{ strings['dashboard'] }}</button>
         <button [ngClass]="{ flat: !isActive('boards') }"
-            (click)="navigateTo('boards')">Boards</button>
+            (click)="navigateTo('boards')">{{ strings['boards'] }}</button>
         <button [ngClass]="{ flat: !isActive('settings') }"
-            (click)="navigateTo('settings')">Settings</button>
+            (click)="navigateTo('settings')">{{ strings['settings'] }}</button>
         <button class="flat"
-            (click)="logout()">Logout ({{ username }})</button>
+            (click)="logout()">{{ strings['logout'] }} ({{ username }})</button>
     </div>
 </nav>
 
