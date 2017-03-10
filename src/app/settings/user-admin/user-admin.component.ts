@@ -181,7 +181,7 @@ export class UserAdmin {
 
     private replaceUser(newUser: User) {
         this.users.forEach((user, index) => {
-            if (user.id === +newUser.id) {
+            if (+user.id === +newUser.id) {
                 this.users[index] = this.convertUser(newUser);
                 this.updateUserList();
             }

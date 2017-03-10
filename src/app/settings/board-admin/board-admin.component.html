@@ -1,5 +1,5 @@
 <section>
-    <h2>{{ strings['settings_boardAdmin'] }}</h2>
+    <h2>{{ strings['settings_boardAdministration'] }}</h2>
 
     <div class="row">
         <h3>{{ strings['settings_currentBoards']  }}</h3>
@@ -75,7 +75,8 @@
                         <ul *ngIf="board.categories && board.categories.length">
                             <li *ngFor="let cat of board.categories">
                                 {{ cat.name }}
-                                <span class="badge" title="Default Task Color"
+                                <span class="badge"
+                                    [title]="strings['settings_defaultTaskColor']"
                                     [style.background-color]="getColor(cat)">
                                     &nbsp;
                                 </span>
@@ -191,13 +192,13 @@
         <label>{{ strings['settings_categories'] }}</label>
         <ul *ngIf="modalProps.categories.length" class="modal-list">
             <li *ngFor="let category of modalProps.categories; let i = index">
-                <span class="badge" title="Default Task Color"
+                <span class="badge" [title]="strings['settings_defaultTaskColor']"
                     [style.background-color]="getColor(category)"></span>
                 <inline-edit [text]="getPropertyValue('categories', 'name', i)"
                     (edit)="onPropertyEdit('categories', 'name', i, $event)"></inline-edit>
                 <span class="actions">
                     <i class="icon icon-trash-empty color-secondary"
-                        title="Remove"
+                        title="{{ strings['settings_removeCategory'] }}"
                         (click)="modalProps.removeCategory(category)"></i>
                 </span>
             </li>
@@ -210,9 +211,9 @@
                     (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.newCategoryName">
                 <input type="color" name="category-default-color"
-                    title="Default Task Color"
+                    [title]="strings['settings_defaultTaskColor']"
                     [(ngModel)]="modalProps.categoryDefaultColor">
-                <button type="submit" class="flat" title="Add Category"
+                <button type="submit" class="flat" [title]="strings['settings_addCategory']"
                      (click)="modalProps.addCategory($event)">
                     <i class="icon icon-plus"></i>
                 </button>
@@ -224,10 +225,9 @@
 
     <div class="issue-trackers">
         <label>
-            Issue Trackers
+            {{ strings['settings_issueTrackers'] }}
             <i class="icon icon-help-circled"
-                alt="Example URL: https://github.com/kiswa/TaskBoard/issues/%BUGID\1%
-                     Example RegExp: (?:Issue)?#(\d+)"></i>
+                [attr.data-help]="strings['settings_issueTrackersHelp']"></i>
         </label>
 
         <ul *ngIf="modalProps.issue_trackers.length" class="modal-list">
@@ -251,14 +251,14 @@
         <div>
             <form>
                 <input type="text" name="issue-tracker"
-                    placeholder="Issue Tracker URL - use %BUGID% as placeholder"
+                    placeholder="{{ strings['settings_issueTrakcerUrl'] }}"
                     (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.issueTrackerUrl">
                 <input type="text" name="issue-tracker-bug-id"
-                    placeholder="BUGID RegExp"
+                    placeholder="{{ strings['settings_issueTrackerRegExp'] }}"
                     (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.issueTrackerBugId">
-                <button type="submit" class="flat" title="Add Issue Tracker"
+                <button type="submit" class="flat" [title]="strings['settings_addIssueTracker']"
                     (click)="modalProps.addIssueTracker($event)">
                     <i class="icon icon-plus"></i>
                 </button>
@@ -267,7 +267,7 @@
     </div>
 
     <div class="users">
-        <label>Select Users</label>
+        <label>{{ strings['settings_selectUsers'] }}</label>
         <div class="clearfix"></div>
         <label class="user-select" *ngFor="let user of users; let i = index">
                 <input type="checkbox" [(ngModel)]="users[i].selected">
@@ -276,10 +276,9 @@
         </label>
 
         <div>
-            <em *ngIf="hasBAUsers"><strong>*</strong> Including a Board Admin,
-            makes them an admin of this board.<br></em>
-            <em>Administrators have access to all boards and are
-            not listed here.</em>
+            <em *ngIf="hasBAUsers"><strong>*</strong>
+            {{ strings['settings_boardAdminMessage'] }}<br></em>
+            <em>{{ strings['settings_adminAccessMessage'] }}</em>
         </div>
     </div>
 
@@ -287,11 +286,12 @@
         <button #defaultAction (click)="addEditBoard()" [disabled]="saving">
             <i class="icon"
                 [ngClass]="{ 'icon-plus': modalProps.title === 'Add', 'icon-floppy': modalProps.title !== 'Add' }"></i>
-            {{ modalProps.title === 'Add' ? 'Add' : 'Save' }}
-            Board
+            {{ modalProps.title === 'Add'
+                ? strings['settings_addBoard']
+                : strings['settings_saveBoard'] }}
         </button>
         <button class="flat" (click)="modal.close(MODAL_ID)">
-            Cancel
+            {{ strings['cancel'] }}
         </button>
     </div>
 </tb-modal>

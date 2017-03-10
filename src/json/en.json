@@ -41,6 +41,7 @@
     "settings_removeUser": "Remove User",
     "settings_addUser": "Add User",
     "settings_editUser": "Edit User",
+    "settings_saveUser": "Save User",
     "settings_confirmUserRemoval": "Confirm User Removal",
     "settings_removeUserWarning": "Removing a user cannot be undone.",
     "settings_continue": "Continue?",
@@ -52,7 +53,7 @@
     "settings_boardAdmin": "Board Admin",
     "settings_admin": "Admin",
 
-    "settings_boardAdmin": "Board Administration",
+    "settings_boardAdministration": "Board Administration",
     "settings_currentBoards": "Current Boards",
     "settings_showByUser": "Show By User",
     "settings_filterBy": "Filter By",
@@ -76,6 +77,18 @@
     "settings_removeColumn": "Remove Column",
     "settings_columnName": "Column Name",
     "settings_addColumn": "Add Column",
-    "settings_categoryName": "Category Name"
+    "settings_removeCategory": "Remove Category",
+    "settings_categoryName": "Category Name",
+    "settings_defaultTaskColor": "Default Task Color",
+    "settings_addCategory": "Add Category",
+    "settings_issueTrackers": "Issue Trackers",
+    "settings_issueTrackersHelp": "Example URL: https://github.com/kiswa/TaskBoard/issues/%BUGID\\1% Example RegExp: (?:Issue)?#(\\d+)",
+    "settings_issueTrakcerUrl": "Issue Tracker URL - use %BUGID% as placeholder",
+    "settings_issueTrackerRegExp": "BUGID RegExp",
+    "settings_addIssueTracker": "Add Issue Tracker",
+    "settings_selectUsers": "Select Users",
+    "settings_boardAdminMessage": "Including a Board Admin, makes them an admin of this board.",
+    "settings_adminAccessMessage": "Administrators have access to all boards and are not listed here.",
+    "settings_saveBoard": "Save Board"
 }
 

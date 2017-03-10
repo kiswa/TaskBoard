@@ -41,6 +41,7 @@
     "settings_removeUser": "Eliminar Usuario",
     "settings_addUser": "Agregar Usuario",
     "settings_editUser": "Cambia Usuario",
+    "settings_saveUser": "Guardar Usuario",
     "settings_confirmUserRemoval": "Confirmar Eliminación del Usuario",
     "settings_removeUserWarning": "No se puede deshacer la eliminación de un usuario.",
     "settings_continue": "¿Continuar?",
@@ -52,7 +53,7 @@
     "settings_boardAdmin": "Administrador de los Tableros",
     "settings_admin": "Administrador",
 
-    "settings_boardAdmin": "Administración de Tableros",
+    "settings_boardAdministration": "Administración de Tableros",
     "settings_currentBoards": "Tableros Actuales",
     "settings_showByUser": "Mostrar por Usuario",
     "settings_filterBy": "Filtrar por",
@@ -76,6 +77,18 @@
     "settings_removeColumn": "Eliminar Columna",
     "settings_columnName": "Nombre del Columna",
     "settings_addColumn": "Agregar Columna",
-    "settings_categoryName": "Nombre del Categoría"
+    "settings_removeCategory": "Eliminar Categoría",
+    "settings_categoryName": "Nombre del Categoría",
+    "settings_defaultTaskColor": "Color de Tarea Predeterminado",
+    "settings_addCategory": "Agregar Categoría",
+    "settings_issueTrackers": "Seguimiento de Incidencias",
+    "settings_issueTrackersHelp": "Ejemplo URL: https://github.com/kiswa/TaskBoard/issues/%BUGID\\1% Ejemplo RegExp: (?:Issue)?#(\\d+)",
+    "settings_issueTrakcerUrl": "URL de Seguimiento de Incidencia: Utilice %BUGID% como marcador de posición",
+    "settings_issueTrackerRegExp": "BUGID RegExp",
+    "settings_addIssueTracker": "Agregar Seguimiento de Incidencia",
+    "settings_selectUsers": "Seleccionar Usuarios",
+    "settings_boardAdminMessage": "Incluyendo un Administrador de Tableros, hace de ellos un administrador de este tablero.",
+    "settings_adminAccessMessage": "Los administradores tienen acceso a todas las tableros y no se enumeran aquí.",
+    "settings_saveBoard": "Guardar Tablero"
 }
 
