@@ -1,5 +1,5 @@
 /* global expect AuthServiceMock SettingsServiceMock BoardAdminServiceMock
-    ModalServiceMock NotificationsServiceMock */
+    ModalServiceMock NotificationsServiceMock StringsServiceMock */
 var dirs = '../../../../',
     path = dirs + 'build/settings/board-admin/',
     pathDrag = dirs + 'node_modules/ng2-dragula/components/',
@@ -15,7 +15,8 @@ describe('BoardAdmin', () => {
 
         boardAdmin = new BoardAdmin(AuthServiceMock, modalService,
             new SettingsServiceMock(), new BoardAdminServiceMock(),
-            new NotificationsServiceMock(), new DragulaService());
+            new NotificationsServiceMock(), StringsServiceMock,
+            new DragulaService());
     });
 
     it('has a function to get a color', () => {

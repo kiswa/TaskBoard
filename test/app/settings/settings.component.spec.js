@@ -1,4 +1,4 @@
-/* global expect TitleMock */
+/* global expect TitleMock StringsServiceMock */
 var path = '../../../build/settings/',
     Settings = require(path + 'settings.component.js').Settings;
 
@@ -8,7 +8,7 @@ describe('Settings', () => {
     beforeEach(() => {
         title = new TitleMock();
         // Just need to create Settings to set Title
-        var settings = new Settings(null, title);
+        var settings = new Settings(null, StringsServiceMock, title);
         settings;
     });
 

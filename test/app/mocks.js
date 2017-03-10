@@ -2,7 +2,78 @@
 
 var MockBrowser = require('mock-browser').mocks.MockBrowser,
     mockBrowser = new MockBrowser(),
-    chai = require('chai');
+    chai = require('chai'),
+    users = [
+        {
+            id: '1',
+            default_board_id: '0',
+            username: 'tester',
+            security_level: '2',
+            user_option_id: '0',
+            board_access: []
+        },
+        {
+            id: '2',
+            default_board_id: '0',
+            username: 'test',
+            security_level: '3',
+            user_option_id: '0',
+            board_access: []
+        }
+    ],
+    boards = [
+        {
+            id: 1,
+            name: 'testing',
+            is_active: true,
+            columns: [{
+                id: 1,
+                name: 'Column 1',
+                position: 0,
+                board_id: 1,
+                tasks: []
+            }],
+            categories: [{
+                id: 1,
+                name: 'Category 1'
+            }],
+            issue_trackers: [],
+            users: [ users[1] ]
+        },
+        {
+            id: 2,
+            name: 'test',
+            is_active: false,
+            columns: [{
+                id: 2,
+                name: 'Column 1',
+                position: 0,
+                board_id: 2,
+                tasks: []
+            }],
+            categories: [],
+            issue_trackers: [],
+            users
+        }
+    ],
+    actions = [
+        {
+            id: 1,
+            trigger: 1,
+            source_id: 1,
+            type: 1,
+            change_to: 'test',
+            board_id: 1
+        },
+        {
+            id: 2,
+            trigger: 2,
+            source_id: 2,
+            type: 2,
+            change_to: 'testing',
+            board_id: 2
+        }
+];
 
 global.window = mockBrowser.getWindow();
 global.document = mockBrowser.getDocument();
@@ -57,12 +128,7 @@ global.AuthServiceMock = {
     userOptions: {
         show_animations: false
     },
-    userChanged: RxJs.Observable.of({
-        id: 1,
-        username: 'tester',
-        default_board_id: 0,
-        security_level: 2
-    }),
+    userChanged: RxJs.Observable.of(users[0]),
     updateUser: user => {
     },
     login: () => {
@@ -127,85 +193,15 @@ global.ModalServiceMock = function() {
     };
 };
 
-var users = [
-    {
-        id: '1',
-        default_board_id: '0',
-        username: 'tester',
-        security_level: '2',
-        user_option_id: '0',
-        board_access: []
-    },
-    {
-        id: '2',
-        default_board_id: '0',
-        username: 'test',
-        security_level: '3',
-        user_option_id: '0',
-        board_access: []
-    }
-];
-
-var boards = [
-    {
-        id: 1,
-        name: 'testing',
-        is_active: true,
-        columns: [{
-            id: 1,
-            name: 'Column 1',
-            position: 0,
-            board_id: 1,
-            tasks: []
-        }],
-        categories: [{
-            id: 1,
-            name: 'Category 1'
-        }],
-        issue_trackers: [],
-        users: [ users[1] ]
-    },
-    {
-        id: 2,
-        name: 'test',
-        is_active: false,
-        columns: [{
-            id: 2,
-            name: 'Column 1',
-            position: 0,
-            board_id: 2,
-            tasks: []
-        }],
-        categories: [],
-        issue_trackers: [],
-        users
-    }
-];
-
-var actions = [
-    {
-        id: 1,
-        trigger: 1,
-        source_id: 1,
-        type: 1,
-        change_to: 'test',
-        board_id: 1
-    },
-    {
-        id: 2,
-        trigger: 2,
-        source_id: 2,
-        type: 2,
-        change_to: 'testing',
-        board_id: 2
-    }
-];
-
 global.StringsServiceMock = {
     stringsChanged: {
-        subscribe: function() {}
+        subscribe(callback) {
+            callback({
+                settings: 'Settings'
+            });
+        }
     },
-    loadStrings: function() {}
+    loadStrings() {}
 };
 
 global.SettingsServiceMock = function() {
@@ -254,6 +250,8 @@ global.SettingsServiceMock = function() {
 };
 
 global.UserAdminServiceMock = function() {
+    var userList = users.slice();
+
     return {
         addUser: user => {
             return RxJs.Observable.of({
@@ -261,7 +259,7 @@ global.UserAdminServiceMock = function() {
                 alerts: [],
                 data: [
                     null,
-                    users.concat(user)
+                    userList.concat(user)
                 ]
             });
         },
@@ -271,8 +269,8 @@ global.UserAdminServiceMock = function() {
                 alerts: [],
                 data: [
                     null,
-                    JSON.stringify(users[1]),
-                    users
+                    JSON.stringify(userList[1]),
+                    userList
                 ]
             });
         },
@@ -282,7 +280,7 @@ global.UserAdminServiceMock = function() {
                 alerts: [],
                 data: [
                     null,
-                    users.slice(1)
+                    userList.slice(1)
                 ]
             });
         }

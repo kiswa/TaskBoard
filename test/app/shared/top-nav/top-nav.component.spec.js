@@ -1,4 +1,4 @@
-/* global expect ConstantsMock RouterMock AuthServiceMock NotificationsServiceMock */
+/* global expect ConstantsMock RouterMock AuthServiceMock NotificationsServiceMock StringsServiceMock */
 var path = '../../../../build/shared/top-nav/',
     TopNav = require(path + 'top-nav.component.js').TopNav;
 
@@ -9,7 +9,8 @@ describe('TopNav', () => {
     beforeEach(() => {
         router = new RouterMock();
         topNav = new TopNav(ConstantsMock, router,
-            AuthServiceMock, new NotificationsServiceMock());
+            AuthServiceMock, new NotificationsServiceMock(),
+            StringsServiceMock);
     });
 
     it('has pageName', () => {

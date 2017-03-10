@@ -26,7 +26,7 @@ describe('UserAdmin', () => {
     });
 
     it('has a function to add or edit a user - Add', done => {
-        userAdmin.modalProps.title = 'Add';
+        userAdmin.modalProps.prefix = true;
         userAdmin.modalProps.user = newUser;
 
         userAdmin.addEditUser();
@@ -38,8 +38,9 @@ describe('UserAdmin', () => {
     });
 
     it('has a function to add or edit a user - Edit', done => {
-        userAdmin.modalProps.title = 'Edit';
+        userAdmin.modalProps.prefix = false;
         userAdmin.modalProps.user = newUser;
+        userAdmin.modalProps.user.id = 2;
 
         userAdmin.addEditUser();
 
