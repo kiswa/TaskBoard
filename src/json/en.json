@@ -89,6 +89,25 @@
     "settings_selectUsers": "Select Users",
     "settings_boardAdminMessage": "Including a Board Admin, makes them an admin of this board.",
     "settings_adminAccessMessage": "Administrators have access to all boards and are not listed here.",
-    "settings_saveBoard": "Save Board"
+    "settings_saveBoard": "Save Board",
+
+    "settings_automaticActions": "Automatic Actions",
+    "settings_board": "Board",
+    "settings_trigger": "Trigger",
+    "settings_action": "Action",
+    "settings_remove": "Remove",
+    "settings_inactiveBoardMessage": "Inactive board.",
+    "settings_removeAutoAction": "Remove Automatic Action",
+    "settings_triggerMoveToColumn": "Task moves to column:",
+    "settings_triggerAssignedToUser": "Task assigned to user:",
+    "settings_triggerAddedToCategory": "Task added to category:",
+    "settings_triggerPointsChanged": "Task points changed.",
+    "settings_actionSetColor": "Set task color:",
+    "settings_actionSetCategory": "Set task category:",
+    "settings_actionAddCategory": "Add task category:",
+    "settings_actionSetAssignee": "Set task assignee:",
+    "settings_actionAddAssignee": "Add task assignee:",
+    "settings_actionClearDueDate": "Clear task due date.",
+    "settings_actionAlterColor": "Alter task color by points."
 }
 

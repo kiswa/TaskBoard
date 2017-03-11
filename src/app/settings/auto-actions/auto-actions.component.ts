@@ -12,7 +12,8 @@ import {
     Notification,
     AuthService,
     ModalService,
-    NotificationsService
+    NotificationsService,
+    StringsService
 } from '../../shared/index';
 import { SettingsService } from '../settings.service';
 import { AutoActionsService } from './auto-actions.service';
@@ -25,6 +26,7 @@ import { AutoActionsService } from './auto-actions.service';
 export class AutoActions {
     private noActionsMessage: string;
     private MODAL_CONFIRM_ID: string;
+    private strings: any;
 
     private activeUser: User;
     private actionToRemove: AutoAction;
@@ -50,6 +52,7 @@ export class AutoActions {
                 private settings: SettingsService,
                 private actions: AutoActionsService,
                 private notes: NotificationsService,
+                private stringsService: StringsService,
                 private sanitizer: DomSanitizer) {
         this.newAction = new AutoAction();
         this.boards = [];
@@ -81,6 +84,12 @@ export class AutoActions {
         settings.boardsChanged
             .subscribe((boards: Array<Board>) => {
                 this.boards = boards;
+
+                boards.forEach(board => {
+                    if (!(+board.is_active)) {
+                        this.hasInactiveBoards = true;
+                    }
+                });
             });
 
         settings.actionsChanged
@@ -102,6 +111,10 @@ export class AutoActions {
 
                 this.loading = false;
             });
+
+        stringsService.stringsChanged.subscribe(newStrings => {
+            this.strings = newStrings;
+        });
     }
 
     addNewAction(): void {
@@ -195,10 +208,6 @@ export class AutoActions {
         if (board) {
             let note = +board.is_active ? '' : '*';
 
-            if (!(+board.is_active)) {
-                this.hasInactiveBoards = true;
-            }
-
             return board.name + note;
         }
 
@@ -206,26 +215,26 @@ export class AutoActions {
     }
 
     getTriggerDescription(action: AutoAction): string {
-        let desc = 'Item ',
+        let desc = '',
             board = this.getBoard(action.board_id);
 
         switch (+action.trigger) {
             case ActionTrigger.MovedToColumn:
-                desc += 'moves to column: ';
+                desc = this.strings.settings_triggerMoveToColumn + ' ';
                 desc += this.getNameFromArray(board.columns, action.source_id);
             break;
             case ActionTrigger.AssignedToUser:
-                desc += 'assigned to user: ';
+                desc = this.strings.settings_triggerAssignedToUser + ' ';
                 desc += this.getNameFromArray(board.users,
                                               action.source_id, 'username');
             break;
             case ActionTrigger.AddedToCategory:
-                desc += 'added to category: ';
+                desc = this.strings.settings_triggerAddedToCategory + ' ';
                 desc += this.getNameFromArray(board.categories,
                                               action.source_id);
             break;
             case ActionTrigger.PointsChanged:
-                desc += 'points changed.';
+                desc = this.strings.settings_triggerPointsChanged;
             break;
         }
 
@@ -238,34 +247,34 @@ export class AutoActions {
 
         switch (+action.type) {
             case ActionType.SetColor:
-                desc = 'Set item color: <span style="color: ' +
+                desc = this.strings.settings_actionSetColor + ' <span style="background-color: ' +
                     action.change_to + ';">' + action.change_to + '</span>';
             break;
             case ActionType.SetCategory:
-                desc = 'Set item category: ';
+                desc = this.strings.settings_actionSetCategory + ' ';
                 desc += this.getNameFromArray(board.categories,
                                               +action.change_to);
             break;
             case ActionType.AddCategory:
-                desc = 'Add item category: ';
+                desc = this.strings.settings_actionAddCategory + ' ';
                 desc += this.getNameFromArray(board.categories,
                                               +action.change_to);
             break;
             case ActionType.SetAssignee:
-                desc = 'Set item assignee: ';
+                desc = this.strings.settings_actionSetAssignee + ' ';
                 desc += this.getNameFromArray(board.users,
                                               +action.change_to, 'username');
             break;
             case ActionType.AddAssignee:
-                desc = 'Add item assignee: ';
+                desc = this.strings.settings_actionAddAssignee + ' ';
                 desc += this.getNameFromArray(board.users,
                                               +action.change_to, 'username');
             break;
             case ActionType.ClearDueDate:
-                desc = 'Clear item due date.';
+                desc = this.strings.settings_actionClearDueDate;
             break;
             case ActionType.AlterColorByPoints:
-                desc = 'Alter item color by points.';
+                desc = this.strings.settings_actionAlterColor;
             break;
         }
 

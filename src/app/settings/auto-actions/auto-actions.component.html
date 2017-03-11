@@ -1,5 +1,5 @@
 <section>
-    <h2>Automatic Actions</h2>
+    <h2>{{ strings['automaticActions'] }}</h2>
 
     <div class="row">
         <h3>Current Actions</h3>
@@ -7,10 +7,10 @@
         <table class="alternating no-bottom-margin">
             <thead>
                 <tr>
-                    <th>Board</th>
-                    <th>Trigger</th>
-                    <th>Action</th>
-                    <th>Remove</th>
+                    <th>{{ strings['settings_board'] }}</th>
+                    <th>{{ strings['settings_trigger'] }}</th>
+                    <th>{{ strings['settings_action'] }}</th>
+                    <th>{{ strings['settings_remove'] }}</th>
                 </tr>
             </thead>
             <tbody *ngIf="!loading">
@@ -25,7 +25,7 @@
                     <td>
                         <span *ngIf="activeUser && activeUser.security_level < 3">
                             <a href="javascript:"
-                                title="Remove Automatic Action"
+                                title="{{ strings['settings_removeAutoAction'] }}"
                                 (click)="showConfirmModal(action)">
                                 <i class="icon icon-trash-empty
                                     color-secondary"></i>
@@ -37,7 +37,7 @@
         </table>
 
         <div *ngIf="!loading && hasInactiveBoards">
-            <em>* Inactive board.</em>
+            <em>* {{ strings['settings_inactiveBoardMessage'] }}</em>
         </div>
 
         <div *ngIf="loading" class="center">

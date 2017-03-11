@@ -89,6 +89,25 @@
     "settings_selectUsers": "Seleccionar Usuarios",
     "settings_boardAdminMessage": "Incluyendo un Administrador de Tableros, hace de ellos un administrador de este tablero.",
     "settings_adminAccessMessage": "Los administradores tienen acceso a todas las tableros y no se enumeran aquí.",
-    "settings_saveBoard": "Guardar Tablero"
+    "settings_saveBoard": "Guardar Tablero",
+
+    "settings_automaticActions": "Acciones Automáticas",
+    "settings_board": "Tablero",
+    "settings_trigger": "Disparador",
+    "settings_action": "Acción",
+    "settings_remove": "Eliminar",
+    "settings_inactiveBoardMessage": "Tablero inactivo.",
+    "settings_removeAutoAction": "Eliminar Acción Automática",
+    "settings_triggerMoveToColumn": "La tarea se mueve a la columna:",
+    "settings_triggerAssignedToUser": "Tarea asignada al usuario:",
+    "settings_triggerAddedToCategory": "Tarea añadida a la categoría:",
+    "settings_triggerPointsChanged": "Los puntos de la tarea han cambiado.",
+    "settings_actionSetColor": "Configurar el color de la tarea:",
+    "settings_actionSetCategory": "Establecer categoría de tarea:",
+    "settings_actionAddCategory": "Agregar categoría de tarea:",
+    "settings_actionSetAssignee": "Establecer asignador de tareas:",
+    "settings_actionAddAssignee": "Agregar asignador de tareas:",
+    "settings_actionClearDueDate": "Borra la fecha de vencimiento de la tarea.",
+    "settings_actionAlterColor": "Cambiar el color de la tarea por puntos."
 }
 
