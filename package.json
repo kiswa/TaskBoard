@@ -36,7 +36,7 @@
     "@angular/platform-browser-dynamic": "2.4.9",
     "@angular/router": "3.4.9",
     "@types/chartist": "^0.9.34",
-    "@types/core-js": "^0.9.36",
+    "@types/core-js": "^0.9.37",
     "bourbon": "^4.3.3",
     "bourbon-neat": "^1.8.0",
     "chai": "^3.5.0",
