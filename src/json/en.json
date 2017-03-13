@@ -92,6 +92,7 @@
     "settings_saveBoard": "Save Board",
 
     "settings_automaticActions": "Automatic Actions",
+    "settings_currentAction": "Current Actions",
     "settings_board": "Board",
     "settings_trigger": "Trigger",
     "settings_action": "Action",
@@ -108,6 +109,15 @@
     "settings_actionSetAssignee": "Set task assignee:",
     "settings_actionAddAssignee": "Add task assignee:",
     "settings_actionClearDueDate": "Clear task due date.",
-    "settings_actionAlterColor": "Alter task color by points."
+    "settings_actionAlterColor": "Alter task color by points.",
+    "settings_addAction": "Add Action",
+    "settings_selectBoard": "Select Board",
+    "settings_selectTrigger": "Select Trigger",
+    "settings_selectAction": "Select Action",
+    "settings_selectColumn": "Select Column",
+    "settings_selectUser": "Select User",
+    "settings_selectCategory": "Select Category",
+    "settings_selectAssignee": "Select Assignee",
+    "settings_alterByPoints": "Alter color by points",
 }
 

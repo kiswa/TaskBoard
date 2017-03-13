@@ -58,23 +58,7 @@ export class AutoActions {
         this.boards = [];
         this.autoActions = [];
         this.MODAL_CONFIRM_ID = 'action-remove-confirm';
-
-        this.triggers = [
-            [ ActionTrigger.MovedToColumn, 'Item moved to column' ],
-            [ ActionTrigger.AssignedToUser, 'Item assigned to user' ],
-            [ ActionTrigger.AddedToCategory, 'Item added to category' ],
-            [ ActionTrigger.PointsChanged, 'Item points change' ]
-        ];
-        this.updateTriggerSources();
-        this.typesList = [
-            [ ActionType.SetColor, 'Set item color'],
-            [ ActionType.SetCategory, 'Set item category' ],
-            [ ActionType.AddCategory, 'Add item category' ],
-            [ ActionType.SetAssignee, 'Set item assignee' ],
-            [ ActionType.AddAssignee, 'Add item assignee' ],
-            [ ActionType.ClearDueDate, 'Clear item due date' ]
-        ];
-        this.types = this.typesList;
+        this.strings = {};
 
         auth.userChanged
             .subscribe(activeUser => {
@@ -114,6 +98,54 @@ export class AutoActions {
 
         stringsService.stringsChanged.subscribe(newStrings => {
             this.strings = newStrings;
+
+            this.triggers = [
+                [
+                    ActionTrigger.MovedToColumn,
+                    this.strings.settings_triggerMoveToColumn
+                ],
+                [
+                    ActionTrigger.AssignedToUser,
+                    this.strings.settings_triggerAssignedToUser
+                ],
+                [
+                    ActionTrigger.AddedToCategory,
+                    this.strings.settings_triggerAddedToCategory
+                ],
+                [
+                    ActionTrigger.PointsChanged,
+                    this.strings.settings_triggerPointsChanged
+                ]
+            ];
+            this.typesList = [
+                [
+                    ActionType.SetColor,
+                    this.strings.settings_actionSetColor
+                ],
+                [
+                    ActionType.SetCategory,
+                    this.strings.settings_actionSetCategory
+                ],
+                [
+                    ActionType.AddCategory,
+                    this.strings.settings_actionAddCategory
+                ],
+                [
+                    ActionType.SetAssignee,
+                    this.strings.settings_actionSetAssignee
+                ],
+                [
+                    ActionType.AddAssignee,
+                    this.strings.settings_actionAddAssignee
+                ],
+                [
+                    ActionType.ClearDueDate,
+                    this.strings.settings_actionClearDueDate
+                ]
+            ];
+            this.types = this.typesList;
+            this.updateTriggerSources();
+            this.updateActionSources();
         });
     }
 
@@ -148,9 +180,10 @@ export class AutoActions {
             break;
             case ActionTrigger.PointsChanged:
                 // Leave triggerSources empty
-                this.types = [
-                    [ ActionType.AlterColorByPoints, 'Alter color by points' ]
-                ];
+                this.types = [ [
+                    ActionType.AlterColorByPoints,
+                    this.strings.settings_alterByPoints
+                ] ];
             break;
         }
 
@@ -304,7 +337,8 @@ export class AutoActions {
                               name: string,
                               arrayName: string,
                               prop: string = 'name'): void {
-        this[sourceArray] = [ [ null, 'Select ' + name ] ];
+        this[sourceArray] =
+            [ [ null, this.strings['settings_select' + name ] ] ]; // tslint:disable-line
 
         for (let i = 0; i < this.boards.length; ++i) {
             if (this.boards[i].id !== this.newAction.board_id) {

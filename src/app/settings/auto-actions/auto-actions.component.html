@@ -1,8 +1,8 @@
 <section>
-    <h2>{{ strings['automaticActions'] }}</h2>
+    <h2>{{ strings['settings_automaticActions'] }}</h2>
 
     <div class="row">
-        <h3>Current Actions</h3>
+        <h3>{{ strings['settings_currentAction'] }}</h3>
 
         <table class="alternating no-bottom-margin">
             <thead>
@@ -46,14 +46,14 @@
     </div>
 
     <div class="row" *ngIf="activeUser && activeUser.security_level < 3">
-        <h3>Add Action</h3>
+        <h3>{{ strings['settings_addAction'] }}</h3>
 
         <table>
             <thead>
                 <tr class="borderless">
-                    <th>Select Board:</th>
-                    <th>Select Trigger:</th>
-                    <th>Select Action:</th>
+                    <th>{{ strings['settings_selectBoard'] }}:</th>
+                    <th>{{ strings['settings_selectTrigger'] }}:</th>
+                    <th>{{ strings['settings_selectAction'] }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,7 +61,9 @@
                     <td>
                         <select [(ngModel)]="newAction.board_id"
                             (change)="updateTriggerSources()">
-                            <option [ngValue]="null">Select Board...</option>
+                            <option [ngValue]="null">
+                                {{ strings['settings_selectBoard'] }}...
+                            </option>
                             <option *ngFor="let board of boards"
                                 [ngValue]="board.id">
                                 {{ board.name }}
@@ -119,7 +121,7 @@
             [disabled]="isAddDisabled"
             (click)="addNewAction()">
             <i class="icon icon-plus"></i>
-            Add Action
+            {{ strings['settings_addAction'] }}
         </button>
     </div>
 </section>

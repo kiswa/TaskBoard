@@ -1,5 +1,5 @@
 /* global expect AuthServiceMock SettingsServiceMock ModalServiceMock
-    NotificationsServiceMock AutoActionsServiceMock SanitizerMock */
+    NotificationsServiceMock AutoActionsServiceMock StringsServiceMock SanitizerMock */
 var dirs = '../../../../',
     path = dirs + 'build/settings/auto-actions/',
     AutoActions = require(path + 'auto-actions.component.js').AutoActions;
@@ -13,7 +13,7 @@ describe('AutoActions', () => {
 
         autoActions = new AutoActions(AuthServiceMock, modalService,
             new SettingsServiceMock(), new AutoActionsServiceMock(),
-            new NotificationsServiceMock(), SanitizerMock);
+            new NotificationsServiceMock(), StringsServiceMock, SanitizerMock);
     });
 
     it('has a function to add an action', done => {
@@ -88,24 +88,24 @@ describe('AutoActions', () => {
         };
 
         var desc = autoActions.getTriggerDescription(action);
-        expect(desc).to.equal('Item moves to column: Column 1');
+        expect(desc).to.equal('undefined Column 1');
 
         action.trigger = 2;
         action.source_id = 2;
 
         desc = autoActions.getTriggerDescription(action);
-        expect(desc).to.equal('Item assigned to user: test');
+        expect(desc).to.equal('undefined test');
 
         action.trigger = 3;
         action.source_id = 1;
 
         desc = autoActions.getTriggerDescription(action);
-        expect(desc).to.equal('Item added to category: Category 1');
+        expect(desc).to.equal('undefined Category 1');
 
         action.trigger = 4;
 
         desc = autoActions.getTriggerDescription(action);
-        expect(desc).to.equal('Item points changed.');
+        expect(desc + '').to.equal('undefined');
     });
 
     it('provides a description for an action type', () => {
@@ -119,41 +119,41 @@ describe('AutoActions', () => {
         };
 
         var desc = autoActions.getTypeDescription(action);
-        expect(desc).to.equal('Set item color: <span style="color: #fff;">#fff</span>');
+        expect(desc).to.equal('undefined <span style="background-color: #fff;">#fff</span>');
 
         action.type = 2;
         action.change_to = 1;
         desc = autoActions.getTypeDescription(action);
 
-        expect(desc).to.equal('Set item category: Category 1');
+        expect(desc).to.equal('undefined Category 1');
 
         action.type = 3;
         action.change_to = 1;
         desc = autoActions.getTypeDescription(action);
 
-        expect(desc).to.equal('Add item category: Category 1');
+        expect(desc).to.equal('undefined Category 1');
 
         action.type = 4;
         action.change_to = 2;
         desc = autoActions.getTypeDescription(action);
 
-        expect(desc).to.equal('Set item assignee: test');
+        expect(desc).to.equal('undefined test');
 
         action.type = 5;
         action.change_to = 2;
         desc = autoActions.getTypeDescription(action);
 
-        expect(desc).to.equal('Add item assignee: test');
+        expect(desc).to.equal('undefined test');
 
         action.type = 6;
         desc = autoActions.getTypeDescription(action);
 
-        expect(desc).to.equal('Clear item due date.');
+        expect(desc + '').to.equal('undefined');
 
         action.type = 7;
         desc = autoActions.getTypeDescription(action);
 
-        expect(desc).to.equal('Alter item color by points.');
+        expect(desc + '').to.equal('undefined');
     });
 });
 

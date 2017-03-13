@@ -114,8 +114,7 @@ class Boards extends BaseController {
 
         $update = R::load('board', (int)$args['id']);
         $update->id = BeanLoader::LoadBoard($update, $request->getBody())
-            ? $board->id
-            : 0;
+            ? $board->id : 0;
 
         if ($update->id === 0 || ($board->id !== $update->id)) {
             $this->logger->addError('Update Board: ', [$board, $update]);
