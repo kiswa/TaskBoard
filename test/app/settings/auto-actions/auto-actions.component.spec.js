@@ -69,12 +69,12 @@ describe('AutoActions', () => {
         autoActions.newAction.type = 2; // 2 and 3 are the same
         autoActions.updateActionSources();
 
-        expect(autoActions.actionSources[0][1]).to.equal('Select Category');
+        expect(autoActions.actionSources[0][1]).to.equal(undefined);
 
         autoActions.newAction.type = 4; // 4 and 5 are the same
         autoActions.updateActionSources();
 
-        expect(autoActions.actionSources[0][1]).to.equal('Select Assignee');
+        expect(autoActions.actionSources[0][1]).to.equal(undefined);
     });
 
     it('provides a description for a trigger', () => {
