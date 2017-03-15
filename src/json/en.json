@@ -52,6 +52,10 @@
     "settings_boardAccess": "Board Access",
     "settings_boardAdmin": "Board Admin",
     "settings_admin": "Admin",
+    "settings_usernameRequired": "Username is required.",
+    "settings_passwordRequired": "Password is required.",
+    "settings_verifyError": "New password and verify password do not match.",
+    "settings_emailError": "Invalid email address.",
 
     "settings_boardAdministration": "Board Administration",
     "settings_currentBoards": "Current Boards",
@@ -90,6 +94,10 @@
     "settings_boardAdminMessage": "Including a Board Admin, makes them an admin of this board.",
     "settings_adminAccessMessage": "Administrators have access to all boards and are not listed here.",
     "settings_saveBoard": "Save Board",
+    "settings_noBoards": "You are not assigned to any boards. Contact an admin user to be added to a board.",
+    "settings_noBoardsAdmin": "There are no current boards. Use the <strong>Add Board</strong> button below to add one.",
+    "settings_boardNameError": "Board name is required.",
+    "settings_columnError": "At least one column is required.",
 
     "settings_automaticActions": "Automatic Actions",
     "settings_currentAction": "Current Actions",
@@ -118,6 +126,8 @@
     "settings_selectUser": "Select User",
     "settings_selectCategory": "Select Category",
     "settings_selectAssignee": "Select Assignee",
-    "settings_alterByPoints": "Alter color by points"
+    "settings_alterByPoints": "Alter color by points",
+    "settings_noActions": "There are no automatic actions. Contact an admin user to create one.",
+    "settings_noActionsAdmin": "There are no automatic actions. Use the <strong>Add Action</strong> form below to add one."
 }
 

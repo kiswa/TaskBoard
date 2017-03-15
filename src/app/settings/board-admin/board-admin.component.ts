@@ -80,6 +80,7 @@ export class BoardAdmin {
         });
         stringsService.stringsChanged.subscribe(newStrings => {
             this.strings = newStrings;
+            this.updateActiveUser(this.activeUser);
         });
     }
 
@@ -262,16 +263,14 @@ export class BoardAdmin {
 
     private validateBoard(): boolean {
         if (this.modalProps.name === '') {
-            this.notes
-                .add(new Notification('error',
-                                      'Board name is required.'));
+            this.notes.add(
+                new Notification('error', this.strings.settings_boardNameError));
             return false;
         }
 
         if (this.modalProps.columns.length === 0) {
-            this.notes
-                .add(new Notification('error',
-                                      'At least one column is required.'));
+            this.notes.add(
+                new Notification('error', this.strings.settings_columnError));
             return false;
         }
 
@@ -318,12 +317,10 @@ export class BoardAdmin {
                                    activeUser.username,
                                    activeUser.board_access);
 
-        this.noBoardsMessage = 'You are not assigned to any boards. ' +
-            'Contact an admin user to be added to a board.';
+        this.noBoardsMessage = this.strings.settings_noBoards;
 
         if (+activeUser.security_level === 1) {
-            this.noBoardsMessage = 'There are no current boards. ' +
-                'Use the <strong>Add Board</strong> button below to add one.';
+            this.noBoardsMessage = this.strings.settings_noBoardsAdmin;
         }
     }
 

@@ -204,19 +204,20 @@ export class UserAdmin {
         let user = this.modalProps.user;
 
         if (user.username === '') {
-            this.notes.add(new Notification('error', 'Username is required.'));
+            this.notes.add(
+                new Notification('error', this.strings.settings_usernameRequired));
             return false;
         }
 
         if (this.modalProps.prefix && user.password === '') {
-            this.notes.add(new Notification('error', 'Password is required.'));
+            this.notes.add(
+                new Notification('error', this.strings.settings_passwordRequired));
             return false;
         }
 
         if (user.password !== user.password_verify) {
-            this.notes.add(new Notification(
-                'error',
-                'New password and verify password do not match.'));
+            this.notes.add(
+                new Notification('error', this.strings.settings_verifyError));
             return false;
         }
 
@@ -224,7 +225,8 @@ export class UserAdmin {
         let match = user.email.match(emailRegex);
 
         if (!match && user.email !== '') {
-            this.notes.add(new Notification('error', 'Invalid email address.'));
+            this.notes.add(
+                new Notification('error', this.strings.settings_emailError));
             return false;
         }
 
@@ -253,17 +255,17 @@ export class UserAdmin {
             return filtered[0].name;
         }
 
-        return 'None';
+        return this.strings.none;
     }
 
     private updateUserList(): void {
         this.users.forEach((user: UserDisplay) => {
             user.default_board_name = this.getDefaultBoardName(user);
             user.security_level_name = +user.security_level === 1
-                ? 'Admin'
+                ? this.strings.settings_admin
                 : +user.security_level === 2
-                    ? 'Board Admin'
-                    : 'User';
+                    ? this.strings.settings_boardAdmin
+                    : this.strings.settings_user;
             user.can_admin = true;
 
             if (+user.id === +this.activeUser.id ||

@@ -52,6 +52,10 @@
     "settings_boardAccess": "Acceso a los Tableros",
     "settings_boardAdmin": "Administrador de los Tableros",
     "settings_admin": "Administrador",
+    "settings_usernameRequired": "Se requiere nombre de usuario.",
+    "settings_passwordRequired": "Se requiere contraseña.",
+    "settings_verifyError": "La nueva contraseña y la contraseña de verificación no coinciden.",
+    "settings_emailError": "Email no válida.",
 
     "settings_boardAdministration": "Administración de Tableros",
     "settings_currentBoards": "Tableros Actuales",
@@ -90,6 +94,10 @@
     "settings_boardAdminMessage": "Incluyendo un Administrador de Tableros, hace de ellos un administrador de este tablero.",
     "settings_adminAccessMessage": "Los administradores tienen acceso a todas las tableros y no se enumeran aquí.",
     "settings_saveBoard": "Guardar Tablero",
+    "settings_noBoards": "Usted no está asignado a ninguno tablero. Póngase en contacto con un usuario de administración para que se agregue a un tablero.",
+    "settings_noBoardsAdmin": "No hay tablas actuales. Utilice el botón <strong>Agregar Tablero</strong> a continuación para agregar uno.",
+    "settings_boardNameError": "El nombre del Tablero es obligatorio.",
+    "settings_columnError": "Se requiere al menos una columna.",
 
     "settings_automaticActions": "Acciones Automáticas",
     "settings_currentAction": "Acción Actual",
@@ -118,6 +126,8 @@
     "settings_selectUser": "Seleccionar Usuario",
     "settings_selectCategory": "Seleccionar Categoría",
     "settings_selectAssignee": "Seleccionar Cesionario",
-    "settings_alterByPoints": "Alterar color por puntos"
+    "settings_alterByPoints": "Alterar color por puntos",
+    "settings_noActions": "No hay acciones automáticas. Póngase en contacto con un usuario administrador para crear uno.",
+    "settings_noActionsAdmin": "No hay acciones automáticas. Utilice el botón <strong>Agregar Acción</strong> de abajo para agregar uno."
 }
 

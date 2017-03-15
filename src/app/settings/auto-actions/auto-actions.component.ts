@@ -146,6 +146,7 @@ export class AutoActions {
             this.types = this.typesList;
             this.updateTriggerSources();
             this.updateActionSources();
+            this.updateActiveUser(this.activeUser);
         });
     }
 
@@ -251,6 +252,10 @@ export class AutoActions {
         let desc = '',
             board = this.getBoard(action.board_id);
 
+        if (!board) {
+            return;
+        }
+
         switch (+action.trigger) {
             case ActionTrigger.MovedToColumn:
                 desc = this.strings.settings_triggerMoveToColumn + ' ';
@@ -277,6 +282,10 @@ export class AutoActions {
     getTypeDescription(action: AutoAction): SafeHtml {
         let desc = '',
             board = this.getBoard(action.board_id);
+
+        if (!board) {
+            return;
+        }
 
         switch (+action.type) {
             case ActionType.SetColor:
@@ -389,12 +398,10 @@ export class AutoActions {
                                    +activeUser.user_option_id,
                                    activeUser.username,
                                    activeUser.board_access);
-        this.noActionsMessage = 'There are no current automatic actions. ' +
-            'Use the Add Action form below to add one.';
+        this.noActionsMessage = this.strings.settings_noActions;
 
-        if (activeUser.security_level === 3) {
-            this.noActionsMessage = 'There are no automatic actions. ' +
-                'Contact an admin user to create one.';
+        if (activeUser.security_level < 3) {
+            this.noActionsMessage = this.strings.settings_noActionsAdmin;
         }
     }
 
