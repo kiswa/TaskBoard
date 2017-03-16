@@ -15,7 +15,6 @@ import {
     User,
     UserOptions,
     AuthService,
-    ModalService,
     NotificationsService
 } from '../../shared/index';
 import { BoardService } from '../board.service';
@@ -34,19 +33,15 @@ export class ColumnDisplay implements OnInit {
     private tasks: Array<Task>;
     private modalProps: Task;
 
-    private MODAL_ID: string;
-    private MODAL_CONFIRM_ID: string;
-
     @Input('column') columnData: Column;
+    @Input('add-task-modal-id') addModalId: string;
+    @Input('remove-task-modal-id') removeModalId: string;
 
     constructor(private elRef: ElementRef,
                 private auth: AuthService,
                 private notes: NotificationsService,
                 private modal: ModalService,
                 private boardService: BoardService) {
-        this.MODAL_ID = 'task-addEdit-form';
-        this.MODAL_CONFIRM_ID = 'task-remove-confirm';
-
         this.templateElement = elRef.nativeElement;
         this.tasks = [];
         this.collapseTasks = false;
@@ -109,6 +104,8 @@ export class ColumnDisplay implements OnInit {
 
     private showModal(): void {
         this.modalProps = new Task();
+        this.modalProps.column_id = +this.columnData.id;
+
         this.modal.open(this.MODAL_ID);
     }
 }
