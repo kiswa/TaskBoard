@@ -30,13 +30,15 @@
 <div class="tasks">
     <div class="task" [ngClass]="{ 'compact': collapseTasks }">
         <h4>
-            <span class="icon icon-minus-squared-alt" title="Collapse Task"></span>
+            <span class="icon"
+             [ngClass]="{ 'icon-minus-squared-alt': !collapseTasks,
+             'icon-plus-squared-alt': collapseTasks }"
+             title="Collapse Task"></span>
             Column Data
-            <span class="badge right" title="Points">0</span>
+            <span class="badge right" title="Points">1</span>
         </h4>
         <div class="description">
             <pre style="margin: 0">{{ columnData | json }}</pre>
-            <p>Vertical scroll test<br><br><br><br><br></p>
         </div>
         <div class="stats">
             Assigned To: admin
@@ -49,7 +51,10 @@
     </div>
     <div class="task" [ngClass]="{ 'compact': collapseTasks }">
         <h4>
-            <span class="icon icon-minus-squared-alt" title="Collapse Task"></span>
+            <span class="icon"
+             [ngClass]="{ 'icon-minus-squared-alt': !collapseTasks,
+             'icon-plus-squared-alt': collapseTasks }"
+             title="Collapse Task"></span>
             Something to Get Done
             <span class="badge right" title="Points">3</span>
         </h4>
@@ -67,7 +72,6 @@
     </div>
 </div>
 
-<!-- TODO Move to Task HTML once created -->
 <!--<tb-modal modal-title="Confirm Task Removal" blocking="true">-->
 <!--    <div class="center">Removing a task cannot be undone.<br>Continue?</div>-->
 <!--    <div class="buttons">-->
@@ -77,4 +81,74 @@
 <!--            (click)="modal.close(MODAL_CONFIRM_ID)">No</button>-->
 <!--    </div>-->
 <!--</tb-modal>-->
+
+<tb-modal  *ngIf="activeBoard" modal-title="Add Task"
+    modal-id="{{ MODAL_ID + columnData.id }}">
+    <label>
+        Title
+        <input type="text" name="title" placeholder="Task Title"
+            [(ngModel)]="modalProps.title">
+    </label>
+
+    <label>
+        Description
+        <textarea name="description" rows="5"
+            placeholder="What needs to get done?"
+            [(ngModel)]="modalProps.description"></textarea>
+    </label>
+
+    <label>
+        Assignees
+        <select name="assignees" multiple [(ngModel)]="modalProps.assignees">
+            <option *ngFor="let user of activeBoard.users"
+                [ngValue]="user">{{ user.username }}</option>
+        </select>
+    </label>
+
+    <label>
+        Categories
+        <select name="categories" multiple [(ngModel)]="modalProps.categories">
+            <option *ngFor="let category of activeBoard.categories"
+                [ngValue]="category">{{ category.name }}</option>
+        </select>
+    </label>
+
+    <div class="half">
+        <label>
+            Column
+            <select name="column" [(ngModel)]="modalProps.column_id">
+                <option *ngFor="let column of activeBoard.columns"
+                    [ngValue]="column.id">{{ column.name }}</option>
+            </select>
+        </label>
+
+        <label>
+            Color
+            <input type="color" [(ngModel)]="modalProps.color">
+        </label>
+    </div>
+
+    <div class="half">
+        <label>
+            Date Due
+            <input type="date" [(ngModel)]="modalProps.due_date">
+        </label>
+
+        <label>
+            Points
+            <input type="number" [(ngModel)]="modalProps.points">
+        </label>
+    </div>
+
+    <div class="buttons">
+        <button #defaultAction
+            (click)="addTask()" [disabled]="saving">
+            <i class="icon icon-plus"></i>
+            Add Task
+        </button>
+        <button class="flat" (click)="modal.close(MODAL_ID + columnData.id)">
+            Cancel
+        </button>
+    </div>
+</tb-modal>
 

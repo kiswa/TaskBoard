@@ -18,24 +18,6 @@ describe('AuthService', () => {
         expect(authService.userChanged).to.be.an('object');
     });
 
-    // it('notifies subscribers when the active user changes', done => {
-    //     authService.userChanged.subscribe(user => {
-    //         expect(user).to.equal(true);
-    //         done();
-    //     });
-
-    //     authService.updateUser(true);
-    // });
-
-    // it('updates user options when the active user changes', done => {
-    //     authService.userChanged.subscribe(user => {
-    //         expect(authService.userOptions).to.equal(true);
-    //         done();
-    //     });
-
-    //     authService.updateUser('', true);
-    // });
-
     it('calls the API to authenticate a JWT', done => {
         authService.authenticate().subscribe(test => {
             expect(test).to.equal(true);

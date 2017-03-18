@@ -10,12 +10,10 @@ import {
     Board,
     Column,
     User,
-    InlineEdit,
-    Modal,
     Notification,
     AuthService,
-    ModalService,
-    NotificationsService
+    NotificationsService,
+    StringsService
 } from '../shared/index';
 import { BoardService } from './board.service';
 
@@ -39,11 +37,12 @@ export class BoardDisplay implements OnInit {
                 private router: Router,
                 private active: ActivatedRoute,
                 private auth: AuthService,
-                private modal: ModalService,
                 private boardService: BoardService,
                 private notes: NotificationsService,
+                private stringsService: StringsService,
                 private dragula: DragulaService) {
         title.setTitle('TaskBoard - Kanban App');
+
         this.boardNavId = null;
         this.userFilter = null;
         this.categoryFilter = null;

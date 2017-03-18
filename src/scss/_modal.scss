@@ -74,7 +74,17 @@
     }
 
     [multiple] {
-        height: auto;
+        height: 4em;
+    }
+
+    .half {
+        display: flex;
+        justify-content: space-between;
+
+        label {
+            display: block;
+            width: 49%;
+        }
     }
 
     .buttons {

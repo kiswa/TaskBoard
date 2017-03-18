@@ -9,8 +9,9 @@ import 'rxjs/add/operator/catch';
 
 import {
     ApiResponse,
-    User,
-    Board
+    Board,
+    Task,
+    User
 } from '../shared/index';
 
 @Injectable()
@@ -41,6 +42,18 @@ export class BoardService {
     toggleCollapsed(userId: number, columnId: number): Observable<ApiResponse> {
         return this.http.post('api/users/' + userId + '/cols',
                               { id: columnId })
+            .map(res => {
+                let response: ApiResponse = res.json();
+                return response;
+            })
+            .catch((res, caught) => {
+                let response: ApiResponse = res.json();
+                return Observable.of(response);
+            });
+    }
+
+    addTask(task: Task): Observable<ApiResponse> {
+        return this.http.post('api/tasks', task)
             .map(res => {
                 let response: ApiResponse = res.json();
                 return response;

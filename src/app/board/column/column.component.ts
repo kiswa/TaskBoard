@@ -15,7 +15,9 @@ import {
     User,
     UserOptions,
     AuthService,
-    NotificationsService
+    ModalService,
+    NotificationsService,
+    StringsService
 } from '../../shared/index';
 import { BoardService } from '../board.service';
 
@@ -31,20 +33,24 @@ export class ColumnDisplay implements OnInit {
     private activeBoard: Board;
     private userOptions: UserOptions;
     private tasks: Array<Task>;
+
+    private MODAL_ID: string;
     private modalProps: Task;
 
     @Input('column') columnData: Column;
-    @Input('add-task-modal-id') addModalId: string;
-    @Input('remove-task-modal-id') removeModalId: string;
+    @Input('show-add-modal') showAddModal: any;
 
     constructor(private elRef: ElementRef,
                 private auth: AuthService,
                 private notes: NotificationsService,
                 private modal: ModalService,
+                private stringsService: StringsService,
                 private boardService: BoardService) {
         this.templateElement = elRef.nativeElement;
         this.tasks = [];
         this.collapseTasks = false;
+
+        this.MODAL_ID = 'add-task-form-';
         this.modalProps = new Task();
 
         boardService.activeBoardChanged.subscribe((board: Board) => {
@@ -98,15 +104,19 @@ export class ColumnDisplay implements OnInit {
         this.collapseTasks = !this.collapseTasks;
     }
 
-    addEditTask() {
-        // TODO
+    addTask() {
+        this.boardService.addTask(this.modalProps)
+            .subscribe(res => {
+                console.log(res); // tslint:disable-line
+            });
     }
 
-    private showModal(): void {
+    private showModal() {
         this.modalProps = new Task();
-        this.modalProps.column_id = +this.columnData.id;
+        this.modalProps.column_id = this.columnData.id;
+        this.modalProps.color = '#ffffe0';
 
-        this.modal.open(this.MODAL_ID);
+        this.modal.open(this.MODAL_ID + this.columnData.id);
     }
 }
 

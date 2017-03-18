@@ -27,7 +27,7 @@ export class InlineEdit {
         this.edit.emit(this.text);
 
         // Prevent Enter key from propagating to parent controls
-        if (event.stopPropagation) {
+        if (event && event.stopPropagation) {
             event.stopPropagation();
         }
     }

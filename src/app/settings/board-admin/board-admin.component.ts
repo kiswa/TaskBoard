@@ -317,6 +317,10 @@ export class BoardAdmin {
                                    activeUser.username,
                                    activeUser.board_access);
 
+        if (!this.strings) {
+            return;
+        }
+
         this.noBoardsMessage = this.strings.settings_noBoards;
 
         if (+activeUser.security_level === 1) {
