@@ -1,4 +1,4 @@
-#TaskBoard
+# TaskBoard
 
 [![Join the chat at https://gitter.im/kiswa/TaskBoard](https://badges.gitter.im/kiswa/TaskBoard.svg)](https://gitter.im/kiswa/TaskBoard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -6,7 +6,7 @@ A [Kanban](http://en.wikipedia.org/wiki/Kanban_board)-inspired app for keeping t
 
 The goal of TaskBoard is to provide a simple and clean interface to a functional and minimal application for keeping track of tasks. It's not trying to be the next Trello or LeanKit.
 
-###How It's Made
+### How It's Made
 
 1. Front end
 
@@ -24,9 +24,9 @@ The goal of TaskBoard is to provide a simple and clean interface to a functional
 
  * SQLite database.
 
-##Installation
+## Installation
 
-###Requirements
+### Requirements
 A web server running PHP with sqlite enabled. Developed and tested under Apache2 running PHP 5.5+.
 
 The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewrite` and `expires` Apache modules.
@@ -35,7 +35,7 @@ The server must have `sqlite` and `php5-sqlite` installed, as well as the `rewri
 
 **Optional:** to build minimized JavaScript and CSS (Install step 3) you must have curl and a jre installed, tested with `openjdk-7-jre` and `openjdk-8-jre`.
 
-###Install
+### Install
 
 Installing TaskBoard is as easy as 1, 2, (3), 4!
 
@@ -61,22 +61,22 @@ Now you can start a simple development environment with the php internal webserv
 
 After launching the internal webserver go to http://127.0.0.1:8080/
 
-##Features
+## Features
 
-###Email
+### Email
 
 TaskBoard will email you (if you supply it with an email address) about changes in the following cases: Board Created, Board Updated, Item Created, Item Edited, Item Comment Created, and Item Comment Edited.
 
 For now, it emails all users assigned to the related Board. There will be further work done on this to allow more fine-grained control of emails.
 
-###Settings
+### Settings
 The settings page allows normal users to see what boards they have access to and edit their user settings.
 
 Admin users have the same, with the additional abilities of adding/editing users and boards, and viewing a log of all activity in TaskBoard.
 
 ![Settings Image](http://taskboard.matthewross.me/docs/images/settings-standard.png)
 
-###Boards
+### Boards
 Each board may have as many columns as needed. For example, a software project might have columns like:
 
  * Proposed
@@ -98,7 +98,7 @@ Boards may also have categories for additional organization, *e.g.* `Bug`, `Enha
 
 ![Board Image](http://taskboard.matthewross.me/images/board.png)
 
-###Items
+### Items
 An item (task) only has to have a Title to be added to a board, but there is much more than that available. Items may be assigned to any user on the board (or left Unassigned), and include options for Due Date, Color, Points (an optional difficulty rating), and Category.
 
 TaskBoard uses a [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#table-of-contents) parser for the Description, allowing for better display of details (like this readme).
@@ -107,13 +107,13 @@ Once an item has been entered, it may have Comments or Attachments added to it b
 
 ![Task Image](http://taskboard.matthewross.me/docs/images/view-item2.png)
 
-##Feedback
+## Feedback
 
 Constructive feedback is appreciated! If you have ideas for improvement, please [add an issue](https://github.com/kiswa/TaskBoard/issues) or submit a pull request.
 
 If you find a bug, please post it on the [Issue Tracker](https://github.com/kiswa/TaskBoard/issues).
 
-##Lines of Code
+## Lines of Code
 
 It's silly to use [LOC](http://en.wikipedia.org/wiki/Source_lines_of_code) as a metric, but it can be interesting to see what goes into a project.
 This is only for TaskBoard files (library code is excluded), using [CLOC](http://cloc.sourceforge.net/).
