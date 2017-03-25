@@ -61,7 +61,7 @@ class BeanLoader {
                 self::updateObjectList('column', 'LoadColumn',
                     $board->xownColumnList, $data->columns);
             }
-        } catch(Exception $ex) {
+        } catch (Exception $ex) {
             return false;
         }
 
@@ -181,7 +181,7 @@ class BeanLoader {
             foreach ($data->assignees as $assignee) {
                 $user = R::load('user', $assignee->id);
 
-                if((int) $user->id) {
+                if ((int) $user->id) {
                     $task->sharedUserList[] = $user;
                 }
             }
