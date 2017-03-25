@@ -66,6 +66,7 @@ class Tasks extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success', 'Task ' .
             $task->title . ' added.');
+        $this->apiJson->addData(R::exportAll($task));
 
         return $this->jsonResponse($response);
     }

@@ -47,6 +47,7 @@ class Boards extends BaseController {
             return $this->jsonResponse($response, 403);
         }
 
+        $this->cleanBoard($board);
         $this->apiJson->setSuccess();
         $this->apiJson->addData(R::exportAll($board));
 
@@ -192,16 +193,27 @@ class Boards extends BaseController {
         if (count($boardBeans)) {
             foreach ($boardBeans as $bean) {
                 if (Auth::HasBoardAccess($request, $bean->id)) {
-                    foreach ($bean->sharedUserList as $user) {
-                        $user = $this->cleanUser($user);
-                    }
-
+                    $this->cleanBoard($bean);
                     $boards[] = $bean;
                 }
             }
         }
 
         return R::exportAll($boards);
+    }
+
+    private function cleanBoard(&$board) {
+        foreach ($board->sharedUserList as $user) {
+            $user = $this->cleanUser($user);
+        }
+
+        foreach ($board->xownColumnList as $column) {
+            foreach ($column->xownTaskList as $task) {
+                foreach ($task->sharedUserList as $user) {
+                    $user = $this->cleanUser($user);
+                }
+            }
+        }
     }
 
     private function cleanUser($user) {

@@ -45,20 +45,24 @@ class BeanLoader {
         $board->name = isset($data->name) ? $data->name : '';
         $board->is_active = isset($data->is_active) ? $data->is_active : '';
 
-        if (isset($data->categories)) {
-            self::updateObjectList('category', 'LoadCategory',
-                $board->xownCategoryList, $data->categories);
-        }
+        try {
+            if (isset($data->categories)) {
+                self::updateObjectList('category', 'LoadCategory',
+                    $board->xownCategoryList, $data->categories);
+            }
 
-        if (isset($data->columns)) {
-            self::updateObjectList('column', 'LoadColumn',
-                $board->xownColumnList, $data->columns);
-        }
+            if (isset($data->issue_trackers)) {
+                self::updateObjectList('issuetracker', 'LoadIssueTracker',
+                    $board->xownIssueTrackerList,
+                    $data->issue_trackers);
+            }
 
-        if (isset($data->issue_trackers)) {
-            self::updateObjectList('issuetracker', 'LoadIssueTracker',
-                $board->xownIssueTrackerList,
-                $data->issue_trackers);
+            if (isset($data->columns)) {
+                self::updateObjectList('column', 'LoadColumn',
+                    $board->xownColumnList, $data->columns);
+            }
+        } catch(Exception $ex) {
+            return false;
         }
 
         // Users do not get deleted when removed from a board
@@ -68,7 +72,7 @@ class BeanLoader {
             foreach ($data->users as $userData) {
                 $user = R::load('user', $userData->id);
 
-                if ((int)$user->id > 0) {
+                if ((int)$user->id) {
                     $board->sharedUserList[] = $user;
                 }
             }
@@ -163,22 +167,36 @@ class BeanLoader {
 
         if (isset($data->comments)) {
             self::updateObjectList('comment', 'LoadComment',
-                $column->xownCommentList, $data->comments);
+                $task->xownCommentList, $data->comments);
         }
 
         if (isset($data->attachments)) {
             self::updateObjectList('attachment', 'LoadAttachment',
-                $column->xownAttachmentList, $data->attachments);
+                $task->xownAttachmentList, $data->attachments);
         }
 
         if (isset($data->assignees)) {
-            self::updateObjectList('user', 'LoadUser',
-                $column->xownAssigneeList, $data->assignees);
+            $task->sharedUserList = [];
+
+            foreach ($data->assignees as $assignee) {
+                $user = R::load('user', $assignee->id);
+
+                if((int) $user->id) {
+                    $task->sharedUserList[] = $user;
+                }
+            }
         }
 
         if (isset($data->categories)) {
-            self::updateObjectList('category', 'LoadCategory',
-                $column->xownCategoryList, $data->categories);
+            $task->sharedCategoryList = [];
+
+            foreach ($data->categories as $category) {
+                $cat = R::load('category', $category->id);
+
+                if ((int)$cat->id) {
+                    $task->sharedCategoryList[] = $cat;
+                }
+            }
         }
 
         if (!isset($data->title) || !isset($data->position) ||

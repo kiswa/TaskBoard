@@ -210,6 +210,7 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
         $board = $this->getBoardData();
         $board->id = 3;
+        unset($board->columns[0]->board_id);
         unset($board->categories[0]->board_id);
         unset($board->issue_trackers[0]->board_id);
 
@@ -351,10 +352,19 @@ class BoardsTest extends PHPUnit_Framework_TestCase {
 
     private function createBoard() {
         $board = R::dispense('board');
+        $column = R::dispense('column');
+        $task = R::dispense('task');
+
+        $task->sharedUserList[] = R::load('user', 1);
+
+        $column->name = 'test';
+        $column->position = 0;
+        $column->xownTaskList[] = $task;
 
         $board->name = 'test';
         $board->is_active = true;
         $board->sharedUserList[] = R::load('user', 1);
+        $board->xownColumnList[] = $column;
 
         R::store($board);
     }

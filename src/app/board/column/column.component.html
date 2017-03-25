@@ -11,7 +11,7 @@
     {{ columnData.name }}
 
     <span class="badge" title="Tasks in Column">
-        {{ tasks.length }}
+        {{ columnData.ownTask.length }}
     </span>
 
     <span class="icon icon-angle-double-up"
@@ -28,48 +28,14 @@
 </div>
 
 <div class="tasks">
-    <div class="task" [ngClass]="{ 'compact': collapseTasks }">
-        <h4>
-            <span class="icon"
-             [ngClass]="{ 'icon-minus-squared-alt': !collapseTasks,
-             'icon-plus-squared-alt': collapseTasks }"
-             title="Collapse Task"></span>
-            Column Data
-            <span class="badge right" title="Points">1</span>
-        </h4>
-        <div class="description">
-            <pre style="margin: 0">{{ columnData | json }}</pre>
-        </div>
-        <div class="stats">
-            Assigned To: admin
-            <span class="right">
-                <span class="icon icon-chat-empty" title="4 Comments"></span>
-                <span class="icon icon-attach" title="2 Attachments"></span>
-                <span class="category" title="Category">Front End</span>
-            </span>
-        </div>
-    </div>
-    <div class="task" [ngClass]="{ 'compact': collapseTasks }">
-        <h4>
-            <span class="icon"
-             [ngClass]="{ 'icon-minus-squared-alt': !collapseTasks,
-             'icon-plus-squared-alt': collapseTasks }"
-             title="Collapse Task"></span>
-            Something to Get Done
-            <span class="badge right" title="Points">3</span>
-        </h4>
-        <div class="description">
-            <p>This is the thing that needs to get done.</p>
-        </div>
-        <div class="stats">
-            Assigned To: admin
-            <span class="right">
-                <span class="icon icon-chat-empty" title="4 Comments"></span>
-                <span class="icon icon-attach" title="2 Attachments"></span>
-                <span class="category" title="Category"></span>
-            </span>
-        </div>
-    </div>
+    <tb-task *ngFor="let task of columnData.ownTask"
+        class="task"
+        [task]="task"></tb-task>
+    <!--<div *ngFor="let task of columnData.ownTask"-->
+    <!--    class="task" [ngClass]="{ 'compact': collapseTasks }"-->
+    <!--    [style.backgroundColor]="task.color"-->
+    <!--    [style.color]="getTextColor(task.color)">-->
+    <!--</div>-->
 </div>
 
 <!--<tb-modal modal-title="Confirm Task Removal" blocking="true">-->

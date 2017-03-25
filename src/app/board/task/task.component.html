@@ -1,0 +1,44 @@
+<div [style.backgroundColor]="taskData.color"
+    [style.color]="getTextColor(taskData.color)">
+    <h4>
+        <span class="icon"
+            [style.color]="getTextColor(taskData.color)"
+            [ngClass]="{ 'icon-minus-squared-alt': !collapseTasks,
+            'icon-plus-squared-alt': collapseTasks }"
+            title="Collapse Task"></span>
+        {{ taskData.title }}
+        <span *ngIf="taskData.points > 0" class="badge right" title="Points">
+            {{ taskData.points }}</span>
+    </h4>
+    <div class="description">
+        {{ taskData.description }}
+    </div>
+    <div class="hidden">
+        <pre>{{ taskData | json }}</pre>
+    </div>
+    <div class="stats">
+        <span *ngIf="userOptions.show_assignee">
+            Assigned To:
+            <span *ngFor="let assignee of taskData.sharedUser">
+                {{ assignee.username }}
+            </span>
+            <span *ngIf="!taskData.sharedUser || !taskData.sharedUser.length">
+                Unassigned
+            </span>
+        </span>
+        <span class="right">
+            <span *ngIf="taskData.due_date">
+                Due: {{ taskData.due_date }}
+            </span>
+            <span *ngIf="taskData.comments" class="icon icon-chat-empty"
+                title="{{ taskData.comments.length }} Comments"></span>
+            <span *ngIf="taskData.attachments" class="icon icon-attach"
+                title="{{ taskData.attachments.length }} Attachments"></span>
+            <span *ngFor="let category of taskData.sharedCategory"
+                class="category" title="Category">
+                {{ category.name }}
+            </span>
+        </span>
+    </div>
+</div>
+

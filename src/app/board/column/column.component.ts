@@ -38,7 +38,6 @@ export class ColumnDisplay implements OnInit {
     private modalProps: Task;
 
     @Input('column') columnData: Column;
-    @Input('show-add-modal') showAddModal: any;
 
     constructor(private elRef: ElementRef,
                 private auth: AuthService,

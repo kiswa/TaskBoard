@@ -76,6 +76,14 @@ class TasksTest extends PHPUnit_Framework_TestCase {
         $this->createTask();
         $data = $this->getTaskData();
 
+        $assignee = R::load('user', 1);
+        $data->assignees[] = $assignee;
+
+        $category = R::load('category', 1);
+        $category->name = 'Front End';
+        R::store($category);
+        $data->categories[] = $category;
+
         $request = new RequestMock();
         $request->header = [DataMock::GetJwt()];
         $request->payload = $data;

@@ -4,7 +4,8 @@ import { AuthGuard } from './shared/index';
 import { Login } from './login/login.component';
 import {
     BoardDisplay,
-    ColumnDisplay
+    ColumnDisplay,
+    TaskDisplay
 } from './board/index';
 import {
     Settings,
@@ -49,6 +50,7 @@ export const ROUTE_COMPONENTS = [
     Calendar,
     Charts,
     ColumnDisplay,
+    TaskDisplay,
     Dashboard,
     Login,
     Settings,
