@@ -27,16 +27,16 @@
   },
   "homepage": "https://github.com/kiswa/TaskBoard#readme",
   "devDependencies": {
-    "@angular/common": "2.4.10",
-    "@angular/compiler": "2.4.10",
-    "@angular/core": "2.4.10",
-    "@angular/forms": "2.4.10",
-    "@angular/http": "2.4.10",
-    "@angular/platform-browser": "2.4.10",
-    "@angular/platform-browser-dynamic": "2.4.10",
-    "@angular/router": "3.4.10",
+    "@angular/common": "4.0.0",
+    "@angular/compiler": "4.0.0",
+    "@angular/core": "4.0.0",
+    "@angular/forms": "4.0.0",
+    "@angular/http": "4.0.0",
+    "@angular/platform-browser": "4.0.0",
+    "@angular/platform-browser-dynamic": "4.0.0",
+    "@angular/router": "4.0.0",
     "@types/chartist": "^0.9.34",
-    "@types/core-js": "^0.9.37",
+    "@types/core-js": "^0.9.39",
     "bourbon": "^4.3.3",
     "bourbon-neat": "^1.8.0",
     "chai": "^3.5.0",
@@ -61,7 +61,7 @@
     "gulp-scss-lint": "^0.4.0",
     "gulp-tslint": "^7.1.0",
     "gulp-typescript": "^3.1.6",
-    "gulp-uglify": "^2.1.0",
+    "gulp-uglify": "^2.1.2",
     "gulp-util": "^3.0.8",
     "merge-stream": "^1.0.1",
     "mock-browser": "^0.92.12",
@@ -75,6 +75,6 @@
     "touch": "^1.0.0",
     "tslint": "^4.5.1",
     "typescript": "^2.2.1",
-    "zone.js": "^0.7.7"
+    "zone.js": "^0.8.5"
   }
 }
