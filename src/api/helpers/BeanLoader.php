@@ -177,11 +177,7 @@ class BeanLoader {
             foreach ($data->assignees as $assignee) {
                 $user = R::load('user', $assignee->id);
 
-<<<<<<< HEAD
                 if ((int)$user->id) {
-=======
-                if ((int) $user->id) {
->>>>>>> a7569450aa54ac34b66b15dac66d0ea95dac7cb4
                     $task->sharedUserList[] = $user;
                 }
             }
