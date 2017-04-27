@@ -80,8 +80,8 @@
                 justify-content: space-between;
             }
 
-            .task {
-                width: 49.3%;
+            .task-container {
+                width: calc(50% - 3.5px);
             }
         }
 
@@ -135,11 +135,13 @@
         }
     }
 
+    .task-container {
+        display: block;
+        margin-bottom: 7px;
+    }
+
     .task {
         @include shadow-low();
-
-        background-color: #ffffe0;
-        margin-bottom: 7px;
 
         h4 {
             border-bottom: 1px solid lighten($color-border, 25%);
@@ -171,6 +173,7 @@
 
         .stats {
             font-size: .9em;
+            overflow: hidden;
             padding: 0 5px;
         }
 

@@ -105,8 +105,15 @@ export class ColumnDisplay implements OnInit {
 
     addTask() {
         this.boardService.addTask(this.modalProps)
-            .subscribe(res => {
-                console.log(res); // tslint:disable-line
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                this.notes.add({ type: 'info', text: 'Refresh... for now.'});
+
+                this.modal.close(this.MODAL_ID + this.columnData.id);
+
+                let boardData = response.data[2][0];
+                // TODO - Update board display with new data
             });
     }
 
@@ -116,6 +123,12 @@ export class ColumnDisplay implements OnInit {
         this.modalProps.color = '#ffffe0';
 
         this.modal.open(this.MODAL_ID + this.columnData.id);
+    }
+
+    private preventEnter(event: any) {
+        if (event && event.stopPropagation) {
+            event.stopPropagation();
+        }
     }
 }
 

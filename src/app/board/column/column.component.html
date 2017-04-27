@@ -28,14 +28,8 @@
 </div>
 
 <div class="tasks">
-    <tb-task *ngFor="let task of columnData.ownTask"
-        class="task"
+    <tb-task class="task-container" *ngFor="let task of columnData.ownTask"
         [task]="task"></tb-task>
-    <!--<div *ngFor="let task of columnData.ownTask"-->
-    <!--    class="task" [ngClass]="{ 'compact': collapseTasks }"-->
-    <!--    [style.backgroundColor]="task.color"-->
-    <!--    [style.color]="getTextColor(task.color)">-->
-    <!--</div>-->
 </div>
 
 <!--<tb-modal modal-title="Confirm Task Removal" blocking="true">-->
@@ -60,6 +54,7 @@
         Description
         <textarea name="description" rows="5"
             placeholder="What needs to get done?"
+            (keyup.enter)="preventEnter($event)"
             [(ngModel)]="modalProps.description"></textarea>
     </label>
 

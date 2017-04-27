@@ -68,6 +68,9 @@ class Tasks extends BaseController {
             $task->title . ' added.');
         $this->apiJson->addData(R::exportAll($task));
 
+        $board = R::load('board', $column->board_id);
+        $this->apiJson->addData(R::exportAll($board));
+
         return $this->jsonResponse($response);
     }
 

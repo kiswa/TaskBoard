@@ -170,22 +170,22 @@ export class AutoActions {
             case ActionTrigger.MovedToColumn:
                 this.buildSourcesArray('triggerSources',
                                        'Column', 'columns');
-            break;
+                break;
             case ActionTrigger.AssignedToUser:
                 this.buildSourcesArray('triggerSources',
                                        'User', 'users', 'username');
-            break;
+                break;
             case ActionTrigger.AddedToCategory:
                 this.buildSourcesArray('triggerSources',
                                        'Category', 'categories');
-            break;
+                break;
             case ActionTrigger.PointsChanged:
                 // Leave triggerSources empty
                 this.types = [ [
                     ActionType.AlterColorByPoints,
                     this.strings.settings_alterByPoints
                 ] ];
-            break;
+                break;
         }
 
         this.newAction.type = this.types ?
@@ -203,15 +203,15 @@ export class AutoActions {
             case ActionType.AddCategory:
                 this.buildSourcesArray('actionSources',
                                        'Category', 'categories');
-            break;
+                break;
             case ActionType.SetAssignee:
             case ActionType.AddAssignee:
                 this.buildSourcesArray('actionSources',
                                        'Assignee', 'users', 'username');
-            break;
+                break;
             case ActionType.SetColor:
                 this.newAction.change_to = '#000000';
-            break;
+                break;
         }
 
         this.checkAddDisabled();
@@ -260,20 +260,20 @@ export class AutoActions {
             case ActionTrigger.MovedToColumn:
                 desc = this.strings.settings_triggerMoveToColumn + ' ';
                 desc += this.getNameFromArray(board.columns, action.source_id);
-            break;
+                break;
             case ActionTrigger.AssignedToUser:
                 desc = this.strings.settings_triggerAssignedToUser + ' ';
                 desc += this.getNameFromArray(board.users,
                                               action.source_id, 'username');
-            break;
+                break;
             case ActionTrigger.AddedToCategory:
                 desc = this.strings.settings_triggerAddedToCategory + ' ';
                 desc += this.getNameFromArray(board.categories,
                                               action.source_id);
-            break;
+                break;
             case ActionTrigger.PointsChanged:
                 desc = this.strings.settings_triggerPointsChanged;
-            break;
+                break;
         }
 
         return desc;
@@ -291,33 +291,33 @@ export class AutoActions {
             case ActionType.SetColor:
                 desc = this.strings.settings_actionSetColor + ' <span style="background-color: ' +
                     action.change_to + ';">' + action.change_to + '</span>';
-            break;
+                break;
             case ActionType.SetCategory:
                 desc = this.strings.settings_actionSetCategory + ' ';
                 desc += this.getNameFromArray(board.categories,
                                               +action.change_to);
-            break;
+                break;
             case ActionType.AddCategory:
                 desc = this.strings.settings_actionAddCategory + ' ';
                 desc += this.getNameFromArray(board.categories,
                                               +action.change_to);
-            break;
+                break;
             case ActionType.SetAssignee:
                 desc = this.strings.settings_actionSetAssignee + ' ';
                 desc += this.getNameFromArray(board.users,
                                               +action.change_to, 'username');
-            break;
+                break;
             case ActionType.AddAssignee:
                 desc = this.strings.settings_actionAddAssignee + ' ';
                 desc += this.getNameFromArray(board.users,
                                               +action.change_to, 'username');
-            break;
+                break;
             case ActionType.ClearDueDate:
                 desc = this.strings.settings_actionClearDueDate;
-            break;
+                break;
             case ActionType.AlterColorByPoints:
                 desc = this.strings.settings_actionAlterColor;
-            break;
+                break;
         }
 
         return this.sanitizer.bypassSecurityTrustHtml(desc);

@@ -27,8 +27,6 @@
         "no-switch-case-fall-through": true,
         "no-unsafe-finally": true,
         "no-unused-expression": true,
-        "no-unused-new": true,
-        "no-use-before-declare": true,
         "no-var-keyword": true,
         "radix": true,
         "triple-equals": [ true,

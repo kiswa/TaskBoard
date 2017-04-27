@@ -21,7 +21,7 @@ export const API_HTTP_PROVIDERS = [
     {
         provide: Http,
         useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions,
-                router: Router) => new ApiHttp(xhrBackend, requestOptions, router),
+                     router: Router) => new ApiHttp(xhrBackend, requestOptions, router),
         deps: [XHRBackend, RequestOptions, Router]
     }
 ];

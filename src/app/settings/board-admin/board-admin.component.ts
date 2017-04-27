@@ -200,22 +200,22 @@ export class BoardAdmin {
                 this.displayBoards.sort((a: Board, b: Board) => {
                     return a.name.localeCompare(b.name);
                 });
-            break;
+                break;
             case 'name-desc':
                 this.displayBoards.sort((a: Board, b: Board) => {
                     return b.name.localeCompare(a.name);
                 });
-            break;
+                break;
             case 'id-desc':
                 this.displayBoards.sort((a: Board, b: Board) => {
                     return b.id - a.id;
                 });
-            break;
+                break;
             case 'id-asc':
                 this.displayBoards.sort((a: Board, b: Board) => {
                     return a.id - b.id;
                 });
-            break;
+                break;
         }
     }
 

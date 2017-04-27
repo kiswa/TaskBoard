@@ -60,19 +60,19 @@ export class UserSettings implements OnInit {
         switch (option) {
             case 'new_tasks':
                 this.userOptions.new_tasks_at_bottom = event === 'true';
-            break;
+                break;
             case 'mult_tasks':
                 this.userOptions.multiple_tasks_per_row = event;
-            break;
+                break;
             case 'show_anim':
                 this.userOptions.show_animations = event;
-            break;
+                break;
             case 'show_assign':
                 this.userOptions.show_assignee = event;
-            break;
+                break;
             case 'language':
                 this.userOptions.language = event;
-            break;
+                break;
         }
         this.updateUserOptions();
     }

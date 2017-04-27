@@ -45,24 +45,20 @@ class BeanLoader {
         $board->name = isset($data->name) ? $data->name : '';
         $board->is_active = isset($data->is_active) ? $data->is_active : '';
 
-        try {
-            if (isset($data->categories)) {
-                self::updateObjectList('category', 'LoadCategory',
-                    $board->xownCategoryList, $data->categories);
-            }
+        if (isset($data->categories)) {
+            self::updateObjectList('category', 'LoadCategory',
+                $board->xownCategoryList, $data->categories);
+        }
 
-            if (isset($data->issue_trackers)) {
-                self::updateObjectList('issuetracker', 'LoadIssueTracker',
-                    $board->xownIssueTrackerList,
-                    $data->issue_trackers);
-            }
+        if (isset($data->issue_trackers)) {
+            self::updateObjectList('issuetracker', 'LoadIssueTracker',
+                $board->xownIssueTrackerList,
+                $data->issue_trackers);
+        }
 
-            if (isset($data->columns)) {
-                self::updateObjectList('column', 'LoadColumn',
-                    $board->xownColumnList, $data->columns);
-            }
-        } catch(Exception $ex) {
-            return false;
+        if (isset($data->columns)) {
+            self::updateObjectList('column', 'LoadColumn',
+                $board->xownColumnList, $data->columns);
         }
 
         // Users do not get deleted when removed from a board
@@ -112,7 +108,7 @@ class BeanLoader {
 
         if (isset($data->tasks)) {
             self::updateObjectList('task', 'LoadTask',
-                $column->xownTaskList, $data->tasks);
+                                   $column->xownTaskList, $data->tasks);
         }
 
         if (!isset($data->name) || !isset($data->position) ||
@@ -181,7 +177,7 @@ class BeanLoader {
             foreach ($data->assignees as $assignee) {
                 $user = R::load('user', $assignee->id);
 
-                if((int) $user->id) {
+                if ((int)$user->id) {
                     $task->sharedUserList[] = $user;
                 }
             }
@@ -274,21 +270,15 @@ class BeanLoader {
         foreach ($dataList as $obj) {
             $object = R::load($type, (isset($obj->id) ? $obj->id : 0));
 
-            if ((int)$object->id === 0) {
-                call_user_func_array(array(__CLASS__, $loadFunc),
-                                     array(&$object, json_encode($obj)));
-                $objectList[] = $object;
-                continue;
-            }
-
             call_user_func_array(array(__CLASS__, $loadFunc),
-                                 array(&$objectList[$object->id],
-                                       json_encode($obj)));
+                                 array(&$object, json_encode($obj)));
+            $objectList[] = $object;
         }
     }
 
     private static function updateObjectList($type, $loadFunc,
-                                            &$objectList = [], &$dataList = []) {
+                                             &$objectList = [],
+                                             &$dataList = []) {
         if (count($objectList) && count($dataList)) {
             self::removeObjectsNotInData($type, $dataList, $objectList);
         }
