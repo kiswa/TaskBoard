@@ -55,6 +55,10 @@ export class BoardDisplay implements OnInit {
             this.loading = false;
         });
 
+        boardService.activeBoardChanged.subscribe((board: Board) => {
+            this.activeBoard = board;
+        });
+
         auth.userChanged.subscribe((user: User) => {
             this.updateActiveUser(user);
         });

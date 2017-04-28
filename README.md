@@ -12,7 +12,7 @@ The goal of TaskBoard is to provide a simple and clean interface to a functional
 
 A web server running PHP 5.5, 5.6, or 7.0 with sqlite enabled.
 
-The server must have `sqlite3` and `php5-sqlite` (or `php7-sqlite`) installed, as well as the `rewrite` Apache module.
+The server must have `sqlite3` and `php5-sqlite` (or `php7-sqlite`) installed.
 
 If you're comfortable changing code, you can use any database [supported by RedBeanPHP](http://www.redbeanphp.com/index.php?p=/connection).
 
@@ -23,6 +23,22 @@ Installing TaskBoard is as easy as 1, 2, 3!
  1. Download [the latest release](#) (or whatever version you want)
  2. Extract it to your webserver
  3. Verify the `api` directory is writable
+
+### Server Config
+
+#### Apache
+
+The directory you create for TaskBoard must have `AllowOverride` set so the .htaccess files work.
+
+You also have to have `mod_rewrite` installed and enabled.
+
+#### NGINX
+
+TODO
+
+#### IIS
+
+See the [Wiki Page](https://github.com/kiswa/TaskBoard/wiki/TaskBoard-on-IIS)
 
 ### First Use
 
@@ -134,11 +150,11 @@ Because I like seeing the numbers.
 
 Language     |   Files |    Blank | Comment |     Code
 -------------|--------:|---------:|--------:|---------:
-TypeScript   |      54 |      586 |      25 |     2765
+TypeScript   |      54 |      590 |      24 |     2785
 PHP          |      18 |      559 |      19 |     1743
-HTML         |      18 |      126 |       9 |     1148
+HTML         |      18 |      126 |       9 |     1149
 SASS         |      13 |      209 |      11 |      953
-__SUM:__     | __103__ | __1480__ |  __64__ | __6609__
+__SUM:__     | __103__ | __1484__ |  __63__ | __6630__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
@@ -147,8 +163,8 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
 PHP          |     10 |      687 |      16 |     2008
-JavaScript   |     31 |      392 |      37 |     1636
-__SUM:__     | __41__ | __1079__ |  __53__ | __3644__
+JavaScript   |     32 |      399 |      38 |     1661
+__SUM:__     | __42__ | __1086__ |  __54__ | __3669__
 
 Command: `cloc --exclude-ext=xml test/`
 

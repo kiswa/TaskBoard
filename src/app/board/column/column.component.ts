@@ -8,6 +8,7 @@ import {
 import {
     ApiResponse,
     Board,
+    Category,
     Column,
     Modal,
     Notification,
@@ -103,17 +104,35 @@ export class ColumnDisplay implements OnInit {
         this.collapseTasks = !this.collapseTasks;
     }
 
+    updateTaskColorByCategory(event: Array<Category>) {
+        this.modalProps.categories = event;
+        this.modalProps.color = event[event.length - 1].default_task_color;
+    }
+
     addTask() {
         this.boardService.addTask(this.modalProps)
             .subscribe((response: ApiResponse) => {
                 response.alerts.forEach(note => this.notes.add(note));
 
-                this.notes.add({ type: 'info', text: 'Refresh... for now.'});
-
                 this.modal.close(this.MODAL_ID + this.columnData.id);
 
                 let boardData = response.data[2][0];
-                // TODO - Update board display with new data
+
+                boardData.ownColumn.forEach((column: any) => {
+                    if (!column.ownTask) {
+                        column.ownTask = [];
+                    }
+                });
+
+                let newBoard = new Board(+boardData.id, boardData.name,
+                                         boardData.is_active === '1',
+                                         boardData.ownColumn,
+                                         boardData.ownCategory,
+                                         boardData.ownAutoAction,
+                                         boardData.ownIssuetracker,
+                                         boardData.sharedUser);
+
+                this.boardService.updateActiveBoard(newBoard);
             });
     }
 

@@ -46,7 +46,7 @@
     modal-id="{{ MODAL_ID + columnData.id }}">
     <label>
         Title
-        <input type="text" name="title" placeholder="Task Title"
+        <input #focusMe type="text" name="title" placeholder="Task Title"
             [(ngModel)]="modalProps.title">
     </label>
 
@@ -68,7 +68,8 @@
 
     <label>
         Categories
-        <select name="categories" multiple [(ngModel)]="modalProps.categories">
+        <select name="categories" multiple [ngModel]="modalProps.categories"
+            (ngModelChange)="updateTaskColorByCategory($event)">
             <option *ngFor="let category of activeBoard.categories"
                 [ngValue]="category">{{ category.name }}</option>
         </select>

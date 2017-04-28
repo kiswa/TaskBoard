@@ -124,6 +124,10 @@ global.RouterMock = function() {
     };
 };
 
+global.ActivatedRouteMock = {
+    params: RxJs.Observable.of({})
+};
+
 global.AuthServiceMock = {
     userOptions: {
         show_animations: false
@@ -374,6 +378,15 @@ global.UserSettingsServiceMock = {
             alerts: [{ type: 'success', text: '' }]
         });
     }
+};
+
+global.BoardServiceMock = {
+    getBoards: () => {
+        return RxJs.Observable.of({
+            data: [ '', [] ]
+        });
+    },
+    activeBoardChanged: RxJs.Observable.of({})
 };
 
 global.HttpMock = {
