@@ -83,26 +83,30 @@ export class ApiHttp extends Http {
 
     intercept(observable: Observable<Response>): Observable<Response> {
         return observable
-            .map((res: Response) => {
-                let response: ApiResponse = res.json();
+            .map(this.handleResponse)
+            .catch(this.handleError);
+    }
 
-                if (response.data) {
-                    localStorage.setItem(this.JWT_KEY, response.data[0]);
-                }
+    private handleResponse(res: Response): Response {
+        let response: ApiResponse = res.json();
 
-                return res;
-            })
-            .catch((err, source) => {
-                // 401 for invalid token, 400 for no token, and convert
-                // url to string in case it is null.
-                if ((err.status === 401 || err.status === 400) &&
-                        (err.url + '').indexOf('login') === -1) {
-                    this.router.navigate(['']);
-                    localStorage.removeItem(this.JWT_KEY);
-                }
+        if (response.data) {
+            localStorage.setItem(this.JWT_KEY, response.data[0]);
+        }
 
-                return Observable.throw(err);
-            });
+        return res;
+    }
+
+    private handleError(err: any, source: any): Observable<any> {
+        // 401 for invalid token, 400 for no token, and convert
+        // url to string in case it is null.
+        if ((err.status === 401 || err.status === 400) &&
+            (err.url + '').indexOf('login') === -1) {
+            this.router.navigate(['']);
+            localStorage.removeItem(this.JWT_KEY);
+        }
+
+        return Observable.throw(err);
     }
 }
 

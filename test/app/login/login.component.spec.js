@@ -28,7 +28,7 @@ describe('Login', () => {
         expect(login.remember).to.equal(false);
     });
 
-    it('has a isSubmitted property', () => {
+    it('has an isSubmitted property', () => {
        expect(login.isSubmitted) .to.equal(false);
     });
 

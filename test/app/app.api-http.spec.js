@@ -1,14 +1,14 @@
-/* globals expect RxJs localStorage */
+/* globals expect RxJs localStorage RouterMock */
 
-var path = '../../build/app.',
-    apihttp = require(path + 'api-http.js'),
+var path = '../../build/',
+    apihttp = require(path + 'app.api-http.js'),
     ApiHttp = apihttp.ApiHttp;
 
 describe('ApiHttp', () => {
     var apiHttp;
 
     beforeEach(() => {
-        apiHttp = new ApiHttp();
+        apiHttp = new ApiHttp(null, null, new RouterMock());
     });
 
     it('provides API_HTTP_PROVIDERS', () => {
@@ -51,6 +51,23 @@ describe('ApiHttp', () => {
                 expect(localStorage.getItem('taskboard.jwt'))
                     .to.equal('');
             });
+    });
+
+    it('handles valid responses', () => {
+        apiHttp.handleResponse(new ResponseMock());
+
+        expect(localStorage.getItem('taskboard.jwt')).to.equal('jwt');
+    });
+
+    it('handles error responses', () => {
+        let error = {
+            status: 401,
+            url: ''
+        };
+
+        apiHttp.handleError(error, null);
+
+        expect(localStorage.getItem('taskboard.jwt')).to.equal(null);
     });
 });
 
