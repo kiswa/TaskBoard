@@ -60,7 +60,7 @@ describe('ApiHttp', () => {
     });
 
     it('handles error responses', () => {
-        let error = {
+        var error = {
             status: 401,
             url: ''
         };
