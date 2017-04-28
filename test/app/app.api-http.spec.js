@@ -1,4 +1,4 @@
-/* globals expect RxJs localStorage RouterMock */
+/* globals expect RxJs localStorage ResponseMock RouterMock */
 
 var path = '../../build/',
     apihttp = require(path + 'app.api-http.js'),

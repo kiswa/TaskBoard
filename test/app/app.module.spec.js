@@ -4,7 +4,9 @@ var path = '../../build/',
 
 try {
     require(path + 'main.js');
-} catch (ex) {}
+} catch (ex) {
+    // Ignore for coverage
+}
 
 describe('Module', () => {
     it('provides an AppModule class', () => {
