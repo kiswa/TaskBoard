@@ -5,10 +5,6 @@
 
     .quick-add {
         padding: 0;
-
-        button {
-            vertical-align: top;
-        }
     }
 
     .half-page {
@@ -52,15 +48,15 @@
 
     .categories {
         [type="text"] {
-            width: calc(100% - 84px);
+            width: calc(100% - 74px);
         }
 
         [type="color"] {
             cursor: pointer;
-            height: 36px;
+            height: 30px;
             margin-left: 2px;
             vertical-align: bottom;
-            width: 36px;
+            width: 30px;
         }
     }
 
