@@ -50,10 +50,10 @@ export class TaskDisplay {
             if (/^\s*\[[x ]\]\s*/.test(text)) {
                 text = text
                     .replace(/^\s*\[ \]\s*/,
-                             '<i class="icon icon-check-empty" style="margin-right:-4px"></i> ')
+                             '<i class="icon icon-check-empty"></i> ')
                     .replace(/^\s*\[x\]\s*/,
-                             '<i class="icon icon-check" style="margin-right:-4px"></i> ');
-                return '<li style="list-style: none; margin-left: -27px;">' + text + '</li>';
+                             '<i class="icon icon-check"></i> ');
+                return '<li class="checklist">' + text + '</li>';
             } else {
                 return '<li>' + text + '</li>';
             }
