@@ -151,10 +151,16 @@
             padding: 0 5px 2px;
 
             .badge {
-                font-size: .5em;
+                font-size: .6em;
                 margin-right: -2px;
                 margin-top: 2px;
             }
+        }
+
+        code {
+            background-color: #1d1f21;
+            border: 0;
+            color: #c5c8c6;
         }
 
         .description {

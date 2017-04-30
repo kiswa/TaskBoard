@@ -44,6 +44,16 @@
 .icon-plus-squared-alt::before { content: '\f196'; }
 .icon-eyedropper::before { content: '\f1fb'; }
 
+.icon-check:before {
+    content: '\e812';
+    margin-left: -6px;
+}
+
+.icon-check-empty:before {
+    content: '\f096';
+    margin-left: -8px;
+}
+
 .icon-help-circled {
     cursor: help;
 }

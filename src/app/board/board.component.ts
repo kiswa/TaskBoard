@@ -121,6 +121,7 @@ export class BoardDisplay implements OnInit {
 
     private updateActiveBoard(): void {
         if (!this.boardNavId || !this.boards) {
+            this.activeBoard = null;
             return;
         }
 

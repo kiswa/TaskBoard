@@ -32,6 +32,7 @@ let gulp = require('gulp'),
         scss_base: 'node_modules/scss-base/src',
         chartist: 'node_modules/chartist/dist/scss',
         normalize: require('node-normalize-scss').includePaths,
+        hljs: 'node_modules/highlight.js/styles',
 
         tests_app: 'test/app/**/*.spec.js',
         tests_api: 'test/api/**/*.php',
@@ -151,17 +152,19 @@ gulp.task('system-build', ['tsc'], () => {
         .then(() => del('build'));
 });
 
-gulp.task('minify', () => {
-    let js = gulp.src('dist/js/**/*.js')
+gulp.task('minify-js', () => {
+    return gulp.src('dist/js/**/*.js')
         .pipe(jsMinify())
         .pipe(gulp.dest('dist/js/'));
+});
 
-    let css = gulp.src('dist/css/styles.css')
+gulp.task('minify-css', () => {
+    return gulp.src('dist/css/styles.css')
         .pipe(cssMinify())
         .pipe(gulp.dest('dist/css/'));
-
-    return merge(js, css);
 });
+
+gulp.task('minify', ['minify-js', 'minify-css']);
 
 gulp.task('composer', () => {
     return composer({

@@ -11,7 +11,12 @@
         "suppressImplicitAnyIndexErrors": true,
         "lib": [ "es2015", "dom" ],
         "typeRoots": [ "node_modules/@types" ],
-        "types": [ "chartist", "core-js" ]
+        "types": [
+            "chartist",
+            "core-js",
+            "marked",
+            "highlight.js"
+        ]
     }
 }
 

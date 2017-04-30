@@ -11,9 +11,7 @@
         <span *ngIf="taskData.points > 0" class="badge right" title="Points">
             {{ taskData.points }}</span>
     </h4>
-    <div class="description">
-        {{ taskData.description }}
-    </div>
+    <div class="description" [innerHTML]="getTaskDescription()"></div>
     <div class="hidden">
         <pre>{{ taskData | json }}</pre>
     </div>
