@@ -10,6 +10,8 @@ import {
     Board,
     Category,
     Column,
+    ContextMenu,
+    ContextMenuItem,
     Modal,
     Notification,
     Task,
@@ -35,6 +37,8 @@ export class ColumnDisplay implements OnInit {
     private userOptions: UserOptions;
     private tasks: Array<Task>;
 
+    private contextMenuItems: Array<ContextMenuItem> = [];
+
     private MODAL_ID: string;
     private modalProps: Task;
 
@@ -49,6 +53,8 @@ export class ColumnDisplay implements OnInit {
         this.templateElement = elRef.nativeElement;
         this.tasks = [];
         this.collapseTasks = false;
+
+        this.contextMenuItems.push(new ContextMenuItem('Add Task'));
 
         this.MODAL_ID = 'add-task-form-';
         this.modalProps = new Task();

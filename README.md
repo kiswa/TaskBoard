@@ -150,11 +150,11 @@ Because I like seeing the numbers.
 
 Language     |   Files |    Blank | Comment |     Code
 -------------|--------:|---------:|--------:|---------:
-TypeScript   |      54 |      602 |      24 |     2827
+TypeScript   |      57 |      610 |      25 |     2855
 PHP          |      18 |      559 |      19 |     1743
-HTML         |      18 |      126 |       9 |     1147
-SASS         |      13 |      209 |      12 |      964
-__SUM:__     | __103__ | __1499__ |  __64__ | __6681__
+HTML         |      19 |      130 |       9 |     1157
+SASS         |      14 |      215 |      12 |      976
+__SUM:__     | __108__ | __1514__ |  __65__ | __6731__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 

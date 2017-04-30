@@ -32,6 +32,8 @@
         [task]="task"></tb-task>
 </div>
 
+<tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
+
 <!--<tb-modal modal-title="Confirm Task Removal" blocking="true">-->
 <!--    <div class="center">Removing a task cannot be undone.<br>Continue?</div>-->
 <!--    <div class="buttons">-->
@@ -42,7 +44,7 @@
 <!--    </div>-->
 <!--</tb-modal>-->
 
-<tb-modal  *ngIf="activeBoard" modal-title="Add Task"
+<tb-modal *ngIf="activeBoard" modal-title="Add Task"
     modal-id="{{ MODAL_ID + columnData.id }}">
     <label>
         Title

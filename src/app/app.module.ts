@@ -12,6 +12,7 @@ import { API_HTTP_PROVIDERS } from './app.api-http';
 import { Constants } from './shared/constants';
 import {
     AuthGuard,
+    ContextMenu,
     InlineEdit,
     Modal,
     Notifications,
@@ -45,6 +46,7 @@ import { BoardService } from './board/board.service';
     declarations: [
         AppComponent,
         InlineEdit,
+        ContextMenu,
         Modal,
         Notifications,
         TopNav,

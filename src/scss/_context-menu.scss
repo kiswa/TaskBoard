@@ -1,0 +1,8 @@
+.context-menu-container {
+    display: none;
+
+    &.menu-open {
+        display: block;
+    }
+}
+

@@ -1,0 +1,12 @@
+<div class="context-menu-container"
+    [ngClass]="{ animated: animate, 'menu-open': isOpen }">
+
+    <div class="menu-item" *ngFor="let item of menuItems">
+        <hr *ngIf="item.isSeparator">
+
+        <div *ngIf="!item.isSeparator">
+            {{ item.text }}
+        </div>
+    </div>
+</div>
+
