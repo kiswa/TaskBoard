@@ -13,7 +13,6 @@ class Boards extends BaseController {
         $boards = $this->loadAllBoards($request);
 
         if (!count($boards)) {
-            $this->logger->addInfo('No boards in database.');
             $this->apiJson->addAlert('info', 'No boards in database.');
 
             return $this->jsonResponse($response);

@@ -15,8 +15,6 @@ class Invalid extends BaseController {
 
         $this->apiJson->addData($apiReturn);
 
-        $this->logger->addInfo('Invalid Endpoint: ', [$this->apiJson]);
-
         return $this->jsonResponse($response);
     }
 

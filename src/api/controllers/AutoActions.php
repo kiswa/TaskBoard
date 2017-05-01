@@ -13,7 +13,6 @@ class AutoActions extends BaseController {
         $autoActions = $this->getAll($request);
 
         if (!count($autoActions)) {
-            $this->logger->addInfo('No automatic actions in database.');
             $this->apiJson->addAlert('info',
                 'No automatic actions in database.');
             $this->apiJson->addData([]);
