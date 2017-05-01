@@ -1,8 +1,35 @@
+.collapsed {
+    .context-menu-container {
+        &.menu-open {
+            display: none;
+        }
+    }
+}
+
 .context-menu-container {
+    @include shadow-high;
+
+    background-color: #fff;
+    border-radius: 3px;
     display: none;
+    margin: 2px 0 0;
+    padding: 5px 0;
+    position: fixed;
+    width: 200px;
+    z-index: 100;
 
     &.menu-open {
         display: block;
+    }
+
+    .menu-item {
+        cursor: pointer;
+        padding: 4px 10px;
+        user-select: none;
+
+        &:hover {
+            background-color: lighten($color-background, 5%);
+        }
     }
 }
 

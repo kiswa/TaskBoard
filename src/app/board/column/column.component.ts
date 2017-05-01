@@ -54,7 +54,7 @@ export class ColumnDisplay implements OnInit {
         this.tasks = [];
         this.collapseTasks = false;
 
-        this.contextMenuItems.push(new ContextMenuItem('Add Task'));
+        this.contextMenuItems.push(new ContextMenuItem('Add New Task'));
 
         this.MODAL_ID = 'add-task-form-';
         this.modalProps = new Task();

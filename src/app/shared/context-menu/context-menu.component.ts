@@ -1,4 +1,8 @@
-import { Component, Input } from '@angular/core';
+import {
+    Component,
+    Input,
+    ElementRef
+} from '@angular/core';
 
 import { ContextMenuItem } from './context-menu-item.model';
 
@@ -12,8 +16,34 @@ export class ContextMenu {
     isOpen = false;
     animate = true;
 
-    constructor() {
-        // TODO
+    constructor(private el: ElementRef) {
+        let parentElement = el.nativeElement.parentElement;
+
+        el.nativeElement.ownerDocument.addEventListener('click', () => {
+            this.isOpen = false;
+        });
+
+        parentElement.oncontextmenu = (event: MouseEvent) => {
+            event.preventDefault();
+            this.onParentContextMenu(event);
+        };
+    }
+
+    private onParentContextMenu(event: MouseEvent) {
+        this.isOpen = true;
+
+        let edgeBuffer = 10;
+        let target = this.el.nativeElement.firstElementChild;
+
+        setTimeout(() => {
+            let rect = target.getBoundingClientRect();
+
+            let offsetX = (event.pageX + rect.width + edgeBuffer) > window.innerWidth;
+            let offsetY = (event.pageY + rect.height + edgeBuffer) > window.innerHeight;
+
+            target.style.left = event.pageX - (offsetX ? rect.width : 0) + 'px';
+            target.style.top = event.pageY - (offsetY ? rect.height : 0) + 'px';
+        }, 10);
     }
 }
 
