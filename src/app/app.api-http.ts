@@ -83,8 +83,8 @@ export class ApiHttp extends Http {
 
     intercept(observable: Observable<Response>): Observable<Response> {
         return observable
-            .map(this.handleResponse)
-            .catch(this.handleError);
+            .map(res => this.handleResponse(res))
+            .catch((err, source) => this.handleError(err, source));
     }
 
     private handleResponse(res: Response): Response {
