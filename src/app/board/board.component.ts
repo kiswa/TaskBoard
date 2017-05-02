@@ -12,6 +12,7 @@ import {
     User,
     Notification,
     AuthService,
+    ContextMenuService,
     NotificationsService,
     StringsService
 } from '../shared/index';
@@ -38,6 +39,7 @@ export class BoardDisplay implements OnInit {
                 private active: ActivatedRoute,
                 private auth: AuthService,
                 private boardService: BoardService,
+                private menuService: ContextMenuService,
                 private notes: NotificationsService,
                 private stringsService: StringsService,
                 private dragula: DragulaService) {

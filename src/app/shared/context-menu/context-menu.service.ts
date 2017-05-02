@@ -18,7 +18,7 @@ export class ContextMenuService {
         this.menus.push(newMenu);
     }
 
-    private closeAllMenus() {
+    closeAllMenus() {
         this.menus.forEach(menu => {
             menu.isOpen = false;
         });

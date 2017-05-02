@@ -9,7 +9,7 @@
 .context-menu-container {
     @include shadow-high;
 
-    background-color: #fff;
+    background-color: $white;
     border-radius: 3px;
     display: none;
     margin: 2px 0 0;
@@ -29,6 +29,14 @@
 
         &:hover {
             background-color: lighten($color-background, 5%);
+        }
+
+        &.no-highlight {
+            cursor: default;
+
+            &:hover {
+                background-color: $white;
+            }
         }
     }
 }

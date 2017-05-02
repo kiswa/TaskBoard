@@ -1,10 +1,16 @@
-import { Component, Input } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit
+} from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import * as Marked from 'marked';
 import * as hljs from 'highlight.js';
 
 import {
+    ContextMenu,
+    ContextMenuItem,
     Task,
     UserOptions,
     AuthService
@@ -14,10 +20,12 @@ import {
     selector: 'tb-task',
     templateUrl: 'app/board/task/task.component.html'
 })
-export class TaskDisplay {
+export class TaskDisplay implements OnInit {
     private userOptions: UserOptions;
+    private contextMenuItems: Array<ContextMenuItem>;
 
     @Input('task') taskData: Task;
+    @Input('add-task') addTask: Function;
 
     constructor(private auth: AuthService,
                 private sanitizer: DomSanitizer) {
@@ -26,6 +34,18 @@ export class TaskDisplay {
         });
 
         this.initMarked();
+    }
+
+    ngOnInit() {
+        this.contextMenuItems = [
+            new ContextMenuItem('View Task'),
+            new ContextMenuItem('Edit Task'),
+            new ContextMenuItem('Delete Task'),
+            new ContextMenuItem('', null, true),
+            new ContextMenuItem('Move to Column:', null, false, false),
+            new ContextMenuItem('', null, true),
+            new ContextMenuItem('Add New Task', this.addTask)
+        ];
     }
 
     getTaskDescription(): SafeHtml {

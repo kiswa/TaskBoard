@@ -37,7 +37,7 @@ export class ColumnDisplay implements OnInit {
     private userOptions: UserOptions;
     private tasks: Array<Task>;
 
-    private contextMenuItems: Array<ContextMenuItem> = [];
+    private contextMenuItems: Array<ContextMenuItem>;
 
     private MODAL_ID: string;
     private modalProps: Task;
@@ -54,7 +54,10 @@ export class ColumnDisplay implements OnInit {
         this.tasks = [];
         this.collapseTasks = false;
 
-        this.contextMenuItems.push(new ContextMenuItem('Add New Task'));
+        this.contextMenuItems = [
+            new ContextMenuItem('Add New Task',
+                                this.getShowModalFunction())
+        ];
 
         this.MODAL_ID = 'add-task-form-';
         this.modalProps = new Task();
@@ -140,6 +143,10 @@ export class ColumnDisplay implements OnInit {
 
                 this.boardService.updateActiveBoard(newBoard);
             });
+    }
+
+    private getShowModalFunction(): Function {
+        return () => { this.showModal(); };
     }
 
     private showModal() {

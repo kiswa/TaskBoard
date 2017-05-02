@@ -18,6 +18,7 @@ import {
     Notifications,
     TopNav,
     AuthService,
+    ContextMenuService,
     ModalService,
     NotificationsService,
     StringsService
@@ -39,6 +40,7 @@ import { BoardService } from './board/board.service';
         Title,
         AuthService,
         BoardService,
+        ContextMenuService,
         ModalService,
         NotificationsService,
         StringsService

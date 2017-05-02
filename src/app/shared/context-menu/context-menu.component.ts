@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 
 import { ContextMenuItem } from './context-menu-item.model';
+import { ContextMenuService } from './context-menu.service';
 
 @Component({
     selector: 'tb-context-menu',
@@ -16,20 +17,28 @@ export class ContextMenu {
     isOpen = false;
     animate = true;
 
-    constructor(private el: ElementRef) {
-        let parentElement = el.nativeElement.parentElement;
+    constructor(private el: ElementRef,
+                private menuService: ContextMenuService) {
+        menuService.registerMenu(this);
 
-        el.nativeElement.ownerDocument.addEventListener('click', () => {
-            this.isOpen = false;
-        });
+        let parentElement = el.nativeElement.parentElement;
 
         parentElement.oncontextmenu = (event: MouseEvent) => {
             event.preventDefault();
+            event.stopPropagation();
+
             this.onParentContextMenu(event);
         };
     }
 
+    callAction(action: Function) {
+        if (action) {
+            action();
+        }
+    }
+
     private onParentContextMenu(event: MouseEvent) {
+        this.menuService.closeAllMenus();
         this.isOpen = true;
 
         let edgeBuffer = 10;

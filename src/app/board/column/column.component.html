@@ -29,7 +29,7 @@
 
 <div class="tasks">
     <tb-task class="task-container" *ngFor="let task of columnData.ownTask"
-        [task]="task"></tb-task>
+        [task]="task" [add-task]="getShowModalFunction()"></tb-task>
 </div>
 
 <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>

@@ -1,12 +1,15 @@
 <div class="context-menu-container"
     [ngClass]="{ animated: animate, 'menu-open': isOpen }">
 
-    <div class="menu-item" *ngFor="let item of menuItems">
+    <div class="menu-item" *ngFor="let item of menuItems"
+        [ngClass]="{ 'no-highlight': item.isSeparator || !item.canHighlight }"
+        (click)="callAction(item.action)">
         <hr *ngIf="item.isSeparator">
 
         <div *ngIf="!item.isSeparator">
             {{ item.text }}
         </div>
     </div>
+
 </div>
 
