@@ -35,6 +35,11 @@ export class ContextMenu {
         let edgeBuffer = 10;
         let target = this.el.nativeElement.firstElementChild;
 
+        // Set to the event position by default
+        target.style.left = event.pageX + 'px';
+        target.style.top = event.pageY + 'px';
+
+        // Adjust position if near an edge
         setTimeout(() => {
             let rect = target.getBoundingClientRect();
 
@@ -43,7 +48,7 @@ export class ContextMenu {
 
             target.style.left = event.pageX - (offsetX ? rect.width : 0) + 'px';
             target.style.top = event.pageY - (offsetY ? rect.height : 0) + 'px';
-        }, 10);
+        }, 0);
     }
 }
 
