@@ -57,7 +57,8 @@ export class ContextMenu {
 
             target.style.left = event.pageX - (offsetX ? rect.width : 0) + 'px';
             target.style.top = event.pageY - (offsetY ? rect.height : 0) + 'px';
-        }, 0);
+        },
+        0);
     }
 }
 
