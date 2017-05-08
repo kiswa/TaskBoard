@@ -6,9 +6,7 @@
         (click)="callAction(item.action)">
         <hr *ngIf="item.isSeparator">
 
-        <div *ngIf="!item.isSeparator">
-            {{ item.text }}
-        </div>
+        <div *ngIf="!item.isSeparator"[innerHTML]="getText(item)"></div>
     </div>
 
 </div>

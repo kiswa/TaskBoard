@@ -5,16 +5,23 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-import * as Marked from 'marked';
+import * as marked from 'marked';
 import * as hljs from 'highlight.js';
 
 import {
+    ApiResponse,
+    Board,
+    Column,
     ContextMenu,
     ContextMenuItem,
+    Notification,
     Task,
     UserOptions,
-    AuthService
+    AuthService,
+    ModalService,
+    NotificationsService
 } from '../../shared/index';
+import { BoardService } from '../board.service';
 
 @Component({
     selector: 'tb-task',
@@ -23,14 +30,33 @@ import {
 export class TaskDisplay implements OnInit {
     private userOptions: UserOptions;
     private contextMenuItems: Array<ContextMenuItem>;
+    private selectMenuItem: ContextMenuItem;
+
+    private activeBoard: Board;
 
     @Input('task') taskData: Task;
     @Input('add-task') addTask: Function;
+    @Input('remove-task') removeTask: Function;
 
     constructor(private auth: AuthService,
-                private sanitizer: DomSanitizer) {
+                private sanitizer: DomSanitizer,
+                private boardService: BoardService,
+                private modal: ModalService,
+                private notes: NotificationsService) {
         auth.userChanged.subscribe(() => {
             this.userOptions = auth.userOptions;
+        });
+
+        boardService.activeBoardChanged.subscribe((board: Board) => {
+            let menuText = 'Move to Column: <select>';
+
+            board.columns.forEach((column: Column) => {
+                menuText += '<option>' + column.name + '</option>';
+            });
+
+            menuText += '</select>';
+
+            this.selectMenuItem = new ContextMenuItem(menuText, null, false, false);
         });
 
         this.initMarked();
@@ -40,17 +66,20 @@ export class TaskDisplay implements OnInit {
         this.contextMenuItems = [
             new ContextMenuItem('View Task'),
             new ContextMenuItem('Edit Task'),
-            new ContextMenuItem('Delete Task'),
+            new ContextMenuItem('Remove Task', this.removeTask),
             new ContextMenuItem('', null, true),
-            new ContextMenuItem('Move to Column:', null, false, false),
+            new ContextMenuItem('Copy To Board'),
+            new ContextMenuItem('Move To Board'),
             new ContextMenuItem('', null, true),
-            new ContextMenuItem('Add New Task', this.addTask)
+            this.selectMenuItem,
+            new ContextMenuItem('', null, true),
+            new ContextMenuItem('Add Task', this.addTask)
         ];
     }
 
     getTaskDescription(): SafeHtml {
         return this.sanitizer.bypassSecurityTrustHtml(
-            Marked(this.taskData.description));
+            marked(this.taskData.description));
     }
 
     // Expects a color in full HEX with leading #, e.g. #ffffe0
@@ -64,7 +93,7 @@ export class TaskDisplay implements OnInit {
     }
 
     private initMarked() {
-        let renderer = new Marked.Renderer();
+        let renderer = new marked.Renderer();
 
         renderer.listitem = text => {
             if (/^\s*\[[x ]\]\s*/.test(text)) {
@@ -91,7 +120,7 @@ export class TaskDisplay implements OnInit {
             return out;
         };
 
-        Marked.setOptions({
+        marked.setOptions({
             renderer,
             smartypants: true,
             highlight: code => {

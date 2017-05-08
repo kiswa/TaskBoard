@@ -3,6 +3,7 @@ import {
     Input,
     ElementRef
 } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { ContextMenuItem } from './context-menu-item.model';
 import { ContextMenuService } from './context-menu.service';
@@ -18,7 +19,8 @@ export class ContextMenu {
     animate = true;
 
     constructor(private el: ElementRef,
-                private menuService: ContextMenuService) {
+                private menuService: ContextMenuService,
+                private sanitizer: DomSanitizer) {
         menuService.registerMenu(this);
 
         let parentElement = el.nativeElement.parentElement;
@@ -29,6 +31,10 @@ export class ContextMenu {
 
             this.onParentContextMenu(event);
         };
+    }
+
+    getText(item: ContextMenuItem): SafeHtml {
+        return this.sanitizer.bypassSecurityTrustHtml(item.text);
     }
 
     callAction(action: Function) {
@@ -49,7 +55,7 @@ export class ContextMenu {
         target.style.top = event.pageY + 'px';
 
         // Adjust position if near an edge
-        setTimeout(() => {
+        let adjustPosition = () => {
             let rect = target.getBoundingClientRect();
 
             let offsetX = (event.pageX + rect.width + edgeBuffer) > window.innerWidth;
@@ -57,8 +63,9 @@ export class ContextMenu {
 
             target.style.left = event.pageX - (offsetX ? rect.width : 0) + 'px';
             target.style.top = event.pageY - (offsetY ? rect.height : 0) + 'px';
-        },
-        0);
+        };
+
+        setTimeout(adjustPosition, 0);
     }
 }
 

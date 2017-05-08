@@ -40,7 +40,10 @@ export class ColumnDisplay implements OnInit {
     private contextMenuItems: Array<ContextMenuItem>;
 
     private MODAL_ID: string;
+    private MODAL_CONFIRM_ID: string;
+
     private modalProps: Task;
+    private taskToRemove: number;
 
     @Input('column') columnData: Column;
 
@@ -55,11 +58,13 @@ export class ColumnDisplay implements OnInit {
         this.collapseTasks = false;
 
         this.contextMenuItems = [
-            new ContextMenuItem('Add New Task',
+            new ContextMenuItem('Add Task',
                                 this.getShowModalFunction())
         ];
 
         this.MODAL_ID = 'add-task-form-';
+        this.MODAL_CONFIRM_ID = 'task-remove-confirm';
+
         this.modalProps = new Task();
 
         boardService.activeBoardChanged.subscribe((board: Board) => {
@@ -143,6 +148,36 @@ export class ColumnDisplay implements OnInit {
 
                 this.boardService.updateActiveBoard(newBoard);
             });
+    }
+
+    removeTask() {
+        this.boardService.removeTask(this.taskToRemove)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                let boardData = response.data[1][0];
+
+                let newBoard = new Board(+boardData.id, boardData.name,
+                                         boardData.is_active === '1',
+                                         boardData.ownColumn,
+                                         boardData.ownCategory,
+                                         boardData.ownAutoAction,
+                                         boardData.ownIssuetracker,
+                                         boardData.sharedUser);
+
+                this.boardService.updateActiveBoard(newBoard);
+            });
+    }
+
+    private getRemoveTaskFunction(taskId: number): Function {
+        return () => {
+            this.taskToRemove = taskId;
+            this.modal.open(this.MODAL_CONFIRM_ID + this.columnData.id);
+        };
     }
 
     private getShowModalFunction(): Function {

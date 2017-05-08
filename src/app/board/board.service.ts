@@ -64,6 +64,18 @@ export class BoardService {
             });
     }
 
+    removeTask(taskId: number): Observable<ApiResponse> {
+        return this.http.delete('api/tasks/' + taskId)
+            .map(res => {
+                let response: ApiResponse = res.json();
+                return response;
+            })
+            .catch((res, caught) => {
+                let response: ApiResponse = res.json();
+                return Observable.of(response);
+            });
+    }
+
     // TODO: Determine when to use this
     refreshToken(): void {
         this.http.post('api/refresh', {}).subscribe();

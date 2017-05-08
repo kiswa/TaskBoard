@@ -126,7 +126,7 @@ class Tasks extends BaseController {
         $id = (int)$args['id'];
         $task = R::load('task', $id);
 
-        if ((int)$task->id !== $id) {
+        if ((int)$task->id !== $id || (int)$task->id === 0) {
             $this->logger->addError('Remove Task: ', [$task]);
             $this->apiJson->addAlert('error', 'Error removing task. ' .
                 'No task found for ID ' . $id . '.');
@@ -134,8 +134,9 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response);
         }
 
-        if (!$this->checkBoardAccess(
-                $this->getBoardId($task->column_id), $request)) {
+        $boardId = $this->getBoardId($task->column_id);
+
+        if (!$this->checkBoardAccess($boardId, $request)) {
             return $this->jsonResponse($response, 403);
         }
 
@@ -150,6 +151,9 @@ class Tasks extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success',
             'Task ' . $before->title . ' removed.');
+
+        $board = R::load('board', $boardId);
+        $this->apiJson->addData(R::exportAll($board));
 
         return $this->jsonResponse($response);
     }

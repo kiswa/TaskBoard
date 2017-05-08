@@ -11,10 +11,9 @@
         <span *ngIf="taskData.points > 0" class="badge right" title="Points">
             {{ taskData.points }}</span>
     </h4>
+
     <div class="description" [innerHTML]="getTaskDescription()"></div>
-    <div class="hidden">
-        <pre>{{ taskData | json }}</pre>
-    </div>
+
     <div class="stats">
         <span *ngIf="userOptions.show_assignee">
             Assigned To:
@@ -25,6 +24,7 @@
                 Unassigned
             </span>
         </span>
+
         <span class="right">
             <span *ngIf="taskData.due_date">
                 Due: {{ taskData.due_date }}
@@ -39,6 +39,7 @@
             </span>
         </span>
     </div>
+
     <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
 </div>
 

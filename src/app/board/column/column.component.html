@@ -29,27 +29,29 @@
 
 <div class="tasks">
     <tb-task class="task-container" *ngFor="let task of columnData.ownTask"
-        [task]="task" [add-task]="getShowModalFunction()"></tb-task>
+        [task]="task" [add-task]="getShowModalFunction(task.id)"
+        [remove-task]="getRemoveTaskFunction(task.id)"></tb-task>
 </div>
 
 <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
 
-<!--<tb-modal modal-title="Confirm Task Removal" blocking="true">-->
-<!--    <div class="center">Removing a task cannot be undone.<br>Continue?</div>-->
-<!--    <div class="buttons">-->
-<!--        <button class="flat"-->
-<!--            (click)="removeUser()">Yes</button>-->
-<!--        <button #defaultAction-->
-<!--            (click)="modal.close(MODAL_CONFIRM_ID)">No</button>-->
-<!--    </div>-->
-<!--</tb-modal>-->
+<tb-modal modal-title="Confirm Task Removal" blocking="true"
+    modal-id="{{ MODAL_CONFIRM_ID + columnData.id }}">
+    <div class="center">Removing a task cannot be undone.<br>Continue?</div>
+    <div class="buttons">
+        <button class="flat"
+            (click)="removeTask()">Yes</button>
+        <button #defaultAction
+            (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">No</button>
+    </div>
+</tb-modal>
 
 <tb-modal *ngIf="activeBoard" modal-title="Add Task"
     modal-id="{{ MODAL_ID + columnData.id }}">
     <label>
         Title
         <input #focusMe type="text" name="title" placeholder="Task Title"
-            [(ngModel)]="modalProps.title">
+        [(ngModel)]="modalProps.title">
     </label>
 
     <label>
