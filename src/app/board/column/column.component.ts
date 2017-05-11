@@ -46,6 +46,7 @@ export class ColumnDisplay implements OnInit {
     private taskToRemove: number;
 
     @Input('column') columnData: Column;
+    @Input('boards') boards: Array<Board>;
 
     constructor(private elRef: ElementRef,
                 private auth: AuthService,
@@ -138,14 +139,7 @@ export class ColumnDisplay implements OnInit {
                     }
                 });
 
-                let newBoard = new Board(+boardData.id, boardData.name,
-                                         boardData.is_active === '1',
-                                         boardData.ownColumn,
-                                         boardData.ownCategory,
-                                         boardData.ownAutoAction,
-                                         boardData.ownIssuetracker,
-                                         boardData.sharedUser);
-
+                let newBoard = this.convertBoardData(boardData);
                 this.boardService.updateActiveBoard(newBoard);
             });
     }
@@ -159,18 +153,19 @@ export class ColumnDisplay implements OnInit {
                     return;
                 }
 
-                let boardData = response.data[1][0];
-
-                let newBoard = new Board(+boardData.id, boardData.name,
-                                         boardData.is_active === '1',
-                                         boardData.ownColumn,
-                                         boardData.ownCategory,
-                                         boardData.ownAutoAction,
-                                         boardData.ownIssuetracker,
-                                         boardData.sharedUser);
-
+                let newBoard = this.convertBoardData(response.data[1][0]);
                 this.boardService.updateActiveBoard(newBoard);
             });
+    }
+
+    private convertBoardData(boardData: any): Board {
+        return new Board(+boardData.id, boardData.name,
+                         boardData.is_active === '1',
+                         boardData.ownColumn,
+                         boardData.ownCategory,
+                         boardData.ownAutoAction,
+                         boardData.ownIssuetracker,
+                         boardData.sharedUser);
     }
 
     private getRemoveTaskFunction(taskId: number): Function {

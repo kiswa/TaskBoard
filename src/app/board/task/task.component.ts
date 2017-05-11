@@ -33,10 +33,17 @@ export class TaskDisplay implements OnInit {
     private selectMenuItem: ContextMenuItem;
 
     private activeBoard: Board;
+    private boardsList: Array<Board>;
 
     @Input('task') taskData: Task;
     @Input('add-task') addTask: Function;
     @Input('remove-task') removeTask: Function;
+
+    @Input('boards')
+    set boards(boards: Array<Board>) {
+        this.boardsList = boards;
+        this.generateContextMenuItems();
+    }
 
     constructor(private auth: AuthService,
                 private sanitizer: DomSanitizer,
@@ -48,10 +55,12 @@ export class TaskDisplay implements OnInit {
         });
 
         boardService.activeBoardChanged.subscribe((board: Board) => {
+            this.activeBoard = board;
+
             let menuText = 'Move to Column: <select>';
 
             board.columns.forEach((column: Column) => {
-                menuText += '<option>' + column.name + '</option>';
+                menuText += '<option value="column.id">' + column.name + '</option>';
             });
 
             menuText += '</select>';
@@ -63,18 +72,7 @@ export class TaskDisplay implements OnInit {
     }
 
     ngOnInit() {
-        this.contextMenuItems = [
-            new ContextMenuItem('View Task'),
-            new ContextMenuItem('Edit Task'),
-            new ContextMenuItem('Remove Task', this.removeTask),
-            new ContextMenuItem('', null, true),
-            new ContextMenuItem('Copy To Board'),
-            new ContextMenuItem('Move To Board'),
-            new ContextMenuItem('', null, true),
-            this.selectMenuItem,
-            new ContextMenuItem('', null, true),
-            new ContextMenuItem('Add Task', this.addTask)
-        ];
+        this.generateContextMenuItems();
     }
 
     getTaskDescription(): SafeHtml {
@@ -90,6 +88,41 @@ export class TaskDisplay implements OnInit {
             yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
         return yiq >= 140 ? '#333333' : '#efefef';
+    }
+
+    private generateContextMenuItems() {
+        this.contextMenuItems = [
+            new ContextMenuItem('View Task'),
+            new ContextMenuItem('Edit Task'),
+            new ContextMenuItem('Remove Task', this.removeTask),
+            new ContextMenuItem('', null, true),
+            this.selectMenuItem,
+            new ContextMenuItem('', null, true),
+            new ContextMenuItem('Add Task', this.addTask)
+        ];
+
+        if (this.boardsList.length > 1) {
+            this.contextMenuItems
+                .splice(3, 0,
+                        new ContextMenuItem('', null, true),
+                        this.getMenuItem('Copy'),
+                        this.getMenuItem('Move'));
+        }
+    }
+
+    private getMenuItem(text: string): ContextMenuItem {
+        let menuText = text + ' to Board: <select>';
+
+        this.boardsList.forEach((board: Board) => {
+            if (board.name !== this.activeBoard.name) {
+                menuText += '<option value="board.id">' + board.name + '</option>';
+
+            }
+        });
+
+        menuText += '</select>';
+
+        return new ContextMenuItem(menuText, null, false, false);
     }
 
     private initMarked() {

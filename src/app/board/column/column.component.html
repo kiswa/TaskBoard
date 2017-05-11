@@ -29,7 +29,8 @@
 
 <div class="tasks">
     <tb-task class="task-container" *ngFor="let task of columnData.ownTask"
-        [task]="task" [add-task]="getShowModalFunction(task.id)"
+        [task]="task" [boards]="boards"
+        [add-task]="getShowModalFunction(task.id)"
         [remove-task]="getRemoveTaskFunction(task.id)"></tb-task>
 </div>
 
