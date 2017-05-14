@@ -48,15 +48,15 @@
 
     .categories {
         [type="text"] {
-            width: calc(100% - 74px);
+            width: calc(100% - 81px);
         }
 
         [type="color"] {
             cursor: pointer;
-            height: 30px;
+            height: 35px;
             margin-left: 2px;
             vertical-align: bottom;
-            width: 30px;
+            width: 35px;
         }
     }
 
