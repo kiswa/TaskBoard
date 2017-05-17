@@ -84,6 +84,11 @@ class Users extends BaseController {
         }
 
         $opts = R::dispense('useroption');
+        $opts->new_tasks_at_bottom = true;
+        $opts->show_animations = true;
+        $opts->show_assignee = true;
+        $opts->multiple_tasks_per_row = false;
+        $opts->language = 'en';
         R::store($opts);
 
         $user->user_option_id = $opts->id;
