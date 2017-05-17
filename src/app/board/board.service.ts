@@ -24,7 +24,9 @@ export class BoardService {
     }
 
     updateActiveBoard(board: Board): void {
-        this.activeBoard.next(board);
+        let newBoard = this.convertBoardData(board);
+        console.log(newBoard); // tslint:disable-line
+        this.activeBoard.next(newBoard);
     }
 
     getBoards(): Observable<ApiResponse> {
@@ -79,6 +81,20 @@ export class BoardService {
     // TODO: Determine when to use this
     refreshToken(): void {
         this.http.post('api/refresh', {}).subscribe();
+    }
+
+    private convertBoardData(boardData: any): Board {
+        if (boardData instanceof Board) {
+            return boardData;
+        }
+
+        return new Board(+boardData.id, boardData.name,
+                         boardData.is_active === '1',
+                         boardData.ownColumn,
+                         boardData.ownCategory,
+                         boardData.ownAutoAction,
+                         boardData.ownIssuetracker,
+                         boardData.sharedUser);
     }
 }
 

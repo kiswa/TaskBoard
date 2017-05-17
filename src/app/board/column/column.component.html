@@ -11,7 +11,7 @@
     {{ columnData.name }}
 
     <span class="badge" title="Tasks in Column">
-        {{ columnData.ownTask.length }}
+        {{ columnData.ownTask && columnData.ownTask.length }}
     </span>
 
     <span class="icon icon-angle-double-up"
@@ -21,8 +21,9 @@
 </h3>
 
 <div class="quick-add">
-    <input type="text" placeholder="Quick Add Task - Title Only">
-    <button class="flat" (click)="showModal('Add')">
+    <input type="text" placeholder="Quick Add Task - Title Only"
+        [(ngModel)]="quickAdd.title">
+    <button class="flat" (click)="quickAddClicked()">
         <i class="icon icon-plus"></i>
     </button>
 </div>

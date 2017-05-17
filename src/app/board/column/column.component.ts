@@ -31,6 +31,7 @@ import { BoardService } from '../board.service';
 export class ColumnDisplay implements OnInit {
     private templateElement: any;
     private collapseTasks: boolean;
+    private saving: boolean;
 
     private activeUser: User;
     private activeBoard: Board;
@@ -42,6 +43,7 @@ export class ColumnDisplay implements OnInit {
     private MODAL_ID: string;
     private MODAL_CONFIRM_ID: string;
 
+    private quickAdd: Task;
     private modalProps: Task;
     private taskToRemove: number;
 
@@ -66,6 +68,7 @@ export class ColumnDisplay implements OnInit {
         this.MODAL_ID = 'add-task-form-';
         this.MODAL_CONFIRM_ID = 'task-remove-confirm';
 
+        this.quickAdd = new Task();
         this.modalProps = new Task();
 
         boardService.activeBoardChanged.subscribe((board: Board) => {
@@ -124,12 +127,23 @@ export class ColumnDisplay implements OnInit {
         this.modalProps.color = event[event.length - 1].default_task_color;
     }
 
-    addTask() {
-        this.boardService.addTask(this.modalProps)
+    addTask(newTask: Task = this.modalProps) {
+        this.saving = true;
+
+        if (!this.validateTask(newTask)) {
+            this.saving = false;
+            return;
+        }
+
+        this.boardService.addTask(newTask)
             .subscribe((response: ApiResponse) => {
                 response.alerts.forEach(note => this.notes.add(note));
 
                 this.modal.close(this.MODAL_ID + this.columnData.id);
+
+                if (response.status !== 'success') {
+                    return;
+                }
 
                 let boardData = response.data[2][0];
 
@@ -139,8 +153,7 @@ export class ColumnDisplay implements OnInit {
                     }
                 });
 
-                let newBoard = this.convertBoardData(boardData);
-                this.boardService.updateActiveBoard(newBoard);
+                this.boardService.updateActiveBoard(boardData);
             });
     }
 
@@ -153,19 +166,18 @@ export class ColumnDisplay implements OnInit {
                     return;
                 }
 
-                let newBoard = this.convertBoardData(response.data[1][0]);
-                this.boardService.updateActiveBoard(newBoard);
+                this.boardService.updateActiveBoard(response.data[1][0]);
             });
     }
 
-    private convertBoardData(boardData: any): Board {
-        return new Board(+boardData.id, boardData.name,
-                         boardData.is_active === '1',
-                         boardData.ownColumn,
-                         boardData.ownCategory,
-                         boardData.ownAutoAction,
-                         boardData.ownIssuetracker,
-                         boardData.sharedUser);
+    private validateTask(task: Task) {
+        if (task.title === '') {
+            this.notes.add(
+                new Notification('error', 'Task title is required.'));
+            return false;
+        }
+
+        return true;
     }
 
     private getRemoveTaskFunction(taskId: number): Function {
@@ -179,10 +191,21 @@ export class ColumnDisplay implements OnInit {
         return () => { this.showModal(); };
     }
 
+    private quickAddClicked() {
+        if (this.quickAdd.title === '') {
+            this.showModal();
+            return;
+        }
+
+        this.quickAdd.column_id = this.columnData.id;
+        this.addTask(this.quickAdd);
+
+        this.quickAdd = new Task();
+    }
+
     private showModal() {
         this.modalProps = new Task();
         this.modalProps.column_id = this.columnData.id;
-        this.modalProps.color = '#ffffe0';
 
         this.modal.open(this.MODAL_ID + this.columnData.id);
     }

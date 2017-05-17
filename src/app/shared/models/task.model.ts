@@ -5,7 +5,7 @@ export class Task {
     constructor(public id: number = 0,
                 public title: string = '',
                 public description: string = '',
-                public color: string = '',
+                public color: string = '#ffffe0',
                 public due_date: string = '', // tslint:disable-line
                 public points: number = 0,
                 public position: number = 0,
