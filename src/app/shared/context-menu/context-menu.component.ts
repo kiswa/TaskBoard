@@ -25,12 +25,7 @@ export class ContextMenu {
 
         let parentElement = el.nativeElement.parentElement;
 
-        parentElement.oncontextmenu = (event: MouseEvent) => {
-            event.preventDefault();
-            event.stopPropagation();
-
-            this.onParentContextMenu(event);
-        };
+        parentElement.oncontextmenu = this.eventHandler;
     }
 
     getText(item: ContextMenuItem): SafeHtml {
@@ -41,6 +36,13 @@ export class ContextMenu {
         if (action) {
             action();
         }
+    }
+
+    private eventHandler(event: MouseEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.onParentContextMenu(event);
     }
 
     private onParentContextMenu(event: MouseEvent) {

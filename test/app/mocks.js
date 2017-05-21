@@ -86,6 +86,23 @@ global.window.Reflect = Reflect;
 global.RxJs = require('rxjs/Rx');
 global.expect = chai.expect;
 
+global.ElementRefMock = {
+    nativeElement: {
+        parentElement: {
+            oncontextmenu: () => {}
+        },
+        firstElementChild: {
+            style: {},
+            getBoundingClientRect: () => {
+                return {
+                    width: 10,
+                    height: 10
+                };
+            }
+        }
+    }
+};
+
 global.Chartist = {
     Pie(id, data, opts) {
         this.sum = function() { return 100; };
@@ -193,6 +210,23 @@ global.ModalServiceMock = function() {
         },
         registerModal: () => {
             register.next(true);
+        }
+    };
+};
+
+global.ContextMenuServiceMock = function() {
+    var register = new RxJs.Subject(),
+        closeAll = new RxJs.Subject();
+
+    return {
+        registerCalled: register.asObservable(),
+        closeAllCalled: closeAll.asObservable(),
+
+        registerMenu: () => {
+            register.next(true);
+        },
+        closeAllMenus: () => {
+            closeAll.next(true);
         }
     };
 };

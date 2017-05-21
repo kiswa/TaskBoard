@@ -6,7 +6,7 @@ var dirs = '../../../../',
 
 describe('AutoActions', () => {
     var autoActions,
-    modalService;
+        imodalService;
 
     beforeEach(() => {
         modalService = new ModalServiceMock();
