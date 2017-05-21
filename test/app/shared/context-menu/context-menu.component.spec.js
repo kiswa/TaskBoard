@@ -15,7 +15,7 @@ describe('ContextMenu', () => {
         expect(contextMenu.getText({ text: 'testing' })).to.equal('testing');
     });
 
-    it('has a function to call a callback', (done) => {
+    it('has a function to call a callback', done => {
         var callback = () => {
             done();
         };
@@ -23,7 +23,7 @@ describe('ContextMenu', () => {
         contextMenu.callAction(callback);
     });
 
-    it('captures the parent oncontextmenu event', (done) => {
+    it('captures the parent oncontextmenu event', done => {
         contextMenuService.closeAllCalled.subscribe( called => {
             expect(called).to.equal(true);
             done();
