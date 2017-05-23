@@ -37,6 +37,7 @@ export class TaskDisplay implements OnInit {
 
     @Input('task') taskData: Task;
     @Input('add-task') addTask: Function;
+    @Input('edit-task') editTask: Function;
     @Input('remove-task') removeTask: Function;
 
     @Input('boards')
@@ -93,7 +94,7 @@ export class TaskDisplay implements OnInit {
     private generateContextMenuItems() {
         this.contextMenuItems = [
             new ContextMenuItem('View Task'),
-            new ContextMenuItem('Edit Task'),
+            new ContextMenuItem('Edit Task', this.editTask),
             new ContextMenuItem('Remove Task', this.removeTask),
             new ContextMenuItem('', null, true),
             this.selectMenuItem,

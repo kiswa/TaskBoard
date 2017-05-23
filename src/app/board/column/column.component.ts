@@ -187,8 +187,8 @@ export class ColumnDisplay implements OnInit {
         };
     }
 
-    private getShowModalFunction(): Function {
-        return () => { this.showModal(); };
+    private getShowModalFunction(taskId: number = 0): Function {
+        return () => { this.showModal(taskId); };
     }
 
     private quickAddClicked() {
@@ -203,10 +203,17 @@ export class ColumnDisplay implements OnInit {
         this.quickAdd = new Task();
     }
 
-    private showModal() {
-        this.modalProps = new Task();
-        this.modalProps.column_id = this.columnData.id;
+    private showModal(taskId: number = 0) {
+        if (taskId === 0) {
+            this.modalProps = new Task();
+            this.modalProps.column_id = this.columnData.id;
 
+            this.modal.open(this.MODAL_ID + this.columnData.id);
+            return;
+        }
+
+        this.modalProps = this.columnData.tasks
+            .filter(task => task.id === taskId)[0];
         this.modal.open(this.MODAL_ID + this.columnData.id);
     }
 

@@ -29,9 +29,10 @@
 </div>
 
 <div class="tasks">
-    <tb-task class="task-container" *ngFor="let task of columnData.ownTask"
+    <tb-task class="task-container" *ngFor="let task of columnData.tasks"
         [task]="task" [boards]="boards"
-        [add-task]="getShowModalFunction(task.id)"
+        [add-task]="getShowModalFunction()"
+        [edit-task]="getShowModalFunction(task.id)"
         [remove-task]="getRemoveTaskFunction(task.id)"></tb-task>
 </div>
 
@@ -48,7 +49,8 @@
     </div>
 </tb-modal>
 
-<tb-modal *ngIf="activeBoard" modal-title="Add Task"
+<tb-modal *ngIf="activeBoard"
+    modal-title="{{ modalProps.id === 0 ? 'Add' : 'Edit' }} Task"
     modal-id="{{ MODAL_ID + columnData.id }}">
     <label>
         Title

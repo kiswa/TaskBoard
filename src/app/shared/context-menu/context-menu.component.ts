@@ -25,7 +25,9 @@ export class ContextMenu {
 
         let parentElement = el.nativeElement.parentElement;
 
-        parentElement.oncontextmenu = this.eventHandler;
+        parentElement.oncontextmenu = (event: MouseEvent) => {
+            this.eventHandler(event);
+        };
     }
 
     getText(item: ContextMenuItem): SafeHtml {
