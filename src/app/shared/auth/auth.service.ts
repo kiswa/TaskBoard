@@ -82,15 +82,12 @@ export class AuthService {
     }
 
     private convertOpts(opts: any): UserOptions {
-        let converted = <UserOptions> {};
-
-        converted.id = +opts.id;
-        converted.new_tasks_at_bottom = opts.new_tasks_at_bottom === '1';
-        converted.show_animations = opts.show_animations === '1';
-        converted.show_assignee = opts.show_assignee === '1';
-        converted.multiple_tasks_per_row = opts.multiple_tasks_per_row === '1';
-        converted.language = opts.language;
-
+        let converted = new UserOptions(+opts.id,
+                                        opts.new_tasks_at_bottom === '1',
+                                        opts.show_animations === '1',
+                                        opts.show_assignee === '1',
+                                        opts.multiple_tasks_per_row === '1',
+                                        opts.language);
         return converted;
     }
 }

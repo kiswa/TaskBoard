@@ -25,7 +25,6 @@ export class BoardService {
 
     updateActiveBoard(board: Board): void {
         let newBoard = this.convertBoardData(board);
-        console.log(newBoard); // tslint:disable-line
         this.activeBoard.next(newBoard);
     }
 
