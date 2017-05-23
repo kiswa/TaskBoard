@@ -129,8 +129,8 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
 
 ##### Front End
 
- * [Angular 2](https://angular.io/) single-page app
- * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & framework
+ * [Angular](https://angular.io/) single-page app (not AngularJS)
+ * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & grid
  * [scss-base](https://www.npmjs.com/package/scss-base) for the base styling
  * [marked](https://github.com/chjj/marked) Markdown parser
  * [Chartist.js](https://gionkunz.github.io/chartist-js/) for all charts
@@ -138,7 +138,7 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
 ##### Back End
 
  * [Slim Framework](http://www.slimframework.com/) and [RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
- * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails.
+ * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails
  * [JWT](https://jwt.io/) authentication
  * [SQLite](https://www.sqlite.org/) database
 
@@ -150,19 +150,19 @@ Because I like seeing the numbers.
 
 Language     |   Files |    Blank | Comment |     Code
 -------------|--------:|---------:|--------:|---------:
-TypeScript   |      58 |      662 |      26 |     3059
+TypeScript   |      60 |      676 |      26 |     3191
 PHP          |      18 |      560 |      19 |     1747
-HTML         |      19 |      135 |       0 |     1169
+HTML         |      19 |      135 |       0 |     1171
 SASS         |      14 |      221 |      12 |     1004
-__SUM:__     | __109__ | __1578__ |  __57__ | __6979__
+__SUM:__     | __111__ | __1592__ |  __57__ | __7113__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
+JavaScript   |     42 |      517 |      49 |     2107
 PHP          |     10 |      687 |      16 |     2008
-JavaScript   |     34 |      432 |      41 |     1779
-__SUM:__     | __44__ | __1119__ |  __57__ | __3787__
+__SUM:__     | __52__ | __1204__ |  __65__ | __4115__
 
 Command: `cloc --exclude-ext=xml test/`
 
