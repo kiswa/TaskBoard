@@ -41,7 +41,7 @@
     "@types/marked": "0.0.28",
     "bourbon": "^4.3.4",
     "bourbon-neat": "1.8.0",
-    "chai": "^3.5.0",
+    "chai": "^4.0.0",
     "chartist": "^0.11.0",
     "chartist-plugin-tooltip": "git+https://github.com/Globegitter/chartist-plugin-tooltip.git",
     "core-js": "^2.4.1",
@@ -61,8 +61,8 @@
     "gulp-phpunit": "^0.23.0",
     "gulp-sass": "^3.1.0",
     "gulp-scss-lint": "^0.4.0",
-    "gulp-tslint": "^8.0.0",
-    "gulp-typescript": "^3.1.6",
+    "gulp-tslint": "^8.1.0",
+    "gulp-typescript": "^3.1.7",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
     "highlight.js": "^9.11.0",
@@ -77,8 +77,8 @@
     "systemjs": "0.20.12",
     "systemjs-builder": "0.16.4",
     "touch": "^1.0.0",
-    "tslint": "^5.2.0",
-    "typescript": "^2.3.2",
+    "tslint": "^5.3.2",
+    "typescript": "^2.3.3",
     "zone.js": "^0.8.11"
   }
 }
