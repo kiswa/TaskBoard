@@ -190,10 +190,11 @@
 
     <div class="half-modal">
         <label>{{ strings['settings_categories'] }}</label>
-        <ul *ngIf="modalProps.categories.length" class="modal-list">
+        <ul *ngIf="modalProps.categories.length" class="modal-list category-list">
             <li *ngFor="let category of modalProps.categories; let i = index">
-                <span class="badge" [title]="strings['settings_defaultTaskColor']"
-                    [style.background-color]="getColor(category)"></span>
+                <input type="color" [title]="strings['settings_defaultTaskColor']"
+                    [ngModel]="getColor(category)"
+                    (ngModelChange)="setCategoryColor($event, i)">
                 <inline-edit [text]="getPropertyValue('categories', 'name', i)"
                     (edit)="onPropertyEdit('categories', 'name', i, $event)"></inline-edit>
                 <span class="actions">

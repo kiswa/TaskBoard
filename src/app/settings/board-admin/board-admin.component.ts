@@ -381,6 +381,10 @@ export class BoardAdmin {
         return category.defaultColor;
     }
 
+    private setCategoryColor(color: any, index: number): void {
+        this.modalProps.categories[index].default_task_color = color;
+    }
+
     private deepCopy(source: any): any {
         let output: any, value: any, key: any;
 
