@@ -142,6 +142,22 @@
         margin-bottom: 1em;
         padding: 0;
 
+        &.category-list {
+            [type="color"] {
+                border: 0;
+                cursor: pointer;
+                height: 24px;
+                margin: 0;
+                padding: 0;
+                width: 20px;
+            }
+
+            .inline-edit {
+                vertical-align: top;
+                width: 85%;
+            }
+        }
+
         li {
             border-bottom: 1px solid $color-border;
             padding: 0 7px;
@@ -168,7 +184,7 @@
 
     .inline-edit {
         display: inline-block;
-        width: 80%;
+        width: 82%;
 
         .icon {
             cursor: pointer;
