@@ -4,9 +4,9 @@ php:
   - '7.0'
   - '7.1'
 before_script:
-  - nvm install 4
-  - nvm use 4
-  - npm i -g npm@4
+  - nvm install 7
+  - nvm use 7
+  - npm i -g npm@5
   - npm i -g gulp
   - npm i
   - touch tests.db
