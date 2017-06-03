@@ -4,8 +4,8 @@ php:
   - '7.0'
   - '7.1'
 before_script:
-  - nvm install 7
-  - nvm use 7
+  - nvm install 5
+  - nvm use 5
   - npm i -g npm@5
   - npm i -g gulp
   - npm i
