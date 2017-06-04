@@ -15,7 +15,7 @@ describe('BoardDisplay', () => {
                                  AuthServiceMock, BoardServiceMock);
     });
 
-    it('sets the title when contstructed', () => {
+    it('sets the title when constructed', () => {
         expect(title.getTitle()).to.equal('TaskBoard - Kanban App');
     });
 

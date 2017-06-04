@@ -4,15 +4,17 @@
     <h4>
         <span class="icon"
             [style.color]="getTextColor(taskData.color)"
-            [ngClass]="{ 'icon-minus-squared-alt': !collapseTasks,
-            'icon-plus-squared-alt': collapseTasks }"
-            title="Collapse Task"></span>
+            [ngClass]="{ 'icon-minus-squared-alt': !isCollapsed,
+            'icon-plus-squared-alt': isCollapsed }"
+            title="{{ isCollapsed ? 'Expand' : 'Collapse' }} Task"
+            (click)="isCollapsed = !isCollapsed"></span>
         {{ taskData.title }}
         <span *ngIf="taskData.points > 0" class="badge right" title="Points">
             {{ taskData.points }}</span>
     </h4>
 
-    <div class="description" [innerHTML]="getTaskDescription()"></div>
+    <div class="description" *ngIf="!isCollapsed"
+        [innerHTML]="getTaskDescription()"></div>
 
     <div class="stats">
         <span *ngIf="userOptions.show_assignee">

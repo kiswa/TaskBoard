@@ -39,6 +39,7 @@ export class TaskDisplay implements OnInit {
     @Input('add-task') addTask: Function;
     @Input('edit-task') editTask: Function;
     @Input('remove-task') removeTask: Function;
+    @Input('collapse') isCollapsed: boolean;
 
     @Input('boards')
     set boards(boards: Array<Board>) {
@@ -51,6 +52,8 @@ export class TaskDisplay implements OnInit {
                 private boardService: BoardService,
                 private modal: ModalService,
                 private notes: NotificationsService) {
+        this.contextMenuItems = [];
+
         auth.userChanged.subscribe(() => {
             this.userOptions = auth.userOptions;
         });
@@ -117,7 +120,6 @@ export class TaskDisplay implements OnInit {
         this.boardsList.forEach((board: Board) => {
             if (board.name !== this.activeBoard.name) {
                 menuText += '<option value="board.id">' + board.name + '</option>';
-
             }
         });
 

@@ -420,7 +420,7 @@ global.BoardServiceMock = {
             data: [ '', [] ]
         });
     },
-    activeBoardChanged: RxJs.Observable.of({})
+    activeBoardChanged: RxJs.Observable.of({ columns: [] })
 };
 
 global.HttpMock = {

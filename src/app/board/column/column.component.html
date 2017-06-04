@@ -11,7 +11,7 @@
     {{ columnData.name }}
 
     <span class="badge" title="Tasks in Column">
-        {{ columnData.ownTask && columnData.ownTask.length }}
+        {{ columnData.ownTask && columnData.ownTask.length || 0 }}
     </span>
 
     <span class="icon icon-angle-double-up"
@@ -33,7 +33,8 @@
         [task]="task" [boards]="boards"
         [add-task]="getShowModalFunction()"
         [edit-task]="getShowModalFunction(task.id)"
-        [remove-task]="getRemoveTaskFunction(task.id)"></tb-task>
+        [remove-task]="getRemoveTaskFunction(task.id)"
+        [collapse]="collapseTasks"></tb-task>
 </div>
 
 <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
