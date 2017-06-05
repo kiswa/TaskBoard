@@ -19,7 +19,7 @@ export class Modal implements OnInit {
     @Input() wide = false;
 
     @ContentChild('focusMe') focusElement: any;
-    @ContentChild('defaultAction') defaulActionElement: any;
+    @ContentChild('defaultAction') defaultActionElement: any;
 
     isOpen = false;
     animate = true;
@@ -51,8 +51,8 @@ export class Modal implements OnInit {
     }
 
     private clickDefaultAction(): void {
-        if (this.defaulActionElement) {
-            this.defaulActionElement.nativeElement.click();
+        if (this.defaultActionElement) {
+            this.defaultActionElement.nativeElement.click();
         }
     }
 }

@@ -57,7 +57,7 @@
     <div class="buttons">
         <button class="flat"
             (click)="removeUser()">{{ strings['yes'] }}</button>
-        <button #defaultAction
+        <button #defaultAction #focusMe
             (click)="modal.close(MODAL_CONFIRM_ID)">{{ strings['no'] }}</button>
     </div>
 </tb-modal>

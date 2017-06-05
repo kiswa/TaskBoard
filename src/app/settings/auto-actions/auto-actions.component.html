@@ -137,7 +137,7 @@
         <button class="flat"
             (click)="removeAutoAction()"
             [disabled]="saving">Yes</button>
-        <button #defaultAction
+        <button #defaultAction #focusMe
             (click)="modal.close(MODAL_CONFIRM_ID)"
             [disabled]="saving">No</button>
     </div>

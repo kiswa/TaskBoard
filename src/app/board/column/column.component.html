@@ -45,7 +45,7 @@
     <div class="buttons">
         <button class="flat"
             (click)="removeTask()">Yes</button>
-        <button #defaultAction
+        <button #defaultAction #focusMe
             (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">No</button>
     </div>
 </tb-modal>

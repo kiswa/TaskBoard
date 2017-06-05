@@ -142,7 +142,7 @@
         <button class="flat"
             (click)="removeBoard()"
             [disabled]="saving">{{ strings['yes'] }}</button>
-        <button #defaultAction
+        <button #defaultAction #focusMe
             (click)="modal.close(MODAL_CONFIRM_ID)"
             [disabled]="saving">{{ strings['no'] }}</button>
     </div>
