@@ -1,3 +1,9 @@
+# **N O T I C E**
+
+TaskBoard is currently being re-written from scratch. The `master` and `dev` branches are still maintained, but are not getting new features at this time.
+
+If you'd like to see how it's progressing, take a look at [the `re-write` branch](https://github.com/kiswa/TaskBoard/tree/re-write) (keeping in mind it's still a work in progress at this point).
+
 # TaskBoard
 
 [![Join the chat at https://gitter.im/kiswa/TaskBoard](https://badges.gitter.im/kiswa/TaskBoard.svg)](https://gitter.im/kiswa/TaskBoard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
