@@ -68,18 +68,13 @@ export class AutoActions {
         settings.boardsChanged
             .subscribe((boards: Array<Board>) => {
                 this.boards = boards;
-
-                boards.forEach(board => {
-                    if (!(+board.is_active)) {
-                        this.hasInactiveBoards = true;
-                    }
-                });
+                this.updateHasInactiveBoards();
             });
 
         settings.actionsChanged
             .subscribe((actionList: Array<AutoAction>) => {
                 this.autoActions = actionList;
-                this.hasInactiveBoards = false;
+                this.updateHasInactiveBoards();
 
                 this.autoActions.sort((a, b) => {
                     let nameA = this.getBoardName(a.board_id),
@@ -330,6 +325,16 @@ export class AutoActions {
             .subscribe((response: ApiResponse) => {
                 this.handleResponse(response);
             });
+    }
+
+    private updateHasInactiveBoards(): void {
+        this.hasInactiveBoards = false;
+
+        this.boards.forEach(board => {
+            if (!(+board.is_active)) {
+                this.hasInactiveBoards = true;
+            }
+        });
     }
 
     private handleResponse(response: ApiResponse): void {
