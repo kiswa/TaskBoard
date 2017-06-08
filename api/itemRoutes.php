@@ -33,6 +33,9 @@ $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
 
             foreach($board->sharedUser as $user) {
                 $actor = getUser();
+		/* VVD - avoid sending to actor */
+		if ($user->username === $actor->username) 
+			continue;
                 $assignee = 'Unassigned';
                 if ($item->assignee > 0) {
                     $assignee = getUserByID($item->assignee)->username;
@@ -95,6 +98,9 @@ $app->post('/items/:itemId', function($itemId) use ($app, $jsonResponse) {
 
             foreach($board->sharedUser as $user) {
                 $actor = getUser();
+		/* VVD - avoid sending to actor */
+		if ($user->username === $actor->username) 
+			continue;
                 $assignee = 'Unassigned';
                 if ($item->assignee > 0) {
                     $assignee = getUserByID($item->assignee)->username;
@@ -184,7 +190,10 @@ $app->post('/items/:itemId/comment', function($itemId) use ($app, $jsonResponse)
             $lane = R::load('lane', $item->lane_id);
             $board = R::load('board', $lane->boardId);
 
-            foreach($board->sharedUser as $user) {
+            foreach($board->sharedUser as $shuser) {
+		/* VVD - avoid sending to actor */
+		if ($user->username === $shuser->username) 
+			continue;
                 $body = getNewCommentEmailBody(
                     $board->id,
                     $user->username,
@@ -193,8 +202,8 @@ $app->post('/items/:itemId/comment', function($itemId) use ($app, $jsonResponse)
                     $comment->text
                 );
                 $subject = 'TaskBoard: New comment';
-                $recipient = $user->username;
-                $email = $user->email;
+                $recipient = $shuser->username;
+                $email = $shuser->email;
 
                 sendEmail($email, $recipient, $subject, $body);
             }
@@ -226,7 +235,10 @@ $app->post('/comments/:commentId', function($commentId) use ($app, $jsonResponse
         $lane = R::load('lane', $item->lane_id);
         $board = R::load('board', $lane->boardId);
 
-        foreach($board->sharedUser as $user) {
+        foreach($board->sharedUser as $shuser) {
+		/* VVD - avoid sending to actor */
+		if ($user->username === $shuser->username) 
+			continue;
             $body = getEditCommentEmailBody(
                 $board->id,
                 $user->username,
@@ -235,8 +247,8 @@ $app->post('/comments/:commentId', function($commentId) use ($app, $jsonResponse
                 $comment->text
             );
             $subject = 'TaskBoard: Comment updated';
-            $recipient = $user->username;
-            $email = $user->email;
+            $recipient = $shuser->username;
+            $email = $shuser->email;
 
             sendEmail($email, $recipient, $subject, $body);
         }

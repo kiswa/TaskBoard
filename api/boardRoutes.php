@@ -22,7 +22,11 @@ $app->post('/boards', function() use($app, $jsonResponse) {
         $jsonResponse->addAlert('success', 'New board ' . $board->name . ' created.');
 
         foreach($board->sharedUser as $user) {
-            $body = getNewBoardEmailBody($board->id, $user->username, $board->name);
+            /* VVD - avoid sending to actor */
+            if ($user->username === $actor->username)
+                 continue;
+
+            $body = getNewBoardEmailBody($board->id, $actor->username, $board->name);
             $subject = 'TaskBoard: New board created!';
             $recipient = $user->username;
             $email = $user->email;
@@ -49,7 +53,11 @@ $app->post('/boards/update', function() use($app, $jsonResponse) {
         $jsonResponse->addBeans(getBoards());
 
         foreach($board->sharedUser as $user) {
-            $body = getEditBoardEmailBody($board->id, $user->username, $board->name);
+            /* VVD - avoid sending to actor */
+            if ($board->id && ($user->username === $actor->username))
+                continue;
+
+            $body = getEditBoardEmailBody($board->id, $actor->username, $board->name);
             $subject = 'TaskBoard: Board updated!';
             $recipient = $user->username;
             $email = $user->email;
