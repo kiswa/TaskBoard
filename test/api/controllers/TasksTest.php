@@ -131,9 +131,6 @@ class TasksTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
-    /**
-     * @group single
-     */
     public function testUpdateTask() {
         ini_set("xdebug.var_display_max_children", -1);
         ini_set("xdebug.var_display_max_data", -1);
@@ -154,7 +151,7 @@ class TasksTest extends PHPUnit_Framework_TestCase {
         $response = $this->tasks->updateTask($request,
             new ResponseMock(), $args);
         $this->assertEquals('success', $response->status);
-        $this->assertEquals(0, count($response->data[1][0]['sharedUser']));
+        $this->assertEquals('updated', $response->data[1][0]['title']);
     }
 
     public function testUpdateTaskInvalid() {
