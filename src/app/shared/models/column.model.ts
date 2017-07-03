@@ -21,8 +21,8 @@ export class Column {
                                      +task.column_id,
                                      task.comments,
                                      task.attachments,
-                                     task.assignees,
-                                     task.categories));
+                                     task.sharedUser || task.assignees,
+                                     task.sharedCategory || task.categories));
         });
     }
 }

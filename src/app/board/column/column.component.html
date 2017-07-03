@@ -112,10 +112,15 @@
     </div>
 
     <div class="buttons">
-        <button #defaultAction
+        <button #defaultAction *ngIf="modalProps.id === 0"
             (click)="addTask()" [disabled]="saving">
             <i class="icon icon-plus"></i>
             Add Task
+        </button>
+        <button #defaultAction *ngIf="modalProps.id !== 0"
+            (click)="updateTask()" [disabled]="saving">
+            <i class="icon icon-floppy"></i>
+            Save Task
         </button>
         <button class="flat" (click)="modal.close(MODAL_ID + columnData.id)">
             Cancel

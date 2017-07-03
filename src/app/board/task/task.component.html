@@ -19,10 +19,10 @@
     <div class="stats">
         <span *ngIf="userOptions.show_assignee">
             Assigned To:
-            <span *ngFor="let assignee of taskData.sharedUser">
+            <span *ngFor="let assignee of taskData.assignees">
                 {{ assignee.username }}
             </span>
-            <span *ngIf="!taskData.sharedUser || !taskData.sharedUser.length">
+            <span *ngIf="!taskData.assignees || !taskData.assignees.length">
                 Unassigned
             </span>
         </span>
@@ -31,15 +31,18 @@
             <span *ngIf="taskData.due_date">
                 Due: {{ taskData.due_date }}
             </span>
-            <span *ngIf="taskData.comments" class="icon icon-chat-empty"
+            <span *ngIf="taskData.comments.length" class="icon icon-chat-empty"
                 title="{{ taskData.comments.length }} Comments"></span>
-            <span *ngIf="taskData.attachments" class="icon icon-attach"
+            <span *ngIf="taskData.attachments.length" class="icon icon-attach"
                 title="{{ taskData.attachments.length }} Attachments"></span>
-            <span *ngFor="let category of taskData.sharedCategory"
+            <span *ngFor="let category of taskData.categories"
                 class="category" title="Category">
                 {{ category.name }}
             </span>
         </span>
+        <div *ngIf="totalTasks > 0"
+            [style]="getPercentStyle()"
+            [title]="'Task ' + percentComplete * 100 + '% Complete'"></div>
     </div>
 
     <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>

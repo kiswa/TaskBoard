@@ -83,7 +83,7 @@ class Tasks extends BaseController {
 
         $task = R::load('task', (int)$args['id']);
 
-        $update = R::dispense('task');
+        $update = R::load('task', (int)$args['id']);
         $update->id = BeanLoader::LoadTask($update, $request->getBody())
             ? $task->id
             : 0;
@@ -109,9 +109,14 @@ class Tasks extends BaseController {
             json_encode($task), json_encode($update),
             'task', $update->id);
 
+        $boardId = $this->getBoardId($task->column_id);
+        $board = R::load('board', $boardId);
+
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success', 'Task ' .
             $update->title . ' updated.');
+        $this->apiJson->addData(R::exportAll($update));
+        $this->apiJson->addData(R::exportAll($board));
 
         return $this->jsonResponse($response);
     }

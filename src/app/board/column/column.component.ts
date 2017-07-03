@@ -157,6 +157,20 @@ export class ColumnDisplay implements OnInit {
             });
     }
 
+    updateTask() {
+        this.boardService.updateTask(this.modalProps)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                this.boardService.updateActiveBoard(response.data[2][0]);
+                this.modal.close(this.MODAL_ID + this.columnData.id);
+            });
+    }
+
     removeTask() {
         this.boardService.removeTask(this.taskToRemove)
             .subscribe((response: ApiResponse) => {
@@ -212,8 +226,32 @@ export class ColumnDisplay implements OnInit {
             return;
         }
 
-        this.modalProps = this.columnData.tasks
+        let editTask = this.columnData.tasks
             .filter(task => task.id === taskId)[0];
+
+        this.modalProps = new Task(editTask.id, editTask.title,
+                                   editTask.description, editTask.color,
+                                   editTask.due_date, editTask.points,
+                                   editTask.position, editTask.column_id,
+                                   editTask.comments, editTask.attachments,
+                                   [], []);
+
+        this.activeBoard.users.forEach(user => {
+            editTask.assignees.forEach(assignee => {
+                if (assignee.id === user.id) {
+                    this.modalProps.assignees.push(user);
+                }
+            });
+        });
+
+        this.activeBoard.categories.forEach(category => {
+            editTask.categories.forEach(cat => {
+                if (cat.id === category.id) {
+                    this.modalProps.categories.push(category);
+                }
+            });
+        });
+
         this.modal.open(this.MODAL_ID + this.columnData.id);
     }
 

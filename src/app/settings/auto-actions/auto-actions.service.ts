@@ -18,26 +18,25 @@ export class AutoActionsService {
 
     addAction(action: AutoAction): Observable<ApiResponse> {
         return this.http.post('api/autoactions', action)
-            .map(res => {
-                let response: ApiResponse = res.json();
-                return response;
-            })
-            .catch((res, caught) => {
-                let response: ApiResponse = res.json();
-                return Observable.of(response);
-            });
+            .map(this.toApiResponse)
+            .catch(this.errorHandler);
     }
 
     removeAction(action: AutoAction): Observable<ApiResponse> {
         return this.http.delete('api/autoactions/' + action.id, action)
-            .map(res => {
-                let response: ApiResponse = res.json();
-                return response;
-            })
-            .catch((res, caught) => {
-                let response: ApiResponse = res.json();
-                return Observable.of(response);
-            });
+            .map(this.toApiResponse)
+            .catch(this.errorHandler);
     }
+
+    private toApiResponse(res: any): ApiResponse {
+        let response: ApiResponse = res.json();
+        return response;
+    }
+
+    private errorHandler(res: any, caught: any): Observable<ApiResponse> {
+        let response: ApiResponse = res.json();
+        return Observable.of(response);
+    }
+
 }
 

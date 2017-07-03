@@ -35,6 +35,10 @@ export class TaskDisplay implements OnInit {
     private activeBoard: Board;
     private boardsList: Array<Board>;
 
+    private totalTasks: number;
+    private completeTasks: number;
+    private percentComplete: number;
+
     @Input('task') taskData: Task;
     @Input('add-task') addTask: Function;
     @Input('edit-task') editTask: Function;
@@ -77,6 +81,14 @@ export class TaskDisplay implements OnInit {
 
     ngOnInit() {
         this.generateContextMenuItems();
+
+        this.totalTasks = 0;
+        this.completeTasks = 0;
+
+        // Updates the counts above
+        this.getTaskDescription();
+
+        this.percentComplete = this.completeTasks / this.totalTasks;
     }
 
     getTaskDescription(): SafeHtml {
@@ -92,6 +104,12 @@ export class TaskDisplay implements OnInit {
             yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
         return yiq >= 140 ? '#333333' : '#efefef';
+    }
+
+    private getPercentStyle() {
+        return this.sanitizer.bypassSecurityTrustStyle(
+            'padding: 0; height: 5px; background-color: rgba(0, 0, 0, .4); ' +
+            'width: ' + (this.percentComplete * 100) + '%;');
     }
 
     private generateContextMenuItems() {
@@ -133,6 +151,12 @@ export class TaskDisplay implements OnInit {
 
         renderer.listitem = text => {
             if (/^\s*\[[x ]\]\s*/.test(text)) {
+                this.totalTasks += 1;
+
+                if (/^\s*\[x\]\s*/.test(text)) {
+                    this.completeTasks += 1;
+                }
+
                 text = text
                     .replace(/^\s*\[ \]\s*/,
                              '<i class="icon icon-check-empty"></i> ')
