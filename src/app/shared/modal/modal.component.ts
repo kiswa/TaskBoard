@@ -10,7 +10,10 @@ import { ModalService } from './modal.service';
 @Component({
     selector: 'tb-modal',
     templateUrl: 'app/shared/modal/modal.component.html',
-    host: { '(document:keyup)': 'keyup($event)' }
+    host: {
+        '(document:keyup.enter)': 'keyup($event)',
+        '(document:keyup.escape)': 'keyup($event)'
+    }
 })
 export class Modal implements OnInit {
     @Input('modal-id') modalId = '';
@@ -38,6 +41,10 @@ export class Modal implements OnInit {
     private keyup(event: KeyboardEvent): void {
         if (event.keyCode === 27) {
             this.modalService.close(this.modalId, true);
+        }
+
+        if (event.keyCode === 13) {
+            this.clickDefaultAction();
         }
     }
 

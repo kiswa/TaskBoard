@@ -64,16 +64,6 @@ export class TaskDisplay implements OnInit {
 
         boardService.activeBoardChanged.subscribe((board: Board) => {
             this.activeBoard = board;
-
-            let menuText = 'Move to Column: <select>';
-
-            board.columns.forEach((column: Column) => {
-                menuText += '<option value="column.id">' + column.name + '</option>';
-            });
-
-            menuText += '</select>';
-
-            this.selectMenuItem = new ContextMenuItem(menuText, null, false, false);
         });
 
         this.initMarked();
@@ -81,19 +71,19 @@ export class TaskDisplay implements OnInit {
 
     ngOnInit() {
         this.generateContextMenuItems();
-
-        this.totalTasks = 0;
-        this.completeTasks = 0;
-
-        // Updates the counts above
         this.getTaskDescription();
-
-        this.percentComplete = this.completeTasks / this.totalTasks;
     }
 
     getTaskDescription(): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(
+        this.totalTasks = 0;
+        this.completeTasks = 0;
+
+        let html = this.sanitizer.bypassSecurityTrustHtml(
             marked(this.taskData.description));
+
+        this.percentComplete = this.completeTasks / this.totalTasks;
+
+        return html;
     }
 
     // Expects a color in full HEX with leading #, e.g. #ffffe0
@@ -104,6 +94,37 @@ export class TaskDisplay implements OnInit {
             yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
         return yiq >= 140 ? '#333333' : '#efefef';
+    }
+
+    private getMoveMenuItem() {
+        let menuText = 'Move to Column: <select id="columnsList' + this.taskData.id + '">';
+
+        this.activeBoard.columns.forEach((column: Column) => {
+            menuText += '<option value="' + column.id + '">' + column.name + '</option>';
+        });
+
+        menuText += '</select>';
+
+        return new ContextMenuItem(menuText,
+                                   () => { this.changeTaskColumn(); },
+                                   false, false);
+    }
+
+    private changeTaskColumn() {
+        let select = document.getElementById('columnsList' + this.taskData.id) as HTMLSelectElement;
+
+        this.taskData.column_id = +select[select.selectedIndex].value;
+
+        this.boardService.updateTask(this.taskData)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                this.boardService.updateActiveBoard(response.data[2][0]);
+            });
     }
 
     private getPercentStyle() {
@@ -118,7 +139,7 @@ export class TaskDisplay implements OnInit {
             new ContextMenuItem('Edit Task', this.editTask),
             new ContextMenuItem('Remove Task', this.removeTask),
             new ContextMenuItem('', null, true),
-            this.selectMenuItem,
+            this.getMoveMenuItem(),
             new ContextMenuItem('', null, true),
             new ContextMenuItem('Add Task', this.addTask)
         ];
@@ -133,11 +154,11 @@ export class TaskDisplay implements OnInit {
     }
 
     private getMenuItem(text: string): ContextMenuItem {
-        let menuText = text + ' to Board: <select>';
+        let menuText = text + ' to Board: <select id="boardsList' + text + '">';
 
         this.boardsList.forEach((board: Board) => {
             if (board.name !== this.activeBoard.name) {
-                menuText += '<option value="board.id">' + board.name + '</option>';
+                menuText += '<option value="' + board.id + '">' + board.name + '</option>';
             }
         });
 

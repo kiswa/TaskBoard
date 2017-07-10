@@ -16,7 +16,6 @@ export class ContextMenu {
     @Input('menu-items') menuItems: Array<ContextMenuItem>;
 
     isOpen = false;
-    animate = true;
 
     constructor(private el: ElementRef,
                 private menuService: ContextMenuService,
