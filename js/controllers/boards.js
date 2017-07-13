@@ -16,10 +16,14 @@ function ($scope, $routeParams, $location, $interval, $window,
         $location.path(path);
     }
 
+    $scope.quickAdd = {
+        title: []
+    };
+
     $scope.alerts = AlertService;
     $scope.marked = function(text) {
         if (text) {
-            return $window.marked(text);
+            return $window.marked(hyperlink(text, $scope.trackers));
         } else {
             return '';
         }
@@ -107,6 +111,7 @@ function ($scope, $routeParams, $location, $interval, $window,
     $scope.userNames = [];
     $scope.laneNames = [];
     $scope.categories = [];
+    $scope.trackers = [];
     $scope.currentBoard = {
         loading: true,
         name: 'Kanban Board App'
@@ -185,9 +190,15 @@ function ($scope, $routeParams, $location, $interval, $window,
                     });
 
                     if (board.ownCategory) {
-                        board.ownCategory.unshift({ id: 0, name: 'Uncategorized' });
+                        board.ownCategory.unshift({ id: 0, name: 'Uncategorized', color: '#ffffe0' });
                         board.ownCategory.forEach(function(category) {
                             $scope.categories[category.id] = category.name;
+                        });
+                    }
+
+                    if (board.ownTracker) {
+                        board.ownTracker.forEach(function(tracker) {
+                            $scope.trackers[tracker.id] = [tracker.name, tracker.bugexpr];
                         });
                     }
 

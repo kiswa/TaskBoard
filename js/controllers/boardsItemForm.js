@@ -39,6 +39,17 @@ function ($scope, BoardService) {
             $('.itemModal').on('hidden.bs.modal', function (e) {
                 that.reset();
             });
+            if ($scope.quickAdd.title[laneId]) {
+                this.quickAddItem(laneId);
+            }
+        },
+        quickAddItem: function(laneId) {
+            $('.itemModal').on('show.bs.modal', function(e) {
+                e.stopPropogation();
+            });
+            this.title = $scope.quickAdd.title[laneId];
+            $scope.submitItem(this);
+            delete $scope.quickAdd.title[laneId];
         },
         loadItem: function(item) {
             this.reset(item.lane_id);

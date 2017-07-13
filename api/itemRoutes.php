@@ -59,7 +59,7 @@ $app->post('/boards/:id/items', function($id) use($app, $jsonResponse) {
         }
     }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['id' => '\d+']); // Numbers only.
+})->conditions(array('id' => '\d+')); // Numbers only.
 
 //Update existing item
 $app->post('/items/:itemId', function($itemId) use ($app, $jsonResponse) {
@@ -121,7 +121,7 @@ $app->post('/items/:itemId', function($itemId) use ($app, $jsonResponse) {
         }
     }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['itemId' => '\d+']);
+})->conditions(array('itemId' => '\d+'));
 
 // Update item positions
 $app->post('/items/positions', function() use ($app, $jsonResponse) {
@@ -201,7 +201,7 @@ $app->post('/items/:itemId/comment', function($itemId) use ($app, $jsonResponse)
         }
     }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['itemId' => '\d+']);
+})->conditions(array('itemId' => '\d+'));
 
 // Update an existing comment
 $app->post('/comments/:commentId', function($commentId) use ($app, $jsonResponse) {
@@ -242,7 +242,7 @@ $app->post('/comments/:commentId', function($commentId) use ($app, $jsonResponse
         }
     }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['commentId' => '\d+']);
+})->conditions(array('commentId' => '\d+'));
 
 // Remove a comment from an item.
 $app->post('/items/:itemId/comment/remove', function($itemId) use ($app, $jsonResponse) {
@@ -262,7 +262,7 @@ $app->post('/items/:itemId/comment/remove', function($itemId) use ($app, $jsonRe
         }
     }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['itemId' => '\d+']);
+})->conditions(array('itemId' => '\d+'));
 
 // Add an attachment to an item.
 $app->post('/items/:itemId/upload', function($itemId) use ($app, $jsonResponse) {
@@ -294,7 +294,7 @@ $app->post('/items/:itemId/upload', function($itemId) use ($app, $jsonResponse) 
         $jsonResponse->addBeans($item);
     }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['itemId' => '\d+']);
+})->conditions(array('itemId' => '\d+'));
 
 // Get an item attachment's information.
 $app->get('/items/:itemId/upload/:attachmentId', function($itemId, $attachmentId) use ($app, $jsonResponse) {
@@ -311,7 +311,7 @@ $app->get('/items/:itemId/upload/:attachmentId', function($itemId, $attachmentId
         }
     }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['itemId' => '\d+', 'attachmentId' => '\d+']);
+})->conditions(array('itemId' => '\d+', 'attachmentId' => '\d+'));
 
 // Remove an attachment from an item.
 $app->post('/items/:itemId/upload/remove', function($itemId) use ($app, $jsonResponse) {
@@ -337,7 +337,7 @@ $app->post('/items/:itemId/upload/remove', function($itemId) use ($app, $jsonRes
         }
     }
     $app->response->setBody($jsonResponse->asJson());
-})->conditions(['itemId' => '\d+']);
+})->conditions(array('itemId' => '\d+'));
 
 // Remove an item.
 $app->post('/items/remove', function() use ($app, $jsonResponse) {

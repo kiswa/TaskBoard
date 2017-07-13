@@ -19,7 +19,7 @@ cat bootstrap.min.css > combined.css
 cat font-awesome.min.css >> combined.css
 cat jquery-ui.min.css >> combined.css
 cat spectrum.css >> combined.css
-curl -X POST -s --data-urlencode 'input@combined.css' http://cssminifier.com/raw > combined.min.css
+curl -X POST -s --data-urlencode 'input@combined.css' https://cssminifier.com/raw?input= > combined.min.css
 rm combined.css
 cd ../../build/
 
@@ -28,7 +28,7 @@ echo ' Compiling app JS files...'
 
 echo ' Minifying app CSS files...'
 cd ../css/
-curl -X POST -s --data-urlencode 'input@styles.css' http://cssminifier.com/raw > styles.min.css
+curl -X POST -s --data-urlencode 'input@styles.css' https://cssminifier.com/raw?input= > styles.min.css
 cd ../build/
 
 echo ' Updating index.html...'
