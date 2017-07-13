@@ -23,7 +23,7 @@ export class AutoActionsService {
     }
 
     removeAction(action: AutoAction): Observable<ApiResponse> {
-        return this.http.delete('api/autoactions/' + action.id, action)
+        return this.http.delete('api/autoactions/' + action.id)
             .map(this.toApiResponse)
             .catch(this.errorHandler);
     }
