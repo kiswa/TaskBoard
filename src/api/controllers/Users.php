@@ -261,9 +261,13 @@ class Users extends BaseController {
         $collapsed = R::findOne('collapsed', ' user_id = ? AND column_id = ? ',
                                 [ $user->id, $data->id ]);
 
+        $makeNew = true;
         if (!is_null($collapsed)) {
             R::trash($collapsed);
-        } else {
+            $makeNew = false;
+        }
+
+        if ($makeNew) {
             $collapsed = R::dispense('collapsed');
             $collapsed->user_id = $user->id;
             $collapsed->column_id = $data->id;
