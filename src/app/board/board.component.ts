@@ -58,7 +58,12 @@ export class BoardDisplay implements OnInit {
         });
 
         boardService.activeBoardChanged.subscribe((board: Board) => {
+            if (!board) {
+                return;
+            }
+
             this.activeBoard = board;
+            title.setTitle('TaskBoard - ' + board.name);
         });
 
         auth.userChanged.subscribe((user: User) => {
