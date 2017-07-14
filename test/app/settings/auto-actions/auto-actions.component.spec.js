@@ -61,6 +61,8 @@ describe('AutoActions', () => {
     });
 
     it('has a function to update the list of action sources', () => {
+        var undef;
+
         autoActions.newAction.type = 1;
         autoActions.updateActionSources();
 
@@ -69,12 +71,12 @@ describe('AutoActions', () => {
         autoActions.newAction.type = 2; // 2 and 3 are the same
         autoActions.updateActionSources();
 
-        expect(autoActions.actionSources[0][1]).to.equal(undefined);
+        expect(autoActions.actionSources[0][1]).to.equal(undef);
 
         autoActions.newAction.type = 4; // 4 and 5 are the same
         autoActions.updateActionSources();
 
-        expect(autoActions.actionSources[0][1]).to.equal(undefined);
+        expect(autoActions.actionSources[0][1]).to.equal(undef);
     });
 
     it('provides a description for a trigger', () => {
