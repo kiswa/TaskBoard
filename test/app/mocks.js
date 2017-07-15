@@ -420,7 +420,7 @@ global.BoardServiceMock = {
             data: [ '', [] ]
         });
     },
-    activeBoardChanged: RxJs.Observable.of({ columns: [] })
+    activeBoardChanged: RxJs.Observable.of({ name: 'Kanban App', columns: [] })
 };
 
 global.HttpMock = {
