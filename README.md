@@ -158,6 +158,8 @@ __SUM:__     | __111__ | __1625__ |  __57__ | __7213__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
+### `test`
+
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
 JavaScript   |     44 |      529 |      51 |     2141
