@@ -150,19 +150,19 @@ Because I like seeing the numbers.
 
 Language     |   Files |    Blank | Comment |     Code
 -------------|--------:|---------:|--------:|---------:
-TypeScript   |      60 |      698 |      27 |     3232
-PHP          |      18 |      561 |      19 |     1751
-HTML         |      19 |      135 |       0 |     1183
-SASS         |      14 |      223 |      12 |     1018
-__SUM:__     | __111__ | __1617__ |  __58__ | __7184__
+TypeScript   |      60 |      705 |      26 |     3258
+PHP          |      18 |      562 |      19 |     1754
+HTML         |      19 |      135 |       0 |     1182
+SASS         |      14 |      223 |      12 |     1019
+__SUM:__     | __111__ | __1625__ |  __57__ | __7213__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
-JavaScript   |     44 |      528 |      51 |     2140
-PHP          |     10 |      688 |      19 |     2014
-__SUM:__     | __54__ | __1216__ |  __70__ | __4154__
+JavaScript   |     44 |      529 |      51 |     2141
+PHP          |     10 |      688 |      16 |     2014
+__SUM:__     | __54__ | __1217__ |  __67__ | __4155__
 
 Command: `cloc --exclude-ext=xml test/`
 
