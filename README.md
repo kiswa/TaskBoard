@@ -2,7 +2,7 @@
 
 TaskBoard is currently being re-written from scratch. The `master` and `dev` branches are still maintained, but are not getting new features at this time.
 
-If you'd like to see how it's progressing, take a look at [the `re-write` branch](https://github.com/kiswa/TaskBoard/tree/re-write) (keeping in mind it's still a work in progress at this point).
+If you'd like to see how it's progressing, take a look at [the `re-write` branch](https://github.com/kiswa/TaskBoard/tree/re-write) (keeping in mind it's still a work in progress at this point) or the [GitHub Project](https://github.com/kiswa/TaskBoard/projects/1?fullscreen=true).
 
 # TaskBoard
 
