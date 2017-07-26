@@ -133,6 +133,7 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
  * [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & grid
  * [scss-base](https://www.npmjs.com/package/scss-base) for the base styling
  * [marked](https://github.com/chjj/marked) Markdown parser
+ * [dragula](https://github.com/bevacqua/dragula) Drag-and-drop
  * [Chartist.js](https://gionkunz.github.io/chartist-js/) for all charts
 
 ##### Back End
@@ -150,11 +151,11 @@ Because I like seeing the numbers.
 
 Language     |   Files |    Blank | Comment |     Code
 -------------|--------:|---------:|--------:|---------:
-TypeScript   |      60 |      705 |      26 |     3258
+TypeScript   |      60 |      708 |      30 |     3282
 PHP          |      18 |      562 |      19 |     1754
 HTML         |      19 |      135 |       0 |     1182
 SASS         |      14 |      223 |      12 |     1019
-__SUM:__     | __111__ | __1625__ |  __57__ | __7213__
+__SUM:__     | __111__ | __1628__ |  __61__ | __7237__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
