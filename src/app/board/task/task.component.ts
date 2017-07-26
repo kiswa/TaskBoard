@@ -56,6 +56,9 @@ export class TaskDisplay implements OnInit {
                 private boardService: BoardService,
                 private modal: ModalService,
                 private notes: NotificationsService) {
+        this.totalTasks = 0;
+        this.completeTasks = 0;
+        this.percentComplete = 0;
         this.contextMenuItems = [];
 
         auth.userChanged.subscribe(() => {
@@ -65,25 +68,37 @@ export class TaskDisplay implements OnInit {
         boardService.activeBoardChanged.subscribe((board: Board) => {
             this.activeBoard = board;
         });
-
-        this.initMarked();
     }
 
     ngOnInit() {
+        // Since marked is global, the counts need to be stored uniquely per task.
+        // String literal access needed because augmenting the type doesn't work.
+        marked['taskCounts'] = []; // tslint:disable-line
+        marked['taskCounts'][this.taskData.id] = { // tslint:disable-line
+            total: 0,
+            complete: 0
+        };
+
         this.generateContextMenuItems();
-        this.getTaskDescription();
+        this.initMarked();
+        this.calcPercentComplete();
     }
 
     getTaskDescription(): SafeHtml {
-        this.totalTasks = 0;
-        this.completeTasks = 0;
-
         let html = this.sanitizer.bypassSecurityTrustHtml(
             marked(this.taskData.description));
 
-        this.percentComplete = this.completeTasks / this.totalTasks;
-
         return html;
+    }
+
+    getPercentStyle() {
+        return this.sanitizer.bypassSecurityTrustStyle(
+            'padding: 0; height: 5px; background-color: rgba(0, 0, 0, .4); ' +
+            'width: ' + (this.percentComplete * 100) + '%;');
+    }
+
+    getPercentTitle() {
+        return 'Task ' + (this.percentComplete * 100) + '% Complete';
     }
 
     // Expects a color in full HEX with leading #, e.g. #ffffe0
@@ -127,10 +142,21 @@ export class TaskDisplay implements OnInit {
             });
     }
 
-    private getPercentStyle() {
-        return this.sanitizer.bypassSecurityTrustStyle(
-            'padding: 0; height: 5px; background-color: rgba(0, 0, 0, .4); ' +
-            'width: ' + (this.percentComplete * 100) + '%;');
+    private calcPercentComplete() {
+        this.percentComplete = 0;
+
+        // String literal access needed because augmenting the type doesn't work.
+        marked['taskCounts'][this.taskData.id] = { // tslint:disable-line
+            total: 0,
+            complete: 0
+        };
+
+        marked(this.taskData.description);
+
+        if (marked['taskCounts'][this.taskData.id].total) { // tslint:disable-line
+            this.percentComplete = marked['taskCounts'][this.taskData.id].complete / // tslint:disable-line
+                                   marked['taskCounts'][this.taskData.id].total; // tslint:disable-line
+        }
     }
 
     private generateContextMenuItems() {
@@ -154,7 +180,11 @@ export class TaskDisplay implements OnInit {
     }
 
     private getMenuItem(text: string): ContextMenuItem {
-        let menuText = text + ' to Board: <select id="boardsList' + text + '">';
+        let menuText = text + ' to Board: ' +
+            '<i class="icon icon-help-circled" ' +
+                'data-help="The task will be placed in the first ' +
+                'column of the selected board."></i> ' +
+            '<select id="boardsList' + text + '">';
 
         this.boardsList.forEach((board: Board) => {
             if (board.name !== this.activeBoard.name) {
@@ -170,12 +200,13 @@ export class TaskDisplay implements OnInit {
     private initMarked() {
         let renderer = new marked.Renderer();
 
+        // String literal access needed because augmenting the type doesn't work.
         renderer.listitem = text => {
             if (/^\s*\[[x ]\]\s*/.test(text)) {
-                this.totalTasks += 1;
+                marked['taskCounts'][this.taskData.id].total += 1; // tslint:disable-line
 
                 if (/^\s*\[x\]\s*/.test(text)) {
-                    this.completeTasks += 1;
+                    marked['taskCounts'][this.taskData.id].complete += 1; // tslint:disable-line
                 }
 
                 text = text

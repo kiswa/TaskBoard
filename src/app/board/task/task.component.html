@@ -40,9 +40,9 @@
                 {{ category.name }}
             </span>
         </span>
-        <div *ngIf="totalTasks > 0"
+        <div *ngIf="percentComplete"
             [style]="getPercentStyle()"
-            [title]="'Task ' + percentComplete * 100 + '% Complete'"></div>
+            [title]="getPercentTitle()"></div>
     </div>
 
     <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
