@@ -26,7 +26,7 @@ class Columns extends BaseController {
         }
 
         $this->apiJson->setSuccess();
-        $this->apiJson->addData($column);
+        $this->apiJson->addData(R::exportAll($column));
 
         return $this->jsonResponse($response);
     }
@@ -108,6 +108,7 @@ class Columns extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success', 'Column ' .
             $update->name . ' updated.');
+        $this->apiJson->addData(R::exportAll($update));
 
         return $this->jsonResponse($response);
     }

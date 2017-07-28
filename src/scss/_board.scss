@@ -52,6 +52,26 @@
             font-size: 24px;
             padding: 5px;
 
+            &.near-limit {
+                box-shadow: 0 2px 2px 0 rgba(255, 150, 0, .4),
+                            0 1px 5px 0 rgba(255, 150, 0, .2),
+                            0 3px 1px -2px rgba(255, 150, 0, .2);
+
+                .count {
+                    color: rgb(255, 150, 0);
+                }
+            }
+
+            &.limit-reached {
+                box-shadow: 0 2px 2px 0 rgba(255, 20, 0, .4),
+                            0 1px 5px 0 rgba(255, 20, 0, .2),
+                            0 3px 1px -2px rgba(255, 20, 0, .2);
+
+                .count {
+                    color: rgb(255, 20, 0);
+                }
+            }
+
             span {
                 cursor: pointer;
             }
@@ -64,6 +84,28 @@
                 float: right;
                 font-size: .5em;
                 margin-top: -4px;
+            }
+
+            .limit-editor {
+                @include shadow-float;
+
+                background-color: $white;
+                border-radius: 3px;
+                padding: 1em;
+                position: absolute;
+                right: 1.5em;
+                width: 70px;
+                z-index: 100;
+            }
+
+            .icon-cancel,
+            .icon-floppy {
+                margin: 5px;
+                margin-bottom: 0;
+            }
+
+            .icon-cancel {
+                color: $color-text;
             }
 
             .icon-angle-double-up,
@@ -121,7 +163,6 @@
             .icon-minus-squared-alt,
             .icon-plus-squared-alt,
             .tasks,
-            .count,
             .quick-add {
                 display: none;
             }

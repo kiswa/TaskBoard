@@ -9,6 +9,7 @@ import 'rxjs/add/operator/catch';
 
 import {
     ApiResponse,
+    Column,
     Board,
     Task,
     User
@@ -41,6 +42,12 @@ export class BoardService {
             .catch(this.errorHandler);
     }
 
+    updateColumn(column: Column): Observable<ApiResponse> {
+        return this.http.post('api/columns/' + column.id, column)
+            .map(this.toApiResponse)
+            .catch(this.errorHandler);
+    }
+
     addTask(task: Task): Observable<ApiResponse> {
         return this.http.post('api/tasks', task)
             .map(this.toApiResponse)
@@ -59,7 +66,6 @@ export class BoardService {
             .catch(this.errorHandler);
     }
 
-    // TODO: Determine when to use this
     refreshToken(): void {
         this.http.post('api/refresh', {}).subscribe();
     }

@@ -29,10 +29,11 @@ import { BoardService } from '../board.service';
     templateUrl: 'app/board/column/column.component.html'
 })
 export class ColumnDisplay implements OnInit {
+    private strings: any;
     private templateElement: any;
     private collapseTasks: boolean;
     private saving: boolean;
-    private hasTaskLimit: boolean;
+    private showLimitEditor: boolean;
 
     private activeUser: User;
     private activeBoard: Board;
@@ -47,6 +48,7 @@ export class ColumnDisplay implements OnInit {
     private quickAdd: Task;
     private modalProps: Task;
     private taskToRemove: number;
+    private taskLimit: number;
 
     @Input('column') columnData: Column;
     @Input('boards') boards: Array<Board>;
@@ -61,16 +63,20 @@ export class ColumnDisplay implements OnInit {
         this.tasks = [];
         this.collapseTasks = false;
 
-        this.contextMenuItems = [
-            new ContextMenuItem('Add Task',
-                                this.getShowModalFunction())
-        ];
-
         this.MODAL_ID = 'add-task-form-';
         this.MODAL_CONFIRM_ID = 'task-remove-confirm';
 
         this.quickAdd = new Task();
         this.modalProps = new Task();
+
+        stringsService.stringsChanged.subscribe(newStrings => {
+            this.strings = newStrings;
+
+            this.contextMenuItems = [
+                new ContextMenuItem(this.strings.boards_addTask,
+                                    this.getShowModalFunction())
+            ];
+        });
 
         boardService.activeBoardChanged.subscribe((board: Board) => {
             this.activeBoard = board;
@@ -108,6 +114,8 @@ export class ColumnDisplay implements OnInit {
         if (isCollapsed) {
             this.templateElement.classList.add('collapsed');
         }
+
+        this.taskLimit = this.columnData.task_limit;
     }
 
     toggleCollapsed() {
@@ -169,6 +177,8 @@ export class ColumnDisplay implements OnInit {
 
                 this.boardService.updateActiveBoard(response.data[2][0]);
                 this.modal.close(this.MODAL_ID + this.columnData.id);
+
+                this.boardService.refreshToken();
             });
     }
 
@@ -183,6 +193,41 @@ export class ColumnDisplay implements OnInit {
 
                 this.boardService.updateActiveBoard(response.data[1][0]);
             });
+    }
+
+    beginLimitEdit() {
+        this.taskLimit = this.columnData.task_limit;
+        this.showLimitEditor = true;
+    }
+
+    cancelLimitChanges() {
+        this.showLimitEditor = false;
+    }
+
+    saveLimitChanges() {
+        let originalLimit = this.columnData.task_limit;
+
+        this.columnData.task_limit = this.taskLimit;
+
+        this.boardService.updateColumn(this.columnData)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status !== 'success') {
+                    this.columnData.task_limit = originalLimit;
+                    return;
+                }
+
+                let colData = response.data[1][0];
+                this.columnData = new Column(colData.id,
+                                             colData.name,
+                                             colData.position,
+                                             colData.board_id,
+                                             colData.task_limit,
+                                             colData.ownTask);
+            });
+
+        this.showLimitEditor = false;
     }
 
     private validateTask(task: Task) {
@@ -206,7 +251,9 @@ export class ColumnDisplay implements OnInit {
         return () => { this.showModal(taskId); };
     }
 
-    private quickAddClicked() {
+    private quickAddClicked(event: any) {
+        this.preventEnter(event);
+
         if (this.quickAdd.title === '') {
             this.showModal();
             return;

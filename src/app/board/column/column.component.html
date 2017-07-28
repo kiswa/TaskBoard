@@ -1,42 +1,57 @@
-<h3>
+<h3 [class.near-limit]="columnData.hasTaskLimit() &&
+                        columnData.task_limit - columnData.tasks.length === 1"
+    [class.limit-reached]="columnData.hasTaskLimit() &&
+                           columnData.task_limit - columnData.tasks.length < 1">
     <span class="icon icon-minus-squared-alt"
-        title="Collapse All Tasks"
+        [title]="strings['boards_collapseAllTasks']"
         *ngIf="!collapseTasks"
         (click)="toggleTaskCollapse()"></span>
     <span class="icon icon-plus-squared-alt"
-        title="Expand All Tasks"
+        [title]="strings['boards_expandAllTasks']"
         *ngIf="collapseTasks"
         (click)="toggleTaskCollapse()"></span>
 
     {{ columnData.name }}
 
-    <span class="badge" title="Tasks in Column">
-        {{ columnData.tasks && columnData.tasks.length || 0 }}
-    </span>
-
-    <span class="icon icon-angle-double-up"
-        title="Expand Column" (click)="toggleCollapsed()"></span>
-    <span class="right icon icon-angle-double-down"
-        title="Collapse Column" (click)="toggleCollapsed()"></span>
-
     <span class="count" *ngIf="columnData.hasTaskLimit()">
         {{ columnData.tasks.length + ' / ' + columnData.task_limit }}
     </span>
 
-    <span class="count-editor" title="Edit Task Limit"
+    <span class="badge" [title]="strings['boards_tasksInColumn']">
+        {{ columnData.tasks && columnData.tasks.length || 0 }}
+    </span>
+
+    <span class="icon icon-angle-double-up"
+        [title]="strings['boards_expandColumn']" (click)="toggleCollapsed()"></span>
+    <span class="right icon icon-angle-double-down"
+        [title]="strings['boards_collapseColumn']" (click)="toggleCollapsed()"></span>
+
+    <span class="count-editor"
           *ngIf="activeUser.isAdmin() || activeUser.isBoardAdmin()">
         <i class="icon icon-hashtag"
-            (click)="showLimitEditor = !showLimitEditor"></i>
+            [title]="strings['boards_editTaskLimit']"
+            (click)="beginLimitEdit()"></i>
+
         <div class="limit-editor" *ngIf="showLimitEditor">
-            <input type="number" min="0" [(ngModel)]="columnData.task_limit">
+            <input type="number" min="0"
+                [title]="'0 = ' + strings['boards_noLimit']"
+                [(ngModel)]="taskLimit">
+            <i class="icon icon-cancel right"
+                [title]="strings['boards_limitCancel']"
+                (click)="cancelLimitChanges()"></i>
+            <i class="icon icon-floppy primary right"
+                [title]="strings['boards_limitSave']"
+                (click)="saveLimitChanges()"></i>
         </div>
     </span>
 </h3>
 
 <div class="quick-add">
-    <input type="text" placeholder="Quick Add Task - Title Only"
-        [(ngModel)]="quickAdd.title">
-    <button class="flat" (click)="quickAddClicked()">
+    <input type="text" [placeholder]="strings['boards_quickAdd']"
+        [(ngModel)]="quickAdd.title" (keyup.enter)="quickAddClicked($event)">
+    <button class="flat"
+        [title] = "strings['boards_addTask']"
+        (click)="quickAddClicked($event)">
         <i class="icon icon-plus"></i>
     </button>
 </div>
@@ -52,36 +67,44 @@
 
 <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
 
-<tb-modal modal-title="Confirm Task Removal" blocking="true"
+<tb-modal modal-title="{{ strings['boards_confirmRemoveTask'] }}" blocking="true"
     modal-id="{{ MODAL_CONFIRM_ID + columnData.id }}">
-    <div class="center">Removing a task cannot be undone.<br>Continue?</div>
+    <div class="center">
+        {{ strings['boards_confirmWarning'] }}<br>
+        {{ strings['boards_confirmContinue'] }}
+    </div>
     <div class="buttons">
         <button class="flat"
-            (click)="removeTask()">Yes</button>
+            (click)="removeTask()">{{ strings['yes'] }}</button>
         <button #defaultAction #focusMe
-            (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">No</button>
+            (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">
+            {{ strings['no'] }}
+        </button>
     </div>
 </tb-modal>
 
 <tb-modal *ngIf="activeBoard"
-    modal-title="{{ modalProps.id === 0 ? 'Add' : 'Edit' }} Task"
+    modal-title="{{ modalProps.id === 0
+        ? strings['boards_addTask']
+        : strings['boards_editTask'] }}"
     modal-id="{{ MODAL_ID + columnData.id }}">
     <label>
-        Title
-        <input #focusMe type="text" name="title" placeholder="Task Title"
-        [(ngModel)]="modalProps.title">
+        {{ strings['boards_taskTitle'] }}
+        <input #focusMe type="text" name="title"
+            [placeholder]="strings['boards_taskTitlePlaceholder']"
+            [(ngModel)]="modalProps.title">
     </label>
 
     <label>
-        Description
+        {{ strings['boards_taskDescription'] }}
         <textarea name="description" rows="5"
-            placeholder="What needs to get done?"
+            [placeholder]="strings['boards_taskDescriptionPlaceholder']"
             (keyup.enter)="preventEnter($event)"
             [(ngModel)]="modalProps.description"></textarea>
     </label>
 
     <label>
-        Assignees
+        {{ strings['boards_taskAssignees'] }}
         <select name="assignees" multiple [(ngModel)]="modalProps.assignees">
             <option *ngFor="let user of activeBoard.users"
                 [ngValue]="user">{{ user.username }}</option>
@@ -89,7 +112,7 @@
     </label>
 
     <label>
-        Categories
+        {{ strings['boards_taskCategories'] }}
         <select name="categories" multiple [ngModel]="modalProps.categories"
             (ngModelChange)="updateTaskColorByCategory($event)">
             <option *ngFor="let category of activeBoard.categories"
@@ -99,7 +122,7 @@
 
     <div class="half">
         <label>
-            Column
+            {{ strings['boards_taskColumn'] }}
             <select name="column" [(ngModel)]="modalProps.column_id">
                 <option *ngFor="let column of activeBoard.columns"
                     [ngValue]="column.id">{{ column.name }}</option>
@@ -107,19 +130,19 @@
         </label>
 
         <label>
-            Color
+            {{ strings['boards_taskColor'] }}
             <input type="color" [(ngModel)]="modalProps.color">
         </label>
     </div>
 
     <div class="half">
         <label>
-            Date Due
+            {{ strings['boards_taskDateDue'] }}
             <input type="date" [(ngModel)]="modalProps.due_date">
         </label>
 
         <label>
-            Points
+            {{ strings['boards_taskPoints'] }}
             <input type="number" [(ngModel)]="modalProps.points">
         </label>
     </div>
@@ -128,15 +151,15 @@
         <button #defaultAction *ngIf="modalProps.id === 0"
             (click)="addTask()" [disabled]="saving">
             <i class="icon icon-plus"></i>
-            Add Task
+            {{ strings['boards_addTask'] }}
         </button>
         <button #defaultAction *ngIf="modalProps.id !== 0"
             (click)="updateTask()" [disabled]="saving">
             <i class="icon icon-floppy"></i>
-            Save Task
+            {{ strings['boards_saveTask'] }}
         </button>
         <button class="flat" (click)="modal.close(MODAL_ID + columnData.id)">
-            Cancel
+            {{ strings['cancel'] }}
         </button>
     </div>
 </tb-modal>

@@ -27,6 +27,7 @@ export class BoardDisplay implements OnInit {
     private activeBoard: Board;
     private boards: Array<Board>;
 
+    private strings: any;
     private boardNavId: number;
     private userFilter: number;
     private categoryFilter: number;
@@ -51,6 +52,15 @@ export class BoardDisplay implements OnInit {
 
         this.pageName = 'Boards';
         this.loading = true;
+
+        stringsService.stringsChanged.subscribe(newStrings => {
+            this.strings = newStrings;
+
+            // Updating the active user updates some display strings.
+            if (this.activeUser) {
+                this.updateActiveUser(this.activeUser);
+            }
+        });
 
         boardService.getBoards().subscribe((response: ApiResponse) => {
             this.updateBoardsList(response.data[1]);
@@ -151,11 +161,10 @@ export class BoardDisplay implements OnInit {
                                    activeUser.username,
                                    activeUser.board_access);
 
-        this.noBoardsMessage = 'You are not assigned to any boards. ' +
-            'Contact an admin user to be added to a board.';
+        this.noBoardsMessage = this.strings.boards_noBoardsMessageUser;
 
         if (+activeUser.security_level === 1) {
-            this.noBoardsMessage = 'Go to Settings to create a board.';
+            this.noBoardsMessage = this.strings.boards_noBoardsMessageAdmin;
         }
     }
 

@@ -19,7 +19,8 @@ import {
     UserOptions,
     AuthService,
     ModalService,
-    NotificationsService
+    NotificationsService,
+    StringsService
 } from '../../shared/index';
 import { BoardService } from '../board.service';
 
@@ -28,6 +29,7 @@ import { BoardService } from '../board.service';
     templateUrl: 'app/board/task/task.component.html'
 })
 export class TaskDisplay implements OnInit {
+    private strings: any;
     private userOptions: UserOptions;
     private contextMenuItems: Array<ContextMenuItem>;
     private selectMenuItem: ContextMenuItem;
@@ -55,11 +57,20 @@ export class TaskDisplay implements OnInit {
                 private sanitizer: DomSanitizer,
                 private boardService: BoardService,
                 private modal: ModalService,
-                private notes: NotificationsService) {
+                private notes: NotificationsService,
+                private stringsService: StringsService) {
         this.totalTasks = 0;
         this.completeTasks = 0;
         this.percentComplete = 0;
         this.contextMenuItems = [];
+
+        stringsService.stringsChanged.subscribe(newStrings => {
+            this.strings = newStrings;
+
+            if (this.taskData) {
+                this.generateContextMenuItems();
+            }
+        });
 
         auth.userChanged.subscribe(() => {
             this.userOptions = auth.userOptions;
@@ -98,7 +109,9 @@ export class TaskDisplay implements OnInit {
     }
 
     getPercentTitle() {
-        return 'Task ' + (this.percentComplete * 100) + '% Complete';
+        return this.strings.boards_task + ' ' +
+            (this.percentComplete * 100).toFixed(0) + '% ' +
+            this.strings.boards_taskComplete;
     }
 
     // Expects a color in full HEX with leading #, e.g. #ffffe0
@@ -112,7 +125,8 @@ export class TaskDisplay implements OnInit {
     }
 
     private getMoveMenuItem() {
-        let menuText = 'Move to Column: <select id="columnsList' + this.taskData.id + '">';
+        let menuText = this.strings.boards_moveTask +
+            ': <select id="columnsList' + this.taskData.id + '">';
 
         this.activeBoard.columns.forEach((column: Column) => {
             menuText += '<option value="' + column.id + '">' + column.name + '</option>';
@@ -161,29 +175,28 @@ export class TaskDisplay implements OnInit {
 
     private generateContextMenuItems() {
         this.contextMenuItems = [
-            new ContextMenuItem('View Task'),
-            new ContextMenuItem('Edit Task', this.editTask),
-            new ContextMenuItem('Remove Task', this.removeTask),
+            new ContextMenuItem(this.strings.boards_viewTask),
+            new ContextMenuItem(this.strings.boards_editTask, this.editTask),
+            new ContextMenuItem(this.strings.boards_removeTask, this.removeTask),
             new ContextMenuItem('', null, true),
             this.getMoveMenuItem(),
             new ContextMenuItem('', null, true),
-            new ContextMenuItem('Add Task', this.addTask)
+            new ContextMenuItem(this.strings.boards_addTask, this.addTask)
         ];
 
         if (this.boardsList.length > 1) {
             this.contextMenuItems
                 .splice(3, 0,
                         new ContextMenuItem('', null, true),
-                        this.getMenuItem('Copy'),
-                        this.getMenuItem('Move'));
+                        this.getMenuItem(this.strings.boards_copyTaskTo),
+                        this.getMenuItem(this.strings.boards_moveTaskTo));
         }
     }
 
     private getMenuItem(text: string): ContextMenuItem {
-        let menuText = text + ' to Board: ' +
+        let menuText = text + ': ' +
             '<i class="icon icon-help-circled" ' +
-                'data-help="The task will be placed in the first ' +
-                'column of the selected board."></i> ' +
+                'data-help="' + this.strings.boards_copyMoveHelp + '"></i> ' +
             '<select id="boardsList' + text + '">';
 
         this.boardsList.forEach((board: Board) => {
