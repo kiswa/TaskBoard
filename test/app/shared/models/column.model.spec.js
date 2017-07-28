@@ -33,5 +33,10 @@ describe('ApiResponse', () => {
         expect(column.tasks).to.be.an('array');
         expect(column.tasks.length).to.equal(0);
     });
+
+    it('has a method to check for task limit', () => {
+        expect(column.hasTaskLimit).to.be.a('function');
+        expect(column.hasTaskLimit()).to.equal(false);
+    });
 });
 

@@ -36,7 +36,7 @@ describe('InlineEdit', () => {
             done();
         });
 
-        inlineEdit.editDone('test');
+        inlineEdit.editDone('test', { stopPropagation: () => {} });
     });
 });
 
