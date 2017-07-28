@@ -11,7 +11,8 @@ describe('TaskDisplay', () => {
 
         task = new TaskDisplay(AuthServiceMock, SanitizerMock,
                                BoardServiceMock, modalService,
-                               new NotificationsServiceMock());
+                               new NotificationsServiceMock(),
+                               StringsServiceMock);
     });
 
     it('has a context menu', () => {

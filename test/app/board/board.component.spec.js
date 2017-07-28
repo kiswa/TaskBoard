@@ -1,4 +1,4 @@
-/* global expect TitleMock RouterMock ActivatedRouteMock AuthServiceMock BoardServiceMock */
+/* global expect TitleMock RouterMock ActivatedRouteMock AuthServiceMock BoardServiceMock StringsServiceMock */
 var path = '../../../build/board/',
     BoardDisplay = require(path + 'board.component.js').BoardDisplay;
 
@@ -12,7 +12,8 @@ describe('BoardDisplay', () => {
         router = new RouterMock();
 
         board = new BoardDisplay(title, router, ActivatedRouteMock,
-                                 AuthServiceMock, BoardServiceMock);
+                                 AuthServiceMock, BoardServiceMock,
+                                 null, null, StringsServiceMock);
     });
 
     it('sets the title when constructed', () => {
