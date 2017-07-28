@@ -30,6 +30,7 @@ export class Board {
                                          column.name,
                                          +column.position,
                                          +column.board_id,
+                                         +column.task_limit,
                                          column.ownTask));
         });
 

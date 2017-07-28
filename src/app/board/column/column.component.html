@@ -18,6 +18,19 @@
         title="Expand Column" (click)="toggleCollapsed()"></span>
     <span class="right icon icon-angle-double-down"
         title="Collapse Column" (click)="toggleCollapsed()"></span>
+
+    <span class="count" *ngIf="columnData.hasTaskLimit()">
+        {{ columnData.tasks.length + ' / ' + columnData.task_limit }}
+    </span>
+
+    <span class="count-editor" title="Edit Task Limit"
+          *ngIf="activeUser.isAdmin() || activeUser.isBoardAdmin()">
+        <i class="icon icon-hashtag"
+            (click)="showLimitEditor = !showLimitEditor"></i>
+        <div class="limit-editor" *ngIf="showLimitEditor">
+            <input type="number" min="0" [(ngModel)]="columnData.task_limit">
+        </div>
+    </span>
 </h3>
 
 <div class="quick-add">

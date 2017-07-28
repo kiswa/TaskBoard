@@ -56,6 +56,16 @@
                 cursor: pointer;
             }
 
+            .count {
+                cursor: default;
+            }
+
+            .count-editor {
+                float: right;
+                font-size: .5em;
+                margin-top: -4px;
+            }
+
             .icon-angle-double-up,
             .badge {
                 display: none;
@@ -100,6 +110,7 @@
             }
 
             .badge {
+                cursor: default;
                 display: inline-block;
                 font-size: .6em;
                 margin-left: .9em;
@@ -110,6 +121,7 @@
             .icon-minus-squared-alt,
             .icon-plus-squared-alt,
             .tasks,
+            .count,
             .quick-add {
                 display: none;
             }

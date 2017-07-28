@@ -9,9 +9,9 @@ class BeanLoader {
         $attachment->filename = isset($data->filename) ? $data->filename : '';
         $attachment->name = isset($data->name) ? $data->name : '';
         $attachment->type = isset($data->type) ? $data->type : '';
-        $attachment->user_id = isset($data->user_id) ? $data->user_id : '';
+        $attachment->user_id = isset($data->user_id) ? $data->user_id : -1;
         $attachment->timestamp = time();
-        $attachment->task_id = isset($data->task_id) ? $data->task_id : '';
+        $attachment->task_id = isset($data->task_id) ? $data->task_id : -1;
 
         if (!isset($data->filename) || !isset($data->name) ||
             !isset($data->type) || !isset($data->user_id) ||
@@ -25,11 +25,11 @@ class BeanLoader {
     public static function LoadAutoAction(&$action, $json) {
         $data = json_decode($json);
 
-        $action->trigger = isset($data->trigger) ? $data->trigger : '';
-        $action->source_id = isset($data->source_id) ? $data->source_id: '';
+        $action->trigger = isset($data->trigger) ? $data->trigger : -1;
+        $action->source_id = isset($data->source_id) ? $data->source_id: -1;
         $action->type = isset($data->type) ? $data->type : '';
-        $action->change_to = isset($data->change_to) ? $data->change_to: '';
-        $action->board_id = isset($data->board_id) ? $data->board_id: '';
+        $action->change_to = isset($data->change_to) ? $data->change_to: -1;
+        $action->board_id = isset($data->board_id) ? $data->board_id: -1;
 
         if (!isset($data->trigger) || !isset($data->type) ||
             !isset($data->board_id)) {
@@ -43,7 +43,7 @@ class BeanLoader {
         $data = json_decode($json);
 
         $board->name = isset($data->name) ? $data->name : '';
-        $board->is_active = isset($data->is_active) ? $data->is_active : '';
+        $board->is_active = isset($data->is_active) ? $data->is_active : false;
 
         if (isset($data->categories)) {
             self::updateObjectList('category', 'LoadCategory',
@@ -89,7 +89,7 @@ class BeanLoader {
         $category->name = isset($data->name) ? $data->name : '';
         $category->default_task_color = isset($data->default_task_color)
             ? $data->default_task_color : '';
-        $category->board_id = isset($data->board_id) ? $data->board_id : '';
+        $category->board_id = isset($data->board_id) ? $data->board_id : -1;
 
         if (!isset($data->name) || !isset($data->default_task_color) ||
             !isset($data->board_id)) {
@@ -103,8 +103,9 @@ class BeanLoader {
         $data = json_decode($json);
 
         $column->name = isset($data->name) ? $data->name : '';
-        $column->position = isset($data->position) ? $data->position : '';
-        $column->board_id = isset($data->board_id) ? $data->board_id : '';
+        $column->position = isset($data->position) ? $data->position : -1;
+        $column->board_id = isset($data->board_id) ? $data->board_id : -1;
+        $column->task_limit = isset($data->task_limit) ? $data->task_limit : 0;
 
         if (isset($data->tasks)) {
             self::updateObjectList('task', 'LoadTask',
@@ -123,8 +124,8 @@ class BeanLoader {
         $data = json_decode($json);
 
         $comment->text = isset($data->text) ? $data->text : '';
-        $comment->user_id = isset($data->user_id) ? $data->user_id : '';
-        $comment->task_id = isset($data->task_id) ? $data->task_id : '';
+        $comment->user_id = isset($data->user_id) ? $data->user_id : -1;
+        $comment->task_id = isset($data->task_id) ? $data->task_id : -1;
 
         if (!isset($data->text) || !isset($data->user_id) ||
             !isset($data->task_id)) {
@@ -139,7 +140,7 @@ class BeanLoader {
 
         $tracker->url = isset($data->url) ? $data->url : '';
         $tracker->regex = isset($data->regex) ? $data->regex : '';
-        $tracker->board_id = isset($data->board_id) ? $data->board_id : '';
+        $tracker->board_id = isset($data->board_id) ? $data->board_id : -1;
 
         if (!isset($data->url) || !isset($data->regex) ||
             !isset($data->board_id)) {
@@ -157,9 +158,9 @@ class BeanLoader {
             ? $data->description : '';
         $task->color = isset($data->color) ? $data->color : '';
         $task->due_date = isset($data->due_date) ? $data->due_date : '';
-        $task->points = isset($data->points) ? $data->points : '';
-        $task->position = isset($data->position) ? $data->position : '';
-        $task->column_id = isset($data->column_id) ? $data->column_id : '';
+        $task->points = isset($data->points) ? $data->points : 0;
+        $task->position = isset($data->position) ? $data->position : -1;
+        $task->column_id = isset($data->column_id) ? $data->column_id : -1;
 
         if (isset($data->comments)) {
             self::updateObjectList('comment', 'LoadComment',
@@ -207,13 +208,13 @@ class BeanLoader {
         $data = json_decode($json);
 
         $user->security_level = isset($data->security_level)
-            ? $data->security_level : '';
+            ? $data->security_level : -1;
         $user->username = isset($data->username) ? $data->username : '';
         $user->email = isset($data->email) ? $data->email : '';
         $user->default_board_id = isset($data->default_board_id)
-            ? $data->default_board_id : '';
+            ? $data->default_board_id : -1;
         $user->user_option_id = isset($data->user_option_id)
-            ? $data->user_option_id : '';
+            ? $data->user_option_id : -1;
         $user->last_login = isset($data->last_login) ? $data->last_login : '';
         $user->password_hash = isset($data->password_hash)
             ? $data->password_hash : '';
@@ -229,13 +230,13 @@ class BeanLoader {
         $data = json_decode($json);
 
         $opts->new_tasks_at_bottom = isset($data->new_tasks_at_bottom)
-            ? (boolean)$data->new_tasks_at_bottom : '';
+            ? (boolean)$data->new_tasks_at_bottom : true;
         $opts->show_animations = isset($data->show_animations)
-            ? (boolean)$data->show_animations : '';
+            ? (boolean)$data->show_animations : true;
         $opts->show_assignee = isset($data->show_assignee)
-            ? (boolean)$data->show_assignee : '';
+            ? (boolean)$data->show_assignee : true;
         $opts->multiple_tasks_per_row = isset($data->multiple_tasks_per_row)
-            ? (boolean)$data->multiple_tasks_per_row : '';
+            ? (boolean)$data->multiple_tasks_per_row : false;
         $opts->language = isset($data->language)
             ? $data->language : '';
 

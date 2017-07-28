@@ -32,6 +32,7 @@ export class ColumnDisplay implements OnInit {
     private templateElement: any;
     private collapseTasks: boolean;
     private saving: boolean;
+    private hasTaskLimit: boolean;
 
     private activeUser: User;
     private activeBoard: Board;

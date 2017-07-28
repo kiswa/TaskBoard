@@ -7,6 +7,7 @@ export class Column {
                 public name: string = '',
                 public position: number = 0,
                 public board_id: number = 0, // tslint:disable-line
+                public task_limit: number = 0, // tslint:disable-line
                 ownTask: Array<any> = []) {
         this.tasks = [];
 
@@ -24,6 +25,10 @@ export class Column {
                                      task.sharedUser || task.assignees,
                                      task.sharedCategory || task.categories));
         });
+    }
+
+    hasTaskLimit() {
+        return this.task_limit > 0;
     }
 }
 
