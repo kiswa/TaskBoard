@@ -56,5 +56,22 @@ describe('UserAdminService', () => {
 
         settingsService.updateBoards([]);
     });
+
+    it('allows updating actions and notifies subscribers', done => {
+        var first = true;
+
+        settingsService.actionsChanged.subscribe(actions => {
+            expect(actions).to.be.an('array');
+
+            if (first) {
+                first = false;
+                return;
+            }
+
+            done();
+        });
+
+        settingsService.updateActions([]);
+    });
 });
 

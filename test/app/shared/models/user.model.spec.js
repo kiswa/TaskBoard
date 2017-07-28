@@ -30,7 +30,7 @@ describe('User', () => {
 
     it('has security_level', () => {
         expect(user.security_level).to.be.a('number');
-        expect(user.security_level).to.equal(3);
+        expect(user.security_level).to.equal(4);
     });
 
     it('has user_option_id', () => {
@@ -41,6 +41,16 @@ describe('User', () => {
     it('has username', () => {
         expect(user.username).to.be.a('string');
         expect(user.username).to.equal('');
+    });
+
+    it('has a method to check for admin', () => {
+        expect(user.isAdmin).to.be.a('function');
+        expect(user.isAdmin()).to.equal(false);
+    });
+
+    it('has a method to check for board admin', () => {
+        expect(user.isBoardAdmin).to.be.a('function');
+        expect(user.isBoardAdmin()).to.equal(false);
     });
 });
 
