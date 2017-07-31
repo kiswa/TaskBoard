@@ -17,5 +17,9 @@ export class User {
     isBoardAdmin() {
         return this.security_level === 2;
     }
+
+    isAnyAdmin() {
+        return this.security_level === 1 || this.security_level === 2;
+    }
 }
 

@@ -52,5 +52,10 @@ describe('User', () => {
         expect(user.isBoardAdmin).to.be.a('function');
         expect(user.isBoardAdmin()).to.equal(false);
     });
+
+    it('has a method to check for any admin', () => {
+        expect(user.isAnyAdmin).to.be.a('function');
+        expect(user.isAnyAdmin()).to.equal(false);
+    });
 });
 
