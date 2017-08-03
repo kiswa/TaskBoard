@@ -59,6 +59,8 @@ class Tasks extends BaseController {
         R::store($task);
 
         $actor = R::load('user', Auth::GetUserId($request));
+        $this->updateTaskOrder($task, $actor);
+
         $this->dbLogger->logChange($actor->id,
             $actor->username . ' added task ' . $task->title . '.',
             '', json_encode($task), 'task', $task->id);
@@ -167,6 +169,27 @@ class Tasks extends BaseController {
         $column = R::load('column', $columnId);
 
         return $column->board_id;
+    }
+
+    private function updateTaskOrder($task, $user) {
+        $column = R::load('column', $task->column_id);
+        $user_opts = R::load('useroption', $user->user_option_id);
+
+        $index = count($column->xownTaskList);
+        $newTask = $column->xownTaskList[$index];
+
+        if ($user_opts->new_tasks_at_bottom) {
+            $newTask->position = $index;
+            R::store($newTask);
+            return;
+        }
+
+        for ($i = count($column->xownTaskList); $i > 0; --$i) {
+            $updateTask = $column->xownTaskList[$i];
+            $updateTask->position = $i;
+
+            R::store($column);
+        }
     }
 }
 

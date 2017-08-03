@@ -33,10 +33,15 @@ export class ContextMenu {
         return this.sanitizer.bypassSecurityTrustHtml(item.text);
     }
 
-    callAction(action: Function) {
+    callAction(event: MouseEvent, action: Function) {
+        event.preventDefault();
+        event.stopPropagation();
+
         if (action) {
             action();
         }
+
+        this.menuService.closeAllMenus();
     }
 
     private eventHandler(event: MouseEvent) {

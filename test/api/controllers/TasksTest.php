@@ -92,6 +92,27 @@ class TasksTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('success', $actual->status);
     }
 
+    /**
+     * @group single
+     */
+    public function testAddTaskTop() {
+        $this->createTask();
+        $data = $this->getTaskData();
+
+        $user = R::load('user', 1);
+        $opts = R::load('useroption', $user->user_option_id);
+
+        $opts->new_tasks_at_bottom = false;
+        R::store($opts);
+
+        $request = new RequestMock();
+        $request->header = [DataMock::GetJwt()];
+        $request->payload = $data;
+
+        $actual = $this->tasks->addTask($request, new ResponseMock(), null);
+        $this->assertEquals('success', $actual->status);
+    }
+
     public function testAddTaskUnprivileged() {
         DataMock::CreateUnprivilegedUser();
 

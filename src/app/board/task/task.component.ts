@@ -1,7 +1,9 @@
 import {
     Component,
+    EventEmitter,
     Input,
-    OnInit
+    OnInit,
+    Output
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -47,6 +49,8 @@ export class TaskDisplay implements OnInit {
     @Input('remove-task') removeTask: Function;
     @Input('collapse') isCollapsed: boolean;
 
+    @Output('on-update-boards') onUpdateBoards: EventEmitter<any>;
+
     @Input('boards')
     set boards(boards: Array<Board>) {
         this.boardsList = boards;
@@ -59,6 +63,7 @@ export class TaskDisplay implements OnInit {
                 private modal: ModalService,
                 private notes: NotificationsService,
                 private stringsService: StringsService) {
+        this.onUpdateBoards = new EventEmitter<any>();
         this.totalTasks = 0;
         this.completeTasks = 0;
         this.percentComplete = 0;
@@ -97,7 +102,7 @@ export class TaskDisplay implements OnInit {
 
     getTaskDescription(): SafeHtml {
         let html = this.sanitizer.bypassSecurityTrustHtml(
-            marked(this.taskData.description));
+            marked(this.taskData.description, this.markedCallback));
 
         return html;
     }
@@ -124,6 +129,36 @@ export class TaskDisplay implements OnInit {
         return yiq >= 140 ? '#333333' : '#efefef';
     }
 
+    // Needs anonymous function for proper `this` context.
+    private markedCallback = (error: any, text: string) => {
+        this.activeBoard.issue_trackers.forEach(tracker => {
+            let re = new RegExp(tracker.regex, 'ig');
+            let replacements = new Array<any>();
+            let result = re.exec(text);
+
+            while (result !== null) {
+                let link = '<a href="' +
+                    tracker.url.replace(/%BUGID%/g, result[1]) +
+                    '" target="tb_external" rel="noreferrer">' +
+                    result[0] + '</a>';
+
+                // text = text.replace(result[0], link);
+                replacements.push({
+                    str: result[0],
+                    link
+                });
+                result = re.exec(text);
+            }
+
+            for (let i = replacements.length - 1; i >= 0; --i) {
+                text = text.replace(replacements[i].str,
+                                    replacements[i].link);
+            }
+        });
+
+        return text;
+    }
+
     private getMoveMenuItem() {
         let menuText = this.strings.boards_moveTask +
             ': <select id="columnsList' + this.taskData.id + '">';
@@ -148,11 +183,9 @@ export class TaskDisplay implements OnInit {
             .subscribe((response: ApiResponse) => {
                 response.alerts.forEach(note => this.notes.add(note));
 
-                if (response.status !== 'success') {
-                    return;
+                if (response.status === 'success') {
+                    this.boardService.updateActiveBoard(response.data[2][0]);
                 }
-
-                this.boardService.updateActiveBoard(response.data[2][0]);
             });
     }
 
@@ -184,7 +217,7 @@ export class TaskDisplay implements OnInit {
             new ContextMenuItem(this.strings.boards_addTask, this.addTask)
         ];
 
-        if (this.boardsList.length > 1) {
+        if (this.boardsList && this.boardsList.length > 1) {
             this.contextMenuItems
                 .splice(3, 0,
                         new ContextMenuItem('', null, true),
@@ -197,7 +230,7 @@ export class TaskDisplay implements OnInit {
         let menuText = text + ': ' +
             '<i class="icon icon-help-circled" ' +
                 'data-help="' + this.strings.boards_copyMoveHelp + '"></i> ' +
-            '<select id="boardsList' + text + '">';
+            '<select id="boardsList' + text.split(' ')[0] + '">';
 
         this.boardsList.forEach((board: Board) => {
             if (board.name !== this.activeBoard.name) {
@@ -207,7 +240,81 @@ export class TaskDisplay implements OnInit {
 
         menuText += '</select>';
 
-        return new ContextMenuItem(menuText, null, false, false);
+        let action = () => {
+            if (text === this.strings.boards_copyTaskTo) {
+                this.copyTaskToBoard();
+                return;
+            }
+
+            this.moveTaskToBoard();
+        };
+
+        return new ContextMenuItem(menuText, action, false, false);
+    }
+
+    private copyTaskToBoard() {
+        let select = document.getElementById('boardsList' +
+            this.strings.boards_copyTaskTo.split(' ')[0]) as HTMLSelectElement;
+
+        let newBoardId = +select[select.selectedIndex].value;
+        let taskData = { ...this.taskData };
+        let boardData: Board;
+
+        this.boardsList.forEach(board => {
+            if (board.id === newBoardId) {
+                taskData.column_id = board.columns[0].id;
+                boardData = board;
+            }
+        });
+
+        this.boardService.addTask(taskData)
+            .subscribe((response: ApiResponse) => {
+                if (response.status === 'success') {
+                    this.notes.add(
+                        new Notification('success',
+                                         this.strings.boards_task +
+                                         ' ' + taskData.title + ' ' +
+                                         this.strings.boards_taskCopied +
+                                         ' ' + boardData.name));
+                    this.onUpdateBoards.emit();
+
+                    return;
+                }
+
+                response.alerts.forEach(note => this.notes.add(note));
+            });
+    }
+
+    private moveTaskToBoard() {
+        let select = document.getElementById('boardsList' +
+            this.strings.boards_moveTaskTo.split(' ')[0]) as HTMLSelectElement;
+
+        let newBoardId = +select[select.selectedIndex].value;
+        let boardData: Board;
+
+        this.boardsList.forEach(board => {
+            if (board.id === newBoardId) {
+                this.taskData.column_id = board.columns[0].id;
+                boardData = board;
+            }
+        });
+
+        this.boardService.updateTask(this.taskData)
+            .subscribe((response: ApiResponse) => {
+                if (response.status === 'success') {
+                    this.notes.add(
+                        new Notification('success',
+                                         this.strings.boards_task +
+                                         ' ' + this.taskData.title + ' ' +
+                                         this.strings.boards_taskMoved +
+                                         ' ' + boardData.name));
+                    this.onUpdateBoards.emit();
+
+                    return;
+                }
+
+                response.alerts.forEach(note => this.notes.add(note));
+            });
     }
 
     private initMarked() {
@@ -240,7 +347,7 @@ export class TaskDisplay implements OnInit {
                 out += ' title="' + title + '"';
             }
 
-            out += ' target="tb_external">' + text + '</a>';
+            out += ' target="tb_external" rel="noreferrer">' + text + '</a>';
 
             return out;
         };

@@ -50,7 +50,6 @@ export class BoardDisplay implements OnInit {
         this.userFilter = null;
         this.categoryFilter = null;
 
-        this.pageName = 'Boards';
         this.loading = true;
 
         stringsService.stringsChanged.subscribe(newStrings => {
@@ -62,10 +61,8 @@ export class BoardDisplay implements OnInit {
             }
         });
 
-        boardService.getBoards().subscribe((response: ApiResponse) => {
-            this.updateBoardsList(response.data[1]);
-            this.loading = false;
-        });
+        this.pageName = this.strings.boards;
+        this.updateBoards();
 
         boardService.activeBoardChanged.subscribe((board: Board) => {
             if (!board) {
@@ -105,6 +102,14 @@ export class BoardDisplay implements OnInit {
         }
 
         this.router.navigate(['/boards/' + this.boardNavId]);
+    }
+
+    updateBoards() {
+        this.boardService.getBoards().subscribe((response: ApiResponse) => {
+            this.boards = [];
+            this.updateBoardsList(response.data[1]);
+            this.loading = false;
+        });
     }
 
     private updateBoardsList(boards: Array<any>): void {

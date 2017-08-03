@@ -5,6 +5,7 @@
     "no": "No",
     "save": "Guardar",
     "cancel": "Cancelar",
+    "sortBy": "Ordenar por",
 
     "dashboard": "Salpicadero",
     "boards": "Tableros",
@@ -65,7 +66,6 @@
     "settings_active": "Activo",
     "settings_inactive": "Inactiva",
     "settings_anyUser": "Cualquier Usuario",
-    "settings_sortBy": "Ordenar por",
     "settings_creationNew": "Creación (Nuevo Primero)",
     "settings_creationOld": "Creación (Viejo Primero)",
     "settings_name": "Nombre",
@@ -86,7 +86,7 @@
     "settings_defaultTaskColor": "Color de Tarea Predeterminado",
     "settings_addCategory": "Agregar Categoría",
     "settings_issueTrackers": "Seguimiento de Incidencias",
-    "settings_issueTrackersHelp": "Ejemplo URL: https://github.com/kiswa/TaskBoard/issues/%BUGID\\1% Ejemplo RegExp: (?:Issue)?#(\\d+)",
+    "settings_issueTrackersHelp": "Ejemplo URL: https://github.com/kiswa/TaskBoard/issues/%BUGID% Ejemplo RegExp: (?:Issue)?#(\\d+)",
     "settings_issueTrakcerUrl": "URL de Seguimiento de Incidencia: Utilice %BUGID% como marcador de posición",
     "settings_issueTrackerRegExp": "BUGID RegExp",
     "settings_addIssueTracker": "Agregar Seguimiento de Incidencia",
@@ -186,6 +186,13 @@
     "boards_taskCategory": "Categoría",
 
     "boards_task": "Tarea",
-    "boards_taskComplete": "Completar"
+    "boards_taskComplete": "Completo",
+    "boards_taskCopied": "copiado a tablero",
+    "boards_taskMoved": "movido a tablero",
+
+    "boards_sortByPosition": "Posición",
+    "boards_sortByDueDate": "Fecha de Vencimiento",
+    "boards_sortByLastModified": "Última Modificación",
+    "boards_sortByPoints": "Puntos"
 }
 

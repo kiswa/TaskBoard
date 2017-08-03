@@ -1,8 +1,10 @@
 import {
     Component,
-    Input,
     ElementRef,
-    OnInit
+    EventEmitter,
+    Input,
+    OnInit,
+    Output
 } from '@angular/core';
 
 import {
@@ -41,6 +43,7 @@ export class ColumnDisplay implements OnInit {
     private tasks: Array<Task>;
 
     private contextMenuItems: Array<ContextMenuItem>;
+    private sortOption: string;
 
     private MODAL_ID: string;
     private MODAL_CONFIRM_ID: string;
@@ -53,6 +56,8 @@ export class ColumnDisplay implements OnInit {
     @Input('column') columnData: Column;
     @Input('boards') boards: Array<Board>;
 
+    @Output('on-update-boards') onUpdateBoards: EventEmitter<any> = new EventEmitter<any>();
+
     constructor(private elRef: ElementRef,
                 private auth: AuthService,
                 private notes: NotificationsService,
@@ -62,6 +67,7 @@ export class ColumnDisplay implements OnInit {
         this.templateElement = elRef.nativeElement;
         this.tasks = [];
         this.collapseTasks = false;
+        this.sortOption = 'pos';
 
         this.MODAL_ID = 'add-task-form-';
         this.MODAL_CONFIRM_ID = 'task-remove-confirm';
@@ -118,6 +124,27 @@ export class ColumnDisplay implements OnInit {
         this.taskLimit = this.columnData.task_limit;
     }
 
+    sortTasks() {
+            switch (this.sortOption) {
+                case 'pos':
+                    this.columnData.tasks.sort((a, b) => {
+                        return b.position - a.position;
+                    });
+                    break;
+                case 'due':
+                    this.columnData.tasks.sort((a, b) => {
+                        return new Date(a.due_date).getTime() -
+                            new Date(b.due_date).getTime();
+                    });
+                    break;
+                case 'pnt':
+                    this.columnData.tasks.sort((a, b) => {
+                        return b.points - a.points;
+                    });
+                    break;
+            }
+    }
+
     toggleCollapsed() {
         this.templateElement.classList.toggle('collapsed');
 
@@ -163,6 +190,7 @@ export class ColumnDisplay implements OnInit {
                 });
 
                 this.boardService.updateActiveBoard(boardData);
+                this.boardService.refreshToken();
             });
     }
 
@@ -192,6 +220,7 @@ export class ColumnDisplay implements OnInit {
                 }
 
                 this.boardService.updateActiveBoard(response.data[1][0]);
+                this.boardService.refreshToken();
             });
     }
 
@@ -238,6 +267,10 @@ export class ColumnDisplay implements OnInit {
         }
 
         return true;
+    }
+
+    private callBoardUpdate() {
+        this.onUpdateBoards.emit();
     }
 
     private getRemoveTaskFunction(taskId: number): Function {

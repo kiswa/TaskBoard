@@ -18,6 +18,7 @@
 
     <div class="description" *ngIf="!isCollapsed"
         [innerHTML]="getTaskDescription()"></div>
+    <pre>{{ taskData.position | json }}</pre>
 
     <div class="stats">
         <span *ngIf="userOptions.show_assignee">

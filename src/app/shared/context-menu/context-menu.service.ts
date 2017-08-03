@@ -9,7 +9,7 @@ export class ContextMenuService {
     constructor() {
         this.menus = [];
 
-        document.addEventListener('click', () => {
+        document.addEventListener('click', event => {
             this.closeAllMenus();
         });
     }

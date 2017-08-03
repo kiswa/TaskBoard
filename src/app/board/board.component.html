@@ -64,6 +64,7 @@
     <tb-column class="column"
         *ngFor="let column of activeBoard.columns"
         [column]="column"
-        [boards]="boards"></tb-column>
+        [boards]="boards"
+        (on-update-boards)="updateBoards()"></tb-column>
 </div>
 
