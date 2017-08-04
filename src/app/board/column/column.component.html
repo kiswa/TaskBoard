@@ -71,8 +71,10 @@
     </button>
 </div>
 
-<div class="tasks">
-    <tb-task class="task-container" *ngFor="let task of columnData.tasks"
+<div class="tasks"
+    [dragula]="'tasks-bag'" [dragulaModel]="columnData.tasks">
+    <tb-task class="task-container" [id]="task.id"
+        *ngFor="let task of columnData.tasks"
         [task]="task" [boards]="boards"
         [add-task]="getShowModalFunction()"
         [edit-task]="getShowModalFunction(task.id)"

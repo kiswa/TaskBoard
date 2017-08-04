@@ -190,6 +190,10 @@
     "boards_taskCopied": "copiado a tablero",
     "boards_taskMoved": "movido a tablero",
 
+    "boards_filterByAny": "Alguna",
+    "boards_filterByUnassigned": "Sin Asignar",
+    "boards_filterByUncategorized": "Sin Categoría",
+
     "boards_sortByPosition": "Posición",
     "boards_sortByDueDate": "Fecha de Vencimiento",
     "boards_sortByLastModified": "Última Modificación",

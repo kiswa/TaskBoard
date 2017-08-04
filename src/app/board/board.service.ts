@@ -42,6 +42,12 @@ export class BoardService {
             .catch(this.errorHandler);
     }
 
+    updateBoard(board: Board): Observable<ApiResponse> {
+        return this.http.post('api/boards/' + board.id, board)
+            .map(this.toApiResponse)
+            .catch(this.errorHandler);
+    }
+
     updateColumn(column: Column): Observable<ApiResponse> {
         return this.http.post('api/columns/' + column.id, column)
             .map(this.toApiResponse)

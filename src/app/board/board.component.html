@@ -17,12 +17,19 @@
     <div class="right" *ngIf="activeBoard">
         <label>
             {{ strings['boards_hideFiltered'] }}:
-            <input type="checkbox">
+            <input type="checkbox" [(ngModel)]="hideFiltered"
+                (change)="toggleFiltered()">
         </label>
         <label>
             {{ strings['boards_userFilter'] }}:
-            <select [(ngModel)]="userFilter">
-                <option [ngValue]="null">Any</option>
+            <select [(ngModel)]="userFilter"
+                (change)="filterTasks('user')">
+                <option [ngValue]="null">
+                    {{ strings['boards_filterByAny'] }}
+                </option>
+                <option [ngValue]="-1">
+                    {{ strings['boards_filterByUnassigned'] }}
+                </option>
                 <option *ngFor="let user of activeBoard.users"
                     [ngValue]="user.id">
                     {{ user.username }}
@@ -31,8 +38,14 @@
         </label>
         <label>
             {{ strings['boards_categoryFilter'] }}:
-            <select [(ngModel)]="categoryFilter">
-                <option [ngValue]="null">Any</option>
+            <select [(ngModel)]="categoryFilter"
+                (change)="filterTasks('cat')">
+                <option [ngValue]="null">
+                    {{ strings['boards_filterByAny'] }}
+                </option>
+                <option [ngValue]="-1">
+                    {{ strings['boards_filterByUncategorized'] }}
+                </option>
                 <option *ngFor="let category of activeBoard.categories"
                     [ngValue]="category.id">
                     {{ category.name }}
@@ -61,7 +74,7 @@
 </div>
 
 <div class="board" *ngIf="activeBoard">
-    <tb-column class="column"
+    <tb-column class="column" [id]="column.id"
         *ngFor="let column of activeBoard.columns"
         [column]="column"
         [boards]="boards"

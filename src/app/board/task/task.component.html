@@ -1,7 +1,9 @@
 <div class="task"
+    [ngClass]="{ 'filtered': taskData.filtered,
+    'hide': taskData.hideFiltered }"
     [style.backgroundColor]="taskData.color"
     [style.color]="getTextColor(taskData.color)">
-    <h4>
+    <h4 class="drag-handle">
         <span class="icon"
             [style.color]="getTextColor(taskData.color)"
             [ngClass]="{ 'icon-minus-squared-alt': !isCollapsed,

@@ -190,6 +190,10 @@
     "boards_taskCopied": "copied to board",
     "boards_taskMoved": "moved to board",
 
+    "boards_filterByAny": "Any",
+    "boards_filterByUnassigned": "Unassigned",
+    "boards_filterByUncategorized": "Uncategorized",
+
     "boards_sortByPosition": "Position",
     "boards_sortByDueDate": "Due Date",
     "boards_sortByLastModified": "Last Modifed",

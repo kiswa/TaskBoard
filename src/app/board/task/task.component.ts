@@ -169,8 +169,16 @@ export class TaskDisplay implements OnInit {
 
         menuText += '</select>';
 
+        let action = (event: any) => {
+            if (event.target.tagName !== 'SELECT') {
+                return;
+            }
+
+            this.changeTaskColumn();
+        };
+
         return new ContextMenuItem(menuText,
-                                   () => { this.changeTaskColumn(); },
+                                   action,
                                    false, false);
     }
 
@@ -240,7 +248,11 @@ export class TaskDisplay implements OnInit {
 
         menuText += '</select>';
 
-        let action = () => {
+        let action = (event: any) => {
+            if (event.target.tagName !== 'SELECT') {
+                return;
+            }
+
             if (text === this.strings.boards_copyTaskTo) {
                 this.copyTaskToBoard();
                 return;

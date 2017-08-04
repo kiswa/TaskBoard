@@ -9,6 +9,7 @@ import {
     ApiResponse,
     Board,
     Column,
+    Task,
     User,
     Notification,
     AuthService,
@@ -31,9 +32,12 @@ export class BoardDisplay implements OnInit {
     private boardNavId: number;
     private userFilter: number;
     private categoryFilter: number;
+
     private noBoardsMessage: string;
     private pageName: string;
+
     private loading: boolean;
+    private hideFiltered: boolean;
 
     constructor(private title: Title,
                 private router: Router,
@@ -71,6 +75,8 @@ export class BoardDisplay implements OnInit {
 
             this.activeBoard = board;
             title.setTitle('TaskBoard - ' + board.name);
+            this.userFilter = null;
+            this.categoryFilter = null;
         });
 
         auth.userChanged.subscribe((user: User) => {
@@ -96,6 +102,34 @@ export class BoardDisplay implements OnInit {
         }
     }
 
+    ngAfterContentInit() {
+        let bag = this.dragula.find('tasks-bag');
+
+        if (bag) {
+            this.dragula.destroy('tasks-bag');
+        }
+
+        this.dragula.setOptions('tasks-bag', {
+            moves: (el: any, container: any, handle: any) => {
+                return handle.classList.contains('drag-handle');
+            }
+        });
+
+        this.dragula.dropModel.subscribe((value: any) => {
+            this.activeBoard.columns.forEach(column => {
+                let position = 0;
+                column.tasks.forEach(task => {
+                    task.column_id = column.id;
+                    task.position = position;
+
+                    position++;
+                });
+            });
+
+            this.boardService.updateBoard(this.activeBoard).subscribe();
+        });
+    }
+
     goToBoard(): void {
         if (this.boardNavId === null) {
             return;
@@ -109,6 +143,70 @@ export class BoardDisplay implements OnInit {
             this.boards = [];
             this.updateBoardsList(response.data[1]);
             this.loading = false;
+        });
+    }
+
+    toggleFiltered() {
+        this.activeBoard.columns.forEach(column => {
+            column.tasks.forEach(task => {
+                task.hideFiltered = this.hideFiltered;
+            });
+        });
+    }
+
+    filterTasks(type: string) {
+        this.activeBoard.columns.forEach(column => {
+            column.tasks.forEach(task => {
+                task.filtered = false;
+
+                if (this.userFilter) {
+                    let found = false;
+
+                    if (this.userFilter === -1 &&
+                        task.assignees.length === 0) {
+                        found = true;
+                    }
+
+                    task.assignees.forEach(user => {
+                        if (user.id === this.userFilter) {
+                            found = true;
+                        }
+                    });
+
+                    if (!found) {
+                        task.filtered = true;
+                    }
+                }
+
+                if (this.categoryFilter) {
+                    let found = false;
+
+                    if (this.categoryFilter === -1 &&
+                        task.categories.length === 0) {
+                        found = true;
+                    }
+
+                    task.categories.forEach(cat => {
+                        if (cat.id === this.categoryFilter) {
+                            found = true;
+                        }
+                    });
+
+                    if (!found) {
+                        task.filtered = true;
+                    }
+                }
+            });
+        });
+    }
+
+    private runFilter(testFunc: Function) {
+        this.activeBoard.columns.forEach(column => {
+            column.tasks.forEach(task => {
+                let found = testFunc(task);
+
+                task.filtered = !found;
+            });
         });
     }
 

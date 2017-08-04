@@ -190,6 +190,8 @@
     }
 
     .tasks {
+        flex: 1 0;
+        flex-direction: column;
         overflow-y: auto;
         padding: 7px;
         padding-top: 0;
@@ -280,6 +282,14 @@
 
         &.compact {
             .description {
+                display: none;
+            }
+        }
+
+        &.filtered {
+            opacity: .4;
+
+            &.hide {
                 display: none;
             }
         }
