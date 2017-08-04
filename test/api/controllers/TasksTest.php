@@ -92,9 +92,6 @@ class TasksTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('success', $actual->status);
     }
 
-    /**
-     * @group single
-     */
     public function testAddTaskTop() {
         $this->createTask();
         $data = $this->getTaskData();

@@ -181,7 +181,7 @@ class Tasks extends BaseController {
             $counter++;
         }
 
-        if ($user_opts->last_task_at_bottom) {
+        if ($user_opts->new_tasks_at_bottom) {
             R::store($column);
             return;
         }
