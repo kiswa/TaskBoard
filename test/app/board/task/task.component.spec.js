@@ -1,4 +1,5 @@
-/* global expect AuthServiceMock SanitizerMock NotificationsServiceMock BoardServiceMock ModalServiceMock */
+/* global expect AuthServiceMock SanitizerMock NotificationsServiceMock
+          BoardServiceMock ModalServiceMock StringsServiceMock */
 var path = '../../../../build/board/task/',
     TaskDisplay = require(path + 'task.component.js').TaskDisplay;
 

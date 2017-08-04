@@ -176,7 +176,7 @@ class Tasks extends BaseController {
         $user_opts = R::load('useroption', $user->user_option_id);
 
         $counter = 1;
-        foreach($column->xownTaskList as $task) {
+        foreach ($column->xownTaskList as $task) {
             $task->position = $counter;
             $counter++;
         }
