@@ -30,7 +30,7 @@ describe('ContextMenu', () => {
             done();
         });
 
-        contextMenu.eventHandler({
+        contextMenu.parentEventHandler({
             pageX: 10, pageY: 10,
             preventDefault: () => {},
             stopPropagation: () => {}

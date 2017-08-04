@@ -9,6 +9,9 @@ export class Task {
     public assignees: Array<User>;
     public categories: Array<Category>;
 
+    public filtered: boolean;
+    public hideFiltered: boolean;
+
     constructor(public id: number = 0,
                 public title: string = '',
                 public description: string = '',
