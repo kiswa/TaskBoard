@@ -4,7 +4,8 @@ var path = '../../../../build/shared/context-menu/',
 
 describe('ContextMenu', () => {
     var contextMenu,
-        contextMenuService;
+        contextMenuService,
+        event = { preventDefault: () => {}, stopPropagation: () => {}};
 
     beforeEach(() => {
         contextMenuService = new ContextMenuServiceMock();
@@ -20,7 +21,7 @@ describe('ContextMenu', () => {
             done();
         };
 
-        contextMenu.callAction(callback);
+        contextMenu.callAction(event, callback);
     });
 
     it('captures the parent oncontextmenu event', done => {

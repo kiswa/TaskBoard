@@ -175,21 +175,20 @@ class Tasks extends BaseController {
         $column = R::load('column', $task->column_id);
         $user_opts = R::load('useroption', $user->user_option_id);
 
-        $index = count($column->xownTaskList);
-        $newTask = $column->xownTaskList[$index];
+        $counter = 1;
+        foreach($column->xownTaskList as $task) {
+            $task->position = $counter;
+            $counter++;
+        }
 
-        if ($user_opts->new_tasks_at_bottom) {
-            $newTask->position = $index;
-            R::store($newTask);
+        if ($user_opts->last_task_at_bottom) {
+            R::store($column);
             return;
         }
 
-        for ($i = count($column->xownTaskList); $i > 0; --$i) {
-            $updateTask = $column->xownTaskList[$i];
-            $updateTask->position = $i;
-
-            R::store($column);
-        }
+        $lastTask = end($column->xownTaskList);
+        $lastTask->position = 0;
+        R::store($column);
     }
 }
 

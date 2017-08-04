@@ -247,6 +247,13 @@
             overflow: auto;
             padding: 5px;
 
+            h3,
+            h4 {
+                background: transparent;
+                border: 0;
+                cursor: default;
+            }
+
             p {
                 margin: 0 0 10px;
             }

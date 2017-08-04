@@ -121,6 +121,7 @@ export class ColumnDisplay implements OnInit {
             this.templateElement.classList.add('collapsed');
         }
 
+        this.sortTasks();
         this.taskLimit = this.columnData.task_limit;
     }
 
@@ -128,7 +129,7 @@ export class ColumnDisplay implements OnInit {
             switch (this.sortOption) {
                 case 'pos':
                     this.columnData.tasks.sort((a, b) => {
-                        return b.position - a.position;
+                        return a.position - b.position;
                     });
                     break;
                 case 'due':
