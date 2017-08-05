@@ -25,7 +25,7 @@ export class ContextMenu {
         let parentElement = el.nativeElement.parentElement;
 
         parentElement.oncontextmenu = (event: MouseEvent) => {
-            this.eventHandler(event);
+            this.parentEventHandler(event);
         };
     }
 
@@ -34,20 +34,21 @@ export class ContextMenu {
     }
 
     callAction(event: MouseEvent, action: Function) {
-        event.preventDefault();
-        event.stopPropagation();
-
+        console.log(event); // tslint:disable-line
         if (action) {
-            action();
+            action(event);
         }
 
         this.menuService.closeAllMenus();
     }
 
-    private eventHandler(event: MouseEvent) {
+    private captureChildEvents(event: MouseEvent) {
         event.preventDefault();
         event.stopPropagation();
+    }
 
+    private parentEventHandler(event: MouseEvent) {
+        this.captureChildEvents(event);
         this.onParentContextMenu(event);
     }
 
