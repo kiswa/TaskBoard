@@ -280,6 +280,14 @@
             font-weight: 700;
         }
 
+        .overdue {
+            text-shadow: 0 0 2px rgba(255, 0, 0, 1);
+        }
+
+        .near-due {
+            text-shadow: 0 0 2px rgba(255, 180, 0, 1);
+        }
+
         &.compact {
             .description {
                 display: none;

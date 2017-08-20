@@ -20,6 +20,7 @@
 
     <div class="description" *ngIf="!isCollapsed"
         [innerHTML]="getTaskDescription()"></div>
+    <pre>{{ taskData.position | json }}</pre>
 
     <div class="stats">
         <span *ngIf="userOptions.show_assignee">
@@ -33,7 +34,9 @@
         </span>
 
         <span class="right">
-            <span *ngIf="taskData.due_date">
+            <span *ngIf="taskData.due_date"
+                [class.overdue]="isOverdue"
+                [class.near-due]="isNearlyDue">
                 {{ strings['boards_taskDue'] }}: {{ taskData.due_date }}
             </span>
             <span *ngIf="taskData.comments.length" class="icon icon-chat-empty"

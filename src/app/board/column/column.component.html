@@ -1,7 +1,7 @@
 <h3 [class.near-limit]="columnData.hasTaskLimit() &&
-                        columnData.task_limit - columnData.tasks.length === 1"
+                        columnData.task_limit - columnData.tasks.length === 0"
     [class.limit-reached]="columnData.hasTaskLimit() &&
-                           columnData.task_limit - columnData.tasks.length < 1">
+                           columnData.task_limit - columnData.tasks.length < 0">
     <span class="icon icon-minus-squared-alt"
         [title]="strings['boards_collapseAllTasks']"
         *ngIf="!collapseTasks"
@@ -44,6 +44,7 @@
                 (click)="saveLimitChanges()"></i>
         </div>
     </span>
+
     <span class="sort-by">
         {{ strings['sortBy'] }}:
         <select [(ngModel)]="sortOption"

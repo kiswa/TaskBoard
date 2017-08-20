@@ -131,6 +131,7 @@
     "settings_noActionsAdmin": "There are no automatic actions. Use the <strong>Add Action</strong> form below to add one.",
 
     "boards_selectBoard": "Select Board",
+    "boards_selectColumn": "Select Column",
     "boards_hideFiltered": "Hide filtered items",
     "boards_userFilter": "User Filter",
     "boards_categoryFilter": "Category Filter",

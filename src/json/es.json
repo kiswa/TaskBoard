@@ -131,6 +131,7 @@
     "settings_noActionsAdmin": "No hay acciones automáticas. Utilice el botón <strong>Agregar Acción</strong> de abajo para agregar uno.",
 
     "boards_selectBoard": "Seleccionar el Tablero",
+    "boards_selectColumn": "Seleccionar la Columna",
     "boards_hideFiltered": "Ocultar los elementos filtrados",
     "boards_userFilter": "Filtro de usuario",
     "boards_categoryFilter": "Filtro de categoría",

@@ -12,6 +12,7 @@ import { API_HTTP_PROVIDERS } from './app.api-http';
 import { Constants } from './shared/constants';
 import {
     AuthGuard,
+    CompileDirective,
     ContextMenu,
     InlineEdit,
     Modal,
@@ -47,8 +48,9 @@ import { BoardService } from './board/board.service';
     ],
     declarations: [
         AppComponent,
-        InlineEdit,
+        CompileDirective,
         ContextMenu,
+        InlineEdit,
         Modal,
         Notifications,
         TopNav,

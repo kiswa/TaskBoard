@@ -1,10 +1,12 @@
 <div class="context-menu-container"
-    [ngClass]="{ 'menu-open': isOpen }">
+    [ngClass]="{ 'menu-open': isOpen }"
+    (click)="$event.stopPropagation()">
 
     <div class="menu-item" *ngFor="let item of menuItems"
-        [ngClass]="{ 'no-highlight': item.isSeparator || !item.canHighlight }"
-        (click)="callAction($event, item.action)"
-        [innerHTML]="getText(item)">
+        (click)="menuService.closeAllMenus()"
+        [ngClass]="{ 'no-highlight': item.isSeparator || !item.canHighlight }">
+        <ng-template
+            *compile="item.text; context: { action: item.action }"></ng-template>
     </div>
 </div>
 

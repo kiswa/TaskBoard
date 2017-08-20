@@ -34,7 +34,6 @@ export class TaskDisplay implements OnInit {
     private strings: any;
     private userOptions: UserOptions;
     private contextMenuItems: Array<ContextMenuItem>;
-    private selectMenuItem: ContextMenuItem;
 
     private activeBoard: Board;
     private boardsList: Array<Board>;
@@ -42,6 +41,9 @@ export class TaskDisplay implements OnInit {
     private totalTasks: number;
     private completeTasks: number;
     private percentComplete: number;
+
+    private isOverdue: boolean;
+    private isNearlyDue: boolean;
 
     @Input('task') taskData: Task;
     @Input('add-task') addTask: Function;
@@ -98,6 +100,7 @@ export class TaskDisplay implements OnInit {
         this.generateContextMenuItems();
         this.initMarked();
         this.calcPercentComplete();
+        this.checkDueDate();
     }
 
     getTaskDescription(): SafeHtml {
@@ -127,6 +130,32 @@ export class TaskDisplay implements OnInit {
             yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
         return yiq >= 140 ? '#333333' : '#efefef';
+    }
+
+    private checkDueDate() {
+        if (this.taskData.due_date === '') {
+            return;
+        }
+
+        let dueDate = new Date(this.taskData.due_date);
+
+        if (isNaN(dueDate.valueOf())) {
+            return;
+        }
+
+        let millisecondsPerDay = (1000 * 3600 * 24),
+            today = new Date(),
+            timeDiff = today.getTime() - dueDate.getTime(),
+            daysDiff = Math.ceil(timeDiff / millisecondsPerDay);
+
+        if (daysDiff > 0) {
+            // past due date
+            this.isOverdue = true;
+        }
+
+        if (daysDiff <= 0 && daysDiff > -3) {
+            this.isNearlyDue = true;
+        }
     }
 
     // Needs anonymous function for proper `this` context.
@@ -161,7 +190,9 @@ export class TaskDisplay implements OnInit {
 
     private getMoveMenuItem() {
         let menuText = this.strings.boards_moveTask +
-            ': <select id="columnsList' + this.taskData.id + '">';
+            ': <select id="columnsList' + this.taskData.id + '" ' +
+            '(click)="action($event)">' +
+            '<option value="0">' + this.strings.boards_selectColumn + '</option>';
 
         this.activeBoard.columns.forEach((column: Column) => {
             menuText += '<option value="' + column.id + '">' + column.name + '</option>';
@@ -177,9 +208,7 @@ export class TaskDisplay implements OnInit {
             this.changeTaskColumn();
         };
 
-        return new ContextMenuItem(menuText,
-                                   action,
-                                   false, false);
+        return new ContextMenuItem(menuText, action, false, false, true);
     }
 
     private changeTaskColumn() {
@@ -237,8 +266,10 @@ export class TaskDisplay implements OnInit {
     private getMenuItem(text: string): ContextMenuItem {
         let menuText = text + ': ' +
             '<i class="icon icon-help-circled" ' +
-                'data-help="' + this.strings.boards_copyMoveHelp + '"></i> ' +
-            '<select id="boardsList' + text.split(' ')[0] + '">';
+            'data-help="' + this.strings.boards_copyMoveHelp + '"></i> ' +
+            '<select id="boardsList' + this.taskData.id + text.split(' ')[0] + '" ' +
+            '(click)="action($event)">' +
+            '<option value="0">' + this.strings.boards_selectBoard + '</option>';
 
         this.boardsList.forEach((board: Board) => {
             if (board.name !== this.activeBoard.name) {
@@ -261,11 +292,11 @@ export class TaskDisplay implements OnInit {
             this.moveTaskToBoard();
         };
 
-        return new ContextMenuItem(menuText, action, false, false);
+        return new ContextMenuItem(menuText, action, false, false, true);
     }
 
     private copyTaskToBoard() {
-        let select = document.getElementById('boardsList' +
+        let select = document.getElementById('boardsList' + this.taskData.id +
             this.strings.boards_copyTaskTo.split(' ')[0]) as HTMLSelectElement;
 
         let newBoardId = +select[select.selectedIndex].value;
@@ -298,7 +329,7 @@ export class TaskDisplay implements OnInit {
     }
 
     private moveTaskToBoard() {
-        let select = document.getElementById('boardsList' +
+        let select = document.getElementById('boardsList' + this.taskData.id +
             this.strings.boards_moveTaskTo.split(' ')[0]) as HTMLSelectElement;
 
         let newBoardId = +select[select.selectedIndex].value;

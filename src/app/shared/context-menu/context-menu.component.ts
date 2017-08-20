@@ -33,15 +33,6 @@ export class ContextMenu {
         return this.sanitizer.bypassSecurityTrustHtml(item.text);
     }
 
-    callAction(event: MouseEvent, action: Function) {
-        console.log(event); // tslint:disable-line
-        if (action) {
-            action(event);
-        }
-
-        this.menuService.closeAllMenus();
-    }
-
     private captureChildEvents(event: MouseEvent) {
         event.preventDefault();
         event.stopPropagation();
