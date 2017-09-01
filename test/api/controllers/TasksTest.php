@@ -150,9 +150,6 @@ class TasksTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testUpdateTask() {
-        ini_set("xdebug.var_display_max_children", -1);
-        ini_set("xdebug.var_display_max_data", -1);
-        ini_set("xdebug.var_display_max_depth", -1);
         $this->createTask();
 
         $task = $this->getTaskData();
@@ -170,6 +167,58 @@ class TasksTest extends PHPUnit_Framework_TestCase {
             new ResponseMock(), $args);
         $this->assertEquals('success', $response->status);
         $this->assertEquals('updated', $response->data[1][0]['title']);
+    }
+
+    /**
+     * @group single
+     */
+    public function testUpdateTaskWithActions() {
+        $this->addActions();
+        $this->createTask();
+
+        DataMock::CreateStandardUser();
+
+        $task = $this->getTaskData();
+        $task->id = 1;
+        $task->column_id = 2;
+        $task->title = 'updated';
+        $task->assignees = [];
+        $task->assignees[] = R::load('user', 2);
+        $task->categories = [];
+        $task->categories[] = R::load('category', 2);
+        $task->points = 5;
+        $task->due_date = '1/1/2017';
+
+        $args = [];
+        $args['id'] = $task->id;
+
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+        $request->payload = $task;
+
+        $response = $this->tasks->updateTask($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
+
+        $updated = $response->data[1][0];
+        $this->assertEquals('updated', $updated['title']);
+        $this->assertEquals('#cdcdcd', $updated['color']);
+        $this->assertEquals(2, (int)$updated['sharedUser'][0]['id']);
+        $this->assertEquals('', $updated['due_date']);
+
+        $temp = R::load('task', 1);
+        $temp->due_date = '';
+        R::store($temp);
+
+        $task->column_id = 1;
+        $task->due_date ='';
+        $request = new RequestMock();
+        $request->header = [DataMock::getJwt()];
+        $request->payload = $task;
+
+        $response = $this->tasks->updateTask($request,
+            new ResponseMock(), $args);
+        $this->assertEquals('success', $response->status);
     }
 
     public function testUpdateTaskInvalid() {
@@ -273,6 +322,80 @@ class TasksTest extends PHPUnit_Framework_TestCase {
             $actual->alerts[0]['text']);
     }
 
+    private function addActions() {
+        $action = R::dispense('autoaction');
+        $action->board_id = 1;
+        $action->trigger = 1; // Moved to column
+        $action->source_id = 2; // Column ID
+        $action->type = 1; // Set color
+        $action->change_to = '#fff';
+
+        R::store($action);
+
+        $action = R::dispense('autoaction');
+        $action->board_id = 1;
+        $action->trigger = 2; // Assigned to user
+        $action->source_id = 2; // User ID
+        $action->type = 2; // Set category
+        $action->change_to = 2; // Category ID
+
+        R::store($action);
+
+        $action = R::dispense('autoaction');
+        $action->board_id = 1;
+        $action->trigger = 2; // Assigned to user
+        $action->source_id = 2; // User ID
+        $action->type = 3; // Add category
+        $action->change_to = 0; // Category ID
+
+        R::store($action);
+
+        $action = R::dispense('autoaction');
+        $action->board_id = 1;
+        $action->trigger = 3; // Assigned to category
+        $action->source_id = 2; // Category ID
+        $action->type = 4; // Set assignee
+        $action->change_to = 1; // User ID
+
+        R::store($action);
+
+        $action = R::dispense('autoaction');
+        $action->board_id = 1;
+        $action->trigger = 3; // Assigned to category
+        $action->source_id = 2; // Category ID
+        $action->type = 5; // Add assignee
+        $action->change_to = 0; // User ID
+
+        R::store($action);
+
+        $action = R::dispense('autoaction');
+        $action->board_id = 1;
+        $action->trigger = 3; // Assigned to category
+        $action->source_id = 2; // Category ID
+        $action->type = 6; // Clear due date
+        $action->change_to = 0;
+
+        R::store($action);
+
+        $action = R::dispense('autoaction');
+        $action->board_id = 1;
+        $action->trigger = 1; // Moved to column
+        $action->source_id = 1; // Category ID
+        $action->type = 6; // Clear due date
+        $action->change_to = 0;
+
+        R::store($action);
+
+        $action = R::dispense('autoaction');
+        $action->board_id = 1;
+        $action->trigger = 4; // Points changed
+        $action->source_id = 0;
+        $action->type = 7; // Alter color by points
+        $action->change_to = 0;
+
+        R::store($action);
+    }
+
     private function getTaskData() {
         $data = new stdClass();
 
@@ -300,9 +423,17 @@ class TasksTest extends PHPUnit_Framework_TestCase {
 
         $column = R::dispense('column');
         $column->xownTaskList[] = $task;
+        $column2 = R::dispense('column');
+
+        $category = R::dispense('category');
+        $category2 = R::dispense('category');
 
         $board = R::dispense('board');
         $board->xownColumnList[] = $column;
+        $board->xownColumnList[] = $column2;
+        $board->xownCategoryList[] = $category;
+        $board->xownCategoryList[] = $category2;
+
         R::store($board);
     }
 

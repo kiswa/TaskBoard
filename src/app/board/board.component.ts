@@ -116,17 +116,41 @@ export class BoardDisplay implements OnInit {
         });
 
         this.dragula.dropModel.subscribe((value: any) => {
+            let taskId = +value[1].id,
+                toColumnId = +value[2].parentNode.id,
+                fromColumnId = +value[3].parentNode.id;
+
             this.activeBoard.columns.forEach(column => {
-                let position = 0;
-                column.tasks.forEach(task => {
-                    task.column_id = column.id;
-                    task.position = position;
+                if (column.id === toColumnId || column.id === fromColumnId) {
+                    let position = 1,
+                        taskToUpdate: Task;
 
-                    position++;
-                });
+                    column.tasks.forEach(task => {
+                        task.column_id = column.id;
+                        task.position = position;
+
+                        position++;
+                        if (task.id === taskId) {
+                            taskToUpdate = task;
+                        }
+                    });
+
+                    this.boardService.updateColumn(column).subscribe();
+
+                    if (taskToUpdate) {
+                        this.boardService.updateTask(taskToUpdate).
+                        subscribe((response: ApiResponse) => {
+                            response.alerts.forEach(alert => {
+                                if (alert.type === 'info') {
+                                    this.notes.add(alert);
+                                }
+                            });
+
+                            this.boardService.updateActiveBoard(response.data[2][0]);
+                        });
+                    }
+                }
             });
-
-            this.boardService.updateBoard(this.activeBoard).subscribe();
         });
     }
 

@@ -60,6 +60,7 @@ class Tasks extends BaseController {
 
         $actor = R::load('user', Auth::GetUserId($request));
         $this->updateTaskOrder($task, $actor, true);
+        $this->checkAutomaticActions(null, $task);
 
         $this->dbLogger->logChange($actor->id,
             $actor->username . ' added task ' . $task->title . '.',
@@ -103,10 +104,15 @@ class Tasks extends BaseController {
             return $this->jsonResponse($response, 403);
         }
 
+        $before = R::exportAll($task);
         R::store($update);
+        $after= R::exportAll($update);
 
         $actor = R::load('user', Auth::GetUserId($request));
-        $this->updateTaskOrder($task, $actor, false);
+
+        $this->updateTaskOrder($update, $actor, false);
+        $this->checkAutomaticActions($before, $after);
+        $update = R::load('task', $update->id);
 
         $this->dbLogger->logChange($actor->id,
             $actor->username . ' updated task ' . $task->title,
@@ -194,6 +200,167 @@ class Tasks extends BaseController {
         $lastTask = end($column->xownTaskList);
         $lastTask->position = 0;
         R::store($column);
+    }
+
+    private function checkAutomaticActions($before, $after) {
+        $boardId = $this->getBoardId($after[0]['column_id']);
+        $autoActions = R::find('autoaction', ' board_id = ? ', [ $boardId ]);
+
+        foreach ($autoActions as $action) {
+            switch ($action->trigger) {
+                case ActionTrigger::MOVED_TO_COLUMN():
+                    if ($before[0]['column_id'] !== $after[0]['column_id'] &&
+                        $after[0]['column_id'] === (int)$action->source_id) {
+                        $this->alterTask($action, $after[0]['id']);
+                    }
+                    break;
+                case ActionTrigger::ASSIGNED_TO_USER():
+                    $prevAssigned = $this->isInList($action->source_id,
+                                                    isset($before[0]['sharedUser']) ?
+                                                    $before[0]['sharedUser'] :
+                                                    []);
+
+                    if ($prevAssigned) {
+                        break;
+                    }
+
+                    foreach ($after[0]['sharedUser'] as $user) {
+                        if ((int)$action->source_id === (int)$user['id']) {
+                            $this->alterTask($action, $after[0]['id']);
+                        }
+                    }
+                    break;
+                case ActionTrigger::ADDED_TO_CATEGORY():
+                    $prevAssigned = $this->isInList($action->source_id,
+                                                    isset($before[0]['sharedCategory']) ?
+                                                    $before[0]['sharedCategory'] :
+                                                    []);
+                    if ($prevAssigned) {
+                        break;
+                    }
+
+                    foreach ($after[0]['sharedCategory'] as $category) {
+                        if ((int)$action->source_id === (int)$category['id']) {
+                            $this->alterTask($action, $after[0]['id']);
+                        }
+                    }
+
+                    break;
+                case ActionTrigger::POINTS_CHANGED():
+                     $points = (isset($before[0]['points'])) ?
+                        (int)$before[0]['points'] :
+                        0;
+
+                    if ($points !== (int)$after[0]['points']) {
+                        $this->updateTaskColor($after[0]['id'],
+                                               $points,
+                                               $after[0]['points']);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private function isInList($itemId, $list) {
+        try {
+            foreach ($list as $item) {
+                if ((int)$item['id'] === (int)$itemId) {
+                    return true;
+                }
+            }
+        } catch(Exception $ex) {
+            // Ignore
+        }
+
+        return false;
+    }
+
+    private function alterTask($action, $taskId) {
+        switch ($action->type) {
+            case ActionType::SET_COLOR():
+                $task = R::load('task', $taskId);
+                $task->color = $action->change_to;
+                $this->apiJson->addAlert('info',
+                                         'Task color changed by automatic action.');
+                R::store($task);
+                break;
+
+            case ActionType::SET_CATEGORY():
+                $task = R::load('task', $taskId);
+                unset($task->sharedCategoryList);
+            case ActionType::ADD_CATEGORY():
+                if (!isset($task)) {
+                    $task = R::load('task', $taskId);
+                }
+
+                $cat = R::load('category', $action->change_to);
+                $task->sharedCategoryList[] = $cat;
+                $this->apiJson->addAlert('info',
+                                         'Task categories changed by automatic action.');
+                R::store($task);
+                break;
+
+            case ActionType::SET_ASSIGNEE():
+                $task = R::load('task', $taskId);
+                unset($task->sharedUserList);
+            case ActionType::ADD_ASSIGNEE():
+                if (!isset($task)) {
+                    $task = R::load('task', $taskId);
+                }
+
+                $user = R::load('user', $action->change_to);
+                $task->sharedUserList[] = $user;
+                $this->apiJson->addAlert('info',
+                                         'Task assignees changed by automatic action.');
+                R::store($task);
+                break;
+
+            case ActionType::CLEAR_DUE_DATE():
+                $task = R::load('task', $taskId);
+
+                if($task->due_date === '') {
+                    break;
+                }
+
+                $task->due_date = '';
+                $this->apiJson->addAlert('info',
+                                         'Task due date cleared by automatic action.');
+                R::store($task);
+                break;
+        }
+    }
+
+    function updateTaskColor($taskId, $beforePoints, $afterPoints)  {
+        $task = R::load('task', $taskId);
+        $diff = (float)$beforePoints - (float)$afterPoints;
+
+        // Steps should be between -255 and 255. Negative = darker, positive = lighter
+        $steps = max(-255, min(255, $diff * 10));
+
+        // Normalize into a six character long hex string
+        $hex = $task->color;
+        $hex = str_replace('#', '', $hex);
+        if (strlen($hex) == 3) {
+            $hex = str_repeat(substr($hex,0,1), 2).
+                str_repeat(substr($hex,1,1), 2).
+                str_repeat(substr($hex,2,1), 2);
+        }
+
+        // Split into three parts: R, G and B
+        $colorParts = str_split($hex, 2);
+        $newColor = '#';
+
+        foreach ($colorParts as $color) {
+            $color   = hexdec($color); // Convert to decimal
+            $color   = max(0,min(255,$color + $steps)); // Adjust color
+            $newColor .= str_pad(dechex($color), 2, '0', STR_PAD_LEFT); // Make two char hex code
+        }
+
+        $task->color = $newColor;
+
+        $this->apiJson->addAlert('info',
+                                 'Task color changed by automatic action.');
+        R::store($task);
     }
 }
 
