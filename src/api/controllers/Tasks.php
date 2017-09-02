@@ -181,9 +181,15 @@ class Tasks extends BaseController {
         return $column->board_id;
     }
 
+    private function sortTasks($a, $b) {
+        return strcmp($a->position, $b->position);
+    }
+
     private function updateTaskOrder($task, $user, $isNew) {
         $column = R::load('column', $task->column_id);
         $user_opts = R::load('useroption', $user->user_option_id);
+
+        usort($column->xownTaskList, array($this, 'sortTasks'));
 
         $counter = 1;
         foreach ($column->xownTaskList as $task) {
@@ -330,7 +336,7 @@ class Tasks extends BaseController {
         }
     }
 
-    function updateTaskColor($taskId, $beforePoints, $afterPoints)  {
+    private function updateTaskColor($taskId, $beforePoints, $afterPoints)  {
         $task = R::load('task', $taskId);
         $diff = (float)$beforePoints - (float)$afterPoints;
 

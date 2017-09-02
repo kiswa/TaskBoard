@@ -115,10 +115,23 @@ export class BoardDisplay implements OnInit {
             }
         });
 
+        let lastTaskId: number,
+            lastToColumnId: number,
+            lastFromColumnId: number;
+
         this.dragula.dropModel.subscribe((value: any) => {
             let taskId = +value[1].id,
                 toColumnId = +value[2].parentNode.id,
                 fromColumnId = +value[3].parentNode.id;
+
+            if (lastTaskId === taskId && lastToColumnId === toColumnId &&
+                lastFromColumnId === fromColumnId) {
+                return;
+            }
+
+            lastTaskId = taskId;
+            lastToColumnId = toColumnId;
+            lastFromColumnId = fromColumnId;
 
             this.activeBoard.columns.forEach(column => {
                 if (column.id === toColumnId || column.id === fromColumnId) {

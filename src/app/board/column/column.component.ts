@@ -126,24 +126,24 @@ export class ColumnDisplay implements OnInit {
     }
 
     sortTasks() {
-            switch (this.sortOption) {
-                case 'pos':
-                    this.columnData.tasks.sort((a, b) => {
-                        return a.position - b.position;
-                    });
-                    break;
-                case 'due':
-                    this.columnData.tasks.sort((a, b) => {
-                        return new Date(a.due_date).getTime() -
-                            new Date(b.due_date).getTime();
-                    });
-                    break;
-                case 'pnt':
-                    this.columnData.tasks.sort((a, b) => {
-                        return b.points - a.points;
-                    });
-                    break;
-            }
+        switch (this.sortOption) {
+            case 'pos':
+                this.columnData.tasks.sort((a, b) => {
+                    return a.position - b.position;
+                });
+                break;
+            case 'due':
+                this.columnData.tasks.sort((a, b) => {
+                    return new Date(a.due_date).getTime() -
+                        new Date(b.due_date).getTime();
+                });
+                break;
+            case 'pnt':
+                this.columnData.tasks.sort((a, b) => {
+                    return b.points - a.points;
+                });
+                break;
+        }
     }
 
     toggleCollapsed() {

@@ -171,7 +171,6 @@ export class TaskDisplay implements OnInit {
                     '" target="tb_external" rel="noreferrer">' +
                     result[0] + '</a>';
 
-                // text = text.replace(result[0], link);
                 replacements.push({
                     str: result[0],
                     link
