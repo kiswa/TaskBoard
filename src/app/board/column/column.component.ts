@@ -152,6 +152,7 @@ export class ColumnDisplay implements OnInit {
         this.boardService.toggleCollapsed(this.activeUser.id, this.columnData.id)
             .subscribe((apiResponse: ApiResponse) => {
                 this.activeUser.collapsed = apiResponse.data[1];
+                this.auth.updateUser(this.activeUser);
             });
     }
 
