@@ -268,7 +268,7 @@ class Tasks extends BaseController {
                     return true;
                 }
             }
-        } catch(Exception $ex) {
+        } catch (Exception $ex) {
             // Ignore
         }
 
@@ -318,7 +318,7 @@ class Tasks extends BaseController {
             case ActionType::CLEAR_DUE_DATE():
                 $task = R::load('task', $taskId);
 
-                if($task->due_date === '') {
+                if ($task->due_date === '') {
                     break;
                 }
 
@@ -334,16 +334,17 @@ class Tasks extends BaseController {
         $task = R::load('task', $taskId);
         $diff = (float)$beforePoints - (float)$afterPoints;
 
-        // Steps should be between -255 and 255. Negative = darker, positive = lighter
+        // Steps should be between -255 and 255.
+        // Negative = darker, positive = lighter
         $steps = max(-255, min(255, $diff * 10));
 
         // Normalize into a six character long hex string
         $hex = $task->color;
         $hex = str_replace('#', '', $hex);
         if (strlen($hex) == 3) {
-            $hex = str_repeat(substr($hex,0,1), 2).
-                str_repeat(substr($hex,1,1), 2).
-                str_repeat(substr($hex,2,1), 2);
+            $hex = str_repeat(substr($hex, 0, 1), 2).
+                str_repeat(substr($hex, 1, 1), 2).
+                str_repeat(substr($hex, 2, 1), 2);
         }
 
         // Split into three parts: R, G and B
@@ -351,9 +352,12 @@ class Tasks extends BaseController {
         $newColor = '#';
 
         foreach ($colorParts as $color) {
-            $color   = hexdec($color); // Convert to decimal
-            $color   = max(0,min(255,$color + $steps)); // Adjust color
-            $newColor .= str_pad(dechex($color), 2, '0', STR_PAD_LEFT); // Make two char hex code
+            // Convert to decimal
+            $color = hexdec($color);
+            // Adjust color
+            $color = max(0, min(255, $color + $steps));
+            // Make two char hex code
+            $newColor .= str_pad(dechex($color), 2, '0', STR_PAD_LEFT);
         }
 
         $task->color = $newColor;
