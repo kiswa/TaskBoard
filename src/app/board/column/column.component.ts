@@ -193,10 +193,18 @@ export class ColumnDisplay implements OnInit {
 
                 this.boardService.updateActiveBoard(boardData);
                 this.boardService.refreshToken();
+                this.saving = false;
             });
     }
 
     updateTask() {
+        this.saving = true;
+
+        if (!this.validateTask(this.modalProps)) {
+            this.saving = false;
+            return;
+        }
+
         this.boardService.updateTask(this.modalProps)
             .subscribe((response: ApiResponse) => {
                 response.alerts.forEach(note => this.notes.add(note));
@@ -209,6 +217,7 @@ export class ColumnDisplay implements OnInit {
                 this.modal.close(this.MODAL_ID + this.columnData.id);
 
                 this.boardService.refreshToken();
+                this.saving = false;
             });
     }
 

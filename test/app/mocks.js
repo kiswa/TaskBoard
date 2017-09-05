@@ -91,6 +91,11 @@ global.ElementRefMock = {
         parentElement: {
             oncontextmenu: () => {}
         },
+        classList: {
+            add: () => {},
+            remove: () => {},
+            toggle: () => {}
+        },
         firstElementChild: {
             style: {},
             getBoundingClientRect: () => {
@@ -417,10 +422,51 @@ global.UserSettingsServiceMock = {
 global.BoardServiceMock = {
     getBoards: () => {
         return RxJs.Observable.of({
-            data: [ '', [] ]
+            data: [ '', [{
+                id: 1, name: 'test', is_active: '1',
+                ownColumn: [], ownCategory: [],
+                ownAutoAction: [], ownIssuetracker: [],
+                sharedUser: []
+            }] ]
         });
     },
-    activeBoardChanged: RxJs.Observable.of({ name: 'Kanban App', columns: [] })
+    updateColumn: () => {
+        return RxJs.Observable.of({
+            status: 'success',
+            alerts: [],
+            data: ['', [{
+                id: 1, name: 'test', position: 1,
+                board_id: 1, task_limit: 3, ownTask: []
+            }]]
+        });
+    },
+    toggleCollapsed: () => {
+        return RxJs.Observable.of({ data: [ '', [1]] });
+    },
+    addTask: () => {
+        return RxJs.Observable.of({
+            status: 'success',
+            alerts: [],
+            data: ['', '', [{ ownColumn: [{}] }] ]
+        });
+    },
+    updateTask: () => {
+        return RxJs.Observable.of({
+            status: 'success',
+            alerts: [],
+            data: ['', '', [{}]]
+        });
+    },
+    removeTask: () => {
+        return RxJs.Observable.of({
+            status: 'success',
+            alerts: [],
+            data: ['', [{}]]
+        });
+    },
+    activeBoardChanged: RxJs.Observable.of({ name: 'Kanban App', columns: [] }),
+    updateActiveBoard: () => {},
+    refreshToken: () => {}
 };
 
 global.HttpMock = {
@@ -441,6 +487,9 @@ global.HttpMock = {
 global.SanitizerMock = {
     bypassSecurityTrustHtml: html => {
         return html;
+    },
+    bypassSecurityTrustStyle: css => {
+        return css;
     }
 };
 

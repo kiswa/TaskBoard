@@ -49,7 +49,7 @@ export class CompileDirective implements OnChanges {
                 this.updateProperties();
             })
             .catch(error => {
-                console.log(error); // tslint:disable-line
+                console.error(error); // tslint:disable-line
             });
     }
 

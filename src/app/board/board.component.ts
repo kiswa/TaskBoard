@@ -115,23 +115,10 @@ export class BoardDisplay implements OnInit {
             }
         });
 
-        let lastTaskId: number,
-            lastToColumnId: number,
-            lastFromColumnId: number;
-
         this.dragula.dropModel.subscribe((value: any) => {
             let taskId = +value[1].id,
                 toColumnId = +value[2].parentNode.id,
                 fromColumnId = +value[3].parentNode.id;
-
-            if (lastTaskId === taskId && lastToColumnId === toColumnId &&
-                lastFromColumnId === fromColumnId) {
-                return;
-            }
-
-            lastTaskId = taskId;
-            lastToColumnId = toColumnId;
-            lastFromColumnId = fromColumnId;
 
             this.activeBoard.columns.forEach(column => {
                 if (column.id === toColumnId || column.id === fromColumnId) {
@@ -148,20 +135,20 @@ export class BoardDisplay implements OnInit {
                         }
                     });
 
-                    this.boardService.updateColumn(column).subscribe();
+                    this.boardService.updateColumn(column).subscribe(() => {
+                        if (taskToUpdate) {
+                            this.boardService.updateTask(taskToUpdate).
+                            subscribe((response: ApiResponse) => {
+                                response.alerts.forEach(alert => {
+                                    if (alert.type === 'info') {
+                                        this.notes.add(alert);
+                                    }
+                                });
 
-                    if (taskToUpdate) {
-                        this.boardService.updateTask(taskToUpdate).
-                        subscribe((response: ApiResponse) => {
-                            response.alerts.forEach(alert => {
-                                if (alert.type === 'info') {
-                                    this.notes.add(alert);
-                                }
+                                this.boardService.updateActiveBoard(response.data[2][0]);
                             });
-
-                            this.boardService.updateActiveBoard(response.data[2][0]);
-                        });
-                    }
+                        }
+                    });
                 }
             });
         });
@@ -191,7 +178,7 @@ export class BoardDisplay implements OnInit {
         });
     }
 
-    filterTasks(type: string) {
+    filterTasks() {
         this.activeBoard.columns.forEach(column => {
             column.tasks.forEach(task => {
                 task.filtered = false;
@@ -233,16 +220,6 @@ export class BoardDisplay implements OnInit {
                         task.filtered = true;
                     }
                 }
-            });
-        });
-    }
-
-    private runFilter(testFunc: Function) {
-        this.activeBoard.columns.forEach(column => {
-            column.tasks.forEach(task => {
-                let found = testFunc(task);
-
-                task.filtered = !found;
             });
         });
     }
