@@ -79,9 +79,11 @@
         [task]="task" [boards]="boards"
         [add-task]="getShowModalFunction()"
         [edit-task]="getShowModalFunction(task.id)"
+        [view-task]="getShowViewModalFunction(task.id)"
         [remove-task]="getRemoveTaskFunction(task.id)"
         (on-update-boards)="callBoardUpdate();"
-        [collapse]="collapseTasks"></tb-task>
+        [collapse]="collapseTasks"
+        (dblclick)="showViewModal(task.id)"></tb-task>
 </div>
 
 <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
@@ -94,11 +96,26 @@
     </div>
     <div class="buttons">
         <button class="flat"
-            (click)="modal.close(MODAL_CONFIRM_ID + columnData.id);removeTask()">{{ strings['yes'] }}</button>
+            (click)="modal.close(MODAL_CONFIRM_ID + columnData.id);removeTask()">
+            {{ strings['yes'] }}
+        </button>
         <button #defaultAction #focusMe
             (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">
             {{ strings['no'] }}
         </button>
+    </div>
+</tb-modal>
+
+<tb-modal *ngIf="activeBoard"
+    modal-title="{{ strings['boards_viewTask'] }} - {{ viewModalProps.title }}"
+    modal-id="{{ MODAL_VIEW_ID + columnData.id }}"
+    wide="true">
+
+    <div class="description"
+        [style.background-color]="viewModalProps.color">
+        {{ viewModalProps.description }}
+        <!--<ng-template ngNonBindable-->
+        <!--    *compile="getTaskDescription()"></ng-template>-->
     </div>
 </tb-modal>
 

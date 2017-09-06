@@ -18,8 +18,10 @@
             {{ taskData.points }}</span>
     </h4>
 
-    <div class="description" *ngIf="!isCollapsed"
-        [innerHTML]="getTaskDescription()"></div>
+    <div class="description" *ngIf="!isCollapsed">
+        <ng-template ngNonBindable
+            *compile="getTaskDescription()"></ng-template>
+    </div>
 
     <div class="stats">
         <span *ngIf="userOptions.show_assignee">

@@ -46,10 +46,12 @@ export class ColumnDisplay implements OnInit {
     private sortOption: string;
 
     private MODAL_ID: string;
+    private MODAL_VIEW_ID: string;
     private MODAL_CONFIRM_ID: string;
 
     private quickAdd: Task;
     private modalProps: Task;
+    private viewModalProps: Task;
     private taskToRemove: number;
     private taskLimit: number;
 
@@ -70,10 +72,12 @@ export class ColumnDisplay implements OnInit {
         this.sortOption = 'pos';
 
         this.MODAL_ID = 'add-task-form-';
+        this.MODAL_VIEW_ID = 'view-task-form-';
         this.MODAL_CONFIRM_ID = 'task-remove-confirm';
 
         this.quickAdd = new Task();
         this.modalProps = new Task();
+        this.viewModalProps = new Task();
 
         stringsService.stringsChanged.subscribe(newStrings => {
             this.strings = newStrings;
@@ -295,6 +299,10 @@ export class ColumnDisplay implements OnInit {
         return () => { this.showModal(taskId); };
     }
 
+    private getShowViewModalFunction(taskId: number): Function {
+        return () => { this.showViewModal(taskId); };
+    }
+
     private quickAddClicked(event: any) {
         this.preventEnter(event);
 
@@ -307,6 +315,20 @@ export class ColumnDisplay implements OnInit {
         this.addTask(this.quickAdd);
 
         this.quickAdd = new Task();
+    }
+
+    private showViewModal(taskId: number) {
+        let viewTask = this.columnData.tasks
+            .filter(task => task.id === taskId)[0];
+
+        this.viewModalProps = new Task(viewTask.id, viewTask.title,
+                                       viewTask.description, viewTask.color,
+                                       viewTask.due_date, viewTask.points,
+                                       viewTask.position, viewTask.column_id,
+                                       viewTask.comments, viewTask.attachments,
+                                       viewTask.assignees, viewTask.categories);
+
+        this.modal.open(this.MODAL_VIEW_ID + this.columnData.id);
     }
 
     private showModal(taskId: number = 0) {

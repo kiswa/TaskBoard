@@ -48,6 +48,7 @@ export class TaskDisplay implements OnInit {
     @Input('task') taskData: Task;
     @Input('add-task') addTask: Function;
     @Input('edit-task') editTask: Function;
+    @Input('view-task') viewTask: Function;
     @Input('remove-task') removeTask: Function;
     @Input('collapse') isCollapsed: boolean;
 
@@ -103,9 +104,10 @@ export class TaskDisplay implements OnInit {
         this.checkDueDate();
     }
 
-    getTaskDescription(): SafeHtml {
-        let html = this.sanitizer.bypassSecurityTrustHtml(
-            marked(this.taskData.description, this.markedCallback));
+    getTaskDescription(): string {
+        let html = marked(this.taskData.description, this.markedCallback);
+        // Escape curly braces for dynamic component.
+        html = html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}" }}');
 
         return html;
     }
@@ -211,9 +213,14 @@ export class TaskDisplay implements OnInit {
     }
 
     private changeTaskColumn() {
-        let select = document.getElementById('columnsList' + this.taskData.id) as HTMLSelectElement;
+        let select = document.getElementById('columnsList' + this.taskData.id) as HTMLSelectElement,
+            id = +select[select.selectedIndex].value;
 
-        this.taskData.column_id = +select[select.selectedIndex].value;
+        if (id === 0) {
+            return;
+        }
+
+        this.taskData.column_id = id;
 
         this.boardService.updateTask(this.taskData)
             .subscribe((response: ApiResponse) => {
@@ -244,7 +251,7 @@ export class TaskDisplay implements OnInit {
 
     private generateContextMenuItems() {
         this.contextMenuItems = [
-            new ContextMenuItem(this.strings.boards_viewTask),
+            new ContextMenuItem(this.strings.boards_viewTask, this.viewTask),
             new ContextMenuItem(this.strings.boards_editTask, this.editTask),
             new ContextMenuItem(this.strings.boards_removeTask, this.removeTask),
             new ContextMenuItem('', null, true),
