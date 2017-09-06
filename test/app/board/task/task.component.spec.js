@@ -95,7 +95,7 @@ describe('TaskDisplay', () => {
         task.changeTaskColumn();
     });
 
-    it("has a function to copy a task to another board", () => {
+    it('has a function to copy a task to another board', () => {
         task.taskData = { id: 1 };
         task.strings = { boards_copyTaskTo: 'two words' };
 
