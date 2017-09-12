@@ -46,7 +46,7 @@ function ($scope, BoardService) {
             this.boardId = board.id;
             this.name = board.name;
             var that = this;
-	    if (typeof(board.ownLane) == "undefined") {
+	    if (typeof(board.ownLane) === "undefined") {
                 board.ownLane.forEach(function(lane) {
                     that.lanes.push({
                         id: lane.id,
@@ -55,7 +55,7 @@ function ($scope, BoardService) {
                     });
                 });
             }
-            if (typeof(board.ownCategory) == "undefined") {
+            if (typeof(board.ownCategory) === "undefined") {
                 board.ownCategory.forEach(function(cat) {
                     that.categories.push({
                         id: cat.id,
@@ -64,7 +64,7 @@ function ($scope, BoardService) {
                     });
                 });
             }
-            if (typeof(board.ownTracker) == "undefined") {
+            if (typeof(board.ownTracker) === "undefined") {
                 board.ownTracker.forEach(function(trac) {
                     that.trackers.push({
                         id: trac.id,
@@ -73,7 +73,7 @@ function ($scope, BoardService) {
                     });
                 });
             }
-            if (typeof(board.sharedUser) == "undefined") {
+            if (typeof(board.sharedUser) === "undefined") {
                 board.sharedUser.forEach(function(user) {
                     that.users[user.id] = true;
                 });
@@ -90,7 +90,7 @@ function ($scope, BoardService) {
 
             var that = this;
             this.lanes.forEach(function(lane) {
-                if (that.laneName == lane.name) {
+                if (that.laneName === lane.name) {
                     that.setAlert(false, true, false, false, 'That column name has already been added.');
                     that.lanesError = true;
                 }
@@ -126,7 +126,7 @@ function ($scope, BoardService) {
 
             var that = this;
             this.categories.forEach(function(category) {
-                if (that.categoryName == category) {
+                if (that.categoryName === category) {
                     this.setAlert(false, false, true, false, 'That category name has already been added.');
                 }
             });
@@ -157,7 +157,7 @@ function ($scope, BoardService) {
             }
             var that = this;
             this.trackers.forEach(function(tracker) {
-                if (that.trackerName == tracker) {
+                if (that.trackerName === tracker) {
                     this.setAlert(false, false, false, true, 'That Issue Tracker URL has already been added.');
                 }
             });
@@ -255,7 +255,7 @@ function ($scope, BoardService) {
             $scope.updateBoardsList(data.data);
             boardFormData.reset();
 
-            if (data.alerts[0].type == 'success') {
+            if (data.alerts[0].type === 'success') {
                 $('.boardModal').modal('hide');
             }
         });
@@ -275,7 +275,7 @@ function ($scope, BoardService) {
             $scope.updateBoardsList(data.data);
             boardFormData.reset();
 
-            if (data.alerts[0].type == 'success') {
+            if (data.alerts[0].type === 'success') {
                 $('.boardModal').modal('hide');
             }
         });
@@ -283,7 +283,7 @@ function ($scope, BoardService) {
 
     $scope.editedCategory = {};
     $scope.editColor = function(category) {
-	if (typeof($scope.editedCategory.id) == "undefined") {
+	if (typeof($scope.editedCategory.id) === "undefined") {
         {
             $scope.editedCategory.id = category.id;
             $scope.editedCategory.name = category.name;
