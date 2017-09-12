@@ -46,7 +46,7 @@ function ($scope, BoardService) {
             this.boardId = board.id;
             this.name = board.name;
             var that = this;
-            if (undefined !== board.ownLane) {
+	    if (typeof(board.ownLane) == "undefined") {
                 board.ownLane.forEach(function(lane) {
                     that.lanes.push({
                         id: lane.id,
@@ -55,7 +55,7 @@ function ($scope, BoardService) {
                     });
                 });
             }
-            if (undefined !== board.ownCategory) {
+            if (typeof(board.ownCategory) == "undefined") {
                 board.ownCategory.forEach(function(cat) {
                     that.categories.push({
                         id: cat.id,
@@ -64,7 +64,7 @@ function ($scope, BoardService) {
                     });
                 });
             }
-            if (undefined !== board.ownTracker) {
+            if (typeof(board.ownTracker) == "undefined") {
                 board.ownTracker.forEach(function(trac) {
                     that.trackers.push({
                         id: trac.id,
@@ -73,7 +73,7 @@ function ($scope, BoardService) {
                     });
                 });
             }
-            if (undefined !== board.sharedUser) {
+            if (typeof(board.sharedUser) == "undefined") {
                 board.sharedUser.forEach(function(user) {
                     that.users[user.id] = true;
                 });
@@ -283,7 +283,7 @@ function ($scope, BoardService) {
 
     $scope.editedCategory = {};
     $scope.editColor = function(category) {
-        if ($scope.editedCategory.id === undefined)
+	if (typeof($scope.editedCategory.id) == "undefined") {
         {
             $scope.editedCategory.id = category.id;
             $scope.editedCategory.name = category.name;
