@@ -46,7 +46,7 @@ function ($scope, BoardService) {
             this.boardId = board.id;
             this.name = board.name;
             var that = this;
-            if (undefined !== board.ownLane) {
+	    if (typeof(board.ownLane) == "undefined") {
                 board.ownLane.forEach(function(lane) {
                     that.lanes.push({
                         id: lane.id,
@@ -55,7 +55,7 @@ function ($scope, BoardService) {
                     });
                 });
             }
-            if (undefined !== board.ownCategory) {
+            if (typeof(board.ownCategory) == "undefined") {
                 board.ownCategory.forEach(function(cat) {
                     that.categories.push({
                         id: cat.id,
@@ -64,7 +64,7 @@ function ($scope, BoardService) {
                     });
                 });
             }
-            if (undefined !== board.ownTracker) {
+            if (typeof(board.ownTracker) == "undefined") {
                 board.ownTracker.forEach(function(trac) {
                     that.trackers.push({
                         id: trac.id,
@@ -73,7 +73,7 @@ function ($scope, BoardService) {
                     });
                 });
             }
-            if (undefined !== board.sharedUser) {
+            if (typeof(board.sharedUser) == "undefined") {
                 board.sharedUser.forEach(function(user) {
                     that.users[user.id] = true;
                 });
@@ -150,34 +150,7 @@ function ($scope, BoardService) {
             if (this.trackerName === '') {
                 this.setAlert(false, false, false, true, 'Issue Tracker URL cannot be empty.');
                 return;
-            }
-            if (this.bugexpr === '') {
-                this.setAlert(false, false, false, true, 'Bug ID regular expression cannot be empty.');
-                return;
-            }
-            var that = this;
-            this.trackers.forEach(function(tracker) {
-                if (that.trackerName == tracker) {
-                    this.setAlert(false, false, false, true, 'That Issue Tracker URL has already been added.');
-                }
-            });
-
-            // Add the new issue tracker (if no error) and reset the input.
-            if (!this.trackersError) {
-                this.trackers.push({
-                    id: 0,
-                    name: this.trackerName,
-                    bugexpr: this.bugexpr
-                });
-            }
-            this.trackerName = '';
-            this.bugexpr = '';
-        },
-        removeTracker: function(tracker) {
-            if (this.isSaving) { return; }
-            this.trackers.splice(this.trackers.indexOf(tracker), 1);
-        },
-        setForSaving: function() {
+"
             this.nameError = false;
             this.lanesError = false;
             this.categoriesError = false;
@@ -283,7 +256,7 @@ function ($scope, BoardService) {
 
     $scope.editedCategory = {};
     $scope.editColor = function(category) {
-        if ($scope.editedCategory.id === undefined)
+	if (typeof($scope.editedCategory.id) == "undefined") {
         {
             $scope.editedCategory.id = category.id;
             $scope.editedCategory.name = category.name;
