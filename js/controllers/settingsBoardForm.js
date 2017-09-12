@@ -291,8 +291,8 @@ function ($scope, BoardService) {
             $scope.editedCategory.color = $scope.boardFormData.color;
             $scope.spectrum(category.color);
         }
-        else if (($scope.editedCategory.id != category.id) &&
-                ($scope.editedCategory.name != category.name))
+        else if (($scope.editedCategory.id !== category.id) &&
+                ($scope.editedCategory.name !== category.name))
         {
             $scope.spectrum()
             $scope.editedCategory = {};
