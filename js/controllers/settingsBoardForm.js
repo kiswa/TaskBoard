@@ -8,7 +8,7 @@ function ($scope, BoardService) {
         boardId: 0,
         isAdd: true,
         name: '',
-        lanes: [],
+        lanes: [], 
         laneName: '',
         categories: [],
         categoryName: '',
@@ -283,7 +283,7 @@ function ($scope, BoardService) {
 
     $scope.editedCategory = {};
     $scope.editColor = function(category) {
-	if (typeof($scope.editedCategory.id) === 'undefined') {
+    if (typeof($scope.editedCategory.id) === 'undefined') {
             $scope.editedCategory.id = category.id;
             $scope.editedCategory.name = category.name;
 
@@ -307,7 +307,7 @@ function ($scope, BoardService) {
         }
         else if (e.which === 27) { // Escape key
             $scope.spectrum();
-	    $scope.editedCategory = {};
+            $scope.editedCategory = {};
         }
     }; 
 
