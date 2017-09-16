@@ -1,6 +1,7 @@
 <div class="modal-container"
     [ngClass]="{ animated: animate, 'modal-open': isOpen }"
-    (click)="close(true)">
+    (click)="close(true)"
+    (contextmenu)="$event.stopPropagation(); $event.preventDefault()">
 
     <div class="modal"
         [ngClass]="{ wide: wide, animated: animate, 'modal-closed': !isOpen }"

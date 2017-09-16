@@ -20,8 +20,8 @@ export class Column {
                                      +task.points,
                                      +task.position,
                                      +task.column_id,
-                                     task.comments,
-                                     task.attachments,
+                                     task.ownComment || task.comments,
+                                     task.ownAttachment || task.attachments,
                                      task.sharedUser || task.assignees,
                                      task.sharedCategory || task.categories));
         });

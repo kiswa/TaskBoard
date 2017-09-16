@@ -83,39 +83,114 @@
         [remove-task]="getRemoveTaskFunction(task.id)"
         (on-update-boards)="callBoardUpdate();"
         [collapse]="collapseTasks"
-        (dblclick)="showViewModal(task.id)"></tb-task>
+        (dblclick)="$event.preventDefault();showViewModal(task.id)"></tb-task>
 </div>
 
 <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
 
-<tb-modal modal-title="{{ strings['boards_confirmRemoveTask'] }}" blocking="true"
-    modal-id="{{ MODAL_CONFIRM_ID + columnData.id }}">
-    <div class="center">
-        {{ strings['boards_confirmWarning'] }}<br>
-        {{ strings['boards_confirmContinue'] }}
-    </div>
-    <div class="buttons">
-        <button class="flat"
-            (click)="modal.close(MODAL_CONFIRM_ID + columnData.id);removeTask()">
-            {{ strings['yes'] }}
-        </button>
-        <button #defaultAction #focusMe
-            (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">
-            {{ strings['no'] }}
-        </button>
-    </div>
-</tb-modal>
-
 <tb-modal *ngIf="activeBoard"
     modal-title="{{ strings['boards_viewTask'] }} - {{ viewModalProps.title }}"
     modal-id="{{ MODAL_VIEW_ID + columnData.id }}"
-    wide="true">
+    wide="true"
+    class="view-modal">
+    <div *ngIf="viewModalProps.points">
+        <span class="badge">{{ viewModalProps.points }}</span>
+    </div>
 
-    <div class="description"
+    <div class="details"
         [style.background-color]="viewModalProps.color">
-        {{ viewModalProps.description }}
-        <!--<ng-template ngNonBindable-->
-        <!--    *compile="getTaskDescription()"></ng-template>-->
+        <div class="date" *ngIf="viewModalProps.due_date"
+            [class.overdue]="isOverdue"
+            [class.near-due]="isNearlyDue">
+            {{ strings['boards_taskDue'] + ' ' + viewModalProps.due_date }}
+        </div>
+
+        <div class="description" *ngIf="viewModalProps.description.length">
+            <ng-template ngNonBindable
+                *compile="getTaskDescription()"></ng-template>
+        </div>
+
+        <div class="stats">
+            <div>
+                <strong>{{ strings['boards_taskAssignees'] }}</strong>
+                <span *ngFor="let user of viewModalProps.assignees">
+                    {{ user.username }}
+                </span>
+                <span *ngIf="viewModalProps.assignees.length === 0">
+                    {{ strings['boards_filterByUnassigned'] }}
+                </span>
+            </div>
+            <div>
+                <strong>{{ strings['boards_taskCategories'] }}</strong>
+                <span *ngFor="let cat of viewModalProps.categories">
+                    {{ cat.name }}
+                </span>
+                <span *ngIf="viewModalProps.categories.length === 0">
+                    {{ strings['boards_filterByUncategorized'] }}
+                </span>
+            </div>
+            <div>
+                <strong>{{ strings['boards_taskCurrentColumn'] }}</strong>
+                {{ columnData.name }}
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <button class="flat"
+            (click)="this.modal.close(MODAL_VIEW_ID + columnData.id);
+                     showModal(viewModalProps.id)">
+            {{ strings['boards_editTask'] }}
+        </button>
+        <button class="flat"
+            (click)="getRemoveTaskFunction(viewModalProps.id)()">
+            {{ strings['boards_removeTask'] }}
+        </button>
+    </div>
+
+    <div *ngIf="viewModalProps.attachments.length">
+        <h3>{{ strings['boards_taskAttachments'] }}</h3>
+    </div>
+
+    <div>
+        <h3>{{ strings['boards_taskAddAttachment'] }}</h3>
+        <input type="file">
+        <button>
+            <i class="icon icon-upload"></i>
+            {{ strings['boards_taskUpload'] }}
+        </button>
+    </div>
+
+    <div *ngIf="viewModalProps.comments.length">
+        <h3>{{ strings['boards_taskComments'] }}</h3>
+        <div class="comment"
+            *ngFor="let comment of viewModalProps.comments">
+            <div [innerHTML]="getComment(comment.text)"></div>
+
+            <div class="byline">
+                Posted by {{ getUserName(comment.user_id) }} on
+                {{ comment.timestamp | date:'medium' }}
+            </div>
+
+            <div class="actions">
+                <i class="icon icon-edit color-primary"
+                    [title]="strings['boards_taskEditComment']"
+                    (click)="editComment(comment)"></i>
+                <i class="icon icon-trash-empty color-secondary"
+                    [title]="strings['boards_taskRemoveComment']"
+                    (click)="removeComment(comment)"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix">
+        <h3>{{ strings['boards_taskAddComment'] }}</h3>
+        <textarea rows="5" [(ngModel)]="newComment"
+            (keyup.enter)="preventEnter($event)"></textarea>
+        <button class="right" (click)="addComment()">
+            <i class="icon icon-comment-empty"></i>
+            {{ strings['boards_taskAddComment'] }}
+        </button>
     </div>
 </tb-modal>
 
@@ -196,6 +271,24 @@
         </button>
         <button class="flat" (click)="modal.close(MODAL_ID + columnData.id)">
             {{ strings['cancel'] }}
+        </button>
+    </div>
+</tb-modal>
+
+<tb-modal modal-title="{{ strings['boards_confirmRemoveTask'] }}" blocking="true"
+    modal-id="{{ MODAL_CONFIRM_ID + columnData.id }}">
+    <div class="center">
+        {{ strings['boards_confirmWarning'] }}<br>
+        {{ strings['boards_confirmContinue'] }}
+    </div>
+    <div class="buttons">
+        <button class="flat"
+            (click)="modal.close(MODAL_CONFIRM_ID + columnData.id);removeTask()">
+            {{ strings['yes'] }}
+        </button>
+        <button #defaultAction #focusMe
+            (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">
+            {{ strings['no'] }}
         </button>
     </div>
 </tb-modal>

@@ -4,7 +4,7 @@ export class Attachment {
                 public name: string = '',
                 public type: string = '',
                 public user_id: number = 0, // tslint:disable-line
-                public timestamp: Date = null,
+                public timestamp: number = Date.now(),
                 public task_id: number = 0) { // tslint:disable-line
     }
 }

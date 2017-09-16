@@ -182,9 +182,19 @@
     "boards_taskAssignedTo": "Assigned To",
     "boards_taskUnassigned": "Unassigned",
     "boards_taskDue": "Due",
-    "boards_taskComments": "Comments",
-    "boards_taskAttachments": "Attachments",
     "boards_taskCategory": "Category",
+    "boards_taskCurrentColumn": "Current Column",
+
+    "boards_taskComments": "Comments",
+    "boards_taskAddComment": "Add Comment",
+    "boards_taskEditComment": "Edit Comment",
+    "boards_taskRemoveComment": "Remove Comment",
+
+    "boards_taskAttachments": "Attachments",
+    "boards_taskAddAttachment": "Add Attachment",
+    "boards_taskEditAttachment": "Edit Attachment",
+    "boards_taskRemoveAttachment": "Remove Attachment",
+    "boards_taskUpload": "Upload",
 
     "boards_task": "Task",
     "boards_taskComplete": "Complete",

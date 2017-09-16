@@ -109,7 +109,8 @@ export class TaskDisplay implements OnInit {
         // Escape curly braces for dynamic component.
         html = html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}" }}');
 
-        return html;
+        // At least have a space so the compile directive doesn't error
+        return html + ' ';
     }
 
     getPercentStyle() {

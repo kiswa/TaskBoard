@@ -6,12 +6,17 @@ import {
     OnInit,
     Output
 } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
+import * as marked from 'marked';
+import * as hljs from 'highlight.js';
 
 import {
     ApiResponse,
     Board,
     Category,
     Column,
+    Comment,
     ContextMenu,
     ContextMenuItem,
     Modal,
@@ -36,6 +41,8 @@ export class ColumnDisplay implements OnInit {
     private collapseTasks: boolean;
     private saving: boolean;
     private showLimitEditor: boolean;
+    private isOverdue: boolean;
+    private isNearlyDue: boolean;
 
     private activeUser: User;
     private activeBoard: Board;
@@ -55,6 +62,8 @@ export class ColumnDisplay implements OnInit {
     private taskToRemove: number;
     private taskLimit: number;
 
+    private newComment: string;
+
     @Input('column') columnData: Column;
     @Input('boards') boards: Array<Board>;
 
@@ -65,7 +74,8 @@ export class ColumnDisplay implements OnInit {
                 private notes: NotificationsService,
                 private modal: ModalService,
                 private stringsService: StringsService,
-                private boardService: BoardService) {
+                private boardService: BoardService,
+                private sanitizer: DomSanitizer) {
         this.templateElement = elRef.nativeElement;
         this.tasks = [];
         this.collapseTasks = false;
@@ -201,6 +211,57 @@ export class ColumnDisplay implements OnInit {
             });
     }
 
+    addComment() {
+        if (this.viewModalProps.id < 1) {
+            return;
+        }
+
+        this.viewModalProps.comments.push(
+            new Comment(0, this.newComment, this.activeUser.id,
+                        this.viewModalProps.id));
+
+        this.newComment = '';
+
+        this.boardService.updateTask(this.viewModalProps)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                let updatedTask = response.data[1][0];
+
+                this.activeBoard.columns.forEach(column => {
+                    if (+column.id !== +updatedTask.column_id) {
+                        return;
+                    }
+
+                    column.tasks.forEach(task => {
+                        if (+task.id !== +updatedTask.id) {
+                            return;
+                        }
+
+                        this.updateTaskComments(task, updatedTask.ownComment);
+                    });
+                });
+            });
+    }
+
+    editComment() {
+        // TODO
+    }
+
+    removeComment(comment: Comment) {
+        for (let i = this.viewModalProps.comments.length - 1; i >= 0; --i) {
+            if (this.viewModalProps.comments[i].id === comment.id) {
+                this.viewModalProps.comments.splice(i, 1);
+            }
+        }
+
+        // TODO: Use comments API
+    }
+
     updateTask() {
         this.saving = true;
 
@@ -274,6 +335,102 @@ export class ColumnDisplay implements OnInit {
         this.showLimitEditor = false;
     }
 
+    // Expects a color in full HEX with leading #, e.g. #ffffe0
+    getTextColor(color: string): string {
+        let r = parseInt(color.substr(1, 2), 16),
+            g = parseInt(color.substr(3, 2), 16),
+            b = parseInt(color.substr(5, 2), 16),
+            yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+        return yiq >= 140 ? '#333333' : '#efefef';
+    }
+
+    private updateTaskComments(task: Task, newComments: Array<any>) {
+        task.comments = [];
+
+        newComments.forEach(comment => {
+            task.comments.push(
+                new Comment(comment.id, comment.text, comment.user_id,
+                            comment.task_id, comment.timestamp));
+        });
+    }
+
+    private checkDueDate() {
+        if (this.viewModalProps.due_date === '') {
+            return;
+        }
+
+        let dueDate = new Date(this.viewModalProps.due_date);
+
+        if (isNaN(dueDate.valueOf())) {
+            return;
+        }
+
+        let millisecondsPerDay = (1000 * 3600 * 24),
+            today = new Date(),
+            timeDiff = today.getTime() - dueDate.getTime(),
+            daysDiff = Math.ceil(timeDiff / millisecondsPerDay);
+
+        if (daysDiff > 0) {
+            // past due date
+            this.isOverdue = true;
+        }
+
+        if (daysDiff <= 0 && daysDiff > -3) {
+            this.isNearlyDue = true;
+        }
+    }
+
+    // Needs anonymous function for proper `this` context.
+    private markedCallback = (error: any, text: string) => {
+        this.activeBoard.issue_trackers.forEach(tracker => {
+            let re = new RegExp(tracker.regex, 'ig');
+            let replacements = new Array<any>();
+            let result = re.exec(text);
+
+            while (result !== null) {
+                let link = '<a href="' +
+                    tracker.url.replace(/%BUGID%/g, result[1]) +
+                    '" target="tb_external" rel="noreferrer">' +
+                    result[0] + '</a>';
+
+                replacements.push({
+                    str: result[0],
+                    link
+                });
+                result = re.exec(text);
+            }
+
+            for (let i = replacements.length - 1; i >= 0; --i) {
+                text = text.replace(replacements[i].str,
+                                    replacements[i].link);
+            }
+        });
+
+        return text;
+    }
+
+    private getTaskDescription() {
+        let html = marked(this.viewModalProps.description, this.markedCallback);
+        // Escape curly braces for dynamic component.
+        html = html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}" }}');
+
+        return html;
+    }
+
+    private getComment(text: string) {
+        let html = marked(text, this.markedCallback);
+
+        return this.sanitizer.bypassSecurityTrustHtml(html);
+    }
+
+    private getUserName(userId: number) {
+        let user = this.activeBoard.users
+            .filter((test: User) => test.id === userId)[0];
+
+        return user.username;
+    }
+
     private validateTask(task: Task) {
         if (task.title === '') {
             this.notes.add(
@@ -321,6 +478,7 @@ export class ColumnDisplay implements OnInit {
         let viewTask = this.columnData.tasks
             .filter(task => task.id === taskId)[0];
 
+        this.newComment = '';
         this.viewModalProps = new Task(viewTask.id, viewTask.title,
                                        viewTask.description, viewTask.color,
                                        viewTask.due_date, viewTask.points,
@@ -328,6 +486,7 @@ export class ColumnDisplay implements OnInit {
                                        viewTask.comments, viewTask.attachments,
                                        viewTask.assignees, viewTask.categories);
 
+        this.checkDueDate();
         this.modal.open(this.MODAL_VIEW_ID + this.columnData.id);
     }
 

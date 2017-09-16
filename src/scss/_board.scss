@@ -159,9 +159,10 @@
             h3 {
                 border: 0;
                 overflow: unset;
+                padding: 0;
                 transform: rotate(90deg)
-                    translateX(-35px)
-                    translateY(5px);
+                    translateX(-25px)
+                    translateY(2px);
                 transform-origin: left bottom;
                 white-space: nowrap;
             }
@@ -206,22 +207,37 @@
         margin-bottom: 7px;
     }
 
+    code {
+        background-color: #1d1f21;
+        border: 0;
+        color: #c5c8c6;
+        overflow: auto;
+    }
+
+    a:link,
+    a:visited {
+        background-image: none;
+        color: inherit;
+        font-weight: bold;
+        text-decoration: underline;
+        text-shadow: none;
+    }
+
+    a:hover,
+    a:active {
+        text-decoration: none;
+    }
+
+    .overdue {
+        text-shadow: 0 0 2px rgba(255, 0, 0, 1);
+    }
+
+    .near-due {
+        text-shadow: 0 0 2px rgba(255, 180, 0, 1);
+    }
+
     .task {
         @include shadow-low();
-
-        a:link,
-        a:visited {
-            background-image: none;
-            color: inherit;
-            font-weight: bold;
-            text-decoration: underline;
-            text-shadow: none;
-        }
-
-        a:hover,
-        a:active {
-            text-decoration: none;
-        }
 
         h4 {
             border-bottom: 1px solid lighten($color-border, 25%);
@@ -235,13 +251,6 @@
                 margin-right: -2px;
                 margin-top: 2px;
             }
-        }
-
-        code {
-            background-color: #1d1f21;
-            border: 0;
-            color: #c5c8c6;
-            overflow: auto;
         }
 
         .description {
@@ -280,14 +289,6 @@
             font-weight: 700;
         }
 
-        .overdue {
-            text-shadow: 0 0 2px rgba(255, 0, 0, 1);
-        }
-
-        .near-due {
-            text-shadow: 0 0 2px rgba(255, 180, 0, 1);
-        }
-
         &.compact {
             .description {
                 display: none;
@@ -300,6 +301,104 @@
             &.hide {
                 display: none;
             }
+        }
+    }
+
+    .view-modal {
+        .badge {
+            float: right;
+            margin-right: 3em;
+            margin-top: -4.2em;
+        }
+
+        .icon {
+            cursor: pointer;
+        }
+
+        [type="file"] {
+            width: 80%;
+        }
+
+        .details {
+            @include shadow-low;
+
+            .date {
+                padding-left: 1em;
+                padding-top: 1em;
+            }
+
+            .stats {
+                display: flex;
+                justify-content: space-around;
+
+                div {
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
+        }
+
+        custom-dynamic-component > :first-child {
+            margin-top: 0;
+        }
+
+        custom-dynamic-component > :last-child {
+            margin-bottom: 0;
+        }
+
+        .description {
+            max-height: 20em;
+            overflow: auto;
+            padding: 1em;
+
+            .checklist {
+                list-style: none;
+                margin-left: -27px;
+            }
+        }
+
+        .quick-actions {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 12px;
+
+            button {
+                width: 45%;
+            }
+        }
+
+        .comment {
+            @include shadow-low;
+
+            padding: 1em;
+
+            p:first-of-type {
+                margin-top: 0;
+            }
+
+            p:last-of-type {
+                margin-bottom: 0;
+            }
+
+            .byline {
+                font-size: .8em;
+                font-weight: bold;
+            }
+
+            .actions {
+                float: right;
+                margin-top: -1.5em;
+            }
+
+            .icon {
+                cursor: pointer;
+            }
+        }
+
+        h3 {
+            background: transparent;
+            border: 0;
+            margin: 1em 0 0;
         }
     }
 }

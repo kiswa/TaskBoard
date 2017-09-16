@@ -33,7 +33,8 @@ export class Task {
             this.comments.push(new Comment(+comment.id,
                                            comment.text,
                                            +comment.user_id,
-                                           +comment.task_id));
+                                           +comment.task_id,
+                                           +comment.timestamp));
         });
 
         attachmentArray.forEach((attachment: any) => {
@@ -42,7 +43,7 @@ export class Task {
                                                  attachment.name,
                                                  attachment.type,
                                                  +attachment.user_id,
-                                                 attachment.timestamp,
+                                                 +attachment.timestamp,
                                                  +attachment.task_id));
         });
 

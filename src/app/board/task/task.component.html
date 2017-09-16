@@ -19,8 +19,7 @@
     </h4>
 
     <div class="description" *ngIf="!isCollapsed">
-        <ng-template ngNonBindable
-            *compile="getTaskDescription()"></ng-template>
+        <ng-template *compile="getTaskDescription()"></ng-template>
     </div>
 
     <div class="stats">
@@ -38,13 +37,13 @@
             <span *ngIf="taskData.due_date"
                 [class.overdue]="isOverdue"
                 [class.near-due]="isNearlyDue">
-                {{ strings['boards_taskDue'] }}: {{ taskData.due_date }}
+                {{ strings['boards_taskDue'] }}: {{ taskData.due_date | date }}
             </span>
             <span *ngIf="taskData.comments.length" class="icon icon-chat-empty"
-                [title]="taskData.comments.length +
+                [title]="taskData.comments.length + ' ' +
                     strings['boards_taskComments']"></span>
             <span *ngIf="taskData.attachments.length" class="icon icon-attach"
-                [title]="taskData.attachments.length +
+                [title]="taskData.attachments.length + ' ' +
                     strings['boards_taskAttachments']"></span>
             <span *ngFor="let category of taskData.categories" class="category"
                 [title]="strings['boards_taskCategory']">
