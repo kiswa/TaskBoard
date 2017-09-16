@@ -289,6 +289,7 @@ class CommentsTest extends PHPUnit_Framework_TestCase {
         $data->text = 'test comment';
         $data->user_id = 1;
         $data->task_id = 1;
+        $data->timestamp = time();
 
         return $data;
     }
