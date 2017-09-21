@@ -155,6 +155,8 @@
     "boards_confirmRemoveTask": "Confirm Task Removal",
     "boards_confirmWarning": "Removing a task cannot be undone.",
     "boards_confirmContinue": "Continue?",
+    "boards_confirmRemoveComment": "Confirm Comment Removal",
+    "boards_confirmWarningComment": "Removing a comment cannot be undone.",
 
     "boards_addTask": "Add Task",
     "boards_editTask": "Edit Task",

@@ -178,7 +178,9 @@
                     (click)="editComment(comment)"></i>
                 <i class="icon icon-trash-empty color-secondary"
                     [title]="strings['boards_taskRemoveComment']"
-                    (click)="removeComment(comment)"></i>
+                    (click)="commentToRemove=comment;
+                        modal.open(MODAL_CONFIRM_COMMENT_ID +
+                        columnData.id)"></i>
             </div>
         </div>
     </div>
@@ -288,6 +290,25 @@
         </button>
         <button #defaultAction #focusMe
             (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">
+            {{ strings['no'] }}
+        </button>
+    </div>
+</tb-modal>
+
+<tb-modal modal-title="{{ strings['boards_confirmRemoveComment'] }}" blocking="true"
+    modal-id="{{ MODAL_CONFIRM_COMMENT_ID + columnData.id }}">
+    <div class="center">
+        {{ strings['boards_confirmWarningComment'] }}<br>
+        {{ strings['boards_confirmContinue'] }}
+    </div>
+    <div class="buttons">
+        <button class="flat"
+            (click)="modal.close(MODAL_CONFIRM_COMMENT_ID
+                + columnData.id);removeComment()">
+            {{ strings['yes'] }}
+        </button>
+        <button #defaultAction #focusMe
+            (click)="modal.close(MODAL_CONFIRM_COMMENT_ID + columnData.id)">
             {{ strings['no'] }}
         </button>
     </div>

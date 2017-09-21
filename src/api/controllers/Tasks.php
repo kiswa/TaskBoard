@@ -268,14 +268,10 @@ class Tasks extends BaseController {
     }
 
     private function isInList($itemId, $list) {
-        try {
-            foreach ($list as $item) {
-                if ((int)$item['id'] === (int)$itemId) {
-                    return true;
-                }
+        foreach ($list as $item) {
+            if ((int)$item['id'] === (int)$itemId) {
+                return true;
             }
-        } catch (Exception $ex) {
-            // Ignore
         }
 
         return false;

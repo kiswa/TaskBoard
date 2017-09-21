@@ -72,6 +72,12 @@ export class BoardService {
             .catch(this.errorHandler);
     }
 
+    removeComment(commentId: number): Observable<ApiResponse> {
+        return this.http.delete('api/comments/' + commentId)
+            .map(this.toApiResponse)
+            .catch(this.errorHandler);
+    }
+
     refreshToken(): void {
         this.http.post('api/refresh', {}).subscribe();
     }

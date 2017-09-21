@@ -155,6 +155,8 @@
     "boards_confirmRemoveTask": "Confirmar la Eliminación de Tarea",
     "boards_confirmWarning": "No se puede deshacer la eliminación de una tarea.",
     "boards_confirmContinue": "¿Continuar?",
+    "boards_confirmRemoveComment": "Confirmar la Eliminación de Comentario",
+    "boards_confirmWarningComment": "No se puede deshacer la eliminación de un comentario.",
 
     "boards_addTask": "Agregar Tarea",
     "boards_editTask": "Editar Tarea",
