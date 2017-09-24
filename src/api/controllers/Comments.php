@@ -123,6 +123,9 @@ class Comments extends BaseController {
         $this->apiJson->setSuccess();
         $this->apiJson->addAlert('success', 'Comment updated.');
 
+        $task = R::load('task', $comment->task_id);
+        $this->apiJson->addData(R::exportAll($task));
+
         return $this->jsonResponse($response);
     }
 

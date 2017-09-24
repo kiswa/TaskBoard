@@ -191,6 +191,8 @@
     "boards_taskAddComment": "Add Comment",
     "boards_taskEditComment": "Edit Comment",
     "boards_taskRemoveComment": "Remove Comment",
+    "boards_postedBy": "Posted by",
+    "boards_editedBy": "Edited by",
 
     "boards_taskAttachments": "Attachments",
     "boards_taskAddAttachment": "Add Attachment",

@@ -214,52 +214,6 @@ export class ColumnDisplay implements OnInit {
             });
     }
 
-    addComment() {
-        if (this.viewModalProps.id < 1) {
-            return;
-        }
-
-        this.viewModalProps.comments.push(
-            new Comment(0, this.newComment, this.activeUser.id,
-                        this.viewModalProps.id));
-
-        this.newComment = '';
-
-        this.boardService.updateTask(this.viewModalProps)
-            .subscribe((response: ApiResponse) => {
-                if (response.status !== 'success') {
-                    return;
-                }
-
-                let updatedTask = response.data[1][0];
-                this.replaceUpdatedTask(updatedTask);
-            });
-    }
-
-    editComment() {
-        // TODO
-    }
-
-    removeComment() {
-        for (let i = this.viewModalProps.comments.length - 1; i >= 0; --i) {
-            if (this.viewModalProps.comments[i].id === this.commentToRemove.id) {
-                this.viewModalProps.comments.splice(i, 1);
-            }
-        }
-
-        this.boardService.removeComment(this.commentToRemove.id)
-            .subscribe((response: ApiResponse) => {
-                response.alerts.forEach(note => this.notes.add(note));
-
-                if (response.status !== 'success') {
-                    return;
-                }
-
-                let updatedTask = response.data[1][0];
-                this.replaceUpdatedTask(updatedTask);
-            });
-    }
-
     updateTask() {
         this.saving = true;
 
@@ -296,6 +250,73 @@ export class ColumnDisplay implements OnInit {
                 this.boardService.updateActiveBoard(response.data[1][0]);
                 this.boardService.refreshToken();
             });
+    }
+
+    addComment() {
+        if (this.viewModalProps.id < 1) {
+            return;
+        }
+
+        this.viewModalProps.comments.push(
+            new Comment(0, this.newComment, this.activeUser.id,
+                        this.viewModalProps.id));
+
+        this.newComment = '';
+
+        this.boardService.updateTask(this.viewModalProps)
+            .subscribe((response: ApiResponse) => {
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                let updatedTask = response.data[1][0];
+                this.replaceUpdatedTask(updatedTask);
+            });
+    }
+
+    editComment(comment: Comment) {
+        comment.is_edited = true;
+        comment.user_id = this.activeUser.id;
+
+        this.boardService.updateComment(comment)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                let updatedTask = response.data[1][0];
+                this.replaceUpdatedTask(updatedTask);
+            });
+    }
+
+    removeComment() {
+        for (let i = this.viewModalProps.comments.length - 1; i >= 0; --i) {
+            if (this.viewModalProps.comments[i].id === this.commentToRemove.id) {
+                this.viewModalProps.comments.splice(i, 1);
+            }
+        }
+
+        this.boardService.removeComment(this.commentToRemove.id)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                let updatedTask = response.data[1][0];
+                this.replaceUpdatedTask(updatedTask);
+            });
+    }
+
+    canAdminComment(comment: Comment) {
+        if (this.activeUser.id === comment.user_id) {
+            return true;
+        }
+
+        return this.activeUser.isAnyAdmin();
     }
 
     beginLimitEdit() {

@@ -191,6 +191,8 @@
     "boards_taskAddComment": "Agregar Comentario",
     "boards_taskEditComment": "Editar Comentario",
     "boards_taskRemoveComment": "Eliminar Comentario",
+    "boards_postedBy": "Publicado por",
+    "boards_editedBy": "Editado por",
 
     "boards_taskAttachments": "Archivos Adjuntos",
     "boards_taskAddAttachment": "Agregar Archivos Adjuntos",

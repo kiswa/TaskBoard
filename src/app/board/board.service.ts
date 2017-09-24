@@ -9,8 +9,9 @@ import 'rxjs/add/operator/catch';
 
 import {
     ApiResponse,
-    Column,
     Board,
+    Column,
+    Comment,
     Task,
     User
 } from '../shared/index';
@@ -68,6 +69,12 @@ export class BoardService {
 
     removeTask(taskId: number): Observable<ApiResponse> {
         return this.http.delete('api/tasks/' + taskId)
+            .map(this.toApiResponse)
+            .catch(this.errorHandler);
+    }
+
+    updateComment(comment: Comment): Observable<ApiResponse> {
+        return this.http.post('api/comments/' + comment.id, comment)
             .map(this.toApiResponse)
             .catch(this.errorHandler);
     }

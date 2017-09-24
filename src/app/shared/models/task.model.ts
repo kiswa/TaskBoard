@@ -34,7 +34,8 @@ export class Task {
                                            comment.text,
                                            +comment.user_id,
                                            +comment.task_id,
-                                           +comment.timestamp));
+                                           +comment.timestamp,
+                                           +comment.is_edited === 1));
         });
 
         attachmentArray.forEach((attachment: any) => {

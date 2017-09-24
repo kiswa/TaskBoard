@@ -127,6 +127,7 @@ class BeanLoader {
         $comment->user_id = isset($data->user_id) ? $data->user_id : -1;
         $comment->task_id = isset($data->task_id) ? $data->task_id : -1;
         $comment->timestamp = isset($data->timestamp) ? $data->timestamp : -1;
+        $comment->is_edited = isset($data->is_edited) ? $data->is_edited : false;
 
         if (!isset($data->text) || !isset($data->user_id) ||
             !isset($data->task_id) || !isset($data->timestamp)) {
