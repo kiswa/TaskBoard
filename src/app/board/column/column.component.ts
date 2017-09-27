@@ -55,12 +55,14 @@ export class ColumnDisplay implements OnInit {
     private MODAL_ID: string;
     private MODAL_VIEW_ID: string;
     private MODAL_CONFIRM_ID: string;
+    private MODAL_CONFIRM_COMMENT_ID: string;
 
     private quickAdd: Task;
     private modalProps: Task;
     private viewModalProps: Task;
     private taskToRemove: number;
     private taskLimit: number;
+    private commentToRemove: Comment;
 
     private newComment: string;
 
@@ -84,6 +86,7 @@ export class ColumnDisplay implements OnInit {
         this.MODAL_ID = 'add-task-form-';
         this.MODAL_VIEW_ID = 'view-task-form-';
         this.MODAL_CONFIRM_ID = 'task-remove-confirm';
+        this.MODAL_CONFIRM_COMMENT_ID = 'comment-remove-confirm';
 
         this.quickAdd = new Task();
         this.modalProps = new Task();
@@ -211,57 +214,6 @@ export class ColumnDisplay implements OnInit {
             });
     }
 
-    addComment() {
-        if (this.viewModalProps.id < 1) {
-            return;
-        }
-
-        this.viewModalProps.comments.push(
-            new Comment(0, this.newComment, this.activeUser.id,
-                        this.viewModalProps.id));
-
-        this.newComment = '';
-
-        this.boardService.updateTask(this.viewModalProps)
-            .subscribe((response: ApiResponse) => {
-                response.alerts.forEach(note => this.notes.add(note));
-
-                if (response.status !== 'success') {
-                    return;
-                }
-
-                let updatedTask = response.data[1][0];
-
-                this.activeBoard.columns.forEach(column => {
-                    if (+column.id !== +updatedTask.column_id) {
-                        return;
-                    }
-
-                    column.tasks.forEach(task => {
-                        if (+task.id !== +updatedTask.id) {
-                            return;
-                        }
-
-                        this.updateTaskComments(task, updatedTask.ownComment);
-                    });
-                });
-            });
-    }
-
-    editComment() {
-        // TODO
-    }
-
-    removeComment(comment: Comment) {
-        for (let i = this.viewModalProps.comments.length - 1; i >= 0; --i) {
-            if (this.viewModalProps.comments[i].id === comment.id) {
-                this.viewModalProps.comments.splice(i, 1);
-            }
-        }
-
-        // TODO: Use comments API
-    }
-
     updateTask() {
         this.saving = true;
 
@@ -298,6 +250,73 @@ export class ColumnDisplay implements OnInit {
                 this.boardService.updateActiveBoard(response.data[1][0]);
                 this.boardService.refreshToken();
             });
+    }
+
+    addComment() {
+        if (this.viewModalProps.id < 1) {
+            return;
+        }
+
+        this.viewModalProps.comments.push(
+            new Comment(0, this.newComment, this.activeUser.id,
+                        this.viewModalProps.id));
+
+        this.newComment = '';
+
+        this.boardService.updateTask(this.viewModalProps)
+            .subscribe((response: ApiResponse) => {
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                let updatedTask = response.data[1][0];
+                this.replaceUpdatedTask(updatedTask);
+            });
+    }
+
+    editComment(comment: Comment) {
+        comment.is_edited = true;
+        comment.user_id = this.activeUser.id;
+
+        this.boardService.updateComment(comment)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                let updatedTask = response.data[1][0];
+                this.replaceUpdatedTask(updatedTask);
+            });
+    }
+
+    removeComment() {
+        for (let i = this.viewModalProps.comments.length - 1; i >= 0; --i) {
+            if (this.viewModalProps.comments[i].id === this.commentToRemove.id) {
+                this.viewModalProps.comments.splice(i, 1);
+            }
+        }
+
+        this.boardService.removeComment(this.commentToRemove.id)
+            .subscribe((response: ApiResponse) => {
+                response.alerts.forEach(note => this.notes.add(note));
+
+                if (response.status !== 'success') {
+                    return;
+                }
+
+                let updatedTask = response.data[1][0];
+                this.replaceUpdatedTask(updatedTask);
+            });
+    }
+
+    canAdminComment(comment: Comment) {
+        if (this.activeUser.id === comment.user_id) {
+            return true;
+        }
+
+        return this.activeUser.isAnyAdmin();
     }
 
     beginLimitEdit() {
@@ -343,6 +362,22 @@ export class ColumnDisplay implements OnInit {
             yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
         return yiq >= 140 ? '#333333' : '#efefef';
+    }
+
+    private replaceUpdatedTask(updatedTask: any) {
+        this.activeBoard.columns.forEach(column => {
+            if (+column.id !== +updatedTask.column_id) {
+                return;
+            }
+
+            column.tasks.forEach(task => {
+                if (+task.id !== +updatedTask.id) {
+                    return;
+                }
+
+                this.updateTaskComments(task, updatedTask.ownComment);
+            });
+        });
     }
 
     private updateTaskComments(task: Task, newComments: Array<any>) {

@@ -13,6 +13,7 @@ export class InlineEdit {
     private isDisplay = true;
 
     @Input() text: string;
+    @Input() isTextarea: boolean;
     @Output() edit = new EventEmitter<string>();
 
     beginEdit(el: HTMLElement): void {

@@ -165,20 +165,34 @@
         <h3>{{ strings['boards_taskComments'] }}</h3>
         <div class="comment"
             *ngFor="let comment of viewModalProps.comments">
-            <div [innerHTML]="getComment(comment.text)"></div>
+            <div [innerHTML]="getComment(comment.text)"
+                *ngIf="!comment.isEdit"></div>
+
+            <textarea *ngIf="comment.isEdit"
+                [(ngModel)]="comment.text"
+                (keyup.enter)="$event.stopPropagation()"></textarea>
 
             <div class="byline">
-                Posted by {{ getUserName(comment.user_id) }} on
+                {{ comment.is_edited ? strings['boards_editedBy']
+                                     : strings['boards_postedBy'] }}
+                {{ getUserName(comment.user_id) }} &mdash;
                 {{ comment.timestamp | date:'medium' }}
             </div>
 
-            <div class="actions">
+            <div class="actions" *ngIf="canAdminComment(comment)">
+                <i class="icon icon-floppy color-primary"
+                    [title]="strings['save']"
+                    *ngIf="comment.isEdit"
+                    (click)="comment.isEdit = false;editComment(comment)"></i>
                 <i class="icon icon-edit color-primary"
                     [title]="strings['boards_taskEditComment']"
-                    (click)="editComment(comment)"></i>
+                    *ngIf="!comment.isEdit"
+                    (click)="comment.isEdit = true"></i>
                 <i class="icon icon-trash-empty color-secondary"
                     [title]="strings['boards_taskRemoveComment']"
-                    (click)="removeComment(comment)"></i>
+                    (click)="commentToRemove=comment;
+                        modal.open(MODAL_CONFIRM_COMMENT_ID +
+                        columnData.id)"></i>
             </div>
         </div>
     </div>
@@ -288,6 +302,25 @@
         </button>
         <button #defaultAction #focusMe
             (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">
+            {{ strings['no'] }}
+        </button>
+    </div>
+</tb-modal>
+
+<tb-modal modal-title="{{ strings['boards_confirmRemoveComment'] }}" blocking="true"
+    modal-id="{{ MODAL_CONFIRM_COMMENT_ID + columnData.id }}">
+    <div class="center">
+        {{ strings['boards_confirmWarningComment'] }}<br>
+        {{ strings['boards_confirmContinue'] }}
+    </div>
+    <div class="buttons">
+        <button class="flat"
+            (click)="modal.close(MODAL_CONFIRM_COMMENT_ID
+                + columnData.id);removeComment()">
+            {{ strings['yes'] }}
+        </button>
+        <button #defaultAction #focusMe
+            (click)="modal.close(MODAL_CONFIRM_COMMENT_ID + columnData.id)">
             {{ strings['no'] }}
         </button>
     </div>
