@@ -164,8 +164,8 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
 JavaScript   |     45 |      624 |      53 |     2478
-PHP          |     10 |      721 |      19 |     2127
-__SUM:__     | __55__ | __1345__ |  __72__ | __4605__
+PHP          |     10 |      721 |      19 |     2128
+__SUM:__     | __55__ | __1345__ |  __72__ | __4606__
 
 Command: `cloc --exclude-ext=xml test/`
 
