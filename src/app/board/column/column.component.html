@@ -169,7 +169,7 @@
                 *ngIf="!comment.isEdit"></div>
 
             <textarea *ngIf="comment.isEdit"
-                [(ngModel)]="comment.text"
+                [(ngModel)]="commentEdit.text"
                 (keyup.enter)="$event.stopPropagation()"></textarea>
 
             <div class="byline">
@@ -180,14 +180,19 @@
             </div>
 
             <div class="actions" *ngIf="canAdminComment(comment)">
+                <i class="icon icon-cancel"
+                    [title]="strings['cancel']"
+                    *ngIf="comment.isEdit"
+                    (click)="comment.isEdit = false"></i>
                 <i class="icon icon-floppy color-primary"
                     [title]="strings['save']"
                     *ngIf="comment.isEdit"
-                    (click)="comment.isEdit = false;editComment(comment)"></i>
+                    (click)="comment.isEdit = false;editComment()"></i>
+
                 <i class="icon icon-edit color-primary"
                     [title]="strings['boards_taskEditComment']"
                     *ngIf="!comment.isEdit"
-                    (click)="comment.isEdit = true"></i>
+                    (click)="comment.isEdit = true;beginEditComment(comment)"></i>
                 <i class="icon icon-trash-empty color-secondary"
                     [title]="strings['boards_taskRemoveComment']"
                     (click)="commentToRemove=comment;

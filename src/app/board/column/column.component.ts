@@ -62,6 +62,7 @@ export class ColumnDisplay implements OnInit {
     private viewModalProps: Task;
     private taskToRemove: number;
     private taskLimit: number;
+    private commentEdit: Comment;
     private commentToRemove: Comment;
 
     private newComment: string;
@@ -274,11 +275,15 @@ export class ColumnDisplay implements OnInit {
             });
     }
 
-    editComment(comment: Comment) {
-        comment.is_edited = true;
-        comment.user_id = this.activeUser.id;
+    beginEditComment(comment: Comment) {
+        this.commentEdit = { ...comment };
+    }
 
-        this.boardService.updateComment(comment)
+    editComment() {
+        this.commentEdit.is_edited = true;
+        this.commentEdit.user_id = this.activeUser.id;
+
+        this.boardService.updateComment(this.commentEdit)
             .subscribe((response: ApiResponse) => {
                 response.alerts.forEach(note => this.notes.add(note));
 
@@ -288,6 +293,8 @@ export class ColumnDisplay implements OnInit {
 
                 let updatedTask = response.data[1][0];
                 this.replaceUpdatedTask(updatedTask);
+
+                this.viewModalProps = this.convertToTask(updatedTask);
             });
     }
 
@@ -362,6 +369,22 @@ export class ColumnDisplay implements OnInit {
             yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
         return yiq >= 140 ? '#333333' : '#efefef';
+    }
+
+    private convertToTask(updatedTask: any) {
+        let task = new Task(updatedTask.id,
+                            updatedTask.title,
+                            updatedTask.description,
+                            updatedTask.color,
+                            updatedTask.due,
+                            updatedTask.points,
+                            updatedTask.position,
+                            updatedTask.column_id,
+                            updatedTask.ownComment,
+                            updatedTask.ownAttachment,
+                            updatedTask.sharedUser,
+                            updatedTask.sharedCategory);
+        return task;
     }
 
     private replaceUpdatedTask(updatedTask: any) {
