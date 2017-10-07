@@ -400,6 +400,38 @@
             border: 0;
             margin: 1em 0 0;
         }
+
+        .activity {
+            background-color: #fff;
+            box-shadow: 0 12px 15px 0 rgba(0, 0, 0, .22),
+                        0 17px 20px 0 rgba(0, 0, 0, .12);
+            height: 85vh;
+            left: 0;
+            overflow: hidden;
+            position: fixed;
+            top: 6em;
+            width: 300px;
+
+            .log-items {
+                height: calc(100% - 48px);
+                overflow: auto;
+            }
+
+            .log-item {
+                border-bottom: 1px solid #1b4e5c;
+                padding: 1em;
+            }
+
+            .log-item:last-of-type {
+                border: 0;
+            }
+
+            span {
+                display: block;
+                font-size: .8em;
+                font-weight: bold;
+            }
+        }
     }
 }
 

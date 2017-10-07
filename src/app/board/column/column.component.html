@@ -211,6 +211,18 @@
             {{ strings['boards_taskAddComment'] }}
         </button>
     </div>
+
+    <div class="activity">
+        <div class="title">
+            <h2>Task Activity</h2>
+        </div>
+        <div class="log-items">
+            <div *ngFor="let item of viewTaskActivities" class="log-item">
+                {{ item.text }}
+                <span>{{ item.timestamp * 1000 | date:'medium' }}</span>
+            </div>
+        </div>
+    </div>
 </tb-modal>
 
 <tb-modal *ngIf="activeBoard"

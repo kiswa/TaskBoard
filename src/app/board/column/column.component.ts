@@ -13,6 +13,7 @@ import * as hljs from 'highlight.js';
 
 import {
     ApiResponse,
+    ActivitySimple,
     Board,
     Category,
     Column,
@@ -60,6 +61,7 @@ export class ColumnDisplay implements OnInit {
     private quickAdd: Task;
     private modalProps: Task;
     private viewModalProps: Task;
+    private viewTaskActivities: Array<ActivitySimple>;
     private taskToRemove: number;
     private taskLimit: number;
     private commentEdit: Comment;
@@ -535,6 +537,15 @@ export class ColumnDisplay implements OnInit {
     private showViewModal(taskId: number) {
         let viewTask = this.columnData.tasks
             .filter(task => task.id === taskId)[0];
+
+        this.viewTaskActivities = [];
+        this.boardService.getTaskActivity(viewTask.id)
+            .subscribe(response => {
+                response.data[1].forEach((item: any) => {
+                    this.viewTaskActivities.push(
+                        new ActivitySimple(item.text, item.timestamp));
+                });
+            });
 
         this.newComment = '';
         this.viewModalProps = new Task(viewTask.id, viewTask.title,
