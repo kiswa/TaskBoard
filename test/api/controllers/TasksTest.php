@@ -169,9 +169,6 @@ class TasksTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('updated', $response->data[1][0]['title']);
     }
 
-    /**
-     * @group single
-     */
     public function testUpdateTaskWithActions() {
         $this->addActions();
         $this->createTask();

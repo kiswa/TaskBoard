@@ -32,6 +32,17 @@ $container['errorHandler'] = function ($c) {
     };
 };
 
+$container['phpErrorHandler'] = function ($c) {
+    return function ($request, $response, $exception) use ($c) {
+        $c['logger']->addError('Server error', $exception->getTrace());
+
+        return $c['response']->withStatus(500)
+                             ->withHeader('Content-Type', 'application/json')
+                             ->write('{ message: "Internal Server Error", error: "' .
+                                $exception->getMessage() . '" }');
+    };
+};
+
 // Routes ending in '/' use route without '/'
 $app->add(function($request, $response, $next) {
     $uri = $request->getUri();

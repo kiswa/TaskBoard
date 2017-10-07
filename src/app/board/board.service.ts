@@ -73,6 +73,12 @@ export class BoardService {
             .catch(this.errorHandler);
     }
 
+    getTaskActivity(taskId: number): Observable<ApiResponse> {
+        return this.http.get('api/activity/task/' + taskId)
+            .map(this.toApiResponse)
+            .catch(this.errorHandler);
+    }
+
     updateComment(comment: Comment): Observable<ApiResponse> {
         return this.http.post('api/comments/' + comment.id, comment)
             .map(this.toApiResponse)

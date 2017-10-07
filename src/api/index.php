@@ -49,6 +49,8 @@ $app->post('/users/{id}/opts', 'Users:updateUserOptions'); // User (limited to s
 $app->post('/users/{id}/cols', 'Users:toggleCollapsed'); // User (limited to self)
 $app->delete('/users/{id}', 'Users:removeUser'); // Admin
 
+$app->get('/activity[/{type}[/{id}]]', 'Activity:getActivity'); // BoardAdmin (with board access)
+
 $app->post('/login', 'Auth:login'); // Unsecured (creates JWT)
 $app->post('/logout', 'Auth:logout'); // Unsecured (clears JWT)
 $app->post('/authenticate', 'Auth:authenticate'); // Unsecured (checks JWT)
