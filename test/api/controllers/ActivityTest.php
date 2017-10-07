@@ -73,7 +73,6 @@ class ActivityTest extends PHPUnit_Framework_TestCase {
         $task->ownAttachment[] = $attachment;
         R::store($task);
 
-
         $activity = R::dispense('activity');
         $activity->item_type = 'task';
         $activity->item_id = 1;
