@@ -40,7 +40,7 @@ class Activity extends BaseController {
             return 0; // @codeCoverageIgnore
         }
 
-        return $a->timestamp < $b->timestamp ? -1 : 1;
+        return $a->timestamp > $b->timestamp ? -1 : 1;
     }
 
     private function getTaskActivity($taskId) {
