@@ -1,4 +1,6 @@
-ExpiresActive Off
+<IfModule mod_expires.c>
+    ExpiresActive Off
+</IfModule>
 RewriteEngine On
 
 RewriteCond %{REQUEST_URI}::$1 ^(.*?/)(.*)::\2$
