@@ -412,6 +412,16 @@
             top: 6em;
             width: 300px;
 
+            &.collapsed {
+                background-color: transparent;
+                box-shadow: none;
+
+                .title {
+                    transform: rotate(90deg) translateX(-48px) translateY(-1px);
+                    transform-origin: left bottom;
+                }
+            }
+
             .log-items {
                 height: calc(100% - 48px);
                 overflow: auto;

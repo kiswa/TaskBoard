@@ -66,6 +66,7 @@ export class ColumnDisplay implements OnInit {
     private taskLimit: number;
     private commentEdit: Comment;
     private commentToRemove: Comment;
+    private showActivity: boolean;
 
     private newComment: string;
 
@@ -119,6 +120,7 @@ export class ColumnDisplay implements OnInit {
                                        user.board_access,
                                        user.collapsed);
             this.userOptions = auth.userOptions;
+            this.showActivity = this.activeUser.isAnyAdmin();
         });
     }
 
@@ -556,6 +558,10 @@ export class ColumnDisplay implements OnInit {
                                        viewTask.assignees, viewTask.categories);
 
         this.checkDueDate();
+        if (this.showActivity) {
+            this.showActivity = false;
+            setTimeout(() => (this.showActivity = true), 500);
+        }
         this.modal.open(this.MODAL_VIEW_ID + this.columnData.id);
     }
 

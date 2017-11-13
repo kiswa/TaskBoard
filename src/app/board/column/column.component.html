@@ -212,11 +212,23 @@
         </button>
     </div>
 
-    <div class="activity">
+    <div class="activity"
+        [class.collapsed]="collapseActivity"
+        *ngIf="showActivity">
         <div class="title">
-            <h2>Task Activity</h2>
+            <h2>
+                Task Activity
+                <span class="right">
+                    <i class="icon icon-angle-double-down"
+                        *ngIf="!collapseActivity"
+                        (click)="collapseActivity = true"></i>
+                    <i class="icon icon-angle-double-up"
+                        *ngIf="collapseActivity"
+                        (click)="collapseActivity = false"></i>
+                </span>
+            </h2>
         </div>
-        <div class="log-items">
+        <div class="log-items" *ngIf="!collapseActivity">
             <div *ngFor="let item of viewTaskActivities" class="log-item">
                 {{ item.text }}
                 <span>{{ item.timestamp * 1000 | date:'medium' }}</span>
