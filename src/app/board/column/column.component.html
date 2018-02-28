@@ -154,8 +154,8 @@
 
     <div>
         <h3>{{ strings['boards_taskAddAttachment'] }}</h3>
-        <input type="file">
-        <button>
+        <input type="file" #fileupload (change)="fileChange(fileupload.files[0])">
+        <button (click)="uploadFile()">
             <i class="icon icon-upload"></i>
             {{ strings['boards_taskUpload'] }}
         </button>

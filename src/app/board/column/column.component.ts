@@ -69,6 +69,7 @@ export class ColumnDisplay implements OnInit {
     private showActivity: boolean;
 
     private newComment: string;
+    private fileUpload: any;
 
     @Input('column') columnData: Column;
     @Input('boards') boards: Array<Board>;
@@ -255,6 +256,19 @@ export class ColumnDisplay implements OnInit {
                 this.boardService.updateActiveBoard(response.data[1][0]);
                 this.boardService.refreshToken();
             });
+    }
+
+    fileChange(file: File) {
+        this.fileUpload = file;
+    }
+
+    uploadFile() {
+        let formData = new FormData();
+        formData.append('file', this.fileUpload, this.fileUpload.name);
+
+        let headers = new Headers();
+
+        console.log(formData, headers); // tslint:disable-line
     }
 
     addComment() {
