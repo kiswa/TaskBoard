@@ -290,6 +290,8 @@ export class ColumnDisplay implements OnInit {
 
                 let updatedTask = response.data[1][0];
                 this.replaceUpdatedTask(updatedTask);
+
+                this.viewModalProps = this.convertToTask(updatedTask);
             });
     }
 
@@ -427,7 +429,8 @@ export class ColumnDisplay implements OnInit {
         newComments.forEach(comment => {
             task.comments.push(
                 new Comment(comment.id, comment.text, comment.user_id,
-                            comment.task_id, comment.timestamp));
+                            comment.task_id, comment.timestamp)
+            );
         });
     }
 
