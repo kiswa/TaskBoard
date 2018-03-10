@@ -3,7 +3,7 @@ import * as Chartist from 'chartist';
 
 @Component({
     selector: 'tb-charts',
-    templateUrl: 'app/dashboard/charts/charts.component.html'
+    templateUrl: './charts.component.html'
 })
 export class Charts implements AfterViewInit {
     private percentages: Array<number>;

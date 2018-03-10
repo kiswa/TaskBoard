@@ -21,23 +21,23 @@ import { BoardService } from './board.service';
 
 @Component({
     selector: 'tb-board',
-    templateUrl: 'app/board/board.component.html'
+    templateUrl: './board.component.html'
 })
 export class BoardDisplay implements OnInit {
-    private activeUser: User;
-    private activeBoard: Board;
-    private boards: Array<Board>;
-
     private strings: any;
     private boardNavId: number;
     private userFilter: number;
     private categoryFilter: number;
-
     private noBoardsMessage: string;
-    private pageName: string;
 
-    private loading: boolean;
     private hideFiltered: boolean;
+
+    public activeUser: User;
+    public activeBoard: Board;
+    public boards: Array<Board>;
+    public pageName: string;
+
+    public loading: boolean;
 
     constructor(private title: Title,
                 private router: Router,
@@ -212,6 +212,16 @@ export class BoardDisplay implements OnInit {
         });
     }
 
+    noBoards(): boolean {
+        if (!this.loading) {
+            if (!this.boards || this.boards.length === 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private updateBoardsList(boards: Array<any>): void {
         let activeBoards: Array<Board> = [];
 
@@ -271,16 +281,6 @@ export class BoardDisplay implements OnInit {
         if (+activeUser.security_level === 1) {
             this.noBoardsMessage = this.strings.boards_noBoardsMessageAdmin;
         }
-    }
-
-    private noBoards(): boolean {
-        if (!this.loading) {
-            if (!this.boards || this.boards.length === 0) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
 

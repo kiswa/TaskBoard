@@ -5,10 +5,10 @@ import { NotificationsService } from './notifications.service';
 
 @Component({
     selector: 'tb-notifications',
-    templateUrl: 'app/shared/notifications/notifications.component.html'
+    templateUrl: './notifications.component.html'
 })
 export class Notifications {
-    private notes: Array<Notification>;
+    public notes: Array<Notification>;
 
     constructor(private notifications: NotificationsService) {
         this.notes = new Array<Notification>();

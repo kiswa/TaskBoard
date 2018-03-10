@@ -25,34 +25,36 @@ class SelectableUser extends User {
 
 @Component({
     selector: 'tb-board-admin',
-    templateUrl: 'app/settings/board-admin/board-admin.component.html',
+    templateUrl: './board-admin.component.html',
     providers: [ BoardAdminService ],
     viewProviders: [ DragulaService ]
 })
 export class BoardAdmin {
-    private users: Array<User>;
-    private boards: Array<Board>;
     private displayBoards: Array<Board>;
-    private activeUser: User;
-    private modalProps: BoardData;
     private noBoardsMessage: string;
     private boardToRemove: Board;
-    private strings: any;
 
     private userFilter: string;
     private statusFilter: string;
     private sortFilter: string;
 
-    private hasBAUsers = false;
-    private loading = true;
     private firstRun = true;
-    private saving = false;
 
-    private MODAL_ID: string;
-    private MODAL_CONFIRM_ID: string;
+    public users: Array<User>;
+    public boards: Array<Board>;
+    public activeUser: User;
+    public modalProps: BoardData;
+    public strings: any;
+
+    public hasBAUsers = false;
+    public loading = true;
+    public saving = false;
+
+    public MODAL_ID: string;
+    public MODAL_CONFIRM_ID: string;
 
     constructor(private auth: AuthService,
-                private modal: ModalService,
+                public modal: ModalService,
                 private settings: SettingsService,
                 private boardService: BoardAdminService,
                 private notes: NotificationsService,
@@ -188,7 +190,7 @@ export class BoardAdmin {
         this.sortBoards();
     }
 
-    private cancelEnterKey(event: any): void {
+    cancelEnterKey(event: any): void {
         if (event.stopPropagation) {
             event.stopPropagation();
         }

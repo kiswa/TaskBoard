@@ -10,7 +10,7 @@ import { ContextMenuService } from './context-menu.service';
 
 @Component({
     selector: 'tb-context-menu',
-    templateUrl: 'app/shared/context-menu/context-menu.component.html'
+    templateUrl: './context-menu.component.html'
 })
 export class ContextMenu {
     @Input('menu-items') menuItems: Array<ContextMenuItem>;

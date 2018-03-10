@@ -129,8 +129,8 @@
         <button #defaultAction
             (click)="addEditUser()" [disabled]="saving">
             <i class="icon"
-                [ngClass]="{ 'icon-plus': modalProps.prefix === '',
-                    'icon-floppy': modalProps.prefix !== '' }"></i>
+                [ngClass]="{ 'icon-plus': modalProps.prefix,
+                    'icon-floppy': !modalProps.prefix }"></i>
                 {{ modalProps.prefix ? strings['settings_addUser']
                                      : strings['settings_saveUser'] }}
         </button>

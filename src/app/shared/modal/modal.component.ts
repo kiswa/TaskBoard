@@ -9,7 +9,7 @@ import { ModalService } from './modal.service';
 
 @Component({
     selector: 'tb-modal',
-    templateUrl: 'app/shared/modal/modal.component.html',
+    templateUrl: './modal.component.html',
     host: {
         '(document:keyup.enter)': 'keyup($event)',
         '(document:keyup.escape)': 'keyup($event)'
@@ -34,8 +34,17 @@ export class Modal implements OnInit {
         this.modalService.registerModal(this);
     }
 
-    private close(checkBlocking = false): void {
+    close(checkBlocking = false): void {
         this.modalService.close(this.modalId, checkBlocking);
+    }
+
+    filterClick(event: Event): void {
+        event = event || window.event;
+
+        // Prevent click from propagating to modal container
+        if (event.stopPropagation) {
+            event.stopPropagation();
+        }
     }
 
     private keyup(event: KeyboardEvent): void {
@@ -45,15 +54,6 @@ export class Modal implements OnInit {
 
         if (event.keyCode === 13) {
             this.clickDefaultAction();
-        }
-    }
-
-    private filterClick(event: Event): void {
-        event = event || window.event;
-
-        // Prevent click from propagating to modal container
-        if (event.stopPropagation) {
-            event.stopPropagation();
         }
     }
 

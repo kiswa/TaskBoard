@@ -7,10 +7,10 @@ import {
 
 @Component({
     selector: 'inline-edit',
-    templateUrl: 'app/shared/inline-edit/inline-edit.component.html'
+    templateUrl: './inline-edit.component.html'
 })
 export class InlineEdit {
-    private isDisplay = true;
+    public isDisplay = true;
 
     @Input() text: string;
     @Input() isTextarea: boolean;
@@ -22,7 +22,7 @@ export class InlineEdit {
         setTimeout(() => { el.focus(); }, 100);
     }
 
-    editDone(newText: string, event: Event): void {
+    editDone(newText: string, event?: Event): void {
         this.isDisplay = true;
         this.text = newText;
         this.edit.emit(this.text);

@@ -20,11 +20,16 @@ import { ApiResponse } from './shared/index';
 export const API_HTTP_PROVIDERS = [
     {
         provide: Http,
-        useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions,
-                     router: Router) => new ApiHttp(xhrBackend, requestOptions, router),
+        useFactory: apiHttpFactory,
         deps: [XHRBackend, RequestOptions, Router]
     }
 ];
+
+export function apiHttpFactory (xhrBackend: XHRBackend,
+                                requestOptions: RequestOptions,
+                                router: Router) {
+    return new ApiHttp(xhrBackend, requestOptions, router);
+}
 
 export class ApiHttp extends Http {
     private JWT_KEY = 'taskboard.jwt';

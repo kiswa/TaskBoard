@@ -28,22 +28,22 @@ import { BoardService } from '../board.service';
 
 @Component({
     selector: 'tb-task',
-    templateUrl: 'app/board/task/task.component.html'
+    templateUrl: './task.component.html'
 })
 export class TaskDisplay implements OnInit {
-    private strings: any;
-    private userOptions: UserOptions;
-    private contextMenuItems: Array<ContextMenuItem>;
-
     private activeBoard: Board;
     private boardsList: Array<Board>;
 
     private totalTasks: number;
     private completeTasks: number;
-    private percentComplete: number;
 
     private isOverdue: boolean;
     private isNearlyDue: boolean;
+
+    public strings: any;
+    public percentComplete: number;
+    public userOptions: UserOptions;
+    public contextMenuItems: Array<ContextMenuItem>;
 
     @Input('task') taskData: Task;
     @Input('add-task') addTask: Function;

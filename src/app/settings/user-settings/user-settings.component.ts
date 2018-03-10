@@ -16,17 +16,17 @@ import {
 
 @Component({
     selector: 'tb-user-settings',
-    templateUrl: 'app/settings/user-settings/user-settings.component.html',
+    templateUrl: './user-settings.component.html',
     providers: [ UserSettingsService ]
 })
 export class UserSettings implements OnInit {
-    private boards: Array<Board>;
-    private user: User;
-    private userOptions: UserOptions;
-    private changePassword: PassForm;
-    private changeUsername: UsernameForm;
-    private changeEmail: EmailForm;
-    private strings: any;
+    public boards: Array<Board>;
+    public user: User;
+    public userOptions: UserOptions;
+    public changePassword: PassForm;
+    public changeUsername: UsernameForm;
+    public changeEmail: EmailForm;
+    public strings: any;
 
     constructor(private auth: AuthService,
                 private notes: NotificationsService,

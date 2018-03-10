@@ -7,7 +7,7 @@ import { Calendar } from './calendar/calendar.component';
 
 @Component({
     selector: 'tb-dashboard',
-    templateUrl: 'app/dashboard/dashboard.component.html'
+    templateUrl: './dashboard.component.html'
 })
 export class Dashboard {
     constructor(private title: Title) {

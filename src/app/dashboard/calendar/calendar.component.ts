@@ -2,21 +2,22 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'tb-calendar',
-    templateUrl: 'app/dashboard/calendar/calendar.component.html'
+    templateUrl: './calendar.component.html'
 })
 export class Calendar {
-    private dayLabels = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
-    private monthLabels = [
+    private today: Date;
+    private tasks: Array<any>; // TODO: Use Task model when created
+
+    public dayLabels = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
+    public monthLabels = [
         'January', 'February', 'March', 'April',
         'May', 'June', 'July', 'August',
         'September', 'October', 'November', 'December'
     ];
 
-    private today: Date;
-    private month: number;
-    private year: number;
-    private calendarDays: Array<Array<string>>;
-    private tasks: Array<any>; // TODO: Use Task model when created
+    public month: number;
+    public year: number;
+    public calendarDays: Array<Array<string>>;
 
     @Input('board-id') boardId: number;
 

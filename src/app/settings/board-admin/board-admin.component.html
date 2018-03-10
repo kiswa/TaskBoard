@@ -181,7 +181,7 @@
                     [(ngModel)]="modalProps.newColumnName">
                     <button type="submit" class="flat"
                         title="{{ strings['settings_addColumn'] }}"
-                        (click)="modalProps.addColumn($event)">
+                        (click)="modalProps.addColumn()">
                     <i class="icon icon-plus"></i>
                 </button>
             </form>
@@ -215,7 +215,7 @@
                     [title]="strings['settings_defaultTaskColor']"
                     [(ngModel)]="modalProps.categoryDefaultColor">
                 <button type="submit" class="flat" [title]="strings['settings_addCategory']"
-                     (click)="modalProps.addCategory($event)">
+                     (click)="modalProps.addCategory()">
                     <i class="icon icon-plus"></i>
                 </button>
             </form>
@@ -260,7 +260,7 @@
                     (keyup.enter)="cancelEnterKey($event)"
                     [(ngModel)]="modalProps.issueTrackerBugId">
                 <button type="submit" class="flat" [title]="strings['settings_addIssueTracker']"
-                    (click)="modalProps.addIssueTracker($event)">
+                    (click)="modalProps.addIssueTracker()">
                     <i class="icon icon-plus"></i>
                 </button>
             </form>

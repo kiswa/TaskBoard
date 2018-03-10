@@ -11,7 +11,7 @@ import {
 
 @Component({
     selector: 'tb-login',
-    templateUrl: 'app/login/login.component.html'
+    templateUrl: './login.component.html'
 })
 export class Login implements OnInit {
     version: string;

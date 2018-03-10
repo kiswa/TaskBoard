@@ -21,28 +21,29 @@ import {
 
 @Component({
     selector: 'tb-user-admin',
-    templateUrl: 'app/settings/user-admin/user-admin.component.html',
+    templateUrl: './user-admin.component.html',
     providers: [ UserAdminService ]
 })
 export class UserAdmin {
     private users: Array<UserDisplay>;
-    private boards: Array<Board>;
-    private activeUser: User;
-    private modalProps: ModalProperties;
     private userToRemove: UserDisplay;
-    private strings: any;
 
-    private loading = true;
-    private saving = false;
+    public boards: Array<Board>;
+    public activeUser: User;
+    public modalProps: ModalProperties;
+    public strings: any;
 
-    private MODAL_ID: string;
-    private MODAL_CONFIRM_ID: string;
+    public loading = true;
+    public saving = false;
+
+    public MODAL_ID: string;
+    public MODAL_CONFIRM_ID: string;
 
     constructor(private userService: UserAdminService,
                 private notes: NotificationsService,
                 private auth: AuthService,
                 private settings: SettingsService,
-                private modal: ModalService,
+                public modal: ModalService,
                 private stringsService: StringsService) {
         this.MODAL_ID = 'user-addEdit-form';
         this.MODAL_CONFIRM_ID = 'user-remove-confirm';

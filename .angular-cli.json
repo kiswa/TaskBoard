@@ -1,0 +1,89 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "project": {
+    "name": "TaskBoard"
+  },
+  "apps": [
+    {
+      "root": "src",
+      "outDir": "dist",
+      "assets": [
+        {
+          "glob": "**/!(composer*)*.*",
+          "input": "api",
+          "output": "api",
+          "allowOutsideOutDir": false
+        },
+        {
+          "glob": "*.json",
+          "input": "json",
+          "output": "strings"
+        },
+        ".htaccess",
+        "images",
+        "fonts"
+      ],
+      "index": "index.html",
+      "main": "main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "app",
+      "styles": [
+        "scss/main.scss"
+      ],
+      "stylePreprocessorOptions": {
+        "includePaths": [
+          "../node_modules/bourbon/app/assets/stylesheets/",
+          "../node_modules/bourbon-neat/app/assets/stylesheets/",
+          "../node_modules/bourbon-neat/app/assets/stylesheets/",
+          "../node_modules/scss-base/src/",
+          "../node_modules/chartist/dist/scss/"
+        ]
+      },
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    }
+  ],
+  "e2e": {
+    "protractor": {
+      "config": "./protractor.conf.js"
+    }
+  },
+  "lint": [
+    {
+      "project": "src/tsconfig.app.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "src/tsconfig.spec.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "e2e/tsconfig.e2e.json",
+      "exclude": "**/node_modules/**"
+    }
+  ],
+  "test": {
+    "karma": {
+      "config": "./karma.conf.js"
+    }
+  },
+  "defaults": {
+    "styleExt": "scss",
+    "build": {
+      "showCircularDependencies": false
+    },
+    "component": {
+    }
+  },
+  "warnings": {
+    "typescriptMismatch": false
+  }
+}
+

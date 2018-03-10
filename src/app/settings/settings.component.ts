@@ -6,11 +6,11 @@ import { SettingsService } from './settings.service';
 
 @Component({
     selector: 'tb-settings',
-    templateUrl: 'app/settings/settings.component.html',
+    templateUrl: './settings.component.html',
     providers: [ SettingsService ]
 })
 export class Settings {
-    private strings: any;
+    public strings: any;
 
     constructor(private settings: SettingsService,
                 private stringsService: StringsService,

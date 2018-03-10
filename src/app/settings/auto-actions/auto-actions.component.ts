@@ -20,15 +20,12 @@ import { AutoActionsService } from './auto-actions.service';
 
 @Component({
     selector: 'tb-auto-actions',
-    templateUrl: 'app/settings/auto-actions/auto-actions.component.html',
+    templateUrl: './auto-actions.component.html',
     providers: [ AutoActionsService ]
 })
 export class AutoActions {
     private noActionsMessage: string;
-    private MODAL_CONFIRM_ID: string;
-    private strings: any;
 
-    private activeUser: User;
     private actionToRemove: AutoAction;
     private newAction: AutoAction;
 
@@ -41,14 +38,19 @@ export class AutoActions {
     private typesList: Array<Array<any>>;
     private actionSources: Array<Array<any>>;
 
-    private loading = true;
     private firstRun = true;
     private isAddDisabled = true;
-    private saving = false;
-    private hasInactiveBoards = false;
+
+    public MODAL_CONFIRM_ID: string;
+    public activeUser: User;
+    public strings: any;
+
+    public saving = false;
+    public loading = true;
+    public hasInactiveBoards = false;
 
     constructor(private auth: AuthService,
-                private modal: ModalService,
+                public modal: ModalService,
                 private settings: SettingsService,
                 private actions: AutoActionsService,
                 private notes: NotificationsService,

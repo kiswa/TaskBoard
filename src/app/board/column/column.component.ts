@@ -34,31 +34,21 @@ import { BoardService } from '../board.service';
 
 @Component({
     selector: 'tb-column',
-    templateUrl: 'app/board/column/column.component.html'
+    templateUrl: './column.component.html'
 })
 export class ColumnDisplay implements OnInit {
-    private strings: any;
     private templateElement: any;
-    private collapseTasks: boolean;
     private saving: boolean;
     private showLimitEditor: boolean;
     private isOverdue: boolean;
     private isNearlyDue: boolean;
 
-    private activeUser: User;
-    private activeBoard: Board;
     private userOptions: UserOptions;
     private tasks: Array<Task>;
 
-    private contextMenuItems: Array<ContextMenuItem>;
-    private sortOption: string;
-
     private MODAL_ID: string;
     private MODAL_VIEW_ID: string;
-    private MODAL_CONFIRM_ID: string;
-    private MODAL_CONFIRM_COMMENT_ID: string;
 
-    private quickAdd: Task;
     private modalProps: Task;
     private viewModalProps: Task;
     private viewTaskActivities: Array<ActivitySimple>;
@@ -71,6 +61,17 @@ export class ColumnDisplay implements OnInit {
     private newComment: string;
     private fileUpload: any;
 
+    public strings: any;
+    public collapseTasks: boolean;
+    public activeUser: User;
+    public activeBoard: Board;
+    public contextMenuItems: Array<ContextMenuItem>;
+    public sortOption: string;
+    public quickAdd: Task;
+
+    public MODAL_CONFIRM_ID: string;
+    public MODAL_CONFIRM_COMMENT_ID: string;
+
     @Input('column') columnData: Column;
     @Input('boards') boards: Array<Board>;
 
@@ -79,7 +80,7 @@ export class ColumnDisplay implements OnInit {
     constructor(private elRef: ElementRef,
                 private auth: AuthService,
                 private notes: NotificationsService,
-                private modal: ModalService,
+                public modal: ModalService,
                 private stringsService: StringsService,
                 private boardService: BoardService,
                 private sanitizer: DomSanitizer) {
@@ -391,6 +392,20 @@ export class ColumnDisplay implements OnInit {
         return yiq >= 140 ? '#333333' : '#efefef';
     }
 
+    quickAddClicked(event: any) {
+        this.preventEnter(event);
+
+        if (this.quickAdd.title === '') {
+            this.showModal();
+            return;
+        }
+
+        this.quickAdd.column_id = this.columnData.id;
+        this.addTask(this.quickAdd);
+
+        this.quickAdd = new Task();
+    }
+
     private convertToTask(updatedTask: any) {
         let task = new Task(updatedTask.id,
                             updatedTask.title,
@@ -537,20 +552,6 @@ export class ColumnDisplay implements OnInit {
 
     private getShowViewModalFunction(taskId: number): Function {
         return () => { this.showViewModal(taskId); };
-    }
-
-    private quickAddClicked(event: any) {
-        this.preventEnter(event);
-
-        if (this.quickAdd.title === '') {
-            this.showModal();
-            return;
-        }
-
-        this.quickAdd.column_id = this.columnData.id;
-        this.addTask(this.quickAdd);
-
-        this.quickAdd = new Task();
     }
 
     private showViewModal(taskId: number) {
