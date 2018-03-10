@@ -9,6 +9,7 @@ before_script:
   - nvm use 4
   - npm i -g npm@4
   - npm i
+  - npm i -g @angular/cli
   - touch tests.db
   - chmod a+w tests.db
 script:
