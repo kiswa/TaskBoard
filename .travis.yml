@@ -14,7 +14,7 @@ before_script:
   - chmod a+w tests.db
 script:
   - ./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml
-  - ng test -cc
+  - ng test -cc -sr
 #  - gulp test-app && gulp coverage
 after_success:
   - echo -e "<?php\n  print phpversion();" > version.php
