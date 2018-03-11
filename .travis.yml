@@ -5,8 +5,8 @@ php:
   - '7.1'
   - '7.2'
 before_script:
-  - nvm install 4
-  - nvm use 4
+  - nvm install 6
+  - nvm use 6
   - npm i -g npm@4
   - npm i
   - npm i -g @angular/cli
