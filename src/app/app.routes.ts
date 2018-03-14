@@ -16,7 +16,7 @@ import {
 } from './settings/index';
 import { Dashboard, Charts, Calendar } from './dashboard/index';
 
-const ROUTES: Routes = [
+export const ROUTES: Routes = [
     {
         path: '',
         component: Login

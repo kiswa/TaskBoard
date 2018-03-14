@@ -91,15 +91,18 @@ Once a task has been entered, it may have Comments (also supporting Markdown) or
 
 Developing on TaskBoard is pretty simple too.
 
- 1. Clone the repository
- 2. Run `npm i` to install dependencies (Linting the SCSS requires Ruby and running `gem install scss-lint`)
- 3. Run `git checkout dev` to work on the `dev` branch
+ 1. Clone the repository and navigate to it `git clone https://github.com/kiswa/TaskBoard && cd TaskBoard/`
+ 2. Run `git checkout dev` to work on the `dev` branch
+ 3. If you don't have it already, install the Angular CLI globally with `npm i -g @angular/cli`
+ 4. Run `npm i` to install dependencies (this also installs the API dependencies)
 
 #### Unit Tests
 
-Both the API and App are unit tested. To run all tests, use the command `gulp test`. For only one set, run `gulp test-api` or `gulp test-app`.
+Both the API and App are unit tested. To run all tests, use the command `npm run test-all`. For only one set, run `npm run test-api` or `npm run test-app`.
 
-If you want to run a single API test, add the following comment block before the test function and use the command `gulp test-api-single`.
+To have the app tests run & update as you work, use the command `npm run test-watch`.
+
+If you want to run a single API test, add the following comment block before the test function and use the command `npm run test-api-single`.
 
 ``` php
 /**
@@ -107,7 +110,7 @@ If you want to run a single API test, add the following comment block before the
  */
 ```
 
-If you want to run a single App test, change the test from `it('should do something', ...);` to `it.only('should do something', ...);` and Mocha will only run that test.
+If you want to run a single App test, change the test from `it('should do something', ...);` to `fit('should do something', ...);` and only that test will run.
 
 These tests are run by [Travis CI](https://travis-ci.org/) on PRs and commits. A PR with failing or missing tests will not be merged.
 

@@ -1,12 +1,12 @@
 {
     "require": {
         "monolog/monolog": "^1.18",
-        "gabordemooij/redbean": "^4.3",
+        "gabordemooij/redbean": "^5.0",
         "slim/slim": "^3.3",
-        "firebase/php-jwt": "^3.0",
-        "phpmailer/phpmailer": "^5.2",
-        "phpunit/phpunit": "^4.8",
-        "myclabs/php-enum": "^1.4"
+        "firebase/php-jwt": "^5.0",
+        "phpmailer/phpmailer": "^6.0",
+        "phpunit/phpunit": "^5.7",
+        "myclabs/php-enum": "^1.5"
     },
     "license": "MIT",
     "authors": [

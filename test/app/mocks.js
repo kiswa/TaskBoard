@@ -141,7 +141,7 @@ global.RouterMock = function() {
         path: 'test',
         url: 'test',
         navigate(arr) {
-            this.path = arr[0];
+            this.path = arr[0];
         }
     };
 };

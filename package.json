@@ -22,13 +22,16 @@
   "homepage": "https://github.com/kiswa/TaskBoard#readme",
   "license": "MIT",
   "scripts": {
-    "start": "ng serve",
-    "build": "ng build --prod",
-    "test": "ng test",
+    "build": "ng b -oh=none -prod && chmod a+w dist/api",
+    "watch": "ng b -oh=none -w",
+    "test-app": "ng test -cc -sr",
+    "test-all": "npm run test && npm run test-api",
+    "test-watch": "ng test -cc",
     "test-api": "./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml",
+    "test-api-single": "./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml -g single",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "cd src/api/ && composer install && cd ../.."
+    "postinstall": "cd src/api/ && composer install --optimize-autoloader && cd ../../"
   },
   "dependencies": {
     "@angular/animations": "^5.2.8",
@@ -48,7 +51,7 @@
     "highlight.js": "^9.12.0",
     "marked": "^0.3.17",
     "ng2-dragula": "^1.5.0",
-    "rxjs": "^5.5.6",
+    "rxjs": "^5.5.7",
     "scss-base": "^1.4.0",
     "zone.js": "^0.8.20"
   },

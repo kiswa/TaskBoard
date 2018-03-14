@@ -39,7 +39,7 @@ export class BoardDisplay implements OnInit {
 
     public loading: boolean;
 
-    constructor(private title: Title,
+    constructor(public title: Title,
                 private router: Router,
                 private active: ActivatedRoute,
                 private auth: AuthService,
@@ -80,7 +80,10 @@ export class BoardDisplay implements OnInit {
         });
 
         auth.userChanged.subscribe((user: User) => {
+          if (user) {
             this.updateActiveUser(user);
+
+          }
         });
 
         active.params.subscribe(params => {

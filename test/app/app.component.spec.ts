@@ -2,12 +2,12 @@ import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpModule } from '@angular/http';
 
-import { AppComponent } from './app.component';
+import { AppComponent } from '../../src/app/app.component';
 import {
   Notifications,
   NotificationsService,
   StringsService
-} from './shared/index';
+} from '../../src/app/shared/index';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -33,3 +33,4 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   }));
 });
+
