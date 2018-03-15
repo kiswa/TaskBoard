@@ -1,23 +1,23 @@
 <div class="modal-container"
-    [ngClass]="{ animated: animate, 'modal-open': isOpen }"
-    (click)="close(true)"
-    (contextmenu)="$event.stopPropagation(); $event.preventDefault()">
+  [ngClass]="{ animated: animate, 'modal-open': isOpen }"
+  (click)="close(true)"
+  (contextmenu)="$event.stopPropagation(); $event.preventDefault()">
 
-    <div class="modal"
-        [ngClass]="{ wide: wide, animated: animate, 'modal-closed': !isOpen }"
-        (click)="filterClick($event)">
-        <div class="title" *ngIf="modalTitle">
-            <h2>
-                {{ modalTitle }}
-                <span class="right" (click)="close()">
-                    <i class="icon icon-cancel"></i>
-                </span>
-            </h2>
-        </div>
-
-        <div class="body">
-            <ng-content></ng-content>
-        </div>
+  <div class="modal"
+    [ngClass]="{ wide: wide, animated: animate, 'modal-closed': !isOpen }"
+    (click)="filterClick($event)">
+    <div class="title" *ngIf="modalTitle">
+      <h2>
+        {{ modalTitle }}
+        <span class="right" (click)="close()">
+          <i class="icon icon-cancel"></i>
+        </span>
+      </h2>
     </div>
+
+    <div class="body">
+      <ng-content></ng-content>
+    </div>
+  </div>
 </div>
 

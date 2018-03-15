@@ -2,60 +2,62 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
-    Constants,
-    AuthService,
-    ApiResponse,
-    Notification,
-    NotificationsService
-} from '../shared/index';
+  ApiResponse,
+  Notification
+} from '../shared/models';
+import {
+  AuthService,
+  Constants,
+  NotificationsService
+} from '../shared/services';
 
 @Component({
-    selector: 'tb-login',
-    templateUrl: './login.component.html'
+  selector: 'tb-login',
+  templateUrl: './login.component.html'
 })
 export class Login implements OnInit {
-    version: string;
-    username = '';
-    password = '';
-    remember = false;
-    isSubmitted = false;
+  version: string;
+  username = '';
+  password = '';
+  remember = false;
+  isSubmitted = false;
 
-    constructor(constants: Constants, private authService: AuthService,
-                private router: Router, private notes: NotificationsService) {
-        this.version = constants.VERSION;
+  constructor(constants: Constants, private authService: AuthService,
+              private router: Router, private notes: NotificationsService) {
+    this.version = constants.VERSION;
+  }
+
+  ngOnInit(): void {
+    this.authService.authenticate()
+    .subscribe(isAuth => {
+      if (isAuth) {
+        this.router.navigate(['/boards']);
+      }
+    });
+  }
+
+  login(): void {
+    if (this.username === '' || this.password === '') {
+      this.notes
+        .add(new Notification('error',
+          'Username and password are required.'));
+      return;
     }
 
-    ngOnInit(): void {
-        this.authService.authenticate()
-            .subscribe(isAuth => {
-                if (isAuth) {
-                    this.router.navigate(['/boards']);
-                }
-            });
-    }
+    this.isSubmitted = true;
 
-    login(): void {
-        if (this.username === '' || this.password === '') {
-            this.notes
-                .add(new Notification('error',
-                                      'Username and password are required.'));
-            return;
-        }
+    this.authService.login(this.username, this.password, this.remember)
+    .subscribe((response: ApiResponse) => {
+      response.alerts.forEach(msg => {
+        this.notes.add(new Notification(msg.type, msg.text));
+      });
 
-        this.isSubmitted = true;
+      if (response.status === 'success') {
+        this.router.navigate(['/boards']);
+      }
 
-        this.authService.login(this.username, this.password, this.remember)
-            .subscribe((response: ApiResponse) => {
-                response.alerts.forEach(msg => {
-                    this.notes.add(new Notification(msg.type, msg.text));
-                });
-
-                if (response.status === 'success') {
-                    this.router.navigate(['/boards']);
-                }
-
-                this.isSubmitted = false;
-        });
-    }
+      this.isSubmitted = false;
+    });
+  }
 }
 

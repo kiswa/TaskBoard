@@ -5,12 +5,12 @@ import { Notification } from '../models/notification.model';
 
 @Injectable()
 export class NotificationsService {
-    private notifications = new Subject<Notification>();
+  private notifications = new Subject<Notification>();
 
-    public noteAdded = this.notifications.asObservable();
+  public noteAdded = this.notifications.asObservable();
 
-    public add(notification: Notification): void {
-        this.notifications.next(notification);
-    }
+  public add(notification: Notification): void {
+    this.notifications.next(notification);
+  }
 }
 

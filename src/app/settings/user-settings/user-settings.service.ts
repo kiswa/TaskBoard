@@ -7,110 +7,110 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import {
-    User,
-    UserOptions,
-    ApiResponse,
-    AuthService
-} from '../../shared/index';
+  User,
+  UserOptions,
+  ApiResponse
+} from '../../shared/models';
+import { AuthService } from '../../shared/services';
 
 interface UpdateUser extends User {
-    new_password?: string;
-    old_password?: string;
+  new_password?: string;
+  old_password?: string;
 }
 
 @Injectable()
 export class UserSettingsService {
-    activeUser: User = null;
+  activeUser: User = null;
 
-    constructor(private auth: AuthService, private http: Http) {
-        auth.userChanged.subscribe(user => this.activeUser = user);
-    }
+  constructor(private auth: AuthService, private http: Http) {
+    auth.userChanged.subscribe(user => this.activeUser = user);
+  }
 
-    changeDefaultBoard(user: User): Observable<ApiResponse> {
-        let json = JSON.stringify(user);
+  changeDefaultBoard(user: User): Observable<ApiResponse> {
+    let json = JSON.stringify(user);
 
-        return this.http.post('api/users/' + this.activeUser.id, json)
-            .map(res => {
-                let response: ApiResponse = res.json();
-                return response;
-            })
-            .catch((res, caught) => {
-                let response: ApiResponse = res.json();
-                return Observable.of(response);
-            });
-    }
+    return this.http.post('api/users/' + this.activeUser.id, json)
+    .map(res => {
+      let response: ApiResponse = res.json();
+      return response;
+    })
+    .catch((res, caught) => {
+      let response: ApiResponse = res.json();
+      return Observable.of(response);
+    });
+  }
 
-    changePassword(oldPass: string, newPass: string): Observable<ApiResponse> {
-        let updateUser: UpdateUser = this.activeUser;
-        updateUser.new_password = newPass;
-        updateUser.old_password = oldPass;
+  changePassword(oldPass: string, newPass: string): Observable<ApiResponse> {
+    let updateUser: UpdateUser = this.activeUser;
+    updateUser.new_password = newPass;
+    updateUser.old_password = oldPass;
 
-        let json = JSON.stringify(updateUser);
+    let json = JSON.stringify(updateUser);
 
-        return this.http.post('api/users/' + this.activeUser.id, json)
-            .map(res => {
-                let response: ApiResponse = res.json();
-                return response;
-            })
-            .catch((res, caught) => {
-                let response: ApiResponse = res.json();
-                return Observable.of(response);
-            });
-    }
+    return this.http.post('api/users/' + this.activeUser.id, json)
+    .map(res => {
+      let response: ApiResponse = res.json();
+      return response;
+    })
+    .catch((res, caught) => {
+      let response: ApiResponse = res.json();
+      return Observable.of(response);
+    });
+  }
 
-    changeUsername(newName: string): Observable<ApiResponse> {
-        let updateUser = this.activeUser;
-        updateUser.username = newName;
+  changeUsername(newName: string): Observable<ApiResponse> {
+    let updateUser = this.activeUser;
+    updateUser.username = newName;
 
-        let json = JSON.stringify(updateUser);
+    let json = JSON.stringify(updateUser);
 
-        return this.http.post('api/users/' + this.activeUser.id, json)
-            .map(res => {
-                let response: ApiResponse = res.json();
-                this.auth.updateUser(JSON.parse(response.data[1]));
+    return this.http.post('api/users/' + this.activeUser.id, json)
+    .map(res => {
+      let response: ApiResponse = res.json();
+      this.auth.updateUser(JSON.parse(response.data[1]));
 
-                return response;
-            })
-            .catch((res, caught) => {
-                let response: ApiResponse = res.json();
-                return Observable.of(response);
-            });
-    }
+      return response;
+    })
+    .catch((res, caught) => {
+      let response: ApiResponse = res.json();
+      return Observable.of(response);
+    });
+  }
 
-    changeEmail(newEmail: string): Observable<ApiResponse> {
-        let updateUser = this.activeUser;
-        updateUser.email = newEmail;
+  changeEmail(newEmail: string): Observable<ApiResponse> {
+    let updateUser = this.activeUser;
+    updateUser.email = newEmail;
 
-        let json = JSON.stringify(updateUser);
+    let json = JSON.stringify(updateUser);
 
-        return this.http.post('api/users/' + this.activeUser.id, json)
-            .map(res => {
-                let response: ApiResponse = res.json();
-                this.auth.updateUser(JSON.parse(response.data[1]));
+    return this.http.post('api/users/' + this.activeUser.id, json)
+    .map(res => {
+      let response: ApiResponse = res.json();
+      this.auth.updateUser(JSON.parse(response.data[1]));
 
-                return response;
-            })
-            .catch((res, caught) => {
-                let response: ApiResponse = res.json();
-                return Observable.of(response);
-            });
-    }
+      return response;
+    })
+    .catch((res, caught) => {
+      let response: ApiResponse = res.json();
+      return Observable.of(response);
+    });
+  }
 
-    changeUserOptions(newOptions: UserOptions): Observable<ApiResponse> {
-        let json = JSON.stringify(newOptions);
+  changeUserOptions(newOptions: UserOptions): Observable<ApiResponse> {
+    let json = JSON.stringify(newOptions);
 
-        return this.http.post('api/users/' + this.activeUser.id + '/opts', json)
-            .map(res => {
-                let response: ApiResponse = res.json();
+    return this.http.post('api/users/' + this.activeUser.id + '/opts', json)
+    .map(res => {
+      let response: ApiResponse = res.json();
 
-                this.auth.updateUser(JSON.parse(response.data[2]),
-                                     JSON.parse(response.data[1]));
-                return response;
-            })
-            .catch((res, caught) => {
-                let response: ApiResponse = res.json();
-                return Observable.of(response);
-            });
-    }
+      this.auth.updateUser(JSON.parse(response.data[2]),
+        JSON.parse(response.data[1]));
+      return response;
+    })
+    .catch((res, caught) => {
+      let response: ApiResponse = res.json();
+      return Observable.of(response);
+    });
+  }
 }
 

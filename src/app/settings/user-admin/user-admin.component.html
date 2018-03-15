@@ -1,142 +1,142 @@
 <section>
-    <h2>{{ strings['settings_userAdmin'] }}</h2>
+  <h2>{{ strings['settings_userAdmin'] }}</h2>
 
-    <div class="row">
-        <table class="alternating">
-            <thead>
-                <tr>
-                    <th>{{ strings['settings_user'] }}</th>
-                    <th>{{ strings['settings_email'] }}</th>
-                    <th>{{ strings['settings_securityLevel'] }}</th>
-                    <th>{{ strings['settings_defaultBoard'] }}</th>
-                    <th>{{ strings['settings_actions'] }}</th>
-                </tr>
-            </thead>
-            <tbody *ngIf="!loading">
-                <tr *ngFor="let user of users">
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.security_level_name }}</td>
-                    <td>{{ user.default_board_name }}</td>
-                    <td>
-                        <span *ngIf="user.can_admin">
-                            <a class="padded" href="javascript:"
-                                title="{{ strings['settings_editUser'] }}"
-                                (click)="showModal(false, user)">
-                                <i class="icon icon-edit color-primary"></i>
-                            </a>
-                            <a class="padded" href="javascript:"
-                                title="{{ strings['settings_removeUser'] }}"
-                                (click)="showConfirmModal(user)">
-                                <i class="icon icon-trash-empty color-secondary"></i>
-                            </a>
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+  <div class="row">
+    <table class="alternating">
+      <thead>
+        <tr>
+          <th>{{ strings['settings_user'] }}</th>
+          <th>{{ strings['settings_email'] }}</th>
+          <th>{{ strings['settings_securityLevel'] }}</th>
+          <th>{{ strings['settings_defaultBoard'] }}</th>
+          <th>{{ strings['settings_actions'] }}</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="!loading">
+        <tr *ngFor="let user of users">
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.security_level_name }}</td>
+          <td>{{ user.default_board_name }}</td>
+          <td>
+            <span *ngIf="user.can_admin">
+              <a class="padded" href="javascript:"
+                title="{{ strings['settings_editUser'] }}"
+                (click)="showModal(false, user)">
+                <i class="icon icon-edit color-primary"></i>
+              </a>
+              <a class="padded" href="javascript:"
+                title="{{ strings['settings_removeUser'] }}"
+                (click)="showConfirmModal(user)">
+                <i class="icon icon-trash-empty color-secondary"></i>
+              </a>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-        <div *ngIf="loading" class="center">
-            <div class="spinner"></div>
-        </div>
-
-        <button *ngIf="activeUser.security_level < 3"
-            (click)="showModal()">
-            <i class="icon icon-plus"></i>
-            {{ strings['settings_addUser'] }}
-        </button>
+    <div *ngIf="loading" class="center">
+      <div class="spinner"></div>
     </div>
+
+    <button *ngIf="activeUser.security_level < 3"
+      (click)="showModal()">
+      <i class="icon icon-plus"></i>
+      {{ strings['settings_addUser'] }}
+    </button>
+  </div>
 </section>
 
 <tb-modal modal-title="Confirm User Removal" blocking="true"
-    modal-id="{{ MODAL_CONFIRM_ID }}">
-    <div class="center">
-        {{ strings['settings_removeUserWarning'] }}<br>
-        {{ strings['settings_continue'] }}
-    </div>
-    <div class="buttons">
-        <button class="flat"
-            (click)="removeUser()">{{ strings['yes'] }}</button>
-        <button #defaultAction #focusMe
-            (click)="modal.close(MODAL_CONFIRM_ID)">{{ strings['no'] }}</button>
-    </div>
+  modal-id="{{ MODAL_CONFIRM_ID }}">
+  <div class="center">
+    {{ strings['settings_removeUserWarning'] }}<br>
+    {{ strings['settings_continue'] }}
+  </div>
+  <div class="buttons">
+    <button class="flat"
+      (click)="removeUser()">{{ strings['yes'] }}</button>
+    <button #defaultAction #focusMe
+      (click)="modal.close(MODAL_CONFIRM_ID)">{{ strings['no'] }}</button>
+  </div>
 </tb-modal>
 
 <tb-modal modal-title="{{ modalProps.prefix ? strings['settings_addUser']
-                                            : strings['settings_editUser'] }}"
-    modal-id="{{ MODAL_ID }}">
+  : strings['settings_editUser'] }}"
+  modal-id="{{ MODAL_ID }}">
+  <label>
+    {{ modalProps.prefix ? strings['settings_username']
+    : strings['settings_changeUsername'] }}
+    <input #focusMe type="text" name="new-username"
+    placeholder="{{ strings['settings_username'] }}"
+    [(ngModel)]="modalProps.user.username">
+  </label>
+
+  <label>
+    {{ modalProps.prefix ? strings['settings_password']
+    : strings['settings_changePassword']}}
+    <input type="password" name="new-password"
+    placeholder="{{ strings['settings_password'] }}"
+    [(ngModel)]="modalProps.user.password">
+  </label>
+  <input type="password" name="new-password-verify"
+  placeholder="{{ strings['settings_verifyPassword'] }}"
+  [(ngModel)]="modalProps.user.password_verify">
+
+  <label>
+    {{ modalProps.prefix ? strings['settings_email']
+    : strings['settings_changeEmail']}}
+    <input type="text" name="new-email"
+    placeholder="{{ strings['settings_emailPlaceholder'] }}"
+    [(ngModel)]="modalProps.user.email">
+  </label>
+
+  <div *ngIf="boards.length">
     <label>
-        {{ modalProps.prefix ? strings['settings_username']
-                             : strings['settings_changeUsername'] }}
-        <input #focusMe type="text" name="new-username"
-            placeholder="{{ strings['settings_username'] }}"
-            [(ngModel)]="modalProps.user.username">
+      {{ strings['settings_defaultBoard'] }}
+      <i [attr.data-help]="strings['settings_defaultBoardHelp']"
+        class="icon icon-help-circled"></i>
+      <select [(ngModel)]="modalProps.user.default_board_id">
+        <option value="0">{{ strings['none'] }}</option>
+        <option *ngFor="let board of boards" value="{{ board.id }}">
+          {{ board.name }}
+        </option>
+      </select>
     </label>
 
     <label>
-        {{ modalProps.prefix ? strings['settings_password']
-                             : strings['settings_changePassword']}}
-        <input type="password" name="new-password"
-            placeholder="{{ strings['settings_password'] }}"
-            [(ngModel)]="modalProps.user.password">
+      {{ strings['settings_boardAccess'] }}
+      <select multiple [(ngModel)]="modalProps.user.boardAccess">
+        <option *ngFor="let board of boards" value="{{ board.id }}">
+          {{ board.name }}
+        </option>
+      </select>
     </label>
-    <input type="password" name="new-password-verify"
-        placeholder="{{ strings['settings_verifyPassword'] }}"
-        [(ngModel)]="modalProps.user.password_verify">
+  </div>
 
-    <label>
-        {{ modalProps.prefix ? strings['settings_email']
-                             : strings['settings_changeEmail']}}
-        <input type="text" name="new-email"
-            placeholder="{{ strings['settings_emailPlaceholder'] }}"
-            [(ngModel)]="modalProps.user.email">
-    </label>
+  <label>
+    {{ strings['settings_securityLevel'] }}
+    <select name="new-security"
+      [(ngModel)]="modalProps.user.security_level">
+      <option value="3">{{ strings['settings_user'] }}</option>
+      <option value="2">{{ strings['settings_boardAdmin'] }}</option>
+      <option value="1">{{ strings['settings_admin'] }}</option>
+    </select>
+  </label>
 
-    <div *ngIf="boards.length">
-        <label>
-            {{ strings['settings_defaultBoard'] }}
-            <i [attr.data-help]="strings['settings_defaultBoardHelp']"
-                class="icon icon-help-circled"></i>
-            <select [(ngModel)]="modalProps.user.default_board_id">
-                <option value="0">{{ strings['none'] }}</option>
-                <option *ngFor="let board of boards" value="{{ board.id }}">
-                    {{ board.name }}
-                </option>
-            </select>
-        </label>
-
-        <label>
-            {{ strings['settings_boardAccess'] }}
-            <select multiple [(ngModel)]="modalProps.user.boardAccess">
-                <option *ngFor="let board of boards" value="{{ board.id }}">
-                    {{ board.name }}
-                </option>
-            </select>
-        </label>
-    </div>
-
-    <label>
-        {{ strings['settings_securityLevel'] }}
-        <select name="new-security"
-            [(ngModel)]="modalProps.user.security_level">
-            <option value="3">{{ strings['settings_user'] }}</option>
-            <option value="2">{{ strings['settings_boardAdmin'] }}</option>
-            <option value="1">{{ strings['settings_admin'] }}</option>
-        </select>
-    </label>
-
-    <div class="buttons">
-        <button #defaultAction
-            (click)="addEditUser()" [disabled]="saving">
-            <i class="icon"
-                [ngClass]="{ 'icon-plus': modalProps.prefix,
-                    'icon-floppy': !modalProps.prefix }"></i>
-                {{ modalProps.prefix ? strings['settings_addUser']
-                                     : strings['settings_saveUser'] }}
-        </button>
-        <button class="flat" (click)="modal.close(MODAL_ID)">
-            {{ strings['cancel'] }}
-        </button>
-    </div>
+  <div class="buttons">
+    <button #defaultAction
+      (click)="addEditUser()" [disabled]="saving">
+      <i class="icon"
+        [ngClass]="{ 'icon-plus': modalProps.prefix,
+        'icon-floppy': !modalProps.prefix }"></i>
+      {{ modalProps.prefix ? strings['settings_addUser']
+      : strings['settings_saveUser'] }}
+    </button>
+    <button class="flat" (click)="modal.close(MODAL_ID)">
+      {{ strings['cancel'] }}
+    </button>
+  </div>
 </tb-modal>
 

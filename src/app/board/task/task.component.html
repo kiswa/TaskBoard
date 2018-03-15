@@ -1,60 +1,60 @@
 <div class="task"
-    [ngClass]="{ 'filtered': taskData.filtered,
-    'hide': taskData.hideFiltered }"
-    [style.backgroundColor]="taskData.color"
-    [style.color]="getTextColor(taskData.color)">
-    <h4 class="drag-handle">
-        <span class="icon"
-            [style.color]="getTextColor(taskData.color)"
-            [ngClass]="{ 'icon-minus-squared-alt': !isCollapsed,
-            'icon-plus-squared-alt': isCollapsed }"
-            [title]="isCollapsed
-                ? strings['boards_expandTask']
-                : strings['boards_collapseTask']"
-            (click)="isCollapsed = !isCollapsed"></span>
-        {{ taskData.title }}
-        <span *ngIf="taskData.points > 0" class="badge right"
-            [title]="strings['boards_taskPoints'] ">
-            {{ taskData.points }}</span>
-    </h4>
+  [ngClass]="{ 'filtered': taskData.filtered,
+  'hide': taskData.hideFiltered }"
+  [style.backgroundColor]="taskData.color"
+  [style.color]="getTextColor(taskData.color)">
+  <h4 class="drag-handle">
+    <span class="icon"
+      [style.color]="getTextColor(taskData.color)"
+      [ngClass]="{ 'icon-minus-squared-alt': !isCollapsed,
+      'icon-plus-squared-alt': isCollapsed }"
+      [title]="isCollapsed
+      ? strings['boards_expandTask']
+      : strings['boards_collapseTask']"
+      (click)="isCollapsed = !isCollapsed"></span>
+    {{ taskData.title }}
+    <span *ngIf="taskData.points > 0" class="badge right"
+      [title]="strings['boards_taskPoints'] ">
+      {{ taskData.points }}</span>
+  </h4>
 
-    <div class="description" *ngIf="!isCollapsed" [innerHtml]="getTaskDescription()">
-        <!-- <ng-template *compile="getTaskDescription()"></ng-template> -->
-    </div>
+  <div class="description" *ngIf="!isCollapsed" [innerHtml]="getTaskDescription()">
+    <!-- <ng-template *compile="getTaskDescription()"></ng-template> -->
+  </div>
 
-    <div class="stats">
-        <span *ngIf="userOptions.show_assignee">
-            {{ strings['boards_taskAssignedTo'] }}:
-            <span *ngFor="let assignee of taskData.assignees">
-                {{ assignee.username }}
-            </span>
-            <span *ngIf="!taskData.assignees || !taskData.assignees.length">
-                {{ strings['boards_taskUnassigned'] }}
-            </span>
-        </span>
+  <div class="stats">
+    <span *ngIf="userOptions.show_assignee">
+      {{ strings['boards_taskAssignedTo'] }}:
+      <span *ngFor="let assignee of taskData.assignees">
+        {{ assignee.username }}
+      </span>
+      <span *ngIf="!taskData.assignees || !taskData.assignees.length">
+        {{ strings['boards_taskUnassigned'] }}
+      </span>
+    </span>
 
-        <span class="right">
-            <span *ngIf="taskData.due_date"
-                [class.overdue]="isOverdue"
-                [class.near-due]="isNearlyDue">
-                {{ strings['boards_taskDue'] }}: {{ taskData.due_date | date }}
-            </span>
-            <span *ngIf="taskData.comments.length" class="icon icon-chat-empty"
-                [title]="taskData.comments.length + ' ' +
-                    strings['boards_taskComments']"></span>
-            <span *ngIf="taskData.attachments.length" class="icon icon-attach"
-                [title]="taskData.attachments.length + ' ' +
-                    strings['boards_taskAttachments']"></span>
-            <span *ngFor="let category of taskData.categories" class="category"
-                [title]="strings['boards_taskCategory']">
-                {{ category.name }}
-            </span>
-        </span>
-        <div *ngIf="percentComplete"
-            [style]="getPercentStyle()"
-            [title]="getPercentTitle()"></div>
-    </div>
+    <span class="right">
+      <span *ngIf="taskData.due_date"
+        [class.overdue]="isOverdue"
+        [class.near-due]="isNearlyDue">
+        {{ strings['boards_taskDue'] }}: {{ taskData.due_date | date }}
+      </span>
+      <span *ngIf="taskData.comments.length" class="icon icon-chat-empty"
+        [title]="taskData.comments.length + ' ' +
+        strings['boards_taskComments']"></span>
+      <span *ngIf="taskData.attachments.length" class="icon icon-attach"
+        [title]="taskData.attachments.length + ' ' +
+        strings['boards_taskAttachments']"></span>
+      <span *ngFor="let category of taskData.categories" class="category"
+        [title]="strings['boards_taskCategory']">
+        {{ category.name }}
+      </span>
+    </span>
+    <div *ngIf="percentComplete"
+      [style]="getPercentStyle()"
+      [title]="getPercentTitle()"></div>
+  </div>
 
-    <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
+  <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
 </div>
 

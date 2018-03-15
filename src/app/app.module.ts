@@ -7,56 +7,33 @@ import { DragulaModule } from 'ng2-dragula/ng2-dragula';
 
 import { APP_ROUTING, ROUTE_COMPONENTS } from './app.routes';
 import { AppComponent } from './app.component';
-
 import { API_HTTP_PROVIDERS } from './app.api-http';
-import { Constants } from './shared/constants';
-import {
-    AuthGuard,
-    CompileDirective,
-    ContextMenu,
-    InlineEdit,
-    Modal,
-    Notifications,
-    TopNav,
-    AuthService,
-    ContextMenuService,
-    ModalService,
-    NotificationsService,
-    StringsService
-} from './shared/index';
-import { BoardService } from './board/board.service';
+
+import { BoardModule } from './board/board.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { SettingsModule } from './settings/settings.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpModule,
-        APP_ROUTING,
-        DragulaModule
-    ],
-    providers: [
-        API_HTTP_PROVIDERS,
-        AuthGuard,
-        Constants,
-        Title,
-        AuthService,
-        BoardService,
-        ContextMenuService,
-        ModalService,
-        NotificationsService,
-        StringsService
-    ],
-    declarations: [
-        AppComponent,
-        CompileDirective,
-        ContextMenu,
-        InlineEdit,
-        Modal,
-        Notifications,
-        TopNav,
-        ...ROUTE_COMPONENTS
-    ],
-    bootstrap: [ AppComponent ]
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    APP_ROUTING,
+    DragulaModule,
+    BoardModule,
+    DashboardModule,
+    SettingsModule,
+    SharedModule
+  ],
+  providers: [
+    API_HTTP_PROVIDERS,
+  ],
+  declarations: [
+    AppComponent,
+    ...ROUTE_COMPONENTS
+  ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
 

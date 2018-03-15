@@ -8,18 +8,18 @@ import 'rxjs/add/operator/finally';
 
 @Injectable()
 export class StringsService {
-    private strings = new BehaviorSubject<any>({});
+  private strings = new BehaviorSubject<any>({});
 
-    public stringsChanged = this.strings.asObservable();
+  public stringsChanged = this.strings.asObservable();
 
-    constructor(private http: Http) {
-    }
+  constructor(private http: Http) {
+  }
 
-    loadStrings(language: string): void {
-        this.http.get('strings/' + language + '.json')
-            .subscribe((res: any) => {
-                this.strings.next(res.json());
-            });
-    }
+  loadStrings(language: string): void {
+    this.http.get('strings/' + language + '.json')
+    .subscribe((res: any) => {
+      this.strings.next(res.json());
+    });
+  }
 }
 

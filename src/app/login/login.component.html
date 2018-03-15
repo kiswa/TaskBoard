@@ -1,15 +1,15 @@
 <div class="login">
-    <form #f="ngForm">
-        <h1>TaskBoard</h1>
-        <input type="text" placeholder="Username" title="Username"
-            [(ngModel)]="username" name="username" autofocus>
-        <input type="password" placeholder="Password" title="Password"
-            [(ngModel)]="password" name="password">
-        <label><input type="checkbox"
-            [(ngModel)]="remember" name="remember"> Remember Me</label>
-        <button type="submit" [disabled]="isSubmitted"
-            (click)="login()" >Sign In</button>
-    </form>
-    <p>v{{ version }}</p>
+  <form #f="ngForm">
+    <h1>TaskBoard</h1>
+    <input type="text" placeholder="Username" title="Username"
+    [(ngModel)]="username" name="username" autofocus>
+    <input type="password" placeholder="Password" title="Password"
+    [(ngModel)]="password" name="password">
+    <label><input type="checkbox"
+      [(ngModel)]="remember" name="remember"> Remember Me</label>
+    <button type="submit" [disabled]="isSubmitted"
+      (click)="login()" >Sign In</button>
+  </form>
+  <p>v{{ version }}</p>
 </div>
 

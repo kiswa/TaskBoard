@@ -3,435 +3,435 @@ import { Component } from '@angular/core';
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 
 import {
-    ApiResponse,
-    Board,
-    Column,
-    User,
-    InlineEdit,
-    Modal,
-    Notification,
-    AuthService,
-    ModalService,
-    NotificationsService,
-    StringsService
-} from '../../shared/index';
+  ApiResponse,
+  Board,
+  Column,
+  User,
+  Notification
+} from '../../shared/models';
+import {
+  AuthService,
+  ModalService,
+  NotificationsService,
+  StringsService
+} from '../../shared/services';
 import { SettingsService } from '../settings.service';
 import { BoardAdminService } from './board-admin.service';
 import { BoardData } from './board-data.model';
 
 class SelectableUser extends User {
-    public selected: boolean;
+  public selected: boolean;
 }
 
 @Component({
-    selector: 'tb-board-admin',
-    templateUrl: './board-admin.component.html',
-    providers: [ BoardAdminService ],
-    viewProviders: [ DragulaService ]
+  selector: 'tb-board-admin',
+  templateUrl: './board-admin.component.html',
+  providers: [ BoardAdminService ],
+  viewProviders: [ DragulaService ]
 })
 export class BoardAdmin {
-    private displayBoards: Array<Board>;
-    private noBoardsMessage: string;
-    private boardToRemove: Board;
+  private displayBoards: Array<Board>;
+  private noBoardsMessage: string;
+  private boardToRemove: Board;
 
-    private userFilter: string;
-    private statusFilter: string;
-    private sortFilter: string;
+  private userFilter: string;
+  private statusFilter: string;
+  private sortFilter: string;
 
-    private firstRun = true;
+  private firstRun = true;
 
-    public users: Array<User>;
-    public boards: Array<Board>;
-    public activeUser: User;
-    public modalProps: BoardData;
-    public strings: any;
+  public users: Array<User>;
+  public boards: Array<Board>;
+  public activeUser: User;
+  public modalProps: BoardData;
+  public strings: any;
 
-    public hasBAUsers = false;
-    public loading = true;
-    public saving = false;
+  public hasBAUsers = false;
+  public loading = true;
+  public saving = false;
 
-    public MODAL_ID: string;
-    public MODAL_CONFIRM_ID: string;
+  public MODAL_ID: string;
+  public MODAL_CONFIRM_ID: string;
 
-    constructor(private auth: AuthService,
-                public modal: ModalService,
-                private settings: SettingsService,
-                private boardService: BoardAdminService,
-                private notes: NotificationsService,
-                private stringsService: StringsService,
-                private dragula: DragulaService) {
-        this.MODAL_ID = 'board-addedit-form';
-        this.MODAL_CONFIRM_ID = 'board-remove-confirm';
+  constructor(private auth: AuthService,
+              public modal: ModalService,
+              private settings: SettingsService,
+              private boardService: BoardAdminService,
+              private notes: NotificationsService,
+              private stringsService: StringsService,
+              private dragula: DragulaService) {
+    this.MODAL_ID = 'board-addedit-form';
+    this.MODAL_CONFIRM_ID = 'board-remove-confirm';
 
-        this.users = [];
-        this.boards = [];
-        this.displayBoards = [];
-        this.modalProps = new BoardData();
-        this.userFilter = '-1'; // Any User
-        this.statusFilter = '-1'; // Any active status
-        this.sortFilter = 'name-asc';
+    this.users = [];
+    this.boards = [];
+    this.displayBoards = [];
+    this.modalProps = new BoardData();
+    this.userFilter = '-1'; // Any User
+    this.statusFilter = '-1'; // Any active status
+    this.sortFilter = 'name-asc';
 
-        auth.userChanged.subscribe((user: User) => {
-            this.updateActiveUser(user);
+    auth.userChanged.subscribe((user: User) => {
+      this.updateActiveUser(user);
+    });
+    settings.usersChanged.subscribe((users: Array<User>) => {
+      this.updateUsersList(users);
+    });
+    settings.boardsChanged.subscribe((boards: Array<Board>) => {
+      this.updateBoardsList(boards);
+    });
+    stringsService.stringsChanged.subscribe(newStrings => {
+      this.strings = newStrings;
+      this.updateActiveUser(this.activeUser);
+    });
+  }
+
+  ngAfterContentInit() {
+    let ul = document.getElementsByClassName('modal-list')[0];
+    let bag = this.dragula.find('columns-bag');
+
+    if (bag !== undefined) {
+      this.dragula.destroy('columns-bag');
+    }
+
+    this.dragula.setOptions('columns-bag', {
+      moves: (el: any, container: any, handle: any) => {
+        return handle.classList.contains('icon-resize-vertical');
+      },
+      mirrorContainer: ul
+    });
+
+    this.dragula.dragend.subscribe(() => {
+      this.modalProps.columns.forEach((item, index) => {
+        item.position = '' + index;
+      });
+    });
+  }
+
+  addEditBoard(): void {
+    let isAdd = this.modalProps.title === 'Add';
+
+    this.saving = true;
+    this.setBoardUsers();
+
+    if (!this.validateBoard()) {
+      this.saving = false;
+      return;
+    }
+
+    if (isAdd) {
+      this.boardService.addBoard(this.modalProps)
+        .subscribe((response: ApiResponse) => {
+          this.handleResponse(response);
         });
-        settings.usersChanged.subscribe((users: Array<User>) => {
-            this.updateUsersList(users);
+      return;
+    }
+
+    this.boardService.editBoard(this.modalProps)
+    .subscribe((response: ApiResponse) => {
+      this.handleResponse(response);
+    });
+  }
+
+  removeBoard(): void {
+    this.saving = true;
+
+    this.boardService.removeBoard(this.boardToRemove.id)
+    .subscribe((response: ApiResponse) => {
+      this.handleResponse(response);
+
+      this.settings.getActions()
+        .subscribe((res: ApiResponse) => {
+          this.settings.updateActions(res.data[1]);
         });
-        settings.boardsChanged.subscribe((boards: Array<Board>) => {
-            this.updateBoardsList(boards);
+    });
+  }
+
+  toggleBoardStatus(board: Board): void {
+    let boardData = new BoardData('', board.id, board.name,
+      !board.is_active, board.columns,
+      board.categories, board.issue_trackers,
+      board.users);
+
+    this.boardService.editBoard(boardData)
+    .subscribe((response: ApiResponse) => {
+      this.handleResponse(response);
+    });
+  }
+
+  filterBoards(): void {
+    let userBoards = this.filterBoardsByUser(),
+    statusBoards = this.filterBoardsByStatus();
+
+    this.displayBoards = [];
+
+    this.boards.forEach((board: Board) => {
+      let foundInUserBoards = false,
+        foundInStatusBoards = false;
+
+      userBoards.forEach((userBoard: Board) => {
+        if (userBoard.id === board.id) {
+          foundInUserBoards = true;
+        }
+      });
+
+      statusBoards.forEach((statusBoard: Board) => {
+        if (statusBoard.id === board.id) {
+          foundInStatusBoards = true;
+        }
+      });
+
+      if (foundInUserBoards && foundInStatusBoards) {
+        this.displayBoards.push(board);
+      }
+    });
+
+    // Always sort the filtered boards
+    this.sortBoards();
+  }
+
+  cancelEnterKey(event: any): void {
+    if (event.stopPropagation) {
+      event.stopPropagation();
+    }
+  }
+
+  private sortBoards(): void {
+    switch (this.sortFilter) {
+      case 'name-asc':
+        this.displayBoards.sort((a: Board, b: Board) => {
+          return a.name.localeCompare(b.name);
         });
-        stringsService.stringsChanged.subscribe(newStrings => {
-            this.strings = newStrings;
-            this.updateActiveUser(this.activeUser);
+        break;
+      case 'name-desc':
+        this.displayBoards.sort((a: Board, b: Board) => {
+          return b.name.localeCompare(a.name);
         });
-    }
-
-    ngAfterContentInit() {
-        let ul = document.getElementsByClassName('modal-list')[0];
-        let bag = this.dragula.find('columns-bag');
-
-        if (bag !== undefined) {
-            this.dragula.destroy('columns-bag');
-        }
-
-        this.dragula.setOptions('columns-bag', {
-            moves: (el: any, container: any, handle: any) => {
-                return handle.classList.contains('icon-resize-vertical');
-            },
-            mirrorContainer: ul
+        break;
+      case 'id-desc':
+        this.displayBoards.sort((a: Board, b: Board) => {
+          return b.id - a.id;
         });
-
-        this.dragula.dragend.subscribe(() => {
-            this.modalProps.columns.forEach((item, index) => {
-                item.position = '' + index;
-            });
+        break;
+      case 'id-asc':
+        this.displayBoards.sort((a: Board, b: Board) => {
+          return a.id - b.id;
         });
+        break;
+    }
+  }
+
+  private filterBoardsByUser(): Array<Board> {
+    if (+this.userFilter === -1) {
+      return this.deepCopy(this.boards);
     }
 
-    addEditBoard(): void {
-        let isAdd = this.modalProps.title === 'Add';
+    let filteredBoards: Array<Board> = [];
 
-        this.saving = true;
-        this.setBoardUsers();
+    this.boards.forEach((board: Board) => {
+      let userFound = false;
 
-        if (!this.validateBoard()) {
-            this.saving = false;
-            return;
+      board.users.forEach(user => {
+        if (+user.id === +this.userFilter) {
+          userFound = true;
         }
+      });
 
-        if (isAdd) {
-            this.boardService.addBoard(this.modalProps)
-                .subscribe((response: ApiResponse) => {
-                    this.handleResponse(response);
-                });
-            return;
+      if (userFound) {
+        filteredBoards.push(board);
+      }
+    });
+
+    return filteredBoards;
+  }
+
+  private filterBoardsByStatus(): Array<Board> {
+    if (+this.statusFilter === -1) {
+      return this.deepCopy(this.boards);
+    }
+
+    let filteredBoards: Array<Board> = [];
+
+    this.boards.forEach((board: Board) => {
+      if ((board.is_active && +this.statusFilter === 1) ||
+        (!board.is_active && +this.statusFilter === 0)) {
+
+        filteredBoards.push(board);
+      }
+    });
+
+    return filteredBoards;
+  }
+
+  private validateBoard(): boolean {
+    if (this.modalProps.name === '') {
+      this.notes.add(
+        new Notification('error', this.strings.settings_boardNameError));
+      return false;
+    }
+
+    if (this.modalProps.columns.length === 0) {
+      this.notes.add(
+        new Notification('error', this.strings.settings_columnError));
+      return false;
+    }
+
+    return true;
+  }
+
+  private handleResponse(response: ApiResponse): void {
+    response.alerts.forEach(note => this.notes.add(note));
+
+    if (response.status === 'success') {
+      this.modal.close(this.MODAL_ID);
+      this.modal.close(this.MODAL_CONFIRM_ID);
+
+      let boards = Array<Board>();
+      response.data[1].forEach((board: any) => {
+        boards.push(new Board(+board.id, board.name,
+          board.is_active === '1', board.ownColumn,
+          board.ownCategory, board.ownAutoAction,
+          board.ownIssuetracker, board.sharedUser));
+      });
+
+      this.settings.updateBoards(boards);
+      this.saving = false;
+    }
+  }
+
+  private setBoardUsers(): void {
+    this.modalProps.users = [];
+
+    this.users.forEach((user: SelectableUser) => {
+      if (user.selected) {
+        this.modalProps.users.push(user);
+      }
+    });
+  }
+
+  private updateActiveUser(activeUser: User): void {
+    this.activeUser = new User(+activeUser.default_board_id,
+      activeUser.email,
+      +activeUser.id,
+      activeUser.last_login,
+      +activeUser.security_level,
+      +activeUser.user_option_id,
+      activeUser.username,
+      activeUser.board_access);
+
+    if (!this.strings) {
+      return;
+    }
+
+    this.noBoardsMessage = this.strings.settings_noBoards;
+
+    if (+activeUser.security_level === 1) {
+      this.noBoardsMessage = this.strings.settings_noBoardsAdmin;
+    }
+  }
+
+  private updateUsersList(users: Array<any>): void {
+    this.users = [];
+    this.hasBAUsers = false;
+
+    users.forEach(user => {
+      // Don't include admin users
+      if (user.security_level > 1) {
+        this.users.push(user);
+
+        if (user.security_level === 2) {
+          this.hasBAUsers = true;
         }
+      }
+    });
+  }
 
-        this.boardService.editBoard(this.modalProps)
-            .subscribe((response: ApiResponse) => {
-                    this.handleResponse(response);
-                });
+  private updateBoardsList(boards: Array<Board>): void {
+    this.boards = boards;
+
+    this.boards.forEach(board => {
+      board.columns.sort((a: Column, b: Column) => {
+        return +a.position - +b.position;
+      });
+    });
+
+    this.displayBoards = this.deepCopy(this.boards);
+    this.filterBoards();
+
+    if (this.firstRun) {
+      this.firstRun = false;
+      return;
     }
 
-    removeBoard(): void {
-        this.saving = true;
+    this.loading = false;
+  }
 
-        this.boardService.removeBoard(this.boardToRemove.id)
-            .subscribe((response: ApiResponse) => {
-                    this.handleResponse(response);
+  private getPropertyValue(obj: string, prop: string, i: number): string {
+    return this.modalProps[obj][i][prop];
+  }
 
-                    this.settings.getActions()
-                        .subscribe((res: ApiResponse) => {
-                            this.settings.updateActions(res.data[1]);
-                        });
-                });
+  private onPropertyEdit(obj: string, prop: string,
+                         i: number, value: any): void {
+      this.modalProps[obj][i][prop] = value;
     }
 
-    toggleBoardStatus(board: Board): void {
-        let boardData = new BoardData('', board.id, board.name,
-                                      !board.is_active, board.columns,
-                                      board.categories, board.issue_trackers,
-                                      board.users);
-
-        this.boardService.editBoard(boardData)
-            .subscribe((response: ApiResponse) => {
-                    this.handleResponse(response);
-                });
+  private getColor(category: any): string {
+    if (category.default_task_color) {
+      return category.default_task_color;
     }
 
-    filterBoards(): void {
-        let userBoards = this.filterBoardsByUser(),
-            statusBoards = this.filterBoardsByStatus();
+    return category.defaultColor;
+  }
 
-        this.displayBoards = [];
+  private setCategoryColor(color: any, index: number): void {
+    this.modalProps.categories[index].default_task_color = color;
+  }
 
-        this.boards.forEach((board: Board) => {
-            let foundInUserBoards = false,
-                foundInStatusBoards = false;
+  private deepCopy(source: any): any {
+    let output: any, value: any, key: any;
 
-            userBoards.forEach((userBoard: Board) => {
-                if (userBoard.id === board.id) {
-                    foundInUserBoards = true;
-                }
-            });
+    output = Array.isArray(source) ? [] : {};
 
-            statusBoards.forEach((statusBoard: Board) => {
-                if (statusBoard.id === board.id) {
-                    foundInStatusBoards = true;
-                }
-            });
-
-            if (foundInUserBoards && foundInStatusBoards) {
-                this.displayBoards.push(board);
-            }
-        });
-
-        // Always sort the filtered boards
-        this.sortBoards();
+    for (key in source) {
+      if (source.hasOwnProperty(key)) {
+        value = source[key];
+        output[key] = (typeof value === 'object') ?
+          this.deepCopy(value) : value;
+      }
     }
 
-    cancelEnterKey(event: any): void {
-        if (event.stopPropagation) {
-            event.stopPropagation();
-        }
+    return output;
+  }
+
+  private showModal(title: string, board?: Board): void {
+    let isAdd = (title === 'Add');
+
+    this.modalProps = new BoardData(title);
+
+    if (isAdd) {
+      this.users.forEach((user: SelectableUser) => {
+        user.selected = false;
+      });
+    } else {
+      this.modalProps.id = board.id;
+      this.modalProps.name = board.name;
+      this.modalProps.columns = this.deepCopy(board.columns);
+      this.modalProps.categories = this.deepCopy(board.categories);
+      this.modalProps.issue_trackers = this.deepCopy(board.issue_trackers);
+
+      this.users.forEach((user: SelectableUser) => {
+        let filtered = board.users.filter(u => +u.id === user.id);
+
+        user.selected = filtered.length > 0;
+      });
     }
 
-    private sortBoards(): void {
-        switch (this.sortFilter) {
-            case 'name-asc':
-                this.displayBoards.sort((a: Board, b: Board) => {
-                    return a.name.localeCompare(b.name);
-                });
-                break;
-            case 'name-desc':
-                this.displayBoards.sort((a: Board, b: Board) => {
-                    return b.name.localeCompare(a.name);
-                });
-                break;
-            case 'id-desc':
-                this.displayBoards.sort((a: Board, b: Board) => {
-                    return b.id - a.id;
-                });
-                break;
-            case 'id-asc':
-                this.displayBoards.sort((a: Board, b: Board) => {
-                    return a.id - b.id;
-                });
-                break;
-        }
-    }
+    this.modal.open(this.MODAL_ID);
+  }
 
-    private filterBoardsByUser(): Array<Board> {
-        if (+this.userFilter === -1) {
-            return this.deepCopy(this.boards);
-        }
-
-        let filteredBoards: Array<Board> = [];
-
-        this.boards.forEach((board: Board) => {
-            let userFound = false;
-
-            board.users.forEach(user => {
-                if (+user.id === +this.userFilter) {
-                    userFound = true;
-                }
-            });
-
-            if (userFound) {
-                filteredBoards.push(board);
-            }
-        });
-
-        return filteredBoards;
-    }
-
-    private filterBoardsByStatus(): Array<Board> {
-        if (+this.statusFilter === -1) {
-            return this.deepCopy(this.boards);
-        }
-
-        let filteredBoards: Array<Board> = [];
-
-        this.boards.forEach((board: Board) => {
-            if ((board.is_active && +this.statusFilter === 1) ||
-                (!board.is_active && +this.statusFilter === 0)) {
-
-                filteredBoards.push(board);
-            }
-        });
-
-        return filteredBoards;
-    }
-
-    private validateBoard(): boolean {
-        if (this.modalProps.name === '') {
-            this.notes.add(
-                new Notification('error', this.strings.settings_boardNameError));
-            return false;
-        }
-
-        if (this.modalProps.columns.length === 0) {
-            this.notes.add(
-                new Notification('error', this.strings.settings_columnError));
-            return false;
-        }
-
-        return true;
-    }
-
-    private handleResponse(response: ApiResponse): void {
-        response.alerts.forEach(note => this.notes.add(note));
-
-        if (response.status === 'success') {
-            this.modal.close(this.MODAL_ID);
-            this.modal.close(this.MODAL_CONFIRM_ID);
-
-            let boards = Array<Board>();
-            response.data[1].forEach((board: any) => {
-                boards.push(new Board(+board.id, board.name,
-                                      board.is_active === '1', board.ownColumn,
-                                      board.ownCategory, board.ownAutoAction,
-                                      board.ownIssuetracker, board.sharedUser));
-            });
-
-            this.settings.updateBoards(boards);
-            this.saving = false;
-        }
-    }
-
-    private setBoardUsers(): void {
-        this.modalProps.users = [];
-
-        this.users.forEach((user: SelectableUser) => {
-            if (user.selected) {
-                this.modalProps.users.push(user);
-            }
-        });
-    }
-
-    private updateActiveUser(activeUser: User): void {
-        this.activeUser = new User(+activeUser.default_board_id,
-                                   activeUser.email,
-                                   +activeUser.id,
-                                   activeUser.last_login,
-                                   +activeUser.security_level,
-                                   +activeUser.user_option_id,
-                                   activeUser.username,
-                                   activeUser.board_access);
-
-        if (!this.strings) {
-            return;
-        }
-
-        this.noBoardsMessage = this.strings.settings_noBoards;
-
-        if (+activeUser.security_level === 1) {
-            this.noBoardsMessage = this.strings.settings_noBoardsAdmin;
-        }
-    }
-
-    private updateUsersList(users: Array<any>): void {
-        this.users = [];
-        this.hasBAUsers = false;
-
-        users.forEach(user => {
-            // Don't include admin users
-            if (user.security_level > 1) {
-                this.users.push(user);
-
-                if (user.security_level === 2) {
-                    this.hasBAUsers = true;
-                }
-            }
-        });
-    }
-
-    private updateBoardsList(boards: Array<Board>): void {
-        this.boards = boards;
-
-        this.boards.forEach(board => {
-            board.columns.sort((a: Column, b: Column) => {
-                return +a.position - +b.position;
-            });
-        });
-
-        this.displayBoards = this.deepCopy(this.boards);
-        this.filterBoards();
-
-        if (this.firstRun) {
-            this.firstRun = false;
-            return;
-        }
-
-        this.loading = false;
-    }
-
-    private getPropertyValue(obj: string, prop: string, i: number): string {
-        return this.modalProps[obj][i][prop];
-    }
-
-    private onPropertyEdit(obj: string, prop: string,
-                           i: number, value: any): void {
-        this.modalProps[obj][i][prop] = value;
-    }
-
-    private getColor(category: any): string {
-        if (category.default_task_color) {
-            return category.default_task_color;
-        }
-
-        return category.defaultColor;
-    }
-
-    private setCategoryColor(color: any, index: number): void {
-        this.modalProps.categories[index].default_task_color = color;
-    }
-
-    private deepCopy(source: any): any {
-        let output: any, value: any, key: any;
-
-        output = Array.isArray(source) ? [] : {};
-
-        for (key in source) {
-            if (source.hasOwnProperty(key)) {
-                value = source[key];
-                output[key] = (typeof value === 'object') ?
-                    this.deepCopy(value) : value;
-            }
-        }
-
-        return output;
-    }
-
-    private showModal(title: string, board?: Board): void {
-        let isAdd = (title === 'Add');
-
-        this.modalProps = new BoardData(title);
-
-        if (isAdd) {
-            this.users.forEach((user: SelectableUser) => {
-                user.selected = false;
-            });
-        } else {
-            this.modalProps.id = board.id;
-            this.modalProps.name = board.name;
-            this.modalProps.columns = this.deepCopy(board.columns);
-            this.modalProps.categories = this.deepCopy(board.categories);
-            this.modalProps.issue_trackers = this.deepCopy(board.issue_trackers);
-
-            this.users.forEach((user: SelectableUser) => {
-                let filtered = board.users.filter(u => +u.id === user.id);
-
-                user.selected = filtered.length > 0;
-            });
-        }
-
-        this.modal.open(this.MODAL_ID);
-    }
-
-    private showConfirmModal(board: Board): void {
-        this.boardToRemove = board;
-        this.modal.open(this.MODAL_CONFIRM_ID);
-    }
+  private showConfirmModal(board: Board): void {
+    this.boardToRemove = board;
+    this.modal.open(this.MODAL_CONFIRM_ID);
+  }
 }
 

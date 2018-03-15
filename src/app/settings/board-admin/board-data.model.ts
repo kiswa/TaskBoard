@@ -1,85 +1,85 @@
-import { User } from '../../shared/index';
+import { User } from '../../shared/models';
 
 export class BoardData {
-    constructor(public title = '',
-                public id = 0,
-                public name = '',
-                public is_active = true, // tslint:disable-line
-                public columns: Array<any> = [],
-                public categories: Array<any> = [],
-                public issue_trackers: Array<any> = [], // tslint:disable-line
-                public users: Array<User> = [],
-                public categoryDefaultColor = '#ffffe0',
-                public newColumnName = '',
-                public newCategoryName = '',
-                public issueTrackerUrl = '',
-                public issueTrackerBugId = '') { }
+  constructor(public title = '',
+              public id = 0,
+              public name = '',
+              public is_active = true, // tslint:disable-line
+              public columns: Array<any> = [],
+              public categories: Array<any> = [],
+              public issue_trackers: Array<any> = [], // tslint:disable-line
+              public users: Array<User> = [],
+              public categoryDefaultColor = '#ffffe0',
+              public newColumnName = '',
+              public newCategoryName = '',
+              public issueTrackerUrl = '',
+              public issueTrackerBugId = '') { }
 
-    addColumn(): void {
-        if (this.newColumnName === '') {
-            return;
-        }
-
-        this.columns.push({
-            name: this.newColumnName,
-            position: this.columns.length
-        });
-        this.newColumnName = '';
+  addColumn(): void {
+    if (this.newColumnName === '') {
+      return;
     }
 
-    removeColumn(column: any): void {
-        let index = this.columns.indexOf(column);
+    this.columns.push({
+      name: this.newColumnName,
+      position: this.columns.length
+    });
+    this.newColumnName = '';
+  }
 
-        if (index === -1) {
-            return;
-        }
+  removeColumn(column: any): void {
+    let index = this.columns.indexOf(column);
 
-        this.columns.splice(index, 1);
+    if (index === -1) {
+      return;
     }
 
-    addCategory(): void {
-        if (this.newCategoryName === '') {
-            return;
-        }
+    this.columns.splice(index, 1);
+  }
 
-        this.categories.push({
-            name: this.newCategoryName,
-            default_task_color: this.categoryDefaultColor
-        });
-        this.newCategoryName = '';
+  addCategory(): void {
+    if (this.newCategoryName === '') {
+      return;
     }
 
-    removeCategory(category: any): void {
-        let index = this.categories.indexOf(category);
+    this.categories.push({
+      name: this.newCategoryName,
+      default_task_color: this.categoryDefaultColor
+    });
+    this.newCategoryName = '';
+  }
 
-        if (index === -1) {
-            return;
-        }
+  removeCategory(category: any): void {
+    let index = this.categories.indexOf(category);
 
-        this.categories.splice(index, 1);
+    if (index === -1) {
+      return;
     }
 
-    addIssueTracker(): void {
-        if (this.issueTrackerUrl === '' || this.issueTrackerBugId === '') {
-            return;
-        }
+    this.categories.splice(index, 1);
+  }
 
-        this.issue_trackers.push({
-            url: this.issueTrackerUrl,
-            regex: this.issueTrackerBugId
-        });
-        this.issueTrackerUrl = '';
-        this.issueTrackerBugId = '';
+  addIssueTracker(): void {
+    if (this.issueTrackerUrl === '' || this.issueTrackerBugId === '') {
+      return;
     }
 
-    removeIssueTracker(tracker: any): void {
-        let index = this.issue_trackers.indexOf(tracker);
+    this.issue_trackers.push({
+      url: this.issueTrackerUrl,
+      regex: this.issueTrackerBugId
+    });
+    this.issueTrackerUrl = '';
+    this.issueTrackerBugId = '';
+  }
 
-        if (index === -1) {
-            return;
-        }
+  removeIssueTracker(tracker: any): void {
+    let index = this.issue_trackers.indexOf(tracker);
 
-        this.issue_trackers.splice(index, 1);
+    if (index === -1) {
+      return;
     }
+
+    this.issue_trackers.splice(index, 1);
+  }
 }
 

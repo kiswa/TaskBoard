@@ -7,36 +7,36 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import {
-    ApiResponse,
-    AutoAction
-} from '../../shared/index';
+  ApiResponse,
+  AutoAction
+} from '../../shared/models';
 
 @Injectable()
 export class AutoActionsService {
-    constructor(private http: Http) {
-    }
+  constructor(private http: Http) {
+  }
 
-    addAction(action: AutoAction): Observable<ApiResponse> {
-        return this.http.post('api/autoactions', action)
-            .map(this.toApiResponse)
-            .catch(this.errorHandler);
-    }
+  addAction(action: AutoAction): Observable<ApiResponse> {
+    return this.http.post('api/autoactions', action)
+    .map(this.toApiResponse)
+    .catch(this.errorHandler);
+  }
 
-    removeAction(action: AutoAction): Observable<ApiResponse> {
-        return this.http.delete('api/autoactions/' + action.id)
-            .map(this.toApiResponse)
-            .catch(this.errorHandler);
-    }
+  removeAction(action: AutoAction): Observable<ApiResponse> {
+    return this.http.delete('api/autoactions/' + action.id)
+    .map(this.toApiResponse)
+    .catch(this.errorHandler);
+  }
 
-    private toApiResponse(res: any): ApiResponse {
-        let response: ApiResponse = res.json();
-        return response;
-    }
+  private toApiResponse(res: any): ApiResponse {
+    let response: ApiResponse = res.json();
+    return response;
+  }
 
-    private errorHandler(res: any, caught: any): Observable<ApiResponse> {
-        let response: ApiResponse = res.json();
-        return Observable.of(response);
-    }
+  private errorHandler(res: any, caught: any): Observable<ApiResponse> {
+    let response: ApiResponse = res.json();
+    return Observable.of(response);
+  }
 
 }
 

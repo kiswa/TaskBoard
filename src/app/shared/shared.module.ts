@@ -13,7 +13,7 @@ import { Activity, ActivitySimple } from './models/activity.model';
 import { ApiResponse } from './models/api-response.model';
 import { Attachment } from './models/attachment.model';
 import { AutoAction, ActionType, ActionTrigger } from './models/auto-actions.model';
-import { Board } from './models/board.model.ts';
+import { Board } from './models/board.model';
 import { Category } from './models/category.model';
 import { Column } from './models/column.model';
 import { Comment } from './models/comment.model';
@@ -33,37 +33,29 @@ import { Constants } from './constants';
     CommonModule
   ],
   declarations: [
-    AuthGuard,
     CompileDirective,
     ContextMenu,
     InlineEdit,
     Modal,
-    Activity,
-    ActivitySimple,
-    ApiResponse,
-    Attachment,
-    AutoAction,
-    ActionType,
-    ActionTrigger,
-    Board,
-    Category,
-    Column,
-    Comment,
-    IssueTracker,
-    Notification,
-    Task,
-    User,
-    UserOptions,
     Notifications,
-    TopNav,
-    Constants
+    TopNav
   ],
   providers: [
+    AuthGuard,
     AuthService,
+    Constants,
     ContextMenuService,
     ModalService,
     NotificationsService,
     StringsService
+  ],
+  exports: [
+    CompileDirective,
+    ContextMenu,
+    InlineEdit,
+    Modal,
+    Notifications,
+    TopNav
   ]
 })
-export class SharedModule { }
+export class SharedModule {}
