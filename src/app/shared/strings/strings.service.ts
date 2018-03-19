@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -12,13 +12,13 @@ export class StringsService {
 
   public stringsChanged = this.strings.asObservable();
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
   }
 
   loadStrings(language: string): void {
     this.http.get('strings/' + language + '.json')
     .subscribe((res: any) => {
-      this.strings.next(res.json());
+      this.strings.next(res);
     });
   }
 }

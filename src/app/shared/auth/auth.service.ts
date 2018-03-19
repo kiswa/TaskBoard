@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -23,7 +23,7 @@ export class AuthService {
   public userOptions: UserOptions = null;
   public userChanged = this.activeUser.asObservable();
 
-  constructor(constants: Constants, private http: Http,
+  constructor(constants: Constants, private http: HttpClient,
               private router: Router, private strings: StringsService) {
   }
 
@@ -38,8 +38,7 @@ export class AuthService {
 
   authenticate(): Observable<boolean> {
     return this.http.post('api/authenticate', null)
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       this.updateUser(response.data[1], response.data[2]);
 
       return true;
@@ -50,7 +49,7 @@ export class AuthService {
   }
 
   login(username: string, password: string,
-    remember: boolean): Observable<ApiResponse> {
+        remember: boolean): Observable<ApiResponse> {
       let json = JSON.stringify({
         username,
         password,
@@ -58,14 +57,12 @@ export class AuthService {
       });
 
       return this.http.post('api/login', json)
-      .map(res => {
-        let response: ApiResponse = res.json();
+      .map((response: ApiResponse) => {
         this.updateUser(response.data[1], response.data[2]);
 
         return response;
       })
-      .catch((res, caught) => {
-        let response: ApiResponse = res.json();
+      .catch((response: ApiResponse, caught) => {
         this.updateUser(null, null);
 
         return Observable.of(response);
@@ -74,20 +71,18 @@ export class AuthService {
 
   logout(): Observable<ApiResponse> {
     return this.http.post('api/logout', null)
-    .map(res => {
-      let response: ApiResponse = res.json();
-
+    .map((response: ApiResponse) => {
       return response;
     });
   }
 
   private convertOpts(opts: any): UserOptions {
     let converted = new UserOptions(+opts.id,
-      opts.new_tasks_at_bottom === '1',
-      opts.show_animations === '1',
-      opts.show_assignee === '1',
-      opts.multiple_tasks_per_row === '1',
-      opts.language);
+                                    opts.new_tasks_at_bottom === '1',
+                                    opts.show_animations === '1',
+                                    opts.show_assignee === '1',
+                                    opts.multiple_tasks_per_row === '1',
+                                    opts.language);
     return converted;
   }
 }

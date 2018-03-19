@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -22,7 +22,7 @@ interface UpdateUser extends User {
 export class UserSettingsService {
   activeUser: User = null;
 
-  constructor(private auth: AuthService, private http: Http) {
+  constructor(private auth: AuthService, private http: HttpClient) {
     auth.userChanged.subscribe(user => this.activeUser = user);
   }
 
@@ -30,12 +30,10 @@ export class UserSettingsService {
     let json = JSON.stringify(user);
 
     return this.http.post('api/users/' + this.activeUser.id, json)
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }
@@ -48,12 +46,10 @@ export class UserSettingsService {
     let json = JSON.stringify(updateUser);
 
     return this.http.post('api/users/' + this.activeUser.id, json)
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }
@@ -65,14 +61,12 @@ export class UserSettingsService {
     let json = JSON.stringify(updateUser);
 
     return this.http.post('api/users/' + this.activeUser.id, json)
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       this.auth.updateUser(JSON.parse(response.data[1]));
 
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }
@@ -84,14 +78,12 @@ export class UserSettingsService {
     let json = JSON.stringify(updateUser);
 
     return this.http.post('api/users/' + this.activeUser.id, json)
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       this.auth.updateUser(JSON.parse(response.data[1]));
 
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }
@@ -100,15 +92,12 @@ export class UserSettingsService {
     let json = JSON.stringify(newOptions);
 
     return this.http.post('api/users/' + this.activeUser.id + '/opts', json)
-    .map(res => {
-      let response: ApiResponse = res.json();
-
+    .map((response: ApiResponse) => {
       this.auth.updateUser(JSON.parse(response.data[2]),
         JSON.parse(response.data[1]));
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }

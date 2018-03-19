@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -22,7 +22,7 @@ export class BoardService {
 
   public activeBoardChanged = this.activeBoard.asObservable();
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
   }
 
   updateActiveBoard(board: Board): void {
@@ -32,77 +32,87 @@ export class BoardService {
 
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   toggleCollapsed(userId: number, columnId: number): Observable<ApiResponse> {
     return this.http.post('api/users/' + userId + '/cols',
       { id: columnId })
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   updateBoard(board: Board): Observable<ApiResponse> {
     return this.http.post('api/boards/' + board.id, board)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   updateColumn(column: Column): Observable<ApiResponse> {
     return this.http.post('api/columns/' + column.id, column)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   addTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks', task)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   updateTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks/' + task.id, task)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   removeTask(taskId: number): Observable<ApiResponse> {
     return this.http.delete('api/tasks/' + taskId)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   getTaskActivity(taskId: number): Observable<ApiResponse> {
     return this.http.get('api/activity/task/' + taskId)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   updateComment(comment: Comment): Observable<ApiResponse> {
     return this.http.post('api/comments/' + comment.id, comment)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   removeComment(commentId: number): Observable<ApiResponse> {
     return this.http.delete('api/comments/' + commentId)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => response)
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   refreshToken(): void {
     this.http.post('api/refresh', {}).subscribe();
-  }
-
-  private toApiResponse(res: any): ApiResponse {
-    let response: ApiResponse = res.json();
-    return response;
-  }
-
-  private errorHandler(res: any, caught: any): Observable<ApiResponse> {
-    let response: ApiResponse = res.json();
-    return Observable.of(response);
   }
 
   private convertBoardData(boardData: any): Board {

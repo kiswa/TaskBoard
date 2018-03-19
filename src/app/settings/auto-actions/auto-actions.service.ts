@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -13,30 +13,27 @@ import {
 
 @Injectable()
 export class AutoActionsService {
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
   }
 
   addAction(action: AutoAction): Observable<ApiResponse> {
     return this.http.post('api/autoactions', action)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => {
+      return response;
+    })
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
 
   removeAction(action: AutoAction): Observable<ApiResponse> {
     return this.http.delete('api/autoactions/' + action.id)
-    .map(this.toApiResponse)
-    .catch(this.errorHandler);
+    .map((response: ApiResponse) => {
+      return response;
+    })
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(response);
+    });
   }
-
-  private toApiResponse(res: any): ApiResponse {
-    let response: ApiResponse = res.json();
-    return response;
-  }
-
-  private errorHandler(res: any, caught: any): Observable<ApiResponse> {
-    let response: ApiResponse = res.json();
-    return Observable.of(response);
-  }
-
 }
 

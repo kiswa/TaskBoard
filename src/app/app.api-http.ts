@@ -1,117 +1,60 @@
+import { Injectable } from '@angular/core';
 import {
-  Http,
-  Request,
-  RequestOptionsArgs,
-  Response,
-  XHRBackend,
-  RequestOptions,
-  ConnectionBackend,
-  Headers
-} from '@angular/http';
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse
+} from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
 
 import { ApiResponse } from './shared/models';
 
-export const API_HTTP_PROVIDERS = [
-  {
-    provide: Http,
-    useFactory: apiHttpFactory,
-    deps: [XHRBackend, RequestOptions, Router]
-  }
-];
-
-export function apiHttpFactory (xhrBackend: XHRBackend,
-  requestOptions: RequestOptions,
-  router: Router) {
-  return new ApiHttp(xhrBackend, requestOptions, router);
-}
-
-export class ApiHttp extends Http {
+@Injectable()
+export class ApiInterceptor implements HttpInterceptor {
   private JWT_KEY = 'taskboard.jwt';
 
-  constructor(backend: ConnectionBackend, defaultOptions: RequestOptions,
-              private router: Router) {
-    super(backend, defaultOptions);
+  constructor(private router: Router) {}
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    const token = localStorage.getItem(this.JWT_KEY);
+
+    if (token !== null) {
+      headers['Authorization'] = token;
+    }
+
+    request = request.clone({
+      setHeaders: headers
+    });
+
+    return next.handle(request).do((evt: HttpEvent<any>) => {
+      if (!(evt instanceof HttpResponse)) {
+        return;
+      }
+
+      const response: ApiResponse = evt.body;
+      if (response.data) {
+        localStorage.setItem(this.JWT_KEY, response.data[0]);
+      }
+    }, (err: any) => {
+      if (!(err instanceof HttpErrorResponse)) {
+        return;
+      }
+
+      if ((err.status === 401 || err.status === 400) &&
+          (err.url + '').indexOf('login') === -1) {
+        this.router.navigate(['']);
+        localStorage.removeItem(this.JWT_KEY);
+      }
+    });
   }
 
-  request(url: string | Request,
-    options?: RequestOptionsArgs): Observable<Response> {
-      return this.intercept(
-        super.request(url, this.getRequestOptionArgs(options)));
-    }
-
-  get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-    return this.intercept(
-      super.get(url, this.getRequestOptionArgs(options)));
-  }
-
-  post(url: string, body: string,
-    options?: RequestOptionsArgs): Observable<Response> {
-      return this.intercept(
-        super.post(url, body, this.getRequestOptionArgs(options, body)));
-    }
-
-  put(url: string, body: string,
-    options?: RequestOptionsArgs): Observable<Response> {
-      return this.intercept(
-        super.put(url, body, this.getRequestOptionArgs(options, body)));
-    }
-
-  delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-    return this.intercept(
-      super.delete(url, this.getRequestOptionArgs(options)));
-  }
-
-  getRequestOptionArgs(options?: RequestOptionsArgs, body?: string): RequestOptionsArgs {
-    if (!options) {
-      options = new RequestOptions();
-    }
-
-    if (!options.headers) {
-      options.headers = new Headers();
-    }
-
-    options.headers.append('Content-Type', 'application/json');
-
-    let jwt = localStorage.getItem(this.JWT_KEY);
-    if (jwt) {
-      options.headers.append('Authorization', jwt);
-    }
-
-    return options;
-  }
-
-  intercept(observable: Observable<Response>): Observable<Response> {
-    return observable
-    .map(res => this.handleResponse(res))
-    .catch((err, source) => this.handleError(err, source));
-  }
-
-  private handleResponse(res: Response): Response {
-    let response: ApiResponse = res.json();
-
-    if (response.data) {
-      localStorage.setItem(this.JWT_KEY, response.data[0]);
-    }
-
-    return res;
-  }
-
-  private handleError(err: any, source: any): Observable<any> {
-    // 401 for invalid token, 400 for no token, and convert
-    // url to string in case it is null.
-    if ((err.status === 401 || err.status === 400) &&
-      (err.url + '').indexOf('login') === -1) {
-      this.router.navigate(['']);
-      localStorage.removeItem(this.JWT_KEY);
-    }
-
-    return Observable.throw(err);
-  }
 }
 

@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { DragulaModule } from 'ng2-dragula/ng2-dragula';
 
 import { APP_ROUTING, ROUTE_COMPONENTS } from './app.routes';
 import { AppComponent } from './app.component';
-import { API_HTTP_PROVIDERS } from './app.api-http';
+import { ApiInterceptor } from './app.api-http';
 
 import { BoardModule } from './board/board.module';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -18,7 +18,7 @@ import { SharedModule } from './shared/shared.module';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     APP_ROUTING,
     DragulaModule,
     BoardModule,
@@ -27,7 +27,11 @@ import { SharedModule } from './shared/shared.module';
     SharedModule
   ],
   providers: [
-    API_HTTP_PROVIDERS,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor,
+      multi: true
+    },
   ],
   declarations: [
     AppComponent,

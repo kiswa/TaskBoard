@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -24,7 +24,7 @@ export class SettingsService {
   public boardsChanged = this.boards.asObservable();
   public actionsChanged = this.actions.asObservable();
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
   }
 
   updateUsers(users: Array<User>): void {
@@ -33,13 +33,11 @@ export class SettingsService {
 
   getUsers(): Observable<ApiResponse> {
     return this.http.get('api/users')
-    .map(res => {
-      let response: ApiResponse = res.json();
-      return response;
+    .map((response: ApiResponse) => {
+      return <ApiResponse>response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
-      return Observable.of(response);
+    .catch((response: ApiResponse, caught) => {
+      return Observable.of(<ApiResponse>response);
     });
   }
 
@@ -52,12 +50,10 @@ export class SettingsService {
 
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }
@@ -68,12 +64,10 @@ export class SettingsService {
 
   getActions(): Observable<ApiResponse> {
     return this.http.get('api/autoactions')
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }

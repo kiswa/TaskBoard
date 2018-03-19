@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -11,41 +11,35 @@ import { ModalUser } from './user-admin.models';
 
 @Injectable()
 export class UserAdminService {
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
   }
 
   addUser(user: ModalUser): Observable<ApiResponse> {
     return this.http.post('api/users', user)
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }
 
   editUser(user: ModalUser): Observable<ApiResponse> {
     return this.http.post('api/users/' + user.id, user)
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }
 
   removeUser(userId: number): Observable<ApiResponse> {
     return this.http.delete('api/users/' + userId)
-    .map(res => {
-      let response: ApiResponse = res.json();
+    .map((response: ApiResponse) => {
       return response;
     })
-    .catch((res, caught) => {
-      let response: ApiResponse = res.json();
+    .catch((response: ApiResponse, caught) => {
       return Observable.of(response);
     });
   }
