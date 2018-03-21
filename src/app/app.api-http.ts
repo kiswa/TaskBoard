@@ -44,11 +44,8 @@ export class ApiInterceptor implements HttpInterceptor {
         localStorage.setItem(this.JWT_KEY, response.data[0]);
       }
     }, (err: any) => {
-      if (!(err instanceof HttpErrorResponse)) {
-        return;
-      }
-
-      if ((err.status === 401 || err.status === 400) &&
+      if ((err instanceof HttpErrorResponse) &&
+          (err.status === 401 || err.status === 400) &&
           (err.url + '').indexOf('login') === -1) {
         this.router.navigate(['']);
         localStorage.removeItem(this.JWT_KEY);

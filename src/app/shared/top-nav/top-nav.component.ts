@@ -28,7 +28,7 @@ export class TopNav {
     this.version = constants.VERSION;
 
     authService.userChanged
-      .subscribe(user => this.username = user.username);
+      .subscribe(user => this.username = user ? user.username : '');
 
     stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;

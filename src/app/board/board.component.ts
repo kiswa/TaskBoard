@@ -55,6 +55,8 @@ export class BoardDisplay implements OnInit {
     this.userFilter = null;
     this.categoryFilter = null;
 
+    this.activeBoard = new Board();
+
     this.loading = true;
 
     stringsService.stringsChanged.subscribe(newStrings => {

@@ -1,25 +1,21 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpModule } from '@angular/http';
 
 import { AppComponent } from '../../src/app/app.component';
 import {
-  Notifications,
   NotificationsService,
   StringsService
-} from '../../src/app/shared/index';
+} from '../../src/app/shared/services';
+import { SharedModule } from '../../src/app/shared/shared.module';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        HttpModule
+        SharedModule
       ],
-      declarations: [
-        AppComponent,
-        Notifications
-      ],
+      declarations: [ AppComponent ],
       providers: [
         StringsService,
         NotificationsService

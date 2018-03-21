@@ -95,6 +95,8 @@ Developing on TaskBoard is pretty simple too.
  2. Run `git checkout dev` to work on the `dev` branch
  3. If you don't have it already, install the Angular CLI globally with `npm i -g @angular/cli`
  4. Run `npm i` to install dependencies (this also installs the API dependencies)
+ 5. Run `npm run watch` for the build to automatically run after any change.
+   a. You will need to change permissions on `dist/api/` manually after the first build.
 
 #### Unit Tests
 

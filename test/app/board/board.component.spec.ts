@@ -1,12 +1,9 @@
 import { async, TestBed, ComponentFixture } from '@angular/core/testing'
-import { NO_ERRORS_SCHEMA  } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-
-import { BaseRequestOptions, Http } from '@angular/http';
-import { MockBackend, MockConnection } from '@angular/http/testing';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DragulaModule } from 'ng2-dragula/ng2-dragula';
@@ -17,12 +14,15 @@ import {
   Constants,
   ContextMenuService,
   NotificationsService
-} from '../../../src/app/shared/index';
+} from '../../../src/app/shared/services';
 import { Login } from '../../../src/app/login/login.component';
-import { Settings } from '../../../src/app/settings/index';
-import { Dashboard } from '../../../src/app/dashboard/index';
-import { BoardService, BoardDisplay } from '../../../src/app/board/index';
-import { ROUTES } from '../../../src/app/app.routes';
+import { SettingsModule } from '../../../src/app/settings/settings.module';
+import { SharedModule } from '../../../src/app/shared/shared.module';
+import { DashboardModule } from '../../../src/app/dashboard/dashboard.module';
+import { BoardDisplay } from '../../../src/app/board/board.component';
+import { BoardService } from '../../../src/app/board/board.service';
+import { ColumnDisplay } from '../../../src/app/board/column/column.component';
+import { TaskDisplay } from '../../../src/app/board/task/task.component';
 
 describe('BoardDisplay', () => {
   let component: BoardDisplay,
@@ -31,15 +31,19 @@ describe('BoardDisplay', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes(ROUTES),
+        RouterTestingModule,
+        HttpClientTestingModule,
         FormsModule,
-        DragulaModule
+        DragulaModule,
+        SettingsModule,
+        SharedModule,
+        DashboardModule
       ],
       declarations: [
-        BoardDisplay,
         Login,
-        Settings,
-        Dashboard
+        BoardDisplay,
+        ColumnDisplay,
+        TaskDisplay
       ],
       providers: [
         Title,
@@ -49,22 +53,14 @@ describe('BoardDisplay', () => {
         StringsService,
         ContextMenuService,
         NotificationsService,
-        MockBackend,
-        BaseRequestOptions,
         {
           provide: ActivatedRoute,
           useValue: {
             url: new BehaviorSubject([{ path: 'boards/1' }]),
             params: new BehaviorSubject({ id: 1 })
           }
-        },
-        {
-          provide: Http,
-          useFactory: (backend, options) => new Http(backend, options),
-          deps: [ MockBackend, BaseRequestOptions ]
         }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      ]
     }).compileComponents();
   }));
 

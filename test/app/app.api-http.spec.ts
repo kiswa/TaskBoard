@@ -1,110 +1,106 @@
+import { TestBed, inject } from '@angular/core/testing';
 import {
-  HttpModule,
-  XHRBackend,
-  CookieXSRFStrategy,
-  ResponseOptions,
-  BrowserXhr,
-  RequestOptions
-} from '@angular/http';
+  HttpClient,
+  HttpErrorResponse,
+  HTTP_INTERCEPTORS
+} from '@angular/common/http';
+import {
+  HttpClientTestingModule,
+  HttpTestingController
+} from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+import { AuthService } from '../../src/app/shared/auth/auth.service';
+import { ApiInterceptor } from '../../src/app/app.api-http';
 
-import { ApiHttp, API_HTTP_PROVIDERS, apiHttpFactory } from '../../src/app/app.api-http';
+describe('ApiInterceptor', () => {
+  const mockAuthService = {
 
-describe('ApiHttp', () => {
-  let apiHttp;
-
-  const routerMock = {
-    path: 'test',
-    url: 'test',
-    navigate(arr) {
-      this.path = arr[0];
-    }
   };
 
   beforeEach(() => {
-    const backend = new XHRBackend(new BrowserXhr(),
-                                   new ResponseOptions(),
-                                   new CookieXSRFStrategy()),
-      requestOptions = new RequestOptions();
-
-    apiHttp = new ApiHttp(backend, requestOptions, <any>routerMock);
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([])
+      ],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: mockAuthService
+        },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: ApiInterceptor,
+          multi: true
+        }
+      ]
+    });
   });
 
-  it('provides API_HTTP_PROVIDERS', () => {
-    expect(API_HTTP_PROVIDERS).toEqual(jasmine.any(Array));
-  });
+  afterEach(inject([HttpTestingController], (httpMock: HttpTestingController) => {
+    httpMock.verify();
+  }));
 
-  it('provides a factory method', () => {
-    const actual = apiHttpFactory(null, null, null);
+  it('adds Content-Type header',
+    inject([HttpClient, HttpTestingController],
+      (http: HttpClient, httpMock: HttpTestingController) => {
+        http.get('').subscribe(response => {
+          expect(response).toBeTruthy();
+        });
 
-    expect(actual).toEqual(jasmine.any(ApiHttp));
-  });
+        const req = httpMock.expectOne(req =>
+          req.headers.has('Content-Type') && req.headers.get('Content-Type') === 'application/json'
+        );
+        expect(req.request.method).toEqual('GET');
 
-  it('should create', () => {
-    expect(apiHttp).toBeTruthy();
-  });
-
-  it('has a request method', () => {
-    expect(apiHttp.request('')).toEqual(jasmine.any(Observable));
-  });
-
-  it('handles the HTTP methods', () => {
-    expect(apiHttp.get('')).toEqual(jasmine.any(Observable));
-    expect(apiHttp.post('')).toEqual(jasmine.any(Observable));
-    expect(apiHttp.put('')).toEqual(jasmine.any(Observable));
-    expect(apiHttp.delete('')).toEqual(jasmine.any(Observable));
-  });
-
-  it('injects headers', () => {
-    localStorage.setItem('taskboard.jwt', 'testjwt');
-
-    const headers = apiHttp.getRequestOptionArgs().headers;
-
-    expect(headers._headers.get('content-type')[0])
-      .toEqual('application/json');
-    expect(headers._headers.get('authorization')[0])
-      .toEqual('testjwt');
-  });
-
-  it('intercepts observable responses', () => {
-    const response = {
-      json() {
-        return {
-          data: ['testjwt']
-        };
+        req.flush({});
       }
-    };
+    )
+  );
 
-    apiHttp.intercept(Observable.of(response))
-      .map(response => {
-        expect(localStorage.getItem('taskboard.jwt'))
-          .toEqual('testjwt');
-      });
+  it('adds Authorization header when JWT is present',
+    inject([HttpClient, HttpTestingController],
+      (http: HttpClient, httpMock: HttpTestingController) => {
+        localStorage.setItem('taskboard.jwt', 'fake');
 
-    apiHttp.intercept(Observable.throw(null, <any>response))
-      .catch((err, caught) => {
-        expect(localStorage.getItem('taskboard.jwt'))
-          .toEqual('');
-      });
-  });
+        http.post('', {}).subscribe(response => {
+          expect(response).toBeTruthy();
+        });
 
-  it('handles valid responses', () => {
-    apiHttp.handleResponse({ json: () => ({ data: [ 'jwt' ]  }) });
+        const req = httpMock.expectOne(req =>
+          req.headers.has('Authorization') && req.headers.get('Authorization') === 'fake'
+        );
+        expect(req.request.method).toEqual('POST');
 
-    expect(localStorage.getItem('taskboard.jwt')).toEqual('jwt');
-  });
+        req.flush({ data: ['newToken'] });
+        expect(localStorage.getItem('taskboard.jwt')).toEqual('newToken');
+      }
+    )
+  )
 
-  it('handles error responses', () => {
-    var error = {
-      status: 401,
-      url: ''
-    };
+  it('handles errors and clears the JWT',
+    inject([HttpClient, HttpTestingController],
+      (http: HttpClient, httpMock: HttpTestingController) => {
+        localStorage.setItem('taskboard.jwt', 'fake');
 
-    apiHttp.handleError(error, null);
+        http.get('').subscribe(response => {
+          expect(response).toBeTruthy();
+        }, error => {
+          expect(error).toBeTruthy();
+        });
 
-    expect(localStorage.getItem('taskboard.jwt')).toEqual(null);
-  });
+        const req = httpMock.expectOne(req =>
+          req.headers.has('Content-Type') && req.headers.get('Content-Type') === 'application/json'
+        );
+        expect(req.request.method).toEqual('GET');
+
+        const error = new HttpErrorResponse({ status: 401 });
+        req.flush({}, error);
+        expect(localStorage.getItem('Authorization')).toEqual(null);
+      }
+    )
+  )
+
 });
 
