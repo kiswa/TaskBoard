@@ -10,7 +10,7 @@ The goal of TaskBoard is to provide a simple and clean interface to a functional
 
 ### Prerequisites
 
-A web server running PHP 5.6, 7.0, or 7.1 with sqlite enabled.
+A web server running PHP 5.6, or 7.x with sqlite enabled.
 
 The server must have `sqlite3` and `php7-sqlite` (or `php5-sqlite`) installed.
 
@@ -156,11 +156,11 @@ Because I like seeing the numbers.
 
 Language     |   Files |    Blank | Comment |     Code
 -------------|--------:|---------:|--------:|---------:
-TypeScript   |      62 |      862 |      38 |     3937
+TypeScript   |      64 |      880 |      88 |     4029
 PHP          |      19 |      624 |      27 |     1997
-HTML         |      19 |      152 |       1 |     1420
-SASS         |      14 |      270 |      12 |     1216
-__SUM:__     | __114__ | __1908__ |  __78__ | __8570__
+HTML         |      19 |      150 |       1 |     1419
+SASS         |      14 |      269 |      12 |     1215
+__SUM:__     | __114__ | __1923__ | __128__ | __8660__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
@@ -168,9 +168,9 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
-JavaScript   |     45 |      624 |      53 |     2478
+TypeScript   |      5 |       37 |       0 |      207
 PHP          |     11 |      742 |      16 |     2205
-__SUM:__     | __56__ | __1366__ |  __69__ | __4683__
+__SUM:__     | __16__ |  __779__ |  __16__ | __2412__
 
 Command: `cloc --exclude-ext=xml test/`
 

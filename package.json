@@ -25,7 +25,7 @@
     "build": "ng b -oh=none -prod && chmod a+w dist/api",
     "watch": "ng b -oh=none -w",
     "test-app": "ng test -cc -sr",
-    "test-all": "npm run test && npm run test-api",
+    "test": "npm run test-app && npm run test-api",
     "test-watch": "ng test -cc",
     "test-api": "./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml",
     "test-api-single": "./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml -g single",
