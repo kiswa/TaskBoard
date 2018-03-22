@@ -31,7 +31,7 @@
     "test-api-single": "./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml -g single",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "cd src/api/ && composer install --optimize-autoloader && cd ../../"
+    "postinstall": "cd src/api/ && composer update && composer install --optimize-autoloader && cd ../../"
   },
   "dependencies": {
     "@angular/animations": "^5.2.9",
