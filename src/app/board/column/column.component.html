@@ -1,6 +1,6 @@
-<h3 [class.near-limit]="columnData.hasTaskLimit() &&
+<h3 [class.near-limit]="columnData && columnData.hasTaskLimit() &&
   columnData.task_limit - columnData.tasks.length === 0"
-  [class.limit-reached]="columnData.hasTaskLimit() &&
+  [class.limit-reached]="columnData && columnData.hasTaskLimit() &&
   columnData.task_limit - columnData.tasks.length < 0">
   <span class="icon icon-minus-squared-alt"
     [title]="strings['boards_collapseAllTasks']"
@@ -11,14 +11,14 @@
     *ngIf="collapseTasks"
     (click)="toggleTaskCollapse()"></span>
 
-  {{ columnData.name }}
+  {{ columnData ? columnData.name : '' }}
 
-  <span class="count" *ngIf="columnData.hasTaskLimit()">
+  <span class="count" *ngIf="columnData && columnData.hasTaskLimit()">
     {{ columnData.tasks.length + ' / ' + columnData.task_limit }}
   </span>
 
   <span class="badge" [title]="strings['boards_tasksInColumn']">
-    {{ columnData.tasks && columnData.tasks.length || 0 }}
+    {{ columnData && columnData.tasks && columnData.tasks.length || 0 }}
   </span>
 
   <span class="icon icon-angle-double-up"
@@ -27,7 +27,7 @@
     [title]="strings['boards_collapseColumn']" (click)="toggleCollapsed()"></span>
 
   <span class="count-editor"
-    *ngIf="activeUser.isAnyAdmin()">
+    *ngIf="activeUser && activeUser.isAnyAdmin()">
     <i class="icon icon-hashtag"
       [title]="strings['boards_editTaskLimit']"
       (click)="beginLimitEdit()"></i>
@@ -72,7 +72,7 @@
   </button>
 </div>
 
-<div class="tasks"
+<div class="tasks" *ngIf="columnData"
   [dragula]="'tasks-bag'" [dragulaModel]="columnData.tasks">
   <tb-task class="task-container" [id]="task.id"
     *ngFor="let task of columnData.tasks"
@@ -88,9 +88,9 @@
 
 <tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
 
-<tb-modal *ngIf="activeBoard"
+<tb-modal *ngIf="activeBoard && columnData"
   modal-title="{{ strings['boards_viewTask'] }} - {{ viewModalProps.title }}"
-  modal-id="{{ MODAL_VIEW_ID + columnData.id }}"
+  modal-id="{{ MODAL_VIEW_ID + (columnData ? columnData.id : '') }}"
   wide="true"
   class="view-modal">
   <div *ngIf="viewModalProps.points">
@@ -138,7 +138,7 @@
 
   <div class="quick-actions">
     <button class="flat"
-      (click)="this.modal.close(MODAL_VIEW_ID + columnData.id);
+      (click)="this.modal.close(MODAL_VIEW_ID + (columnData ? columnData.id : ''));
       showModal(viewModalProps.id)">
       {{ strings['boards_editTask'] }}
     </button>
@@ -197,7 +197,7 @@
           [title]="strings['boards_taskRemoveComment']"
           (click)="commentToRemove=comment;
           modal.open(MODAL_CONFIRM_COMMENT_ID +
-          columnData.id)"></i>
+          (columnData ? columnData.id : ''))"></i>
       </div>
     </div>
   </div>
@@ -237,11 +237,11 @@
   </div>
 </tb-modal>
 
-<tb-modal *ngIf="activeBoard"
+<tb-modal *ngIf="activeBoard && columnData"
   modal-title="{{ modalProps.id === 0
   ? strings['boards_addTask']
   : strings['boards_editTask'] }}"
-  modal-id="{{ MODAL_ID + columnData.id }}">
+  modal-id="{{ MODAL_ID + (columnData ? columnData.id : '') }}">
   <label>
     {{ strings['boards_taskTitle'] }}
     <input #focusMe type="text" name="title"
@@ -312,32 +312,32 @@
       <i class="icon icon-floppy"></i>
       {{ strings['boards_saveTask'] }}
     </button>
-    <button class="flat" (click)="modal.close(MODAL_ID + columnData.id)">
+    <button class="flat" (click)="modal.close(MODAL_ID + (columnData ? columnData.id : ''))">
       {{ strings['cancel'] }}
     </button>
   </div>
 </tb-modal>
 
 <tb-modal modal-title="{{ strings['boards_confirmRemoveTask'] }}" blocking="true"
-  modal-id="{{ MODAL_CONFIRM_ID + columnData.id }}">
+  modal-id="{{ MODAL_CONFIRM_ID + (columnData ? columnData.id : '') }}">
   <div class="center">
     {{ strings['boards_confirmWarning'] }}<br>
     {{ strings['boards_confirmContinue'] }}
   </div>
   <div class="buttons">
     <button class="flat"
-      (click)="modal.close(MODAL_CONFIRM_ID + columnData.id);removeTask()">
+      (click)="modal.close(MODAL_CONFIRM_ID + (columnData ? columnData.id : ''));removeTask()">
       {{ strings['yes'] }}
     </button>
     <button #defaultAction #focusMe
-      (click)="modal.close(MODAL_CONFIRM_ID + columnData.id)">
+      (click)="modal.close(MODAL_CONFIRM_ID + (columnData ? columnData.id : ''))">
       {{ strings['no'] }}
     </button>
   </div>
 </tb-modal>
 
 <tb-modal modal-title="{{ strings['boards_confirmRemoveComment'] }}" blocking="true"
-  modal-id="{{ MODAL_CONFIRM_COMMENT_ID + columnData.id }}">
+  modal-id="{{ MODAL_CONFIRM_COMMENT_ID + (columnData ? columnData.id : '') }}">
   <div class="center">
     {{ strings['boards_confirmWarningComment'] }}<br>
     {{ strings['boards_confirmContinue'] }}
@@ -345,11 +345,11 @@
   <div class="buttons">
     <button class="flat"
       (click)="modal.close(MODAL_CONFIRM_COMMENT_ID
-      + columnData.id);removeComment()">
+      + (columnData ? columnData.id : ''));removeComment()">
       {{ strings['yes'] }}
     </button>
     <button #defaultAction #focusMe
-      (click)="modal.close(MODAL_CONFIRM_COMMENT_ID + columnData.id)">
+      (click)="modal.close(MODAL_CONFIRM_COMMENT_ID + (columnData ? columnData.id : ''))">
       {{ strings['no'] }}
     </button>
   </div>

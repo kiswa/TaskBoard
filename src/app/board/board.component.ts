@@ -45,9 +45,8 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
   constructor(public title: Title,
               private router: Router,
               private active: ActivatedRoute,
-              private auth: AuthService,
-              private boardService: BoardService,
-
+              public auth: AuthService,
+              public boardService: BoardService,
               private menuService: ContextMenuService,
               private notes: NotificationsService,
               private stringsService: StringsService,

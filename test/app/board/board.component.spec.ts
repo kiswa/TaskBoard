@@ -1,4 +1,4 @@
-import { async, TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing'
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
@@ -26,60 +26,13 @@ import { BoardDisplay } from '../../../src/app/board/board.component';
 import { BoardService } from '../../../src/app/board/board.service';
 import { ColumnDisplay } from '../../../src/app/board/column/column.component';
 import { TaskDisplay } from '../../../src/app/board/task/task.component';
-
-class RouterMock {
-  public url = {
-    indexOf: str => TestBed.get(Location).path().indexOf(str)
-  }
-
-  navigate(arr) {
-    TestBed.get(Location).go(arr[0]);
-  }
-}
-
-class DragulaMock {
-  public opts;
-  public dropModel = new BehaviorSubject([
-    {},
-    { id: '1' },
-    { parentNode: { id: '1' } },
-    { parentNode: { id: '1' } }
-  ]);
-
-  find () {
-    return {};
-  }
-
-  destroy () {}
-
-  setOptions (name, opts) {
-    this.opts = opts;
-  }
-}
-
-class BoardServiceMock {
-  public activeBoardChanged = new BehaviorSubject({ id: 0, name: 'Test', columns: [] });
-
-  getBoards () {
-    return new BehaviorSubject({
-      data: [{}, [{ id: 1, name: 'Test' }]]
-    });
-  }
-
-  updateActiveBoard (board) {
-    this.activeBoardChanged.next(board);
-  }
-
-  updateColumn (col) {
-    return new BehaviorSubject({});
-  }
-}
+import { RouterMock, BoardServiceMock, DragulaMock } from '../mocks';
 
 describe('BoardDisplay', () => {
   let component: BoardDisplay,
     fixture: ComponentFixture<BoardDisplay>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -115,13 +68,13 @@ describe('BoardDisplay', () => {
         }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BoardDisplay);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  })
+  });
 
   it('sets the title when constructed', () => {
     expect(component.title.getTitle()).toEqual('TaskBoard - Test');
@@ -219,6 +172,9 @@ describe('BoardDisplay', () => {
   it('has a function to check for boards', () => {
     expect(component.noBoards).toEqual(jasmine.any(Function));
 
+    component.loading = true;
+    expect(component.noBoards()).toEqual(false);
+
     component.loading = false;
     component.boards = [];
 
@@ -228,10 +184,18 @@ describe('BoardDisplay', () => {
     expect(component.noBoards()).toEqual(false);
   })
 
-  it('updates the boards list from a service', () => {
-    component.boards = <any>[];
+  it('updates the active board from a service', () => {
+    component.boardService.updateActiveBoard(null);
+    component.boardService.updateActiveBoard(<any>{});
 
+    expect(component.activeBoard).toEqual(jasmine.any(Object));
   });
+
+  it('updates the active user from a service', () => {
+    component.auth.updateUser(<any>{ security_level: 1 });
+
+    expect(component.activeUser).toEqual(jasmine.any(Object));
+  })
 
 });
 

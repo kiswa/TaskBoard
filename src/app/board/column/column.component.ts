@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  OnDestroy,
   Output
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -36,14 +37,12 @@ import { BoardService } from '../board.service';
   selector: 'tb-column',
   templateUrl: './column.component.html'
 })
-export class ColumnDisplay implements OnInit {
-  private templateElement: any;
+export class ColumnDisplay implements OnInit, OnDestroy {
   private saving: boolean;
   private showLimitEditor: boolean;
   private isOverdue: boolean;
   private isNearlyDue: boolean;
 
-  private userOptions: UserOptions;
   private tasks: Array<Task>;
 
   private MODAL_ID: string;
@@ -60,7 +59,10 @@ export class ColumnDisplay implements OnInit {
 
   private newComment: string;
   private fileUpload: any;
+  private subs = [];
 
+  public templateElement: any;
+  public userOptions: UserOptions;
   public strings: any;
   public collapseTasks: boolean;
   public activeUser: User;
@@ -98,7 +100,7 @@ export class ColumnDisplay implements OnInit {
     this.modalProps = new Task();
     this.viewModalProps = new Task();
 
-    stringsService.stringsChanged.subscribe(newStrings => {
+    let sub = stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
 
       this.contextMenuItems = [
@@ -106,12 +108,18 @@ export class ColumnDisplay implements OnInit {
                             this.getShowModalFunction())
       ];
     });
+    this.subs.push(sub);
 
-    boardService.activeBoardChanged.subscribe((board: Board) => {
+    sub = boardService.activeBoardChanged.subscribe((board: Board) => {
       this.activeBoard = board;
     });
+    this.subs.push(sub);
 
-    auth.userChanged.subscribe((user: User) => {
+    sub = auth.userChanged.subscribe((user: User) => {
+      if (user === null) {
+        return;
+      }
+
       this.activeUser = new User(+user.default_board_id,
                                  user.email,
                                  +user.id,
@@ -124,13 +132,18 @@ export class ColumnDisplay implements OnInit {
       this.userOptions = auth.userOptions;
       this.showActivity = this.activeUser.isAnyAdmin();
     });
+    this.subs.push(sub);
   }
 
   ngOnInit() {
     this.templateElement.classList.remove('double');
 
-    if (this.userOptions.multiple_tasks_per_row) {
+    if (this.userOptions && this.userOptions.multiple_tasks_per_row) {
       this.templateElement.classList.add('double');
+    }
+
+    if (this.activeUser === undefined) {
+      return;
     }
 
     let isCollapsed = false;
@@ -147,6 +160,10 @@ export class ColumnDisplay implements OnInit {
 
     this.sortTasks();
     this.taskLimit = this.columnData.task_limit;
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => (sub.unsubscribe()));
   }
 
   sortTasks() {
