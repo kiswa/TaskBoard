@@ -4,8 +4,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { DragulaService } from 'ng2-dragula/ng2-dragula';
 import { DragulaModule } from 'ng2-dragula/ng2-dragula';
 
 import {
@@ -23,6 +26,54 @@ import { BoardDisplay } from '../../../src/app/board/board.component';
 import { BoardService } from '../../../src/app/board/board.service';
 import { ColumnDisplay } from '../../../src/app/board/column/column.component';
 import { TaskDisplay } from '../../../src/app/board/task/task.component';
+
+class RouterMock {
+  public url = {
+    indexOf: str => TestBed.get(Location).path().indexOf(str)
+  }
+
+  navigate(arr) {
+    TestBed.get(Location).go(arr[0]);
+  }
+}
+
+class DragulaMock {
+  public opts;
+  public dropModel = new BehaviorSubject([
+    {},
+    { id: '1' },
+    { parentNode: { id: '1' } },
+    { parentNode: { id: '1' } }
+  ]);
+
+  find () {
+    return {};
+  }
+
+  destroy () {}
+
+  setOptions (name, opts) {
+    this.opts = opts;
+  }
+}
+
+class BoardServiceMock {
+  public activeBoardChanged = new BehaviorSubject({ id: 0, name: 'Test', columns: [] });
+
+  getBoards () {
+    return new BehaviorSubject({
+      data: [{}, [{ id: 1, name: 'Test' }]]
+    });
+  }
+
+  updateActiveBoard (board) {
+    this.activeBoardChanged.next(board);
+  }
+
+  updateColumn (col) {
+    return new BehaviorSubject({});
+  }
+}
 
 describe('BoardDisplay', () => {
   let component: BoardDisplay,
@@ -49,10 +100,12 @@ describe('BoardDisplay', () => {
         Title,
         Constants,
         AuthService,
-        BoardService,
         StringsService,
         ContextMenuService,
         NotificationsService,
+        { provide: BoardService, useClass: BoardServiceMock },
+        { provide: DragulaService, useClass: DragulaMock },
+        { provide: Router, useClass: RouterMock },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -71,7 +124,114 @@ describe('BoardDisplay', () => {
   })
 
   it('sets the title when constructed', () => {
-    expect(component.title.getTitle()).toEqual('TaskBoard - Kanban App');
+    expect(component.title.getTitle()).toEqual('TaskBoard - Test');
+  });
+
+  it('implements ngOnOnit', () => {
+    component.boardNavId = 0;
+    component.ngOnInit();
+    expect(component.boardNavId).toEqual(0);
+
+    component.activeUser = <any>{ default_board_id: 2 };
+    component.ngOnInit();
+
+    const location = TestBed.get(Location);
+    expect(component.boardNavId).toEqual(2);
+    expect(location.path()).toEqual('/boards/2');
+  });
+
+  it('sets up drag and drop during ngAfterContentInit', () => {
+    component.activeBoard = <any>{ columns: [
+      { id: 1, tasks: [{}] }
+    ] };
+    component.ngAfterContentInit();
+
+    expect((<any>component.dragula).opts.moves).toEqual(jasmine.any(Function));
+    expect(component.activeBoard.columns[0].tasks[0].position).toEqual(1);
+
+    const test = (<any>component.dragula).opts.moves(null, null, {
+      classList: { contains: () => false }
+    });
+    expect(test).toEqual(false);
+  });
+
+  it('has a function to open a board', () => {
+    component.boardNavId = null;
+    component.goToBoard();
+
+    component.boardNavId = 1;
+    component.goToBoard();
+
+    const location = TestBed.get(Location);
+    expect(location.path()).toEqual('/boards/1');
+  });
+
+  it('has a function to toggle filtered tasks', () => {
+    component.activeBoard = <any>{ columns: [
+      { tasks: [{ hidefiltered: true }] }
+    ] };
+
+    component.toggleFiltered();
+    expect(component.activeBoard.columns[0].tasks[0].hideFiltered).toEqual(false);
+  });
+
+  it('has a function to filter tasks', () => {
+    component.userFilter = -1;
+
+    component.activeBoard = <any>{
+      columns: [{
+        tasks: [{
+          assignees: []
+        }]
+      }]
+    };
+
+    const task = component.activeBoard.columns[0].tasks[0];
+
+    component.filterTasks();
+    expect(task.filtered).toEqual(false);
+
+    task.assignees = <any>[{ id: 1 }];
+
+    component.filterTasks();
+    expect(task.filtered).toEqual(true);
+
+    component.userFilter = 1;
+    component.filterTasks();
+    expect(task.filtered).toEqual(false);
+
+    component.categoryFilter = -1;
+    task.categories = [];
+
+    component.filterTasks();
+    expect(task.filtered).toEqual(false);
+
+    task.categories = <any>[{ id: 1 }];
+
+    component.filterTasks();
+    expect(task.filtered).toEqual(true);
+
+    component.categoryFilter = 1;
+    component.filterTasks();
+    expect(task.filtered).toEqual(false);
+  });
+
+  it('has a function to check for boards', () => {
+    expect(component.noBoards).toEqual(jasmine.any(Function));
+
+    component.loading = false;
+    component.boards = [];
+
+    expect(component.noBoards()).toEqual(true);
+
+    component.boards = <any>[{}];
+    expect(component.noBoards()).toEqual(false);
   })
+
+  it('updates the boards list from a service', () => {
+    component.boards = <any>[];
+
+  });
+
 });
 

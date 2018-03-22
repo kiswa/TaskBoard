@@ -5,7 +5,7 @@
         "slim/slim": "^3.3",
         "firebase/php-jwt": "^5.0",
         "phpmailer/phpmailer": "^6.0",
-        "phpunit/phpunit": "^5.7",
+        "phpunit/phpunit": "^6.0",
         "myclabs/php-enum": "^1.5"
     },
     "license": "MIT",

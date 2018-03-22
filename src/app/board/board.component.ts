@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterContentInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
@@ -24,14 +24,16 @@ import { BoardService } from './board.service';
   selector: 'tb-board',
   templateUrl: './board.component.html'
 })
-export class BoardDisplay implements OnInit {
+export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
   private strings: any;
-  private boardNavId: number;
-  private userFilter: number;
-  private categoryFilter: number;
   private noBoardsMessage: string;
+  private subs: Array<any>;
 
   private hideFiltered: boolean;
+
+  public categoryFilter: number;
+  public userFilter: number;
+  public boardNavId: number;
 
   public activeUser: User;
   public activeBoard: Board;
@@ -45,10 +47,11 @@ export class BoardDisplay implements OnInit {
               private active: ActivatedRoute,
               private auth: AuthService,
               private boardService: BoardService,
+
               private menuService: ContextMenuService,
               private notes: NotificationsService,
               private stringsService: StringsService,
-              private dragula: DragulaService) {
+              public dragula: DragulaService) {
     title.setTitle('TaskBoard - Kanban App');
 
     this.boardNavId = null;
@@ -56,10 +59,13 @@ export class BoardDisplay implements OnInit {
     this.categoryFilter = null;
 
     this.activeBoard = new Board();
+    this.boards = [];
+    this.subs = [];
 
     this.loading = true;
+    this.hideFiltered = false;
 
-    stringsService.stringsChanged.subscribe(newStrings => {
+    let sub = stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
 
       // Updating the active user updates some display strings.
@@ -67,11 +73,18 @@ export class BoardDisplay implements OnInit {
         this.updateActiveUser(this.activeUser);
       }
     });
+    this.subs.push(sub);
 
     this.pageName = this.strings.boards;
-    this.updateBoards();
 
-    boardService.activeBoardChanged.subscribe((board: Board) => {
+    sub = this.boardService.getBoards().subscribe((response: ApiResponse) => {
+      this.boards = [];
+      this.updateBoardsList(response.data[1]);
+      this.loading = false;
+    });
+    this.subs.push(sub);
+
+    sub = boardService.activeBoardChanged.subscribe((board: Board) => {
       if (!board) {
         return;
       }
@@ -81,23 +94,25 @@ export class BoardDisplay implements OnInit {
       this.userFilter = null;
       this.categoryFilter = null;
     });
+    this.subs.push(sub);
 
-    auth.userChanged.subscribe((user: User) => {
+    sub = auth.userChanged.subscribe((user: User) => {
       if (user) {
         this.updateActiveUser(user);
-
       }
     });
+    this.subs.push(sub);
 
-    active.params.subscribe(params => {
+    sub = active.params.subscribe(params => {
       let id = +params.id;
 
       this.boardNavId = id ? id : null;
       this.updateActiveBoard();
     });
+    this.subs.push(sub);
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     if (this.boardNavId) {
       return;
     }
@@ -106,6 +121,10 @@ export class BoardDisplay implements OnInit {
       this.boardNavId = this.activeUser.default_board_id;
       this.goToBoard();
     }
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   ngAfterContentInit() {
@@ -142,7 +161,8 @@ export class BoardDisplay implements OnInit {
             position++;
           });
 
-          this.boardService.updateColumn(column).subscribe();
+          let oneOff = this.boardService.updateColumn(column).subscribe();
+          oneOff.unsubscribe();
         }
       });
     });
@@ -154,14 +174,6 @@ export class BoardDisplay implements OnInit {
     }
 
     this.router.navigate(['/boards/' + this.boardNavId]);
-  }
-
-  updateBoards() {
-    this.boardService.getBoards().subscribe((response: ApiResponse) => {
-      this.boards = [];
-      this.updateBoardsList(response.data[1]);
-      this.loading = false;
-    });
   }
 
   toggleFiltered() {

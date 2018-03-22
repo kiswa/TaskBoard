@@ -2,7 +2,7 @@
 use RedBeanPHP\R;
 use Firebase\JWT\JWT;
 
-class AuthTest extends PHPUnit_Framework_TestCase {
+class AuthTest extends PHPUnit\Framework\TestCase {
     private $auth;
 
     public static function setupBeforeClass() {

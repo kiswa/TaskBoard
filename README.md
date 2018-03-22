@@ -10,7 +10,7 @@ The goal of TaskBoard is to provide a simple and clean interface to a functional
 
 ### Prerequisites
 
-A web server running PHP 5.6, or 7.x with sqlite enabled.
+A web server running PHP 7.x with sqlite enabled (it may work on PHP 5.6, but is not supported).
 
 The server must have `sqlite3` and `php7-sqlite` (or `php5-sqlite`) installed.
 

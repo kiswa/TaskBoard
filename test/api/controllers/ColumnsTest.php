@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../Mocks.php';
 use RedBeanPHP\R;
 
-class ColumnsTest extends PHPUnit_Framework_TestCase {
+class ColumnsTest extends PHPUnit\Framework\TestCase {
     private $columns;
 
     public static function setupBeforeClass() {

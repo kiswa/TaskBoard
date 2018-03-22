@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../Mocks.php';
 use RedBeanPHP\R;
 
-class TasksTest extends PHPUnit_Framework_TestCase {
+class TasksTest extends PHPUnit\Framework\TestCase {
     private $tasks;
 
     public static function setupBeforeClass() {

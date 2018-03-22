@@ -1,14 +1,13 @@
 language: php
 php:
-  - '5.6'
   - '7.0'
   - '7.1'
   - '7.2'
+  - '7.3'
 before_script:
   - nvm install 6
   - nvm use 6
   - npm i -g npm@4
-  - npm i -g @angular/cli
   - npm i
   - touch tests.db
   - chmod a+w tests.db

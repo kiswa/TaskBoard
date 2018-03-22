@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../Mocks.php';
 
-class InvalidTest extends PHPUnit_Framework_TestCase {
+class InvalidTest extends PHPUnit\Framework\TestCase {
     public function testCreateInvalid() {
         $invalid = new Invalid(new ContainerMock());
         $expected = new ApiJson();
