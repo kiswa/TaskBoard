@@ -38,7 +38,6 @@ import { BoardService } from '../board.service';
   templateUrl: './column.component.html'
 })
 export class ColumnDisplay implements OnInit, OnDestroy {
-  private saving: boolean;
   private showLimitEditor: boolean;
   private isOverdue: boolean;
   private isNearlyDue: boolean;
@@ -48,10 +47,8 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   private MODAL_ID: string;
   private MODAL_VIEW_ID: string;
 
-  private modalProps: Task;
   private viewModalProps: Task;
   private viewTaskActivities: Array<ActivitySimple>;
-  private taskToRemove: number;
   private taskLimit: number;
   private commentEdit: Comment;
   private commentToRemove: Comment;
@@ -62,13 +59,17 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   private subs = [];
 
   public templateElement: any;
-  public userOptions: UserOptions;
   public strings: any;
   public collapseTasks: boolean;
+  public sortOption: string;
+  public saving: boolean;
+  public taskToRemove: number;
+
+  public modalProps: Task;
+  public userOptions: UserOptions;
   public activeUser: User;
   public activeBoard: Board;
   public contextMenuItems: Array<ContextMenuItem>;
-  public sortOption: string;
   public quickAdd: Task;
 
   public MODAL_CONFIRM_ID: string;
@@ -84,7 +85,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
               private notes: NotificationsService,
               public modal: ModalService,
               private stringsService: StringsService,
-              private boardService: BoardService,
+              public boardService: BoardService,
               private sanitizer: DomSanitizer) {
     this.templateElement = elRef.nativeElement;
     this.tasks = [];
@@ -218,14 +219,16 @@ export class ColumnDisplay implements OnInit, OnDestroy {
       .subscribe((response: ApiResponse) => {
         response.alerts.forEach(note => this.notes.add(note));
 
-        this.modal.close(this.MODAL_ID + this.columnData.id);
-
         if (response.status !== 'success') {
+          this.saving = false;
           return;
         }
 
-        let boardData = response.data[2][0];
+        this.modal.close(this.MODAL_ID + (this.columnData
+                         ? this.columnData.id + ''
+                         : ''));
 
+        let boardData = response.data[2][0];
         boardData.ownColumn.forEach((column: any) => {
           if (!column.ownTask) {
             column.ownTask = [];
@@ -251,11 +254,14 @@ export class ColumnDisplay implements OnInit, OnDestroy {
         response.alerts.forEach(note => this.notes.add(note));
 
         if (response.status !== 'success') {
+          this.saving = false;
           return;
         }
 
         this.boardService.updateActiveBoard(response.data[2][0]);
-        this.modal.close(this.MODAL_ID + this.columnData.id);
+        this.modal.close(this.MODAL_ID + (this.columnData
+                         ? this.columnData.id + ''
+                         : ''));
 
         this.boardService.refreshToken();
         this.saving = false;

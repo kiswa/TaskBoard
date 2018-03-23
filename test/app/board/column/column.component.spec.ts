@@ -88,5 +88,111 @@ describe('ColumnDisplay', () => {
     expect(component.columnData.tasks[0].points).toEqual(3);
   });
 
+  it('calls a service to toggle collapsed state', () => {
+    (<any>component.boardService.toggleCollapsed) = () => {
+      return { subscribe: fn =>  fn(<any>{ data: [{}, [1]] }) };
+    };
+    component.activeUser = <any>{ id: 1, collapsed: [] };
+    component.columnData = <any>{ id: 1 };
+
+    component.toggleCollapsed();
+
+    expect(component.templateElement.classList
+      .contains('collapsed')).toEqual(true);
+    expect(component.activeUser.collapsed[0]).toEqual(1);
+  });
+
+  it('toggles task collapsing', () => {
+    component.collapseTasks = false;
+
+    component.toggleTaskCollapse();
+    expect(component.collapseTasks).toEqual(true);
+  });
+
+  it('updates task color by category', () => {
+    const mock = [<any>{ default_task_color: 'red' }];
+    component.updateTaskColorByCategory(mock);
+
+    expect(component.modalProps.categories).toEqual(mock);
+    expect(component.modalProps.color).toEqual('red');
+  });
+
+  it('calls a service to add a task', () => {
+    component.addTask();
+    expect(component.saving).toEqual(false);
+
+    (<any>component.boardService.addTask) = () => {
+      return { subscribe: fn =>  fn(<any>{ status: 'error', alerts: [{}] }) };
+    };
+
+    component.modalProps = <any>{ title: 'Testing' };
+    component.addTask();
+    expect(component.saving).toEqual(false);
+
+    (<any>component.boardService.addTask) = () => {
+      return { subscribe: fn =>  fn(<any>{
+        status: 'success',
+        alerts: [],
+        data: [{}, {}, [{ ownColumn: [{}] }]]
+      }) };
+    };
+
+    component.addTask();
+    expect(component.saving).toEqual(false);
+    });
+
+  it('calls a service to update a task', () => {
+    component.updateTask();
+    expect(component.saving).toEqual(false);
+
+    (<any>component.boardService.updateTask) = () => {
+      return { subscribe: fn =>  fn(<any>{ status: 'error', alerts: [{}] }) };
+    };
+
+    component.modalProps = <any>{ title: 'Testing' };
+    component.updateTask();
+    expect(component.saving).toEqual(false);
+
+    (<any>component.boardService.updateTask) = () => {
+      return { subscribe: fn =>  fn(<any>{
+        status: 'success',
+        alerts: [],
+        data: [{}, {}, [{ ownColumn: [{}] }]]
+      }) };
+    };
+
+    component.updateTask();
+    expect(component.saving).toEqual(false);
+    });
+
+  it('calls a service to remove a task', () => {
+    let called = false;
+    component.taskToRemove = 1;
+
+    (<any>component.boardService.removeTask) = () => {
+      return { subscribe: fn => {
+        called = true;
+        fn(<any>{ status: 'error', alerts: [{}] });
+      } };
+    };
+
+    component.removeTask();
+    expect(called).toEqual(true);
+
+    (<any>component.boardService.removeTask) = () => {
+      return { subscribe: fn => {
+        called = true;
+        fn(<any>{
+          status: 'success',
+          alerts: [{}],
+          data: [{}, [{}]]
+        });
+      } };
+    };
+
+    component.removeTask();
+    expect(called).toEqual(true);
+  });
+
 });
 
