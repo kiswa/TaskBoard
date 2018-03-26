@@ -38,26 +38,21 @@ import { BoardService } from '../board.service';
   templateUrl: './column.component.html'
 })
 export class ColumnDisplay implements OnInit, OnDestroy {
-  private showLimitEditor: boolean;
-  private isOverdue: boolean;
-  private isNearlyDue: boolean;
-
   private tasks: Array<Task>;
+  private viewTaskActivities: Array<ActivitySimple>;
 
   private MODAL_ID: string;
   private MODAL_VIEW_ID: string;
 
-  private viewModalProps: Task;
-  private viewTaskActivities: Array<ActivitySimple>;
-  private taskLimit: number;
-  private commentEdit: Comment;
-  private commentToRemove: Comment;
   private showActivity: boolean;
-
-  private newComment: string;
   private fileUpload: any;
   private subs = [];
 
+  public isOverdue: boolean;
+  public isNearlyDue: boolean;
+  public showLimitEditor: boolean;
+  public taskLimit: number;
+  public newComment: string;
   public templateElement: any;
   public strings: any;
   public collapseTasks: boolean;
@@ -65,6 +60,9 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   public saving: boolean;
   public taskToRemove: number;
 
+  public commentEdit: Comment;
+  public commentToRemove: Comment;
+  public viewModalProps: Task;
   public modalProps: Task;
   public userOptions: UserOptions;
   public activeUser: User;
@@ -353,10 +351,6 @@ export class ColumnDisplay implements OnInit, OnDestroy {
       .subscribe((response: ApiResponse) => {
         response.alerts.forEach(note => this.notes.add(note));
 
-        if (response.status !== 'success') {
-          return;
-        }
-
         let updatedTask = response.data[1][0];
         this.replaceUpdatedTask(updatedTask);
       });
@@ -429,6 +423,32 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     this.quickAdd = new Task();
   }
 
+  checkDueDate() {
+    if (this.viewModalProps.due_date === '') {
+      return;
+    }
+
+    let dueDate = new Date(this.viewModalProps.due_date);
+
+    if (isNaN(dueDate.valueOf())) {
+      return;
+    }
+
+    let millisecondsPerDay = (1000 * 3600 * 24),
+      today = new Date(),
+      timeDiff = today.getTime() - dueDate.getTime(),
+      daysDiff = Math.ceil(timeDiff / millisecondsPerDay);
+
+    if (daysDiff > 0) {
+      // past due date
+      this.isOverdue = true;
+    }
+
+    if (daysDiff <= 0 && daysDiff > -3) {
+      this.isNearlyDue = true;
+    }
+  }
+
   private convertToTask(updatedTask: any) {
     let task = new Task(updatedTask.id,
                         updatedTask.title,
@@ -470,32 +490,6 @@ export class ColumnDisplay implements OnInit, OnDestroy {
                     comment.task_id, comment.timestamp)
       );
     });
-  }
-
-  private checkDueDate() {
-    if (this.viewModalProps.due_date === '') {
-      return;
-    }
-
-    let dueDate = new Date(this.viewModalProps.due_date);
-
-    if (isNaN(dueDate.valueOf())) {
-      return;
-    }
-
-    let millisecondsPerDay = (1000 * 3600 * 24),
-      today = new Date(),
-      timeDiff = today.getTime() - dueDate.getTime(),
-      daysDiff = Math.ceil(timeDiff / millisecondsPerDay);
-
-    if (daysDiff > 0) {
-      // past due date
-      this.isOverdue = true;
-    }
-
-    if (daysDiff <= 0 && daysDiff > -3) {
-      this.isNearlyDue = true;
-    }
   }
 
   // Needs anonymous function for proper `this` context.
