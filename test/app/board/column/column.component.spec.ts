@@ -390,5 +390,54 @@ describe('ColumnDisplay', () => {
     expect(component.isOverdue).toEqual(true);
   });
 
+  it('provides a function to remove a task', () => {
+    const remove = component.getRemoveTaskFunction(3);
+
+    expect(remove).toEqual(jasmine.any(Function));
+
+    component.columnData = <any>{ id: 1 };
+    remove();
+
+    expect(component.taskToRemove).toEqual(3);
+  });
+
+  it('provides a function to show a modal', () => {
+    const show = component.getShowModalFunction(3);
+
+    expect(show).toEqual(jasmine.any(Function));
+
+    component.columnData = <any>{ id: 1, tasks: [{
+      id: 3, title: 'test', description: '', color: '#ffffe0', points: 1,
+      position: 1, column_id: 1, comments: [], attachments: [],
+      assignees: [{}], categories: [{}]
+    }] };
+    component.activeBoard = <any>{ users: [{}], categories: [{}] };
+    show();
+
+    expect(component.modalProps.column_id).toEqual(1);
+  });
+
+  it('provides a function to show a view modal', () => {
+    const view = component.getShowViewModalFunction(3);
+
+    expect(view).toEqual(jasmine.any(Function));
+
+    component.showActivity = true;
+    component.columnData = <any>{ id: 1, tasks: [{
+      id: 3, title: 'test', description: '', color: '#ffffe0', points: 1,
+      position: 1, column_id: 1, comments: [], attachments: [],
+      assignees: [{}], categories: [{}]
+    }] };
+    (<any>component.boardService.getTaskActivity) = () => {
+      return { subscribe: fn =>  fn(<any>{ data: [
+        {}, [{ text: '', timestamp: '' }]
+      ] }) };
+    };
+
+    view();
+
+    expect(component.viewModalProps.column_id).toEqual(1);
+  });
+
 });
 

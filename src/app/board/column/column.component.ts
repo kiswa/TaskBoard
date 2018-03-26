@@ -44,10 +44,10 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   private MODAL_ID: string;
   private MODAL_VIEW_ID: string;
 
-  private showActivity: boolean;
   private fileUpload: any;
   private subs = [];
 
+  public showActivity: boolean;
   public isOverdue: boolean;
   public isNearlyDue: boolean;
   public showLimitEditor: boolean;
@@ -449,6 +449,21 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     }
   }
 
+  getRemoveTaskFunction(taskId: number): Function {
+    return () => {
+      this.taskToRemove = taskId;
+      this.modal.open(this.MODAL_CONFIRM_ID + this.columnData.id);
+    };
+  }
+
+  getShowModalFunction(taskId: number = 0): Function {
+    return () => { this.showModal(taskId); };
+  }
+
+  getShowViewModalFunction(taskId: number): Function {
+    return () => { this.showViewModal(taskId); };
+  }
+
   private convertToTask(updatedTask: any) {
     let task = new Task(updatedTask.id,
                         updatedTask.title,
@@ -536,8 +551,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   }
 
   private getUserName(userId: number) {
-    let user = this.activeBoard.users
-      .filter((test: User) => test.id === userId)[0];
+    let user = this.activeBoard.users.find((test: User) => test.id === userId);
 
     return user.username;
   }
@@ -556,24 +570,8 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     this.onUpdateBoards.emit();
   }
 
-  private getRemoveTaskFunction(taskId: number): Function {
-    return () => {
-      this.taskToRemove = taskId;
-      this.modal.open(this.MODAL_CONFIRM_ID + this.columnData.id);
-    };
-  }
-
-  private getShowModalFunction(taskId: number = 0): Function {
-    return () => { this.showModal(taskId); };
-  }
-
-  private getShowViewModalFunction(taskId: number): Function {
-    return () => { this.showViewModal(taskId); };
-  }
-
   private showViewModal(taskId: number) {
-    let viewTask = this.columnData.tasks
-      .filter(task => task.id === taskId)[0];
+    let viewTask = this.columnData.tasks.find(task => task.id === taskId);
 
     this.viewTaskActivities = [];
     this.boardService.getTaskActivity(viewTask.id)
@@ -610,8 +608,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
       return;
     }
 
-    let editTask = this.columnData.tasks
-      .filter(task => task.id === taskId)[0];
+    let editTask = this.columnData.tasks.find(task => task.id === taskId);
 
     this.modalProps = new Task(editTask.id, editTask.title,
                                editTask.description, editTask.color,

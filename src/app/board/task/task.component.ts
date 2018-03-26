@@ -32,7 +32,6 @@ import { BoardService } from '../board.service';
   templateUrl: './task.component.html'
 })
 export class TaskDisplay implements OnInit {
-  private activeBoard: Board;
   private boardsList: Array<Board>;
 
   private totalTasks: number;
@@ -43,6 +42,7 @@ export class TaskDisplay implements OnInit {
 
   public strings: any;
   public percentComplete: number;
+  public activeBoard: Board;
   public userOptions: UserOptions;
   public contextMenuItems: Array<ContextMenuItem>;
 
@@ -94,6 +94,10 @@ export class TaskDisplay implements OnInit {
     // Since marked is global, the counts need to be stored uniquely per task.
     // String literal access needed because augmenting the type doesn't work.
     marked['taskCounts'] = []; // tslint:disable-line
+    if (!this.taskData) {
+      return;
+    }
+
     marked['taskCounts'][this.taskData.id] = { // tslint:disable-line
       total: 0,
       complete: 0
