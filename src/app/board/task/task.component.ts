@@ -63,7 +63,7 @@ export class TaskDisplay implements OnInit {
 
   constructor(private auth: AuthService,
               private sanitizer: DomSanitizer,
-              private boardService: BoardService,
+              public boardService: BoardService,
               private modal: ModalService,
               private notes: NotificationsService,
               private stringsService: StringsService) {
@@ -138,6 +138,91 @@ export class TaskDisplay implements OnInit {
       yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
     return yiq >= 140 ? '#333333' : '#efefef';
+  }
+
+  changeTaskColumn() {
+    let select = document.getElementById('columnsList' + this.taskData.id) as HTMLSelectElement,
+      id = +select[select.selectedIndex].value;
+
+    if (id === 0) {
+      return;
+    }
+
+    this.taskData.column_id = id;
+
+    this.boardService.updateTask(this.taskData)
+      .subscribe((response: ApiResponse) => {
+        response.alerts.forEach(note => this.notes.add(note));
+
+        if (response.status === 'success') {
+          this.boardService.updateActiveBoard(response.data[2][0]);
+        }
+      });
+  }
+
+  copyTaskToBoard() {
+    let select = document.getElementById('boardsList' + this.taskData.id +
+      this.strings.boards_copyTaskTo.split(' ')[0]) as HTMLSelectElement;
+
+    let newBoardId = +select[select.selectedIndex].value;
+    let taskData = { ...this.taskData };
+    let boardData: Board;
+
+    this.boardsList.forEach(board => {
+      if (board.id === newBoardId) {
+        taskData.column_id = board.columns[0].id;
+        boardData = board;
+      }
+    });
+
+    this.boardService.addTask(taskData)
+      .subscribe((response: ApiResponse) => {
+        if (response.status === 'success') {
+          this.notes.add(
+            new Notification('success',
+              this.strings.boards_task +
+              ' ' + taskData.title + ' ' +
+              this.strings.boards_taskCopied +
+              ' ' + boardData.name));
+          this.onUpdateBoards.emit();
+
+          return;
+        }
+
+        response.alerts.forEach(note => this.notes.add(note));
+      });
+  }
+
+  moveTaskToBoard() {
+    let select = document.getElementById('boardsList' + this.taskData.id +
+      this.strings.boards_moveTaskTo.split(' ')[0]) as HTMLSelectElement;
+
+    let newBoardId = +select[select.selectedIndex].value;
+    let boardData: Board;
+
+    this.boardsList.forEach(board => {
+      if (board.id === newBoardId) {
+        this.taskData.column_id = board.columns[0].id;
+        boardData = board;
+      }
+    });
+
+    this.boardService.updateTask(this.taskData)
+      .subscribe((response: ApiResponse) => {
+        if (response.status === 'success') {
+          this.notes.add(
+            new Notification('success',
+              this.strings.boards_task +
+              ' ' + this.taskData.title + ' ' +
+              this.strings.boards_taskMoved +
+              ' ' + boardData.name));
+          this.onUpdateBoards.emit();
+
+          return;
+        }
+
+        response.alerts.forEach(note => this.notes.add(note));
+      });
   }
 
   private checkDueDate() {
@@ -218,26 +303,6 @@ export class TaskDisplay implements OnInit {
     return new ContextMenuItem(menuText, action, false, false, true);
   }
 
-  private changeTaskColumn() {
-    let select = document.getElementById('columnsList' + this.taskData.id) as HTMLSelectElement,
-      id = +select[select.selectedIndex].value;
-
-    if (id === 0) {
-      return;
-    }
-
-    this.taskData.column_id = id;
-
-    this.boardService.updateTask(this.taskData)
-      .subscribe((response: ApiResponse) => {
-        response.alerts.forEach(note => this.notes.add(note));
-
-        if (response.status === 'success') {
-          this.boardService.updateActiveBoard(response.data[2][0]);
-        }
-      });
-  }
-
   private calcPercentComplete() {
     this.percentComplete = 0;
 
@@ -305,71 +370,6 @@ export class TaskDisplay implements OnInit {
     };
 
     return new ContextMenuItem(menuText, action, false, false, true);
-  }
-
-  private copyTaskToBoard() {
-    let select = document.getElementById('boardsList' + this.taskData.id +
-      this.strings.boards_copyTaskTo.split(' ')[0]) as HTMLSelectElement;
-
-    let newBoardId = +select[select.selectedIndex].value;
-    let taskData = { ...this.taskData };
-    let boardData: Board;
-
-    this.boardsList.forEach(board => {
-      if (board.id === newBoardId) {
-        taskData.column_id = board.columns[0].id;
-        boardData = board;
-      }
-    });
-
-    this.boardService.addTask(taskData)
-      .subscribe((response: ApiResponse) => {
-        if (response.status === 'success') {
-          this.notes.add(
-            new Notification('success',
-              this.strings.boards_task +
-              ' ' + taskData.title + ' ' +
-              this.strings.boards_taskCopied +
-              ' ' + boardData.name));
-          this.onUpdateBoards.emit();
-
-          return;
-        }
-
-        response.alerts.forEach(note => this.notes.add(note));
-      });
-  }
-
-  private moveTaskToBoard() {
-    let select = document.getElementById('boardsList' + this.taskData.id +
-      this.strings.boards_moveTaskTo.split(' ')[0]) as HTMLSelectElement;
-
-    let newBoardId = +select[select.selectedIndex].value;
-    let boardData: Board;
-
-    this.boardsList.forEach(board => {
-      if (board.id === newBoardId) {
-        this.taskData.column_id = board.columns[0].id;
-        boardData = board;
-      }
-    });
-
-    this.boardService.updateTask(this.taskData)
-      .subscribe((response: ApiResponse) => {
-        if (response.status === 'success') {
-          this.notes.add(
-            new Notification('success',
-              this.strings.boards_task +
-              ' ' + this.taskData.title + ' ' +
-              this.strings.boards_taskMoved +
-              ' ' + boardData.name));
-          this.onUpdateBoards.emit();
-
-          return;
-        }
-
-        response.alerts.forEach(note => this.notes.add(note));
-      });
   }
 
   private initMarked() {
