@@ -32,11 +32,8 @@ import { BoardService } from '../board.service';
   templateUrl: './task.component.html'
 })
 export class TaskDisplay implements OnInit {
-  private boardsList: Array<Board>;
-
   private totalTasks: number;
   private completeTasks: number;
-
   private isOverdue: boolean;
   private isNearlyDue: boolean;
 
@@ -44,6 +41,7 @@ export class TaskDisplay implements OnInit {
   public percentComplete: number;
   public activeBoard: Board;
   public userOptions: UserOptions;
+  public boardsList: Array<Board>;
   public contextMenuItems: Array<ContextMenuItem>;
 
   @Input('task') taskData: Task;

@@ -6,9 +6,9 @@ import * as Chartist from 'chartist';
   templateUrl: './charts.component.html'
 })
 export class Charts implements AfterViewInit {
-  private percentages: Array<number>;
-  private data: Array<number>;
-  private words: Array<string>;
+  public percentages: Array<number>;
+  public data: Array<number>;
+  public words: Array<string>;
 
   @Input('chart-name') chartName = '';
   @Input('chart-type') chartType = 'pie';

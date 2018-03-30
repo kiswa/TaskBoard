@@ -22,7 +22,7 @@ export class Login implements OnInit {
   remember = false;
   isSubmitted = false;
 
-  constructor(constants: Constants, private authService: AuthService,
+  constructor(private constants: Constants, public authService: AuthService,
               private router: Router, private notes: NotificationsService) {
     this.version = constants.VERSION;
   }

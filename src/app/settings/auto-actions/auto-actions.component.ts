@@ -65,7 +65,9 @@ export class AutoActions {
 
     auth.userChanged
       .subscribe(activeUser => {
+        if (activeUser) {
         this.updateActiveUser(activeUser);
+        }
       });
 
     settings.boardsChanged

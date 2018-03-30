@@ -156,11 +156,11 @@ Because I like seeing the numbers.
 
 Language     |   Files |    Blank | Comment |     Code
 -------------|--------:|---------:|--------:|---------:
-TypeScript   |      64 |      881 |      88 |     4056
+TypeScript   |      64 |      882 |      88 |     4056
 PHP          |      19 |      624 |      27 |     1997
 HTML         |      19 |      150 |       1 |     1419
 SASS         |      14 |      269 |      12 |     1215
-__SUM:__     | __116__ | __1924__ | __128__ | __8687__
+__SUM:__     | __116__ | __1925__ | __128__ | __8687__
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
@@ -168,9 +168,9 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
 Language     |  Files |    Blank | Comment |     Code
 -------------|-------:|---------:|--------:|---------:
-TypeScript   |      8 |      221 |       0 |      814
+TypeScript   |      9 |      271 |       0 |      977
 PHP          |     11 |      742 |      16 |     2205
-__SUM:__     | __19__ |  __963__ |  __16__ | __3019__
+__SUM:__     | __20__ | __1013__ |  __16__ | __3182__
 
 Command: `cloc --exclude-ext=xml test/`
 

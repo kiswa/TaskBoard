@@ -35,11 +35,16 @@ export class UserSettings implements OnInit {
               private settings: SettingsService,
               private users: UserSettingsService,
               private stringsService: StringsService) {
+    this.user = new User();
     this.boards = [];
     this.changeEmail = new EmailForm();
     this.strings = {};
 
     auth.userChanged.subscribe(user => {
+      if (!user) {
+        return;
+      }
+
       this.user = user;
       this.changeEmail.newEmail = user.email;
       this.userOptions = auth.userOptions;

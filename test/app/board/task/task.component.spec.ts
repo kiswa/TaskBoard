@@ -77,11 +77,30 @@ describe('TaskDisplay', () => {
 
   it('parses task description markdown into text', () => {
     component.taskData = <any>{ description: '# Make this HTML' };
-    component.activeBoard = <any>{ issue_trackers: [] }
+    component.activeBoard = <any>{ issue_trackers: [
+      { regex: 'test', url: '%BUGID%' }
+    ] };
 
-    const actual = component.getTaskDescription()
+    const actual = component.getTaskDescription();
 
     expect(actual).toEqual('<h1 id="make-this-html">Make this HTML</h1>\n ');
+  });
+
+  it('handles checklists in markdown', () => {
+    component.taskData = <any>{ description: ' - [x] One\n - Two' };
+    component.activeBoard = <any>{ issue_trackers: [] };
+
+    const actual = component.getTaskDescription();
+    expect(actual).toEqual('<ul>\n<li class="checklist"><i class="icon icon-check"></i> ' +
+      'One</li><li>Two</li></ul>\n ');
+  });
+
+  it('adds attributes to links in markdown', () => {
+    component.taskData = <any>{ description: '[link](google.com)' };
+    component.activeBoard = <any>{ issue_trackers: [] };
+
+    const actual = component.getTaskDescription();
+    expect(actual).toContain('target="tb_external" rel="noreferrer"');
   });
 
   it('provides a custom style for percentage of task completed', () => {
@@ -160,5 +179,78 @@ describe('TaskDisplay', () => {
     expect(component.contextMenuItems.length).toEqual(10);
   });
 
+  it('calls a service to copy a task to another board', () => {
+    const sel = document.createElement('select'),
+      opt = document.createElement('option');
+
+    sel.id = 'boardsList1Copy';
+    sel.selectedIndex = 0;
+    opt.value = '1';
+
+    sel.appendChild(opt);
+    document.body.appendChild(sel);
+
+    component.strings = <any>{ boards_copyTaskTo: 'Copy To' };
+    component.taskData = <any>{ id: 1 };
+    component.boardsList = <any>[
+      { id: 1, name: 'one', columns: [{ id: 1 }] },
+      { id: 2, name: 'test' }
+    ];
+
+    let emitted = false;
+
+    component.onUpdateBoards.subscribe(() => emitted = true);
+
+    (<any>component.boardService.addTask) = () => {
+      return { subscribe: fn =>  fn(<any>{ status: 'success' }) };
+    };
+
+    component.copyTaskToBoard();
+
+    (<any>component.boardService.addTask) = () => {
+      return { subscribe: fn =>  fn(<any>{ status: 'asdf', alerts: [{}] }) };
+    };
+
+    component.copyTaskToBoard();
+
+    expect(emitted).toEqual(true);
+  });
+
+  it('calls a service to move a task to another board', () => {
+    const sel = document.createElement('select'),
+      opt = document.createElement('option');
+
+    sel.id = 'boardsList1Move';
+    sel.selectedIndex = 0;
+    opt.value = '1';
+
+    sel.appendChild(opt);
+    document.body.appendChild(sel);
+
+    component.strings = <any>{ boards_moveTaskTo: 'Move To' };
+    component.taskData = <any>{ id: 1 };
+    component.boardsList = <any>[
+      { id: 1, name: 'one', columns: [{ id: 1 }] },
+      { id: 2, name: 'test' }
+    ];
+
+    let emitted = false;
+
+    component.onUpdateBoards.subscribe(() => emitted = true);
+
+    (<any>component.boardService.updateTask) = () => {
+      return { subscribe: fn =>  fn(<any>{ status: 'success' }) };
+    };
+
+    component.moveTaskToBoard();
+
+    (<any>component.boardService.updateTask) = () => {
+      return { subscribe: fn =>  fn(<any>{ status: 'asdf', alerts: [{}] }) };
+    };
+
+    component.moveTaskToBoard();
+
+    expect(emitted).toEqual(true);
+  });
 });
 

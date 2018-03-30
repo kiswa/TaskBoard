@@ -55,6 +55,10 @@ export class UserAdmin {
 
     auth.userChanged
       .subscribe(activeUser => {
+        if (!activeUser) {
+          return;
+        }
+
         this.activeUser = new User(+activeUser.default_board_id,
           activeUser.email,
           +activeUser.id,

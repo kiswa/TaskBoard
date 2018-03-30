@@ -72,7 +72,9 @@ export class BoardAdmin {
     this.sortFilter = 'name-asc';
 
     auth.userChanged.subscribe((user: User) => {
-      this.updateActiveUser(user);
+      if (user) {
+        this.updateActiveUser(user);
+      }
     });
     settings.usersChanged.subscribe((users: Array<User>) => {
       this.updateUsersList(users);
