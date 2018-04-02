@@ -32,18 +32,20 @@ export class AutoActions {
   private autoActions: Array<AutoAction>;
 
   private triggers: Array<Array<any>>;
-  private triggerSources: Array<Array<any>>;
-  private types: Array<Array<any>>;
-  private typesList: Array<Array<any>>;
-  private actionSources: Array<Array<any>>;
   private subs: Array<any>;
 
   private firstRun = true;
   private isAddDisabled = true;
 
+  public boards: Array<Board>;
+  public triggerSources: Array<Array<any>>;
+  public actionSources: Array<Array<any>>;
+  public types: Array<Array<any>>;
+  public typesList: Array<Array<any>>;
+
   public newAction: AutoAction;
   public activeUser: User;
-  public boards: Array<Board>;
+
   public strings: any;
   public MODAL_CONFIRM_ID: string;
 
@@ -186,17 +188,17 @@ export class AutoActions {
 
     switch (this.newAction.trigger) {
       case ActionTrigger.MovedToColumn:
-        this.buildSourcesArray('triggerSources',
-          'Column', 'columns');
+        this.buildSourcesArray('triggerSources', 'Column', 'columns');
         break;
+
       case ActionTrigger.AssignedToUser:
-        this.buildSourcesArray('triggerSources',
-          'User', 'users', 'username');
+        this.buildSourcesArray('triggerSources', 'User', 'users', 'username');
         break;
+
       case ActionTrigger.AddedToCategory:
-        this.buildSourcesArray('triggerSources',
-          'Category', 'categories');
+        this.buildSourcesArray('triggerSources', 'Category', 'categories');
         break;
+
       case ActionTrigger.PointsChanged:
         // Leave triggerSources empty
         this.types = [ [
@@ -219,14 +221,14 @@ export class AutoActions {
     switch (this.newAction.type) {
       case ActionType.SetCategory:
       case ActionType.AddCategory:
-        this.buildSourcesArray('actionSources',
-          'Category', 'categories');
+        this.buildSourcesArray('actionSources', 'Category', 'categories');
         break;
+
       case ActionType.SetAssignee:
       case ActionType.AddAssignee:
-        this.buildSourcesArray('actionSources',
-          'Assignee', 'users', 'username');
+        this.buildSourcesArray('actionSources', 'Assignee', 'users', 'username');
         break;
+
       case ActionType.SetColor:
         this.newAction.change_to = '#000000';
         break;
@@ -279,16 +281,19 @@ export class AutoActions {
         desc = this.strings.settings_triggerMoveToColumn + ' ';
         desc += this.getNameFromArray(board.columns, action.source_id);
         break;
+
       case ActionTrigger.AssignedToUser:
         desc = this.strings.settings_triggerAssignedToUser + ' ';
         desc += this.getNameFromArray(board.users,
           action.source_id, 'username');
         break;
+
       case ActionTrigger.AddedToCategory:
         desc = this.strings.settings_triggerAddedToCategory + ' ';
         desc += this.getNameFromArray(board.categories,
           action.source_id);
         break;
+
       case ActionTrigger.PointsChanged:
         desc = this.strings.settings_triggerPointsChanged;
         break;
@@ -310,29 +315,35 @@ export class AutoActions {
         desc = this.strings.settings_actionSetColor + ' <span style="background-color: ' +
           action.change_to + ';">' + action.change_to + '</span>';
         break;
+
       case ActionType.SetCategory:
         desc = this.strings.settings_actionSetCategory + ' ';
         desc += this.getNameFromArray(board.categories,
           +action.change_to);
         break;
+
       case ActionType.AddCategory:
         desc = this.strings.settings_actionAddCategory + ' ';
         desc += this.getNameFromArray(board.categories,
           +action.change_to);
         break;
+
       case ActionType.SetAssignee:
         desc = this.strings.settings_actionSetAssignee + ' ';
         desc += this.getNameFromArray(board.users,
           +action.change_to, 'username');
         break;
+
       case ActionType.AddAssignee:
         desc = this.strings.settings_actionAddAssignee + ' ';
         desc += this.getNameFromArray(board.users,
           +action.change_to, 'username');
         break;
+
       case ActionType.ClearDueDate:
         desc = this.strings.settings_actionClearDueDate;
         break;
+
       case ActionType.AlterColorByPoints:
         desc = this.strings.settings_actionAlterColor;
         break;

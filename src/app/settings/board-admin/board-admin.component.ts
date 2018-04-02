@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 
@@ -29,7 +29,7 @@ class SelectableUser extends User {
   providers: [ BoardAdminService ],
   viewProviders: [ DragulaService ]
 })
-export class BoardAdmin {
+export class BoardAdmin implements OnDestroy {
   private displayBoards: Array<Board>;
   private noBoardsMessage: string;
   private boardToRemove: Board;
@@ -39,6 +39,7 @@ export class BoardAdmin {
   private sortFilter: string;
 
   private firstRun = true;
+  private subs: Array<any>;
 
   public users: Array<User>;
   public boards: Array<Board>;
@@ -66,6 +67,7 @@ export class BoardAdmin {
     this.users = [];
     this.boards = [];
     this.displayBoards = [];
+    this.subs = [];
 
     this.modalProps = new BoardData();
     this.activeUser = new User();
@@ -74,19 +76,30 @@ export class BoardAdmin {
     this.statusFilter = '-1'; // Any active status
     this.sortFilter = 'name-asc';
 
-    auth.userChanged.subscribe((user: User) => {
+    let sub = auth.userChanged.subscribe((user: User) => {
       this.updateActiveUser(user);
     });
-    settings.usersChanged.subscribe((users: Array<User>) => {
+    this.subs.push(sub);
+
+    sub = settings.usersChanged.subscribe((users: Array<User>) => {
       this.updateUsersList(users);
     });
-    settings.boardsChanged.subscribe((boards: Array<Board>) => {
+    this.subs.push(sub);
+
+    sub = settings.boardsChanged.subscribe((boards: Array<Board>) => {
       this.updateBoardsList(boards);
     });
-    stringsService.stringsChanged.subscribe(newStrings => {
+    this.subs.push(sub);
+
+    sub = stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
       this.updateActiveUser(this.activeUser);
     });
+    this.subs.push(sub);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   ngAfterContentInit() {
@@ -206,16 +219,19 @@ export class BoardAdmin {
           return a.name.localeCompare(b.name);
         });
         break;
+
       case 'name-desc':
         this.displayBoards.sort((a: Board, b: Board) => {
           return b.name.localeCompare(a.name);
         });
         break;
+
       case 'id-desc':
         this.displayBoards.sort((a: Board, b: Board) => {
           return b.id - a.id;
         });
         break;
+
       case 'id-asc':
         this.displayBoards.sort((a: Board, b: Board) => {
           return a.id - b.id;
