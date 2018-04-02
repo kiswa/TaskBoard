@@ -66,15 +66,16 @@ export class BoardAdmin {
     this.users = [];
     this.boards = [];
     this.displayBoards = [];
+
     this.modalProps = new BoardData();
+    this.activeUser = new User();
+
     this.userFilter = '-1'; // Any User
     this.statusFilter = '-1'; // Any active status
     this.sortFilter = 'name-asc';
 
     auth.userChanged.subscribe((user: User) => {
-      if (user) {
-        this.updateActiveUser(user);
-      }
+      this.updateActiveUser(user);
     });
     settings.usersChanged.subscribe((users: Array<User>) => {
       this.updateUsersList(users);
@@ -312,6 +313,10 @@ export class BoardAdmin {
   }
 
   private updateActiveUser(activeUser: User): void {
+    if (!activeUser) {
+      return;
+    }
+
     this.activeUser = new User(+activeUser.default_board_id,
       activeUser.email,
       +activeUser.id,

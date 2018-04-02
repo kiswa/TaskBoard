@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import {
@@ -28,9 +28,7 @@ export class AutoActions {
   private noActionsMessage: string;
 
   private actionToRemove: AutoAction;
-  private newAction: AutoAction;
 
-  private boards: Array<Board>;
   private autoActions: Array<AutoAction>;
 
   private triggers: Array<Array<any>>;
@@ -38,13 +36,16 @@ export class AutoActions {
   private types: Array<Array<any>>;
   private typesList: Array<Array<any>>;
   private actionSources: Array<Array<any>>;
+  private subs: Array<any>;
 
   private firstRun = true;
   private isAddDisabled = true;
 
-  public MODAL_CONFIRM_ID: string;
+  public newAction: AutoAction;
   public activeUser: User;
+  public boards: Array<Board>;
   public strings: any;
+  public MODAL_CONFIRM_ID: string;
 
   public saving = false;
   public loading = true;
@@ -53,103 +54,118 @@ export class AutoActions {
   constructor(private auth: AuthService,
               public modal: ModalService,
               private settings: SettingsService,
-              private actions: AutoActionsService,
+              public actions: AutoActionsService,
               private notes: NotificationsService,
               private stringsService: StringsService,
               private sanitizer: DomSanitizer) {
     this.newAction = new AutoAction();
+    this.activeUser = new User();
+
     this.boards = [];
     this.autoActions = [];
-    this.MODAL_CONFIRM_ID = 'action-remove-confirm';
     this.strings = {};
+    this.subs = [];
+    this.MODAL_CONFIRM_ID = 'action-remove-confirm';
 
-    auth.userChanged
-      .subscribe(activeUser => {
-        if (activeUser) {
-        this.updateActiveUser(activeUser);
-        }
-      });
-
-    settings.boardsChanged
-      .subscribe((boards: Array<Board>) => {
-        this.boards = boards;
-        this.updateHasInactiveBoards();
-      });
-
-    settings.actionsChanged
-      .subscribe((actionList: Array<AutoAction>) => {
-        this.autoActions = actionList;
-        this.updateHasInactiveBoards();
-
-        this.autoActions.sort((a, b) => {
-          let nameA = this.getBoardName(a.board_id),
-            nameB = this.getBoardName(b.board_id);
-
-          return nameA.localeCompare(nameB);
-        });
-
-        if (this.firstRun) {
-          this.firstRun = false;
-          return;
-        }
-
-        this.loading = false;
-      });
-
-    stringsService.stringsChanged.subscribe(newStrings => {
-      this.strings = newStrings;
-
-      this.triggers = [
-        [
-          ActionTrigger.MovedToColumn,
-          this.strings.settings_triggerMoveToColumn
-        ],
-        [
-          ActionTrigger.AssignedToUser,
-          this.strings.settings_triggerAssignedToUser
-        ],
-        [
-          ActionTrigger.AddedToCategory,
-          this.strings.settings_triggerAddedToCategory
-        ],
-        [
-          ActionTrigger.PointsChanged,
-          this.strings.settings_triggerPointsChanged
-        ]
-      ];
-
-      this.typesList = [
-        [
-          ActionType.SetColor,
-          this.strings.settings_actionSetColor
-        ],
-        [
-          ActionType.SetCategory,
-          this.strings.settings_actionSetCategory
-        ],
-        [
-          ActionType.AddCategory,
-          this.strings.settings_actionAddCategory
-        ],
-        [
-          ActionType.SetAssignee,
-          this.strings.settings_actionSetAssignee
-        ],
-        [
-          ActionType.AddAssignee,
-          this.strings.settings_actionAddAssignee
-        ],
-        [
-          ActionType.ClearDueDate,
-          this.strings.settings_actionClearDueDate
-        ]
-      ];
-
-      this.types = this.typesList;
-      this.updateTriggerSources();
-      this.updateActionSources();
-      this.updateActiveUser(this.activeUser);
+    let sub = auth.userChanged.subscribe(activeUser => {
+      this.updateActiveUser(activeUser);
     });
+    this.subs.push(sub);
+
+    sub = settings.boardsChanged.subscribe((boards: Array<Board>) => {
+      this.boards = boards;
+      this.updateHasInactiveBoards();
+    });
+    this.subs.push(sub);
+
+    sub = settings.actionsChanged
+      .subscribe((actionsList: Array<AutoAction>) => {
+        this.updateActions(actionsList);
+      });
+    this.subs.push(sub);
+
+    sub = stringsService.stringsChanged.subscribe((newStrings: any) => {
+      this.updateStrings(newStrings);
+    });
+    this.subs.push(sub);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }
+
+  updateActions(actionList: Array<AutoAction>) {
+    this.autoActions = actionList;
+    this.updateHasInactiveBoards();
+
+    this.autoActions.sort((a, b) => {
+      let nameA = this.getBoardName(a.board_id),
+        nameB = this.getBoardName(b.board_id);
+
+      return nameA.localeCompare(nameB);
+    });
+
+    if (this.firstRun) {
+      this.firstRun = false;
+      return;
+    }
+
+    this.loading = false;
+  }
+
+  updateStrings(newStrings: any) {
+    this.strings = newStrings;
+
+    this.triggers = [
+      [
+        ActionTrigger.MovedToColumn,
+        this.strings.settings_triggerMoveToColumn
+      ],
+      [
+        ActionTrigger.AssignedToUser,
+        this.strings.settings_triggerAssignedToUser
+      ],
+      [
+        ActionTrigger.AddedToCategory,
+        this.strings.settings_triggerAddedToCategory
+      ],
+      [
+        ActionTrigger.PointsChanged,
+        this.strings.settings_triggerPointsChanged
+      ]
+    ];
+
+    this.typesList = [
+      [
+        ActionType.SetColor,
+        this.strings.settings_actionSetColor
+      ],
+      [
+        ActionType.SetCategory,
+        this.strings.settings_actionSetCategory
+      ],
+      [
+        ActionType.AddCategory,
+        this.strings.settings_actionAddCategory
+      ],
+      [
+        ActionType.SetAssignee,
+        this.strings.settings_actionSetAssignee
+      ],
+      [
+        ActionType.AddAssignee,
+        this.strings.settings_actionAddAssignee
+      ],
+      [
+        ActionType.ClearDueDate,
+        this.strings.settings_actionClearDueDate
+      ]
+    ];
+
+    this.types = this.typesList;
+    this.updateTriggerSources();
+    this.updateActionSources();
+    this.updateActiveUser(this.activeUser);
   }
 
   addNewAction(): void {
@@ -402,6 +418,10 @@ export class AutoActions {
   }
 
   private updateActiveUser(activeUser: User) {
+    if (!activeUser) {
+      return;
+    }
+
     this.activeUser = new User(+activeUser.default_board_id,
       activeUser.email,
       +activeUser.id,

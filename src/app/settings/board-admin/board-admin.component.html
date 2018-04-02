@@ -93,7 +93,7 @@
           </td>
 
           <td>
-            <span *ngIf="activeUser.security_level < 3">
+            <span *ngIf="activeUser && activeUser.security_level < 3">
               <a class="padded" href="javascript:"
                 title="{{ strings['settings_editBoard'] }}"
                 (click)="showModal('Edit', board)">

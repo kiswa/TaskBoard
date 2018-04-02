@@ -13,6 +13,7 @@
           <th>{{ strings['settings_remove'] }}</th>
         </tr>
       </thead>
+
       <tbody *ngIf="!loading">
         <tr *ngIf="autoActions && autoActions.length === 0">
           <td colspan="4" class="center"
@@ -56,6 +57,7 @@
           <th>{{ strings['settings_selectAction'] }}</th>
         </tr>
       </thead>
+
       <tbody>
         <tr class="borderless">
           <td>
@@ -73,7 +75,6 @@
           <td>
             <select [disabled]="newAction.board_id === null"
               [(ngModel)]="newAction.trigger"
-
               (change)="updateTriggerSources()">
               <option *ngFor="let trigger of triggers"
                 [ngValue]="trigger[0]">{{ trigger[1] }}</option>
@@ -88,6 +89,7 @@
             </select>
           </td>
         </tr>
+
         <tr class="borderless">
           <td></td>
           <td>

@@ -33,6 +33,7 @@
     <label>
       {{ strings['settings_displayLanguage'] }}:
       <select class="autosize"
+        *ngIf="userOptions"
         [ngModel]="userOptions.language"
         (ngModelChange)="onOptionChange('language', $event)">
         <option value="en">English</option>
@@ -44,6 +45,7 @@
     <label>
       {{ strings['settings_selectDefaultBoard'] }}:
       <select class="autosize"
+        *ngIf="user"
         [ngModel]="user.default_board_id"
         (ngModelChange)="updateDefaultBoard($event)">
         <option value="0">{{ strings['none'] }}</option>
@@ -55,6 +57,7 @@
     <label>
       {{ strings['settings_newTasks'] }}:
       <select class="autosize"
+        *ngIf="userOptions"
         [ngModel]="userOptions.new_tasks_at_bottom"
         (ngModelChange)="onOptionChange('new_tasks', $event)">
         <option value="true">{{ strings['settings_bottom'] }}</option>
@@ -92,7 +95,7 @@
         (click)="resetEmailForm()">{{ strings['reset'] }}</button>
     </form>
 
-    <div class="hold-bottom">
+    <div class="hold-bottom" *ngIf="userOptions">
       <label>
         {{ strings['settings_optionsDisplay'] }}
         <input type="checkbox" class="hidden"

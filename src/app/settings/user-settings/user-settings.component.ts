@@ -36,8 +36,9 @@ export class UserSettings implements OnInit {
               private users: UserSettingsService,
               private stringsService: StringsService) {
     this.user = new User();
-    this.boards = [];
     this.changeEmail = new EmailForm();
+
+    this.boards = [];
     this.strings = {};
 
     auth.userChanged.subscribe(user => {

@@ -40,7 +40,7 @@
       <div class="spinner"></div>
     </div>
 
-    <button *ngIf="activeUser.security_level < 3"
+    <button *ngIf="activeUser && activeUser.security_level < 3"
       (click)="showModal()">
       <i class="icon icon-plus"></i>
       {{ strings['settings_addUser'] }}

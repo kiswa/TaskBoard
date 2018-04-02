@@ -58,6 +58,8 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
     this.categoryFilter = null;
 
     this.activeBoard = new Board();
+    this.activeUser = new User();
+
     this.boards = [];
     this.subs = [];
 
@@ -68,9 +70,7 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
       this.strings = newStrings;
 
       // Updating the active user updates some display strings.
-      if (this.activeUser) {
-        this.updateActiveUser(this.activeUser);
-      }
+      this.updateActiveUser(this.activeUser);
     });
     this.subs.push(sub);
 
@@ -96,9 +96,7 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
     this.subs.push(sub);
 
     sub = auth.userChanged.subscribe((user: User) => {
-      if (user) {
-        this.updateActiveUser(user);
-      }
+      this.updateActiveUser(user);
     });
     this.subs.push(sub);
 
@@ -286,6 +284,10 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
   }
 
   private updateActiveUser(activeUser: User) {
+    if (!activeUser) {
+      return;
+    }
+
     this.activeUser = new User(+activeUser.default_board_id,
                                activeUser.email,
                                +activeUser.id,

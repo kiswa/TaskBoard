@@ -7,6 +7,7 @@ import { Title } from '@angular/platform-browser';
 import { Settings } from '../../../src/app/settings/settings.component';
 import { SettingsModule } from '../../../src/app/settings/settings.module';
 import { SettingsService } from '../../../src/app/settings/settings.service';
+import { StringsService } from '../../../src/app/shared/services';
 
 describe('Settings', () => {
   let component: Settings,
@@ -22,7 +23,18 @@ describe('Settings', () => {
       ],
       providers: [
         Title,
-        SettingsService
+        SettingsService,
+        {
+          provide: StringsService,
+          useValue: {
+            stringsChanged: {
+              subscribe: fn => {
+                fn({ settings: 'Settings' });
+                return { unsubscribe: () => {} };
+              }
+            }
+          }
+        }
       ]
     }).compileComponents();
   });
@@ -34,10 +46,6 @@ describe('Settings', () => {
   });
 
   it('sets the title when constructed', () => {
-    component.strings = {
-      settings: 'Settings'
-    };
-
     expect((<any>component).title.getTitle()).toEqual('TaskBoard - Settings');
   });
 
