@@ -23,6 +23,7 @@
   "license": "MIT",
   "scripts": {
     "build": "ng b -oh=none -prod && chmod a+w dist/api",
+    "build-dev": "ng b -oh=none && chmod a+w dist/api",
     "watch": "ng b -oh=none -w",
     "test-app": "ng test -cc -sr",
     "test": "npm run test-app && npm run test-api",
@@ -53,15 +54,15 @@
     "ng2-dragula": "^1.5.0",
     "rxjs": "^5.5.8",
     "scss-base": "^1.4.0",
-    "zone.js": "^0.8.21"
+    "zone.js": "^0.8.25"
   },
   "devDependencies": {
-    "@angular/cli": "~1.7.3",
+    "@angular/cli": "~1.7.4",
     "@angular/compiler-cli": "^5.2.9",
     "@angular/language-service": "^5.2.9",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "~9.6.1",
+    "@types/node": "~9.6.2",
     "bourbon": "5.0.0",
     "bourbon-neat": "1.9.0",
     "codelyzer": "^4.2.1",
@@ -73,7 +74,7 @@
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-phantomjs-launcher": "^1.0.4",
-    "protractor": "~5.3.0",
+    "protractor": "~5.3.1",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "typescript": "^2.8.1"
