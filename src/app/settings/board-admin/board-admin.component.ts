@@ -26,41 +26,40 @@ class SelectableUser extends User {
 @Component({
   selector: 'tb-board-admin',
   templateUrl: './board-admin.component.html',
-  providers: [ BoardAdminService ],
-  viewProviders: [ DragulaService ]
+  providers: [ BoardAdminService ]
 })
 export class BoardAdmin implements OnDestroy {
-  private displayBoards: Array<Board>;
   private noBoardsMessage: string;
-  private boardToRemove: Board;
-
-  private userFilter: string;
-  private statusFilter: string;
-  private sortFilter: string;
 
   private firstRun = true;
   private subs: Array<any>;
 
+  public displayBoards: Array<Board>;
   public users: Array<User>;
   public boards: Array<Board>;
   public activeUser: User;
   public modalProps: BoardData;
+  public boardToRemove: Board;
   public strings: any;
 
   public hasBAUsers = false;
   public loading = true;
   public saving = false;
 
+  public userFilter: string;
+  public statusFilter: string;
+  public sortFilter: string;
+
   public MODAL_ID: string;
   public MODAL_CONFIRM_ID: string;
 
   constructor(private auth: AuthService,
               public modal: ModalService,
-              private settings: SettingsService,
-              private boardService: BoardAdminService,
+              public settings: SettingsService,
+              public boardService: BoardAdminService,
               private notes: NotificationsService,
               private stringsService: StringsService,
-              private dragula: DragulaService) {
+              public dragula: DragulaService) {
     this.MODAL_ID = 'board-addedit-form';
     this.MODAL_CONFIRM_ID = 'board-remove-confirm';
 
@@ -144,9 +143,9 @@ export class BoardAdmin implements OnDestroy {
     }
 
     this.boardService.editBoard(this.modalProps)
-    .subscribe((response: ApiResponse) => {
-      this.handleResponse(response);
-    });
+      .subscribe((response: ApiResponse) => {
+        this.handleResponse(response);
+      });
   }
 
   removeBoard(): void {
@@ -395,8 +394,8 @@ export class BoardAdmin implements OnDestroy {
 
   private onPropertyEdit(obj: string, prop: string,
                          i: number, value: any): void {
-      this.modalProps[obj][i][prop] = value;
-    }
+    this.modalProps[obj][i][prop] = value;
+  }
 
   private getColor(category: any): string {
     if (category.default_task_color) {

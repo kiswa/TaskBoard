@@ -21,9 +21,14 @@ export class DragulaMock {
     { parentNode: { id: '1' } },
     { parentNode: { id: '1' } }
   ]);
+  public dragend = {
+    subscribe: (fn) => { fn(); }
+  };
 
   find () {
-    return {};
+    return { drake: {
+      containers: []
+    } };
   }
 
   destroy () {}
@@ -34,7 +39,8 @@ export class DragulaMock {
 }
 
 export class BoardServiceMock {
-  public activeBoardChanged = new BehaviorSubject({ id: 0, name: 'Test', columns: [] });
+  public activeBoardChanged =
+    new BehaviorSubject({ id: 0, name: 'Test', columns: [] });
 
   getBoards () {
     return new BehaviorSubject({
@@ -49,5 +55,23 @@ export class BoardServiceMock {
   updateColumn (col) {
     return new BehaviorSubject({});
   }
+}
+
+export class SettingsServiceMock {
+  public usersChanged = new BehaviorSubject([{ security_level: 2 }]);
+
+  public boardsChanged = new BehaviorSubject([
+    { columns: [{ position: 3 }, { position: 2 }] }
+  ]);
+
+  updateBoards () { }
+
+  updateActions () { }
+}
+
+export class AuthServiceMock {
+  public userChanged = new BehaviorSubject({ security_level: 1 });
+
+  public userOptions = { show_animations: false };
 }
 
