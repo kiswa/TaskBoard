@@ -27,7 +27,8 @@ import {
 })
 export class UserAdmin {
   private users: Array<UserDisplay>;
-  private userToRemove: UserDisplay;
+
+  public userToRemove: UserDisplay;
 
   public boards: Array<Board>;
   public activeUser: User;
@@ -40,7 +41,7 @@ export class UserAdmin {
   public MODAL_ID: string;
   public MODAL_CONFIRM_ID: string;
 
-  constructor(private userService: UserAdminService,
+  constructor(public userService: UserAdminService,
               private notes: NotificationsService,
               private auth: AuthService,
               private settings: SettingsService,

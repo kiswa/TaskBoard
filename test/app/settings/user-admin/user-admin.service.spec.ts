@@ -5,22 +5,22 @@ import {
 } from '@angular/common/http/testing';
 
 import {
-  BoardAdminService
-} from '../../../../src/app/settings/board-admin/board-admin.service';
+  UserAdminService
+} from '../../../../src/app/settings/user-admin/user-admin.service';
 
-describe('BoardAdminService', () => {
+describe('UserAdminService', () => {
   let injector: TestBed;
-  let service: BoardAdminService;
+  let service: UserAdminService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [BoardAdminService]
+      providers: [UserAdminService]
     });
 
     injector = getTestBed();
-    service = injector.get(BoardAdminService);
+    service = injector.get(UserAdminService);
     httpMock = injector.get(HttpTestingController);
   });
 
@@ -32,52 +32,52 @@ describe('BoardAdminService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('adds a board', () => {
-    service.addBoard(<any>{}).subscribe(response => {
+  it('adds a user', () => {
+    service.addUser(<any>{}).subscribe(response => {
       expect(response.data.length).toEqual(0);
     });
 
-    testCall('api/boards', 'POST');
+    testCall('api/users', 'POST');
   });
 
-  it('handles errors on add board', () => {
-    service.addBoard(<any>{}).subscribe(() => {}, response => {
+  it('handles errors on add user', () => {
+    service.addUser(<any>{}).subscribe(() => {}, response => {
       expect(response.alerts.length).toEqual(1);
     });
 
-    testCall('api/boards', 'POST', true);
+    testCall('api/users', 'POST', true);
   });
 
-  it('edits a board', () => {
-    service.editBoard(<any>{ id: 1 }).subscribe(response => {
+  it('edits a user', () => {
+    service.editUser(<any>{ id: 1 }).subscribe(response => {
       expect(response.data.length).toEqual(0);
     });
 
-    testCall('api/boards/1', 'POST');
+    testCall('api/users/1', 'POST');
   });
 
-  it('handles errors on edit board', () => {
-    service.editBoard(<any>{id: 1}).subscribe(() => {}, response => {
+  it('handles errors on edit user', () => {
+    service.editUser(<any>{ id: 1 }).subscribe(() => {}, response => {
       expect(response.alerts.length).toEqual(1);
     });
 
-    testCall('api/boards/1', 'POST', true);
+    testCall('api/users/1', 'POST', true);
   });
 
-  it('removes a board', () => {
-    service.removeBoard(1).subscribe(response => {
+  it('removes a user', () => {
+    service.removeUser(1).subscribe(response => {
       expect(response.data.length).toEqual(0);
     });
 
-    testCall('api/boards/1', 'DELETE');
+    testCall('api/users/1', 'DELETE');
   });
 
-  it('handles errors on edit board', () => {
-    service.removeBoard(1).subscribe(() => {}, response => {
+  it('handles errors on remove user', () => {
+    service.removeUser(1).subscribe(() => {}, response => {
       expect(response.alerts.length).toEqual(1);
     });
 
-    testCall('api/boards/1', 'DELETE', true);
+    testCall('api/users/1', 'DELETE', true);
   });
 
   const testCall = (url, method, isError = false) => {

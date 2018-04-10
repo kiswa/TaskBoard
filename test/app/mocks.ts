@@ -3,6 +3,8 @@ import { Location } from '@angular/common';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { User, Board } from '../../src/app/shared/models';
+
 export class RouterMock {
   public url = {
     indexOf: str => TestBed.get(Location).path().indexOf(str)
@@ -67,11 +69,33 @@ export class SettingsServiceMock {
   updateBoards () { }
 
   updateActions () { }
+
+  updateUsers () { }
+
+  getUsers () {
+    return new BehaviorSubject({ data: [{}, [new User()]] });
+  }
+
+  getBoards () {
+    return new BehaviorSubject({ data: [{}, [new Board()]] });
+  }
+
+  getActions () {
+    return new BehaviorSubject({ data: [{}, []] });
+  }
 }
 
 export class AuthServiceMock {
-  public userChanged = new BehaviorSubject({ security_level: 1 });
+  public userChanged = new BehaviorSubject({ security_level: 1, id: 1 });
 
-  public userOptions = { show_animations: false };
+  public userOptions = {
+    new_tasks_at_bottom: false,
+    multiple_tasks_per_row: false,
+    show_animations: false,
+    show_assignee: false,
+    language: 'en'
+  };
+
+  updateUser () { }
 }
 

@@ -80,6 +80,7 @@ export class UserSettingsService {
     return this.http.post('api/users/' + this.activeUser.id, json)
     .map((response: ApiResponse) => {
       this.auth.updateUser(JSON.parse(response.data[1]));
+      console.log(response);
 
       return response;
     })
@@ -95,6 +96,7 @@ export class UserSettingsService {
     .map((response: ApiResponse) => {
       this.auth.updateUser(JSON.parse(response.data[2]),
         JSON.parse(response.data[1]));
+
       return response;
     })
     .catch((response: ApiResponse, caught) => {

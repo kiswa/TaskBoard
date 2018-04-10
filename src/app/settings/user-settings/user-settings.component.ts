@@ -33,7 +33,7 @@ export class UserSettings implements OnInit {
   constructor(private auth: AuthService,
               private notes: NotificationsService,
               private settings: SettingsService,
-              private users: UserSettingsService,
+              public users: UserSettingsService,
               private stringsService: StringsService) {
     this.user = new User();
     this.changeEmail = new EmailForm();
@@ -143,7 +143,7 @@ export class UserSettings implements OnInit {
 
         this.settings.getBoards()
           .subscribe((res: ApiResponse) => {
-            let boardData = res[1],
+            let boardData = res.data[1],
               boards: Array<Board> = [];
 
             if (boardData) {
