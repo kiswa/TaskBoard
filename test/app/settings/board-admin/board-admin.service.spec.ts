@@ -89,7 +89,7 @@ describe('BoardAdminService', () => {
     } else {
       req.flush({ data: [] });
     }
-  }
+  };
 
 });
 

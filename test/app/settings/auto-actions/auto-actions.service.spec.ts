@@ -73,7 +73,7 @@ describe('AutoActionsService', () => {
     } else {
       req.flush({ data: [] });
     }
-  }
+  };
 
 });
 

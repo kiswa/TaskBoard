@@ -27,7 +27,7 @@ export class Modal implements OnInit {
   isOpen = false;
   animate = true;
 
-  constructor(private modalService: ModalService) {
+  constructor(public modalService: ModalService) {
   }
 
   ngOnInit() {

@@ -19,7 +19,7 @@ import { User } from '../../../../src/app/shared/models';
 import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
 
 import {
-  UserDisplay
+  UserDisplay, ModalUser
 } from '../../../../src/app/settings/user-admin/user-admin.models';
 import {
   UserAdmin
@@ -94,6 +94,9 @@ describe('UserAdmin', () => {
     (<any>component.userService).editUser = () => {
       return { subscribe: fn => {
         const user = new User();
+        user.board_access = [1];
+        const mUser = new ModalUser(user);
+
         fn({ status: 'success',
           alerts: [{}],
           data: [{}, JSON.stringify([user])] });

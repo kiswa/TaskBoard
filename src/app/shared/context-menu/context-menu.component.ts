@@ -17,7 +17,7 @@ export class ContextMenu {
 
   isOpen = false;
 
-  constructor(private el: ElementRef,
+  constructor(public el: ElementRef,
               private menuService: ContextMenuService,
               private sanitizer: DomSanitizer) {
     menuService.registerMenu(this);

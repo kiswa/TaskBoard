@@ -89,7 +89,7 @@ describe('UserAdminService', () => {
     } else {
       req.flush({ data: [] });
     }
-  }
+  };
 
 });
 

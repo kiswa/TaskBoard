@@ -214,7 +214,7 @@ describe('BoardService', () => {
     } else {
       req.flush({ data: [] });
     }
-  }
+  };
 
 });
 

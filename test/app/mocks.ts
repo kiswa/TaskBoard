@@ -96,6 +96,7 @@ export class AuthServiceMock {
     language: 'en'
   };
 
+  authenticate () { return new BehaviorSubject(true); }
   updateUser () { }
 }
 

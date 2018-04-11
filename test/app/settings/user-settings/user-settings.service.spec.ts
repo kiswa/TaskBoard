@@ -40,7 +40,7 @@ describe('UserSettingsService', () => {
 
   it('changes default board', () => {
     service.changeDefaultBoard(<any>{}).subscribe(response => {
-      expect(response.data.length).toEqual(2);
+      expect(response.data.length).toEqual(3);
     });
 
     testCall('api/users/1', 'POST');
@@ -56,7 +56,7 @@ describe('UserSettingsService', () => {
 
   it('changes password', () => {
     service.changePassword('', '').subscribe(response => {
-      expect(response.data.length).toEqual(2);
+      expect(response.data.length).toEqual(3);
     });
 
     testCall('api/users/1', 'POST');
@@ -70,37 +70,53 @@ describe('UserSettingsService', () => {
     testCall('api/users/1', 'POST', true);
   });
 
-  // it('changes username', () => {
-  //   service.changeUsername('').subscribe(response => {
-  //     expect(response.data.length).toEqual(2);
-  //   });
-  //
-  //   testCall('api/users/1', 'POST');
-  // });
-  //
-  // it('handles errors on change username', () => {
-  //   service.changeUsername('').subscribe(() => {}, response => {
-  //     expect(response.alerts.length).toEqual(1);
-  //   });
-  //
-  //   testCall('api/users/1', 'POST', true);
-  // });
+  it('changes username', () => {
+    service.changeUsername('').subscribe(response => {
+      expect(response.data.length).toEqual(3);
+    });
 
-  // it('changes email', () => {
-  //   service.changeEmail('').subscribe(response => {
-  //     expect(response.data.length).toEqual(2);
-  //   });
-  //
-  //   testCall('api/users/1', 'POST');
-  // });
-  //
-  // it('handles errors on change email', () => {
-  //   service.changeEmail('').subscribe(() => {}, response => {
-  //     expect(response.alerts.length).toEqual(1);
-  //   });
-  //
-  //   testCall('api/users/1', 'POST', true);
-  // });
+    testCall('api/users/1', 'POST');
+  });
+
+  it('handles errors on change username', () => {
+    service.changeUsername('').subscribe(() => {}, response => {
+      expect(response.alerts.length).toEqual(1);
+    });
+
+    testCall('api/users/1', 'POST', true);
+  });
+
+  it('changes email', () => {
+    service.changeEmail('').subscribe(response => {
+      expect(response.data.length).toEqual(3);
+    });
+
+    testCall('api/users/1', 'POST');
+  });
+
+  it('handles errors on change email', () => {
+    service.changeEmail('').subscribe(() => {}, response => {
+      expect(response.alerts.length).toEqual(1);
+    });
+
+    testCall('api/users/1', 'POST', true);
+  });
+
+  it('changes user options', () => {
+    service.changeUserOptions(<any>{}).subscribe(response => {
+      expect(response.data.length).toEqual(3);
+    });
+
+    testCall('api/users/1/opts', 'POST');
+  });
+
+  it('handles errors on change user options', () => {
+    service.changeUserOptions(<any>{}).subscribe(() => {}, response => {
+      expect(response.alerts.length).toEqual(1);
+    });
+
+    testCall('api/users/1/opts', 'POST', true);
+  });
 
   const testCall = (url, method, isError = false) => {
     const req = httpMock.expectOne(url);
@@ -109,9 +125,9 @@ describe('UserSettingsService', () => {
     if (isError) {
       req.flush({ alerts: [{}], data: [] }, { status: 500, statusText: '' });
     } else {
-      req.flush({ data: [{}, {}] });
+      req.flush({ data: [{}, '{}', '{}'] });
     }
-  }
+  };
 
 });
 

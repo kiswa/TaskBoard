@@ -124,7 +124,7 @@ describe('SettingsService', () => {
     } else {
       req.flush({ data: [] });
     }
-  }
+  };
 
 });
 
