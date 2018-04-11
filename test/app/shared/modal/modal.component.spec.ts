@@ -8,7 +8,7 @@ import { SharedModule } from '../../../../src/app/shared/shared.module';
 import { ModalService } from '../../../../src/app/shared/services';
 import { Modal } from '../../../../src/app/shared/modal/modal.component';
 
-fdescribe('Modal', () => {
+describe('Modal', () => {
   let component: Modal,
     fixture: ComponentFixture<Modal>;
 
@@ -61,6 +61,27 @@ fdescribe('Modal', () => {
 
     component.filterClick(<any>event);
     expect(called).toEqual(true);
+  });
+
+  it('handles the Escape key', () => {
+    const keyUp = component['keyup'].bind(component);
+
+    (<any>component.modalService).close = (id, checkBlocking) => {
+      expect(checkBlocking).toEqual(true);
+    };
+
+    keyUp(<any>{ keyCode: 27 });
+  });
+
+  it('handles the Enter key', () => {
+    const keyUp = component['keyup'].bind(component);
+    let called = false;
+
+    component.defaultActionElement = { nativeElement: {
+      click: () => called = true
+    } };
+
+    keyUp(<any>{ keyCode: 13 });
   });
 
 });

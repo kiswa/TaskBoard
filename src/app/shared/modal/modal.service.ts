@@ -15,7 +15,7 @@ export class ModalService {
   }
 
   registerModal(newModal: Modal): void {
-    let modal = this.findModal(newModal.modalId);
+    let modal = this.modals.find(modal => modal.modalId === newModal.modalId);
 
     // Delete existing to replace the modal
     if (modal) {
@@ -26,7 +26,7 @@ export class ModalService {
   }
 
   open(modalId: string): void {
-    let modal = this.findModal(modalId);
+    let modal = this.modals.find(modal => modal.modalId === modalId);
 
     if (modal) {
       modal.animate = (this.userOptions.show_animations);
@@ -42,7 +42,7 @@ export class ModalService {
   }
 
   close(modalId: string, checkBlocking = false): void {
-    let modal = this.findModal(modalId);
+    let modal = this.modals.find(modal => modal.modalId === modalId);
 
     if (modal) {
       if (checkBlocking && modal.blocking) {
@@ -54,14 +54,5 @@ export class ModalService {
     }
   }
 
-  private findModal(modalId: string): Modal {
-    for (let modal of this.modals) {
-      if (modal.modalId === modalId) {
-        return modal;
-      }
-    }
-
-    return null;
-  }
 }
 
