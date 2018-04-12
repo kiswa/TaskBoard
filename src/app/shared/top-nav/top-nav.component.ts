@@ -21,8 +21,8 @@ export class TopNav {
   version: string = '';
   username: string = '';
 
-  constructor(constants: Constants, private router: Router,
-              private authService: AuthService,
+  constructor(public constants: Constants, private router: Router,
+              public authService: AuthService,
               private notes: NotificationsService,
               private stringsService: StringsService) {
     this.version = constants.VERSION;

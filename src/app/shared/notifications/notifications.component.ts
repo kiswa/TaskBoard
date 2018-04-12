@@ -10,7 +10,7 @@ import { NotificationsService } from './notifications.service';
 export class Notifications {
   public notes: Array<Notification>;
 
-  constructor(private notifications: NotificationsService) {
+  constructor(public notifications: NotificationsService) {
     this.notes = new Array<Notification>();
 
     notifications.noteAdded
@@ -28,7 +28,7 @@ export class Notifications {
 
       setTimeout(() => {
         this.notes.splice(index, 1);
-      },         500); // 500ms is the fade out transition time
+      }, 500); // 500ms is the fade out transition time
     }
   }
 }

@@ -100,3 +100,11 @@ export class AuthServiceMock {
   updateUser () { }
 }
 
+export class NotificationsServiceMock {
+  public noteAdded = new BehaviorSubject({});
+
+  addNote (note) {
+    this.noteAdded.next(note);
+  }
+}
+
