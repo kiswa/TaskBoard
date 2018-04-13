@@ -21,10 +21,15 @@
   },
   "homepage": "https://github.com/kiswa/TaskBoard#readme",
   "license": "MIT",
+  "watch": {
+    "api-changed": "dist/api/**/*.*"
+  },
   "scripts": {
     "build": "ng b -oh=none -prod && chmod a+w dist/api",
     "build-dev": "ng b -oh=none && chmod a+w dist/api",
-    "watch": "ng b -oh=none -w",
+    "watch": "parallelshell \"ng b -oh=none -w\" \"npm run dist-watch\"",
+    "dist-watch": "npm-watch api-changed",
+    "api-changed": "chmod a+w dist/api",
     "test-app": "ng test -cc -sr",
     "test": "npm run test-app && npm run test-api",
     "test-watch": "ng test -cc",
@@ -52,7 +57,7 @@
     "highlight.js": "^9.12.0",
     "marked": "^0.3.19",
     "ng2-dragula": "^1.5.0",
-    "rxjs": "^5.5.9",
+    "rxjs": "^5.5.10",
     "scss-base": "^1.4.0",
     "zone.js": "^0.8.26"
   },
@@ -74,6 +79,8 @@
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-phantomjs-launcher": "^1.0.4",
+    "npm-watch": "^0.3.0",
+    "parallelshell": "^3.0.2",
     "protractor": "~5.3.1",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
