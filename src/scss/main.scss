@@ -1,15 +1,15 @@
 // Bourbon and Neat
-@import 'bourbon';
+@import '../../node_modules/bourbon/core/bourbon';
 @import 'neat-settings';
-@import 'neat';
+@import '../../node_modules/bourbon-neat/app/assets/stylesheets/neat';
 
 // scss-base
 @import 'scss-base-settings';
-@import 'scss-base';
+@import '../../node_modules/scss-base/src/scss-base';
 
 // chartist
 @import 'chartist-settings';
-@import 'chartist';
+@import '../../node_modules/chartist/dist/chartist.css';
 
 // dragula
 @import '../../node_modules/dragula/dist/dragula.css';

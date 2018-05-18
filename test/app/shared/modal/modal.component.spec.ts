@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
@@ -82,6 +82,7 @@ describe('Modal', () => {
     } };
 
     keyUp(<any>{ keyCode: 13 });
+    expect(called).toEqual(true);
   });
 
 });

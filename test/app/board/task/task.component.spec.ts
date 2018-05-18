@@ -76,10 +76,12 @@ describe('TaskDisplay', () => {
   });
 
   it('parses task description markdown into text', () => {
-    component.taskData = <any>{ description: '# Make this HTML' };
-    component.activeBoard = <any>{ issue_trackers: [
+    setupBoard();
+    component.taskData.description = '# Make this HTML';
+    component.activeBoard.issue_trackers = <any>[
       { regex: 'test', url: '%BUGID%' }
-    ] };
+    ];
+    component.ngOnInit();
 
     const actual = component.getTaskDescription();
 
@@ -87,8 +89,9 @@ describe('TaskDisplay', () => {
   });
 
   it('handles checklists in markdown', () => {
-    component.taskData = <any>{ description: ' - [x] One\n - Two' };
-    component.activeBoard = <any>{ issue_trackers: [] };
+    setupBoard();
+    component.taskData.description = ' - [x] One\n - Two';
+    component.ngOnInit();
 
     const actual = component.getTaskDescription();
     expect(actual).toEqual('<ul>\n<li class="checklist"><i class="icon icon-check"></i> ' +
@@ -96,8 +99,9 @@ describe('TaskDisplay', () => {
   });
 
   it('adds attributes to links in markdown', () => {
-    component.taskData = <any>{ description: '[link](google.com)' };
-    component.activeBoard = <any>{ issue_trackers: [] };
+    setupBoard();
+    component.taskData.description = '[link](google.com)';
+    component.ngOnInit();
 
     const actual = component.getTaskDescription();
     expect(actual).toContain('target="tb_external" rel="noreferrer"');
@@ -252,5 +256,20 @@ describe('TaskDisplay', () => {
 
     expect(emitted).toEqual(true);
   });
+
+  function setupBoard() {
+    const today = new Date();
+
+    component.activeBoard = <any>{
+      id: 1,
+      columns: [{ id: 1, name: 'test' }],
+      issue_trackers: []
+    };
+    component.taskData = <any>{
+      id: 1, description: '',
+      due_date: (today.getMonth() + 1) + '/' +
+        (today.getDate() + 1) + '/' + today.getFullYear()
+    };
+  }
 });
 

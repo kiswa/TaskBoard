@@ -47,7 +47,11 @@ export class Login implements OnInit {
     this.isSubmitted = true;
 
     this.authService.login(this.username, this.password, this.remember)
-    .subscribe((response: ApiResponse) => {
+    .subscribe((response: any) => {
+      response = response.error
+        ? <ApiResponse>response.error
+        : <ApiResponse>response;
+
       response.alerts.forEach(msg => {
         this.notes.add(new Notification(msg.type, msg.text));
       });

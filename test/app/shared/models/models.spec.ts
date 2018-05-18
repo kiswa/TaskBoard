@@ -67,6 +67,7 @@ describe('Models', () => {
           board_access: '', collapsed: true
         }]
       );
+      expect(actual.id).toEqual(1);
     });
 
     it('can add a column', () => {
@@ -145,6 +146,7 @@ describe('Models', () => {
         }],
         [{ id: 1, name: '', default_task_color: '', board_id: 1 }]
       );
+      expect(task.id).toEqual(1);
     });
   });
 
