@@ -6,9 +6,9 @@ php:
 script:
   - npm test
 before_script:
-  - nvm install 6
-  - nvm use 6
-  - npm i -g npm@4
+  - nvm install 10
+  - nvm use 10
+  - npm i -g npm@6
   - npm i
   - touch tests.db
   - chmod a+w tests.db
