@@ -238,7 +238,7 @@ function ($scope, BoardService) {
             showSelectionPalette: true,
             showButtons: false,
             showInput: true,
-            preferredFormat: 'hex3',
+            preferredFormat: 'hex3'
         });
     };
     $scope.addBoard = function(boardFormData) {
