@@ -299,9 +299,9 @@ function ($scope, BoardService) {
         }
     };
     $scope.storeColor = function(e) {
-        if (e.which === 13) { // Enter key 
+        if (e.which === 13) { // Enter key
             $scope.boardFormData.categories.forEach(function(cat){
-                if ((cat.id == $scope.editedCategory.id) && 
+                if ((cat.id == $scope.editedCategory.id) &&
                    (cat.name == $scope.editedCategory.name))
                     cat.color = $scope.boardFormData.color;
             });
@@ -312,7 +312,7 @@ function ($scope, BoardService) {
             $scope.spectrum();
 	    $scope.editedCategory = {};
         }
-    }; 
+    };
 
 
     var checkFormInputs = function(boardFormData) {
