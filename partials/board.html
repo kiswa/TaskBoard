@@ -38,7 +38,7 @@
                     <p>Try using the board list above, or checking your <a href="#/settings">Settings</a>.</p>
                 </span>
             </div>
-            <div class="boardColumn" data-ng-repeat="lane in currentBoard.ownLane | orderBy:'position':false"
+            <div class="boardColumn" data-ng-repeat="lane in currentBoard.ownLane | orderBy:'position':false track by lane.id"
                  data-ng-class="{'collapsed': lane.collapsed}" data-lane-id="{{ lane.id }}"
                  data-context-menu="onContextMenu(lane.id)" data-target="laneMenu">
                 <h3>{{ lane.name }}
