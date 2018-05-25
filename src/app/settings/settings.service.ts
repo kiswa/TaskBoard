@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 import {
   ApiResponse,
@@ -33,12 +30,10 @@ export class SettingsService {
 
   getUsers(): Observable<ApiResponse> {
     return this.http.get('api/users')
-    .map((response: ApiResponse) => {
-      return <ApiResponse>response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(<ApiResponse>response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   updateBoards(boards: Array<Board>): void {
@@ -50,12 +45,10 @@ export class SettingsService {
 
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
-    .map((response: ApiResponse) => {
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   updateActions(actions: Array<AutoAction>): void {
@@ -64,12 +57,10 @@ export class SettingsService {
 
   getActions(): Observable<ApiResponse> {
     return this.http.get('api/autoactions')
-    .map((response: ApiResponse) => {
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 }
 

@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 import {
   ApiResponse,
@@ -23,32 +21,26 @@ export class BoardAdminService {
 
   addBoard(board: BoardData): Observable<ApiResponse> {
     return this.http.post('api/boards', board)
-    .map((response: ApiResponse) => {
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   editBoard(board: BoardData): Observable<ApiResponse> {
     return this.http.post('api/boards/' + board.id, board)
-    .map((response: ApiResponse) => {
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   removeBoard(boardId: number): Observable<ApiResponse> {
     return this.http.delete('api/boards/' + boardId)
-    .map((response: ApiResponse) => {
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
 }

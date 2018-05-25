@@ -2,11 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 import {
   ApiResponse,
@@ -38,14 +35,13 @@ export class AuthService {
 
   authenticate(): Observable<boolean> {
     return this.http.post('api/authenticate', null)
-    .map((response: ApiResponse) => {
-      this.updateUser(response.data[1], response.data[2]);
-
-      return true;
-    })
-    .catch((res, caught) => {
-      return Observable.of(false);
-    });
+    .pipe(
+      map((response: ApiResponse) => {
+        this.updateUser(response.data[1], response.data[2]);
+        return true;
+      }),
+      catchError((err, caught) => { return of(false); })
+    );
   }
 
   login(username: string, password: string,
@@ -57,23 +53,25 @@ export class AuthService {
       });
 
       return this.http.post('api/login', json)
-      .map((response: ApiResponse) => {
-        this.updateUser(response.data[1], response.data[2]);
-
-        return response;
-      })
-      .catch((response: ApiResponse, caught) => {
-        this.updateUser(null, null);
-
-        return Observable.of(response);
-      });
+      .pipe(
+        map((response: ApiResponse) => {
+          this.updateUser(response.data[1], response.data[2]);
+          return response;
+        }),
+        catchError((err, caught) => {
+          this.updateUser(null, null);
+          return caught;
+        })
+      );
     }
 
   logout(): Observable<ApiResponse> {
     return this.http.post('api/logout', null)
-    .map((response: ApiResponse) => {
-      return response;
-    });
+    .pipe(
+      map((response: ApiResponse) => {
+        return response;
+      })
+    );
   }
 
   private convertOpts(opts: any): UserOptions {

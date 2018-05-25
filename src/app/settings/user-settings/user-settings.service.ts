@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 import {
   User,
@@ -30,12 +28,10 @@ export class UserSettingsService {
     let json = JSON.stringify(user);
 
     return this.http.post('api/users/' + this.activeUser.id, json)
-    .map((response: ApiResponse) => {
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   changePassword(oldPass: string, newPass: string): Observable<ApiResponse> {
@@ -46,12 +42,10 @@ export class UserSettingsService {
     let json = JSON.stringify(updateUser);
 
     return this.http.post('api/users/' + this.activeUser.id, json)
-    .map((response: ApiResponse) => {
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   changeUsername(newName: string): Observable<ApiResponse> {
@@ -61,14 +55,13 @@ export class UserSettingsService {
     let json = JSON.stringify(updateUser);
 
     return this.http.post('api/users/' + this.activeUser.id, json)
-    .map((response: ApiResponse) => {
-      this.auth.updateUser(JSON.parse(response.data[1]));
-
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => {
+        this.auth.updateUser(JSON.parse(response.data[1]));
+        return response;
+      }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   changeEmail(newEmail: string): Observable<ApiResponse> {
@@ -78,29 +71,26 @@ export class UserSettingsService {
     let json = JSON.stringify(updateUser);
 
     return this.http.post('api/users/' + this.activeUser.id, json)
-    .map((response: ApiResponse) => {
-      this.auth.updateUser(JSON.parse(response.data[1]));
-
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => {
+        this.auth.updateUser(JSON.parse(response.data[1]));
+        return response;
+      }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   changeUserOptions(newOptions: UserOptions): Observable<ApiResponse> {
     let json = JSON.stringify(newOptions);
 
     return this.http.post('api/users/' + this.activeUser.id + '/opts', json)
-    .map((response: ApiResponse) => {
-      this.auth.updateUser(JSON.parse(response.data[2]),
-        JSON.parse(response.data[1]));
-
-      return response;
-    })
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => {
+        this.auth.updateUser(JSON.parse(response.data[1]));
+        return response;
+      }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 }
 

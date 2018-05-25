@@ -9,8 +9,8 @@ import {
 } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/do';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { ApiResponse } from './shared/models';
 
@@ -34,23 +34,25 @@ export class ApiInterceptor implements HttpInterceptor {
       setHeaders: headers
     });
 
-    return next.handle(request).do((evt: HttpEvent<any>) => {
-      if (!(evt instanceof HttpResponse)) {
-        return;
-      }
+    return next.handle(request).pipe(
+      tap((evt: HttpEvent<any>) => {
+        if (!(evt instanceof HttpResponse)) {
+          return;
+        }
 
-      const response: ApiResponse = evt.body;
-      if (response.data) {
-        localStorage.setItem(this.JWT_KEY, response.data[0]);
-      }
-    }, (err: any) => {
-      if ((err instanceof HttpErrorResponse) &&
-          (err.status === 401 || err.status === 400) &&
-          (err.url + '').indexOf('login') === -1) {
-        this.router.navigate(['']);
-        localStorage.removeItem(this.JWT_KEY);
-      }
-    });
+        const response: ApiResponse = evt.body;
+        if (response.data) {
+          localStorage.setItem(this.JWT_KEY, response.data[0]);
+        }
+      }, (err: any) => {
+        if ((err instanceof HttpErrorResponse) &&
+            (err.status === 401 || err.status === 400) &&
+            (err.url + '').indexOf('login') === -1) {
+          this.router.navigate(['']);
+          localStorage.removeItem(this.JWT_KEY);
+        }
+      })
+    );
   }
 
 }

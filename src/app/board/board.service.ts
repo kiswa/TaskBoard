@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 import {
   ApiResponse,
@@ -32,83 +29,82 @@ export class BoardService {
 
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   toggleCollapsed(userId: number, columnId: number): Observable<ApiResponse> {
-    return this.http.post('api/users/' + userId + '/cols',
-      { id: columnId })
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    return this.http.post('api/users/' + userId + '/cols', { id: columnId })
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   updateBoard(board: Board): Observable<ApiResponse> {
     return this.http.post('api/boards/' + board.id, board)
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   updateColumn(column: Column): Observable<ApiResponse> {
     return this.http.post('api/columns/' + column.id, column)
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   addTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks', task)
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   updateTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks/' + task.id, task)
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   removeTask(taskId: number): Observable<ApiResponse> {
     return this.http.delete('api/tasks/' + taskId)
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   getTaskActivity(taskId: number): Observable<ApiResponse> {
     return this.http.get('api/activity/task/' + taskId)
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   updateComment(comment: Comment): Observable<ApiResponse> {
     return this.http.post('api/comments/' + comment.id, comment)
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   removeComment(commentId: number): Observable<ApiResponse> {
     return this.http.delete('api/comments/' + commentId)
-    .map((response: ApiResponse) => response)
-    .catch((response: ApiResponse, caught) => {
-      return Observable.of(response);
-    });
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err, caught) => { return caught; })
+    );
   }
 
   refreshToken(): void {
