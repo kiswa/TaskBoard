@@ -29,8 +29,8 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id, json)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
@@ -43,8 +43,8 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id, json)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
@@ -56,11 +56,11 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id, json)
     .pipe(
+      catchError((err, caught) => { return caught; }),
       map((response: ApiResponse) => {
         this.auth.updateUser(JSON.parse(response.data[1]));
         return response;
-      }),
-      catchError((err, caught) => { return caught; })
+      })
     );
   }
 
@@ -72,11 +72,11 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id, json)
     .pipe(
+      catchError((err, caught) => { return caught; }),
       map((response: ApiResponse) => {
         this.auth.updateUser(JSON.parse(response.data[1]));
         return response;
-      }),
-      catchError((err, caught) => { return caught; })
+      })
     );
   }
 
@@ -85,11 +85,11 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id + '/opts', json)
     .pipe(
+      catchError((err, caught) => { return caught; }),
       map((response: ApiResponse) => {
         this.auth.updateUser(JSON.parse(response.data[1]));
         return response;
-      }),
-      catchError((err, caught) => { return caught; })
+      })
     );
   }
 }

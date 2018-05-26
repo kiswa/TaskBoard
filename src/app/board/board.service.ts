@@ -30,80 +30,80 @@ export class BoardService {
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   toggleCollapsed(userId: number, columnId: number): Observable<ApiResponse> {
     return this.http.post('api/users/' + userId + '/cols', { id: columnId })
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   updateBoard(board: Board): Observable<ApiResponse> {
     return this.http.post('api/boards/' + board.id, board)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   updateColumn(column: Column): Observable<ApiResponse> {
     return this.http.post('api/columns/' + column.id, column)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   addTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks', task)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   updateTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks/' + task.id, task)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   removeTask(taskId: number): Observable<ApiResponse> {
     return this.http.delete('api/tasks/' + taskId)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   getTaskActivity(taskId: number): Observable<ApiResponse> {
     return this.http.get('api/activity/task/' + taskId)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   updateComment(comment: Comment): Observable<ApiResponse> {
     return this.http.post('api/comments/' + comment.id, comment)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   removeComment(commentId: number): Observable<ApiResponse> {
     return this.http.delete('api/comments/' + commentId)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 

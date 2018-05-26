@@ -75,8 +75,9 @@ describe('AuthService', () => {
     testCall('api/login', 'POST');
   });
 
-  it('handles errors on user login', () => {
-    service.login('test', 'test', true).subscribe(() => {}, response => {
+  fit('handles errors on user login', () => {
+    service.login('test', 'test', true).subscribe(response => {
+      console.log(response);
       expect(response.alerts.length).toEqual(1);
     });
 

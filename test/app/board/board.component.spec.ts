@@ -7,7 +7,7 @@ import { Title } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 import { DragulaModule } from 'ng2-dragula/ng2-dragula';
 

@@ -36,11 +36,11 @@ export class AuthService {
   authenticate(): Observable<boolean> {
     return this.http.post('api/authenticate', null)
     .pipe(
+      catchError((err, caught) => { return of(false); }),
       map((response: ApiResponse) => {
         this.updateUser(response.data[1], response.data[2]);
         return true;
-      }),
-      catchError((err, caught) => { return of(false); })
+      })
     );
   }
 
@@ -54,13 +54,13 @@ export class AuthService {
 
       return this.http.post('api/login', json)
       .pipe(
-        map((response: ApiResponse) => {
-          this.updateUser(response.data[1], response.data[2]);
-          return response;
-        }),
         catchError((err, caught) => {
           this.updateUser(null, null);
           return caught;
+        }),
+        map((response: ApiResponse) => {
+          this.updateUser(response.data[1], response.data[2]);
+          return response;
         })
       );
     }

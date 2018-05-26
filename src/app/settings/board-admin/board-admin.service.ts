@@ -22,24 +22,24 @@ export class BoardAdminService {
   addBoard(board: BoardData): Observable<ApiResponse> {
     return this.http.post('api/boards', board)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   editBoard(board: BoardData): Observable<ApiResponse> {
     return this.http.post('api/boards/' + board.id, board)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
   removeBoard(boardId: number): Observable<ApiResponse> {
     return this.http.delete('api/boards/' + boardId)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 

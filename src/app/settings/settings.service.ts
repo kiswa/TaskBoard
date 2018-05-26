@@ -31,8 +31,8 @@ export class SettingsService {
   getUsers(): Observable<ApiResponse> {
     return this.http.get('api/users')
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
@@ -46,8 +46,8 @@ export class SettingsService {
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 
@@ -58,8 +58,8 @@ export class SettingsService {
   getActions(): Observable<ApiResponse> {
     return this.http.get('api/autoactions')
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err, caught) => { return caught; }),
+      map((response: ApiResponse) => { return response; })
     );
   }
 }

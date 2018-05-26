@@ -90,12 +90,12 @@ describe('TaskDisplay', () => {
 
   it('handles checklists in markdown', () => {
     setupBoard();
-    component.taskData.description = ' - [x] One\n - Two';
+    component.taskData.description = ' - [x] One\n - [ ] Two';
     component.ngOnInit();
 
     const actual = component.getTaskDescription();
-    expect(actual).toEqual('<ul>\n<li class="checklist"><i class="icon icon-check"></i> ' +
-      'One</li><li>Two</li></ul>\n ');
+    expect(actual).toEqual('<ul>\n<li><i class="icon icon-check"></i>' +
+      'One</li>\n<li><i class="icon icon-check-empty"></i>Two</li>\n</ul>\n');
   });
 
   it('adds attributes to links in markdown', () => {

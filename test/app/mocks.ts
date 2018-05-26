@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 import { Location } from '@angular/common';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 import { User, Board } from '../../src/app/shared/models';
 

@@ -108,12 +108,7 @@ export class TaskDisplay implements OnInit {
   }
 
   getTaskDescription(): string {
-    let html = marked(this.taskData.description, this.markedCallback);
-    // Escape curly braces for dynamic component.
-    html = html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}" }}');
-
-    // At least have a space so the compile directive doesn't error
-    return html + ' ';
+    return marked(this.taskData.description, this.markedCallback);
   }
 
   getPercentStyle() {
@@ -373,24 +368,9 @@ export class TaskDisplay implements OnInit {
   private initMarked() {
     let renderer = new marked.Renderer();
 
-    // String literal access needed because augmenting the type doesn't work.
-    renderer.listitem = text => {
-      if (/^\s*\[[x ]\]\s*/.test(text)) {
-        marked['taskCounts'][this.taskData.id].total += 1; // tslint:disable-line
-
-        if (/^\s*\[x\]\s*/.test(text)) {
-          marked['taskCounts'][this.taskData.id].complete += 1; // tslint:disable-line
-        }
-
-        text = text
-          .replace(/^\s*\[ \]\s*/,
-            '<i class="icon icon-check-empty"></i> ')
-          .replace(/^\s*\[x\]\s*/,
-            '<i class="icon icon-check"></i> ');
-        return '<li class="checklist">' + text + '</li>';
-      } else {
-        return '<li>' + text + '</li>';
-      }
+    renderer.checkbox = isChecked => {
+      let text = '<i class="icon icon-check' + (isChecked ? '' : '-empty') + '"></i>';
+      return text;
     };
 
     renderer.link = (href, title, text) => {
