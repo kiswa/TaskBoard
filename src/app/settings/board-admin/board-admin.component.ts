@@ -124,6 +124,10 @@ export class BoardAdmin implements OnDestroy {
   }
 
   addEditBoard(): void {
+    if (!this.modal.isOpen(this.MODAL_ID)) {
+      return;
+    }
+
     let isAdd = this.modalProps.title === 'Add';
 
     this.saving = true;

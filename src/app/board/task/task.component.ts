@@ -108,7 +108,8 @@ export class TaskDisplay implements OnInit {
   }
 
   getTaskDescription(): string {
-    return marked(this.taskData.description, this.markedCallback);
+    let html = marked(this.taskData.description, this.markedCallback);
+    return html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}"  }}');
   }
 
   getPercentStyle() {

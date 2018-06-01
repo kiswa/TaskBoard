@@ -31,7 +31,7 @@ import { SharedModule } from './shared/shared.module';
       provide: HTTP_INTERCEPTORS,
       useClass: ApiInterceptor,
       multi: true
-    },
+    }
   ],
   declarations: [
     AppComponent,

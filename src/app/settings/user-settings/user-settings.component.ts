@@ -120,7 +120,9 @@ export class UserSettings implements OnInit {
         this.resetPasswordForm();
         this.changePassword.submitted = false;
 
-        this.auth.updateUser(JSON.parse(response.data[1]));
+        if (response.status === 'success') {
+          this.auth.updateUser(JSON.parse(response.data[1]));
+        }
       });
   }
 
@@ -129,7 +131,7 @@ export class UserSettings implements OnInit {
 
     if (this.changeUsername.newName === '') {
       this.notes.add(new Notification('error',
-        'New Username cannot be blank.'));
+        this.strings['settings_usernameRequired']));
       this.changeUsername.submitted = false;
 
       return;

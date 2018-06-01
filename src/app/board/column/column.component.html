@@ -105,9 +105,8 @@
       {{ strings['boards_taskDue'] + ' ' + viewModalProps.due_date }}
     </div>
 
-    <div class="description" *ngIf="viewModalProps.description.length">
-      <ng-template ngNonBindable
-        *compile="getTaskDescription()"></ng-template>
+    <div class="description" *ngIf="viewModalProps.description.length"
+      [innerHtml]="getTaskDescription()">
     </div>
 
     <div class="stats">

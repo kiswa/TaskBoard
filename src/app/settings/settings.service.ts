@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import {
@@ -31,8 +31,8 @@ export class SettingsService {
   getUsers(): Observable<ApiResponse> {
     return this.http.get('api/users')
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
@@ -46,8 +46,8 @@ export class SettingsService {
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
@@ -58,8 +58,8 @@ export class SettingsService {
   getActions(): Observable<ApiResponse> {
     return this.http.get('api/autoactions')
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 }

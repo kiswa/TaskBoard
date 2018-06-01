@@ -540,15 +540,11 @@ export class ColumnDisplay implements OnInit, OnDestroy {
 
   private getTaskDescription() {
     let html = marked(this.viewModalProps.description, this.markedCallback);
-    // Escape curly braces for dynamic component.
-    html = html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}" }}');
-
-    return html;
+    return html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}" }}');
   }
 
   private getComment(text: string) {
     let html = marked(text, this.markedCallback);
-
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 

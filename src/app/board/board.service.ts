@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import {
@@ -30,80 +30,80 @@ export class BoardService {
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   toggleCollapsed(userId: number, columnId: number): Observable<ApiResponse> {
     return this.http.post('api/users/' + userId + '/cols', { id: columnId })
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   updateBoard(board: Board): Observable<ApiResponse> {
     return this.http.post('api/boards/' + board.id, board)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   updateColumn(column: Column): Observable<ApiResponse> {
     return this.http.post('api/columns/' + column.id, column)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   addTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks', task)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   updateTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks/' + task.id, task)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   removeTask(taskId: number): Observable<ApiResponse> {
     return this.http.delete('api/tasks/' + taskId)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   getTaskActivity(taskId: number): Observable<ApiResponse> {
     return this.http.get('api/activity/task/' + taskId)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   updateComment(comment: Comment): Observable<ApiResponse> {
     return this.http.post('api/comments/' + comment.id, comment)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   removeComment(commentId: number): Observable<ApiResponse> {
     return this.http.delete('api/comments/' + commentId)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 

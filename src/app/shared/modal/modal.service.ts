@@ -25,6 +25,16 @@ export class ModalService {
     this.modals.push(newModal);
   }
 
+  isOpen(modalId: string): boolean {
+    let modal = this.modals.find(modal => modal.modalId === modalId);
+
+    if (modal) {
+      return modal.isOpen;
+    }
+
+    return false;
+  }
+
   open(modalId: string): void {
     let modal = this.modals.find(modal => modal.modalId === modalId);
 

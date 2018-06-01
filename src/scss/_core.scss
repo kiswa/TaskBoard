@@ -1,15 +1,15 @@
 html {
-    background-image: url('../images/bg.png');
+  background-image: url('../images/bg.png');
 }
 
 html,
 body {
-    height: 100%;
-    margin: 0;
+  height: 100%;
+  margin: 0;
 }
 
 ::selection {
-    color: $color-background;
+  color: $color-background;
 }
 
 h1,
@@ -18,42 +18,42 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: Raleway;
-    font-weight: 500;
-    margin: 0;
+  font-family: Raleway;
+  font-weight: 500;
+  margin: 0;
 }
 
 form {
-    box-shadow: none;
-    padding: 0;
+  box-shadow: none;
+  padding: 0;
 }
 
 section {
-    @include clearfix();
-    @include shadow-low();
+  @include clearfix();
+  @include shadow-low();
 
-    background-color: $white;
-    margin-bottom: 1em;
-    position: relative;
+  background-color: $white;
+  margin-bottom: 1em;
+  position: relative;
 
-    h2 {
-        background-color: $color-heading-bg;
-        padding: 7px;
-    }
+  h2 {
+    background-color: $color-heading-bg;
+    padding: 7px;
+  }
 
-    h3 {
-        padding: 7px;
-        padding-left: 0;
-    }
+  h3 {
+    padding: 7px;
+    padding-left: 0;
+  }
 }
 
 a {
-    background-position: left 1.05em;
+  background-position: left 1.05em;
 }
 
 table {
-    border-collapse: collapse;
-    margin-bottom: 1em;
+  border-collapse: collapse;
+  margin-bottom: 1em;
 }
 
 // Override scss-base flat styles
@@ -63,8 +63,9 @@ table {
 [type="submit"].flat,
 button.flat,
 .btn.flat {
-    background-color: $white;
-    color: $color-primary;
+  background-color: $white;
+  color: $color-primary;
+  margin-right: 7px;
 }
 // scss-lint:enable QualifyingElement
 
@@ -74,136 +75,138 @@ input,
 optgroup,
 select,
 textarea {
-    font-family: "Pontano Sans", sans-serif;
+  font-family: "Pontano Sans", sans-serif;
 }
 
 button {
-    transition: background .3s;
+  margin-right: 7px;
+  transition: background .3s;
 }
 
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
 
-    100% {
-        transform: rotate(360deg);
-    }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .spinner {
-    animation: spin 1s infinite;
-    border: 3px solid $color-heading-bg;
-    border-radius: 50%;
-    border-right-color: $color-text;
-    display: inline-block;
-    height: 20px;
-    margin-bottom: -.3em;
-    width: 20px;
+  animation: spin 1s infinite;
+  border: 3px solid $color-heading-bg;
+  border-radius: 50%;
+  border-right-color: $color-text;
+  display: inline-block;
+  height: 20px;
+  margin-bottom: -.3em;
+  width: 20px;
 }
 
 .icon-help-circled {
-    position: relative;
+  position: relative;
 
-    &:hover::after {
-        @include shadow-high;
+  &:hover::after {
+    @include shadow-high;
 
-        background-color: $white;
-        border: 1px solid $color-border;
-        content: attr(data-help);
-        left: 20px;
-        min-width: 250px;
-        padding: 7px;
-        position: absolute;
-        text-align: left;
-        top: -1em;
-        z-index: 100;
-    }
+    background-color: $white;
+    border: 1px solid $color-border;
+    content: attr(data-help);
+    left: 20px;
+    min-width: 250px;
+    padding: 7px;
+    position: absolute;
+    text-align: left;
+    top: -1em;
+    z-index: 100;
+  }
 }
 
 .color-primary {
-    color: $color-primary;
+  color: $color-primary;
 }
 
 .color-secondary {
-    color: $color-secondary;
+  color: $color-secondary;
 }
 
 .loading {
-    padding-top: 2em;
-    text-align: center;
+  padding-top: 2em;
+  text-align: center;
 }
 
 .small {
-    font-size: .8em;
+  font-size: .8em;
 }
 
 .clearfix {
-    @include clearfix;
+  @include clearfix;
 }
 
 .row {
-    @include row();
+  @include row();
 
-    padding: 7px;
+  padding: 7px;
 }
 
 .right {
-    float: right;
+  float: right;
 }
 
 .center {
-    text-align: center;
+  text-align: center;
 }
 
 .inline {
-    margin-right: 1em;
+  margin-right: 1em;
 
-    input {
-        width: auto;
-    }
+  input {
+    width: auto;
+  }
 }
 
 .badge {
-    background-color: $color-tertiary;
-    border: 1px solid $color-border;
-    border-radius: 33%;
-    box-shadow: inset 1px 1px rgba(0, 0, 0, .1);
-    font-family: 'Fira Mono';
-    font-size: .75em;
-    font-weight: 700;
-    line-height: 1.7em;
-    margin: 2px;
-    padding: 3px 5px 1px;
+  background-color: $color-tertiary;
+  border: 1px solid $color-border;
+  border-radius: 33%;
+  box-shadow: inset 1px 1px rgba(0, 0, 0, .1);
+  font-family: 'Fira Mono';
+  font-size: .75em;
+  font-weight: 700;
+  line-height: 1.7em;
+  margin: 2px;
+  padding: 3px 5px 1px;
 }
 
 .quick-add {
-    padding: 7px;
+  padding: 7px;
 
-    input {
-        width: calc(100% - 40px);
-    }
+  input {
+    width: calc(100% - 40px);
+  }
 
-    button {
-        margin-left: 2px;
-        padding: 8px;
-    }
+  button {
+    margin-left: 5px;
+    margin-right: 0;
+    padding: 8px;
+  }
 }
 
 .toggle {
-    vertical-align: sub;
+  vertical-align: sub;
 
-    &::before {
-        height: 16px;
-        width: 30px;
-    }
+  &::before {
+    height: 16px;
+    width: 30px;
+  }
 
-    &::after {
-        top: -2px;
-    }
+  &::after {
+    top: -2px;
+  }
 }
 
 .hidden:checked + .toggle::after {
-    transform: translate(15px);
+  transform: translate(15px);
 }
 

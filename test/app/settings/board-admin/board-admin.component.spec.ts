@@ -96,6 +96,7 @@ describe('BoardAdmin', () => {
 
     let called = false;
 
+    (<any>component.modal).isOpen = () => true;
     (<any>component.boardService).addBoard = () => {
       return { subscribe: fn => {
         const board = new Board();
@@ -118,6 +119,7 @@ describe('BoardAdmin', () => {
 
     let called = false;
 
+    (<any>component.modal).isOpen = () => true;
     (<any>component.boardService).editBoard = () => {
       return { subscribe: fn => {
         const board = new Board();

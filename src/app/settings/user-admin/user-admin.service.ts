@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { ApiResponse } from '../../shared/models';
@@ -15,24 +15,24 @@ export class UserAdminService {
   addUser(user: ModalUser): Observable<ApiResponse> {
     return this.http.post('api/users', user)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   editUser(user: ModalUser): Observable<ApiResponse> {
     return this.http.post('api/users/' + user.id, user)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
   removeUser(userId: number): Observable<ApiResponse> {
     return this.http.delete('api/users/' + userId)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 }

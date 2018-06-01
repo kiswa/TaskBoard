@@ -85,7 +85,7 @@ describe('TaskDisplay', () => {
 
     const actual = component.getTaskDescription();
 
-    expect(actual).toEqual('<h1 id="make-this-html">Make this HTML</h1>\n ');
+    expect(actual).toEqual('<h1 id="make-this-html">Make this HTML</h1>\n');
   });
 
   it('handles checklists in markdown', () => {

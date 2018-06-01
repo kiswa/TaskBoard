@@ -66,6 +66,7 @@ describe('UserAdmin', () => {
   it('calls a service to add a user', () => {
     let called = false;
 
+    (<any>component.modal).isOpen = () => true;
     (<any>component.userService).addUser = () => {
       return { subscribe: fn => {
         const user = new User();
@@ -91,6 +92,7 @@ describe('UserAdmin', () => {
   it('calls a service to edit a user', () => {
     let called = false;
 
+    (<any>component.modal).isOpen = () => true;
     (<any>component.userService).editUser = () => {
       return { subscribe: fn => {
         const user = new User();

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import {
@@ -18,7 +18,7 @@ export class AutoActionsService {
     return this.http.post('api/autoactions', action)
     .pipe(
       map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
@@ -26,7 +26,7 @@ export class AutoActionsService {
     return this.http.delete('api/autoactions/' + action.id)
     .pipe(
       map((response: ApiResponse) => { return response; }),
-      catchError((err, caught) => { return caught; })
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 }

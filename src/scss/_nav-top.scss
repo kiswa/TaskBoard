@@ -1,28 +1,28 @@
 .nav-top {
-    border-bottom: 1px solid lighten($color-border, 10%);
-    margin-bottom: 5px;
-    padding: .5em;
+  border-bottom: 1px solid lighten($color-border, 10%);
+  margin-bottom: 5px;
+  padding: .5em;
 
-    h1 {
-        margin-top: 3px;
+  h1 {
+    margin-top: 3px;
 
-        span {
-            padding: 0;
-        }
+    span {
+      padding: 0;
     }
+  }
 
-    .dark {
-        color: $color-text;
-    }
+  .dark {
+    color: $color-text;
+  }
 
-    .small {
-        font-size: .655555em;
-        font-weight: 500;
-    }
+  .small {
+    font-size: .655555em;
+    font-weight: 500;
+  }
 
-    .buttons {
-        float: right;
-        margin-top: -2.2em;
-    }
+  .buttons {
+    float: right;
+    margin-top: -2.2em;
+  }
 }
 

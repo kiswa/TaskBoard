@@ -1,66 +1,66 @@
 .login {
+  @include shadow-low();
+
+  background-color: $white;
+  display: inline-block;
+  margin: 3em calc(50% - 175px);
+  padding: 1em;
+  position: relative;
+  text-align: center;
+  width: 350px;
+
+  h1 {
+    margin: 1em;
+    margin-top: .5em;
+  }
+
+  [type='text'] {
+    border-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    text-align: center;
+  }
+
+  [type='password'] {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    text-align: center;
+  }
+
+  label {
+    display: inline-block;
+    margin-top: .5em;
+  }
+
+  button {
+    margin-top: .5em;
+    width: 100%;
+  }
+
+  p {
+    font-size: .8em;
+    margin-bottom: -1em;
+  }
+
+  &::before,
+  &::after {
     @include shadow-low();
 
-    background-color: $white;
-    display: inline-block;
-    margin: 3em calc(50% - 175px);
-    padding: 1em;
-    position: relative;
-    text-align: center;
-    width: 350px;
+    background: $color-table-row;
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transform: rotate(2deg);
+    width: 100%;
+    z-index: -1;
+  }
 
-    h1 {
-        margin: 1em;
-        margin-top: .5em;
-    }
-
-    [type='text'] {
-        border-bottom: 0;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        text-align: center;
-    }
-
-    [type='password'] {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        text-align: center;
-    }
-
-    label {
-        display: inline-block;
-        margin-top: .5em;
-    }
-
-    button {
-        margin-top: .5em;
-        width: 100%;
-    }
-
-    p {
-        font-size: .8em;
-        margin-bottom: -1em;
-    }
-
-    &::before,
-    &::after {
-        @include shadow-low();
-
-        background: $color-table-row;
-        content: '';
-        height: 100%;
-        left: 0;
-        position: absolute;
-        top: 0;
-        transform: rotate(2deg);
-        width: 100%;
-        z-index: -1;
-    }
-
-    &::after {
-        background-color: darken($color-table-row, 5%);
-        transform: rotate(-3deg);
-        z-index: -2;
-    }
+  &::after {
+    background-color: darken($color-table-row, 5%);
+    transform: rotate(-3deg);
+    z-index: -2;
+  }
 }
 

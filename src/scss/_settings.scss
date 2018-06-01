@@ -1,293 +1,293 @@
 .settings {
-    @include clearfix();
+  @include clearfix();
 
-    margin: 7px 1em;
+  margin: 7px 1em;
 
-    .quick-add {
-        padding: 0;
+  .quick-add {
+    padding: 0;
+  }
+
+  .half-page {
+    @include span-columns(9 of 18);
+  }
+
+  .half-modal {
+    float: left;
+    margin-right: 2%;
+    width: 49%;
+
+    &:nth-of-type(2) {
+      margin: 0;
     }
 
-    .half-page {
-        @include span-columns(9 of 18);
+    label {
+      display: inline-block;
+      margin-top: 1em;
+    }
+  }
+
+  .no-bottom-margin {
+    margin-bottom: 0;
+  }
+
+  .borderless {
+    border: 0;
+  }
+
+  .padded {
+    margin-right: 3px;
+  }
+
+  .alternating {
+    td:last-child {
+      a {
+        background-image: none;
+      }
+    }
+  }
+
+  .categories {
+    [type="text"] {
+      width: calc(100% - 81px);
     }
 
-    .half-modal {
-        float: left;
-        margin-right: 2%;
-        width: 49%;
+    [type="color"] {
+      cursor: pointer;
+      height: 35px;
+      margin-left: 2px;
+      vertical-align: bottom;
+      width: 35px;
+    }
+  }
 
-        &:nth-of-type(2) {
-            margin: 0;
-        }
-
-        label {
-            display: inline-block;
-            margin-top: 1em;
-        }
+  .issue-trackers {
+    label {
+      display: inline-block;
+      margin-top: 1em;
     }
 
-    .no-bottom-margin {
-        margin-bottom: 0;
+    [type="text"] {
+      &:first-of-type {
+        width: 430px;
+      }
+
+      &:last-of-type {
+        margin-left: 2px;
+        width: 148px;
+      }
     }
 
-    .borderless {
-        border: 0;
+    button {
+      height: 36px;
+      margin-left: 2px;
+      padding: 9px;
+      vertical-align: top;
     }
+  }
 
-    .padded {
-        margin-right: 3px;
-    }
-
-    .alternating {
-        td:last-child {
-            a {
-                background-image: none;
-            }
-        }
-    }
-
-    .categories {
-        [type="text"] {
-            width: calc(100% - 81px);
-        }
-
-        [type="color"] {
-            cursor: pointer;
-            height: 35px;
-            margin-left: 2px;
-            vertical-align: bottom;
-            width: 35px;
-        }
-    }
-
-    .issue-trackers {
-        label {
-            display: inline-block;
-            margin-top: 1em;
-        }
-
-        [type="text"] {
-            &:first-of-type {
-                width: 430px;
-            }
-
-            &:last-of-type {
-                margin-left: 2px;
-                width: 148px;
-            }
-        }
-
-        button {
-            height: 36px;
-            margin-left: 2px;
-            padding: 9px;
-            vertical-align: top;
-        }
-    }
-
-    .double-edit .first {
-        .inline-edit {
-            margin-right: 1%;
-            width: 70%;
-        }
-
-        [type="text"] {
-            width: 95%;
-        }
-    }
-
-    .double-edit .last {
-        .inline-edit {
-            width: 25%;
-        }
-
-        [type="text"] {
-            width: 86%;
-        }
-    }
-
-    .users {
-        .user-select {
-            display: inline-block;
-            margin-bottom: .3em;
-            margin-top: 0;
-            width: 33%;
-        }
-
-        label {
-            display: inline-block;
-            margin-top: 1em;
-        }
-    }
-
-    .gu-mirror {
-        @include shadow-high;
-
-        background: $white;
-        display: block;
-        // To override default opacity settings
-        filter: alpha(opacity = 100);
-        opacity: 1;
-
-        .actions {
-            float: right;
-        }
-    }
-
-    .modal-list {
-        border: 1px solid $color-border;
-        border-radius: 3px;
-        list-style: none;
-        margin: 0;
-        margin-bottom: 1em;
-        padding: 0;
-
-        &.category-list {
-            [type="color"] {
-                border: 0;
-                cursor: pointer;
-                height: 24px;
-                margin: 0;
-                padding: 0;
-                width: 20px;
-            }
-
-            .inline-edit {
-                vertical-align: top;
-                width: 85%;
-            }
-        }
-
-        li {
-            border-bottom: 1px solid $color-border;
-            padding: 0 7px;
-
-            &:last-of-type {
-                border: 0;
-            }
-        }
-
-        .actions {
-            float: right;
-        }
-
-        .badge {
-            margin-left: 5px;
-            margin-right: 13px;
-        }
-
-        .icon-trash-empty,
-        .icon-edit {
-            cursor: pointer;
-        }
-    }
-
+  .double-edit .first {
     .inline-edit {
+      margin-right: 1%;
+      width: 70%;
+    }
+
+    [type="text"] {
+      width: 95%;
+    }
+  }
+
+  .double-edit .last {
+    .inline-edit {
+      width: 25%;
+    }
+
+    [type="text"] {
+      width: 86%;
+    }
+  }
+
+  .users {
+    .user-select {
+      display: inline-block;
+      margin-bottom: .3em;
+      margin-top: 0;
+      width: 33%;
+    }
+
+    label {
+      display: inline-block;
+      margin-top: 1em;
+    }
+  }
+
+  .gu-mirror {
+    @include shadow-high;
+
+    background: $white;
+    display: block;
+    // To override default opacity settings
+    filter: alpha(opacity = 100);
+    opacity: 1;
+
+    .actions {
+      float: right;
+    }
+  }
+
+  .modal-list {
+    border: 1px solid $color-border;
+    border-radius: 3px;
+    list-style: none;
+    margin: 0;
+    margin-bottom: 1em;
+    padding: 0;
+
+    &.category-list {
+      [type="color"] {
+        border: 0;
+        cursor: pointer;
+        height: 24px;
+        margin: 0;
+        padding: 0;
+        width: 20px;
+      }
+
+      .inline-edit {
+        vertical-align: top;
+        width: 85%;
+      }
+    }
+
+    li {
+      border-bottom: 1px solid $color-border;
+      padding: 0 7px;
+
+      &:last-of-type {
+        border: 0;
+      }
+    }
+
+    .actions {
+      float: right;
+    }
+
+    .badge {
+      margin-left: 5px;
+      margin-right: 13px;
+    }
+
+    .icon-trash-empty,
+    .icon-edit {
+      cursor: pointer;
+    }
+  }
+
+  .inline-edit {
+    display: inline-block;
+    width: 82%;
+
+    .icon {
+      cursor: pointer;
+      float: right;
+      margin-top: 4px;
+    }
+
+    [type="text"] {
+      border: 0;
+      border-bottom: 1px solid $color-border;
+      border-radius: 0;
+      height: 1em;
+      margin: 0;
+      padding-left: 0;
+      width: 90%;
+    }
+  }
+
+  .icon-resize-vertical {
+    border-right: 1px solid $color-border;
+    cursor: move;
+    margin-left: -5px;
+    margin-right: .5em;
+    width: 1.5em;
+  }
+
+  section {
+    ul {
+      border: 1px solid lighten($color-border, 10%);
+      border-radius: 4px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        @include clearfix();
+
+        border-bottom: 1px solid lighten($color-border, 10%);
+        line-height: 2em;
+        padding-left: 5px;
+      }
+
+      li:last-of-type {
+        border-bottom: 0;
+      }
+
+      .badge {
+        float: right;
+        margin-top: 3px;
+      }
+    }
+
+    label {
+      display: block;
+      line-height: 2em;
+
+      &.inline {
         display: inline-block;
-        width: 82%;
+        margin-right: 1em;
+      }
 
-        .icon {
-            cursor: pointer;
-            float: right;
-            margin-top: 4px;
-        }
-
-        [type="text"] {
-            border: 0;
-            border-bottom: 1px solid $color-border;
-            border-radius: 0;
-            height: 1em;
-            margin: 0;
-            padding-left: 0;
-            width: 90%;
-        }
+      &.hidden {
+        display: none;
+      }
     }
 
-    .icon-resize-vertical {
-        border-right: 1px solid $color-border;
-        cursor: move;
-        margin-left: -5px;
-        margin-right: .5em;
-        width: 1.5em;
+    tbody label {
+      display: inline;
     }
 
-    section {
-        ul {
-            border: 1px solid lighten($color-border, 10%);
-            border-radius: 4px;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-
-            li {
-                @include clearfix();
-
-                border-bottom: 1px solid lighten($color-border, 10%);
-                line-height: 2em;
-                padding-left: 5px;
-            }
-
-            li:last-of-type {
-                border-bottom: 0;
-            }
-
-            .badge {
-                float: right;
-                margin-top: 3px;
-            }
-        }
-
-        label {
-            display: block;
-            line-height: 2em;
-
-            &.inline {
-                display: inline-block;
-                margin-right: 1em;
-            }
-
-            &.hidden {
-                display: none;
-            }
-        }
-
-        tbody label {
-            display: inline;
-        }
-
-        .filters {
-            margin-top: -2.5em;
-            max-width: 80%;
-        }
-
-        .hold-bottom {
-            bottom: 7px;
-            position: absolute;
-        }
-
-        .autosize {
-            margin-bottom: .5em;
-            width: auto;
-        }
-
-        .tall {
-            margin-top: 2.5em;
-        }
-
-        .half {
-            @include span-columns(4.5 of 9);
-            padding: 7px;
-
-            input,
-            button {
-                margin-top: 7px;
-            }
-        }
-
-        .flat {
-            background-color: lighten($color-background, 10%);
-            color: $color-primary;
-        }
+    .filters {
+      margin-top: -2.5em;
+      max-width: 80%;
     }
+
+    .hold-bottom {
+      bottom: 7px;
+      position: absolute;
+    }
+
+    .autosize {
+      margin-bottom: .5em;
+      width: auto;
+    }
+
+    .tall {
+      margin-top: 2.5em;
+    }
+
+    .half {
+      @include span-columns(4.5 of 9);
+      padding: 7px;
+
+      input,
+      button {
+        margin-top: 7px;
+      }
+    }
+
+    .flat {
+      background-color: lighten($color-background, 10%);
+      color: $color-primary;
+    }
+  }
 }
 

@@ -50,7 +50,8 @@ describe('ApiInterceptor', () => {
         });
 
         const req = httpMock.expectOne(req =>
-          req.headers.has('Content-Type') && req.headers.get('Content-Type') === 'application/json'
+          req.headers.has('Content-Type') &&
+          req.headers.get('Content-Type') === 'application/json'
         );
         expect(req.request.method).toEqual('GET');
 
@@ -69,7 +70,8 @@ describe('ApiInterceptor', () => {
         });
 
         const req = httpMock.expectOne(req =>
-          req.headers.has('Authorization') && req.headers.get('Authorization') === 'fake'
+          req.headers.has('Authorization') &&
+          req.headers.get('Authorization') === 'fake'
         );
         expect(req.request.method).toEqual('POST');
 
@@ -91,12 +93,13 @@ describe('ApiInterceptor', () => {
         });
 
         const req = httpMock.expectOne(req =>
-          req.headers.has('Content-Type') && req.headers.get('Content-Type') === 'application/json'
+          req.headers.has('Content-Type') &&
+          req.headers.get('Content-Type') === 'application/json'
         );
         expect(req.request.method).toEqual('GET');
 
         const error = new HttpErrorResponse({ status: 401 });
-        req.flush({}, error);
+        req.flush(error);
         expect(localStorage.getItem('Authorization')).toEqual(null);
       }
     )

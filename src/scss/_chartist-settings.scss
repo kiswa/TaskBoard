@@ -1,53 +1,54 @@
 $ct-text-color: $color-text;
 
 .white-labels {
-    .ct-label {
-        color: $white;
-        fill: $white;
-    }
+  .ct-label {
+    color: $white;
+    fill: $white;
+  }
 }
 
 .chartist-tooltip {
-    background: $color-text;
-    border-radius: 3px;
-    color: $white;
-    opacity: 0;
-    padding: .5em;
-    pointer-events: none;
+  background: $color-text;
+  border-radius: 3px;
+  color: $white;
+  opacity: 0;
+  padding: .5em;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity .2s;
+
+  &::before {
+    border: 10px solid transparent;
+    border-top-color: $color-text;
+    content: '';
+    height: 0;
+    left: 50%;
+    margin-left: -10px;
     position: absolute;
-    transition: opacity .2s;
+    top: 100%;
+    width: 0;
+  }
 
-    &::before {
-        border: 10px solid transparent;
-        border-top-color: $color-text;
-        content: '';
-        height: 0;
-        left: 50%;
-        margin-left: -10px;
-        position: absolute;
-        top: 100%;
-        width: 0;
-    }
-
-    &.tooltip-show {
-        opacity: 1;
-    }
+  &.tooltip-show {
+    opacity: 1;
+  }
 }
 
 $ct-series-colors: (
-    #2291c9,
-    #135170,
-    #2088bc,
-    #104763,
-    #1d7faf,
-    #0d3e56,
-    #1b76a3,
-    #0b3449,
-    #196c96,
-    #092b3d,
-    #176389,
-    #072230,
-    #155a7c,
-    #051923,
-    #031016
+  #2291c9,
+  #135170,
+  #2088bc,
+  #104763,
+  #1d7faf,
+  #0d3e56,
+  #1b76a3,
+  #0b3449,
+  #196c96,
+  #092b3d,
+  #176389,
+  #072230,
+  #155a7c,
+  #051923,
+  #031016
 );
+

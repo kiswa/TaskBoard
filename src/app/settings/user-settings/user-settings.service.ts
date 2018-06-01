@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import {
@@ -29,8 +29,8 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id, json)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
@@ -43,8 +43,8 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id, json)
     .pipe(
-      catchError((err, caught) => { return caught; }),
-      map((response: ApiResponse) => { return response; })
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
@@ -56,11 +56,11 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id, json)
     .pipe(
-      catchError((err, caught) => { return caught; }),
       map((response: ApiResponse) => {
         this.auth.updateUser(JSON.parse(response.data[1]));
         return response;
-      })
+      }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
@@ -72,11 +72,11 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id, json)
     .pipe(
-      catchError((err, caught) => { return caught; }),
       map((response: ApiResponse) => {
         this.auth.updateUser(JSON.parse(response.data[1]));
         return response;
-      })
+      }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 
@@ -85,11 +85,12 @@ export class UserSettingsService {
 
     return this.http.post('api/users/' + this.activeUser.id + '/opts', json)
     .pipe(
-      catchError((err, caught) => { return caught; }),
       map((response: ApiResponse) => {
-        this.auth.updateUser(JSON.parse(response.data[1]));
+        this.auth.updateUser(JSON.parse(response.data[2]),
+                             JSON.parse(response.data[1]));
         return response;
-      })
+      }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
     );
   }
 }

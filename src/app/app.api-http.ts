@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   HttpErrorResponse,
+  HttpHeaderResponse,
+  HttpResponseBase,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
@@ -36,20 +38,21 @@ export class ApiInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       tap((evt: HttpEvent<any>) => {
-        if (!(evt instanceof HttpResponse)) {
+        if (evt instanceof HttpHeaderResponse ||
+            !(evt instanceof HttpResponseBase)) {
+          return;
+        }
+
+        if ((evt.status === 401 || evt.status === 400) &&
+            (evt.url + '').indexOf('login') === -1) {
+          localStorage.removeItem(this.JWT_KEY);
+          this.router.navigate(['']);
           return;
         }
 
         const response: ApiResponse = evt.body;
         if (response.data) {
           localStorage.setItem(this.JWT_KEY, response.data[0]);
-        }
-      }, (err: any) => {
-        if ((err instanceof HttpErrorResponse) &&
-            (err.status === 401 || err.status === 400) &&
-            (err.url + '').indexOf('login') === -1) {
-          this.router.navigate(['']);
-          localStorage.removeItem(this.JWT_KEY);
         }
       })
     );

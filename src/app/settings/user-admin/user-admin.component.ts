@@ -93,6 +93,10 @@ export class UserAdmin {
   }
 
   addEditUser(): void {
+    if (!this.modal.isOpen(this.MODAL_ID)) {
+      return;
+    }
+
     let isAdd = this.modalProps.prefix;
     this.saving = true;
 

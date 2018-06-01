@@ -75,9 +75,8 @@ describe('AuthService', () => {
     testCall('api/login', 'POST');
   });
 
-  fit('handles errors on user login', () => {
-    service.login('test', 'test', true).subscribe(response => {
-      console.log(response);
+  it('handles errors on user login', () => {
+    service.login('test', 'test', true).subscribe(() => {}, response => {
       expect(response.alerts.length).toEqual(1);
     });
 
@@ -93,7 +92,7 @@ describe('AuthService', () => {
   });
 
   const testCall = (url, method, isError = false) => {
-    const req = httpMock.expectOne(url);
+    const req = httpMock.expectOne({ method, url });
     expect(req.request.method).toEqual(method);
 
     if (isError) {
