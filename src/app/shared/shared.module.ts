@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { AuthGuard } from './auth/auth.guard';
 import { AuthService } from './auth/auth.service';
-import { CompileDirective } from './compile/compile.directive';
 import { ContextMenu } from './context-menu/context-menu.component';
+import { ContextMenuItem } from './context-menu/context-menu-item.component';
 import { ContextMenuService } from './context-menu/context-menu.service';
 import { InlineEdit } from './inline-edit/inline-edit.component';
 import { Modal } from './modal/modal.component';
@@ -33,8 +33,8 @@ import { Constants } from './constants';
     CommonModule
   ],
   declarations: [
-    CompileDirective,
     ContextMenu,
+    ContextMenuItem,
     InlineEdit,
     Modal,
     Notifications,
@@ -50,8 +50,8 @@ import { Constants } from './constants';
     StringsService
   ],
   exports: [
-    CompileDirective,
     ContextMenu,
+    ContextMenuItem,
     InlineEdit,
     Modal,
     Notifications,

@@ -6,7 +6,6 @@ export * from './board.model';
 export * from './category.model';
 export * from './column.model';
 export * from './comment.model';
-export * from '../context-menu/context-menu-item.model';
 export * from './issue-tracker.model';
 export * from './notification.model';
 export * from './task.model';

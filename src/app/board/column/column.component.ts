@@ -19,7 +19,6 @@ import {
   Category,
   Column,
   Comment,
-  ContextMenuItem,
   Notification,
   Task,
   User,
@@ -67,7 +66,6 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   public userOptions: UserOptions;
   public activeUser: User;
   public activeBoard: Board;
-  public contextMenuItems: Array<ContextMenuItem>;
   public quickAdd: Task;
 
   public MODAL_CONFIRM_ID: string;
@@ -102,10 +100,10 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     let sub = stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
 
-      this.contextMenuItems = [
-        new ContextMenuItem(this.strings.boards_addTask,
-                            this.getShowModalFunction())
-      ];
+      // this.contextMenuItems = [
+      //   new ContextMenuItem(this.strings.boards_addTask,
+      //                       this.getShowModalFunction())
+      // ];
     });
     this.subs.push(sub);
 

@@ -1,8 +1,6 @@
 .collapsed {
   .context-menu-container {
-    &.menu-open {
-      display: none;
-    }
+    display: none;
   }
 }
 
@@ -12,32 +10,9 @@
   background-color: $white;
   border-radius: 3px;
   color: $color-text;
-  display: none;
   padding: 5px 0;
   position: fixed;
   width: 200px;
   z-index: 100;
-
-  &.menu-open {
-    display: block;
-  }
-
-  .menu-item {
-    cursor: pointer;
-    padding: 4px 10px;
-    user-select: none;
-
-    &:hover {
-      background-color: lighten($color-background, 5%);
-    }
-
-    &.no-highlight {
-      cursor: default;
-
-      &:hover {
-        background-color: $white;
-      }
-    }
-  }
 }
 

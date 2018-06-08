@@ -55,12 +55,5 @@ describe('ContextMenu', () => {
     });
   });
 
-  it('gets HTML formatted text from items', () => {
-    let actual = component.getText(<any>{ text: '<p>Test</p>' });
-
-    expect((<any>actual).changingThisBreaksApplicationSecurity)
-      .toEqual('<p>Test</p>');
-  });
-
 });
 

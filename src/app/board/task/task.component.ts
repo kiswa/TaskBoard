@@ -14,7 +14,6 @@ import {
   ApiResponse,
   Board,
   Column,
-  ContextMenuItem,
   Notification,
   Task,
   UserOptions
@@ -42,7 +41,6 @@ export class TaskDisplay implements OnInit {
   public activeBoard: Board;
   public userOptions: UserOptions;
   public boardsList: Array<Board>;
-  public contextMenuItems: Array<ContextMenuItem>;
 
   @Input('task') taskData: Task;
   @Input('add-task') addTask: Function;
@@ -56,7 +54,7 @@ export class TaskDisplay implements OnInit {
   @Input('boards')
   set boards(boards: Array<Board>) {
     this.boardsList = boards;
-    this.generateContextMenuItems();
+    // this.generateContextMenuItems();
   }
 
   constructor(private auth: AuthService,
@@ -69,13 +67,12 @@ export class TaskDisplay implements OnInit {
     this.totalTasks = 0;
     this.completeTasks = 0;
     this.percentComplete = 0;
-    this.contextMenuItems = [];
 
     stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
 
       if (this.taskData) {
-        this.generateContextMenuItems();
+        // this.generateContextMenuItems();
       }
     });
 
@@ -101,7 +98,7 @@ export class TaskDisplay implements OnInit {
       complete: 0
     };
 
-    this.generateContextMenuItems();
+    // this.generateContextMenuItems();
     this.initMarked();
     this.calcPercentComplete();
     this.checkDueDate();
@@ -274,28 +271,28 @@ export class TaskDisplay implements OnInit {
     return text;
   }
 
-  private getMoveMenuItem() {
-    let menuText = this.strings.boards_moveTask +
-      ': <select id="columnsList' + this.taskData.id + '" ' +
-      '(click)="action($event)">' +
-      '<option value="0">' + this.strings.boards_selectColumn + '</option>';
-
-    this.activeBoard.columns.forEach((column: Column) => {
-      menuText += '<option value="' + column.id + '">' + column.name + '</option>';
-    });
-
-    menuText += '</select>';
-
-    let action = (event: any) => {
-      if (event.target.tagName !== 'SELECT') {
-        return;
-      }
-
-      this.changeTaskColumn();
-    };
-
-    return new ContextMenuItem(menuText, action, false, false, true);
-  }
+  // private getMoveMenuItem() {
+  //   let menuText = this.strings.boards_moveTask +
+  //     ': <select id="columnsList' + this.taskData.id + '" ' +
+  //     '(click)="action($event)">' +
+  //     '<option value="0">' + this.strings.boards_selectColumn + '</option>';
+  //
+  //   this.activeBoard.columns.forEach((column: Column) => {
+  //     menuText += '<option value="' + column.id + '">' + column.name + '</option>';
+  //   });
+  //
+  //   menuText += '</select>';
+  //
+  //   let action = (event: any) => {
+  //     if (event.target.tagName !== 'SELECT') {
+  //       return;
+  //     }
+  //
+  //     this.changeTaskColumn();
+  //   };
+  //
+  //   return new ContextMenuItem(menuText, action, false, false, true);
+  // }
 
   private calcPercentComplete() {
     this.percentComplete = 0;
@@ -314,57 +311,57 @@ export class TaskDisplay implements OnInit {
     }
   }
 
-  private generateContextMenuItems() {
-    this.contextMenuItems = [
-      new ContextMenuItem(this.strings.boards_viewTask, this.viewTask),
-      new ContextMenuItem(this.strings.boards_editTask, this.editTask),
-      new ContextMenuItem(this.strings.boards_removeTask, this.removeTask),
-      new ContextMenuItem('', null, true),
-      this.getMoveMenuItem(),
-      new ContextMenuItem('', null, true),
-      new ContextMenuItem(this.strings.boards_addTask, this.addTask)
-    ];
+  // private generateContextMenuItems() {
+  //   this.contextMenuItems = [
+  //     new ContextMenuItem(this.strings.boards_viewTask, this.viewTask),
+  //     new ContextMenuItem(this.strings.boards_editTask, this.editTask),
+  //     new ContextMenuItem(this.strings.boards_removeTask, this.removeTask),
+  //     new ContextMenuItem('', null, true),
+  //     this.getMoveMenuItem(),
+  //     new ContextMenuItem('', null, true),
+  //     new ContextMenuItem(this.strings.boards_addTask, this.addTask)
+  //   ];
+  //
+  //   if (this.boardsList && this.boardsList.length > 1) {
+  //     this.contextMenuItems
+  //       .splice(3, 0,
+  //         new ContextMenuItem('', null, true),
+  //         this.getMenuItem(this.strings.boards_copyTaskTo),
+  //         this.getMenuItem(this.strings.boards_moveTaskTo));
+  //   }
+  // }
 
-    if (this.boardsList && this.boardsList.length > 1) {
-      this.contextMenuItems
-        .splice(3, 0,
-          new ContextMenuItem('', null, true),
-          this.getMenuItem(this.strings.boards_copyTaskTo),
-          this.getMenuItem(this.strings.boards_moveTaskTo));
-    }
-  }
-
-  private getMenuItem(text: string): ContextMenuItem {
-    let menuText = text + ': ' +
-      '<i class="icon icon-help-circled" ' +
-      'data-help="' + this.strings.boards_copyMoveHelp + '"></i> ' +
-      '<select id="boardsList' + this.taskData.id + text.split(' ')[0] + '" ' +
-      '(click)="action($event)">' +
-      '<option value="0">' + this.strings.boards_selectBoard + '</option>';
-
-    this.boardsList.forEach((board: Board) => {
-      if (board.name !== this.activeBoard.name) {
-        menuText += '<option value="' + board.id + '">' + board.name + '</option>';
-      }
-    });
-
-    menuText += '</select>';
-
-    let action = (event: any) => {
-      if (event.target.tagName !== 'SELECT') {
-        return;
-      }
-
-      if (text === this.strings.boards_copyTaskTo) {
-        this.copyTaskToBoard();
-        return;
-      }
-
-      this.moveTaskToBoard();
-    };
-
-    return new ContextMenuItem(menuText, action, false, false, true);
-  }
+  // private getMenuItem(text: string): ContextMenuItem {
+  //   let menuText = text + ': ' +
+  //     '<i class="icon icon-help-circled" ' +
+  //     'data-help="' + this.strings.boards_copyMoveHelp + '"></i> ' +
+  //     '<select id="boardsList' + this.taskData.id + text.split(' ')[0] + '" ' +
+  //     '(click)="action($event)">' +
+  //     '<option value="0">' + this.strings.boards_selectBoard + '</option>';
+  //
+  //   this.boardsList.forEach((board: Board) => {
+  //     if (board.name !== this.activeBoard.name) {
+  //       menuText += '<option value="' + board.id + '">' + board.name + '</option>';
+  //     }
+  //   });
+  //
+  //   menuText += '</select>';
+  //
+  //   let action = (event: any) => {
+  //     if (event.target.tagName !== 'SELECT') {
+  //       return;
+  //     }
+  //
+  //     if (text === this.strings.boards_copyTaskTo) {
+  //       this.copyTaskToBoard();
+  //       return;
+  //     }
+  //
+  //     this.moveTaskToBoard();
+  //   };
+  //
+  //   return new ContextMenuItem(menuText, action, false, false, true);
+  // }
 
   private initMarked() {
     let renderer = new marked.Renderer();

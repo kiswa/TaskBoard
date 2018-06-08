@@ -4,18 +4,21 @@ import { ContextMenu } from './context-menu.component';
 
 @Injectable()
 export class ContextMenuService {
-  private menus: Array<ContextMenu>;
+  private menus: Array<ContextMenu> = [];
 
   constructor() {
-    this.menus = [];
-
-    document.addEventListener('click', event => {
-      this.closeAllMenus();
-    });
+    document.addEventListener('click', event => { this.closeAllMenus(); });
   }
 
   registerMenu(newMenu: ContextMenu) {
-    this.menus.push(newMenu);
+    const index = this.menus.indexOf(newMenu);
+
+    if (index === -1) {
+      this.menus.push(newMenu);
+      return;
+    }
+
+    this.menus[index] = newMenu;
   }
 
   closeAllMenus() {

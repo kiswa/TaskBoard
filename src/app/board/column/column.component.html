@@ -86,7 +86,9 @@
     (dblclick)="$event.preventDefault();showViewModal(task.id)"></tb-task>
 </div>
 
-<tb-context-menu [menu-items]="contextMenuItems"></tb-context-menu>
+<tb-context-menu>
+  <tb-context-menu-item>Column Test</tb-context-menu-item>
+</tb-context-menu>
 
 <tb-modal *ngIf="activeBoard && columnData"
   modal-title="{{ strings['boards_viewTask'] }} - {{ viewModalProps.title }}"
