@@ -1,3 +1,5 @@
+import { SafeHtml } from '@angular/platform-browser';
+
 import { Attachment } from './attachment.model';
 import { Category } from './category.model';
 import { Comment } from './comment.model';
@@ -8,6 +10,7 @@ export class Task {
   public attachments: Array<Attachment>;
   public assignees: Array<User>;
   public categories: Array<Category>;
+  public html: SafeHtml;
 
   public filtered: boolean;
   public hideFiltered: boolean;

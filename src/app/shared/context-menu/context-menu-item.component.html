@@ -1,2 +1,5 @@
-<ng-content *ngIf="!isSeparator; else separator"></ng-content>
-<ng-template #separator><hr></ng-template>
+<ng-content *ngIf="!isSeparator; else separator"
+  class="context-menu-item"></ng-content>
+<ng-template #separator class="context-menu-separator">
+  <hr>
+</ng-template>

@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Output
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'tb-context-menu-item',
@@ -24,19 +18,17 @@ export class ContextMenuItem {
   @Input()
   isSeparator: boolean;
 
-  @Output()
-  clickEvent: EventEmitter<MouseEvent> = new EventEmitter();
+  @Input()
+  isCustomEvent: boolean;
 
   constructor(private el: ElementRef) {
     const elem = el.nativeElement;
 
     elem.onclick = (event) => {
-      if (this.isSeparator) {
+      if (this.isSeparator || this.isCustomEvent) {
         this.killEvent(event);
         return;
       }
-
-      this.clickEvent.next(event);
     };
 
     elem.oncontextmenu = (event) => {

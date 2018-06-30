@@ -20,8 +20,6 @@ describe('ContextMenu', () => {
     fixture: ComponentFixture<ContextMenu>,
     elementRef: ElementRefMock;
 
-  const getPrivateFunction = name => component[name].bind(component);
-
   beforeEach(() => {
     elementRef = new ElementRefMock();
 

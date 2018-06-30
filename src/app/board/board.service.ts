@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import * as marked from 'marked';
+import * as hljs from 'highlight.js';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -13,13 +15,42 @@ import {
   User
 } from '../shared/models';
 
+interface MarkedReturn {
+  html: string;
+  counts: any;
+}
+
 @Injectable()
 export class BoardService {
+  private checkCounts = {
+    total: 0,
+    complete: 0
+  }
   private activeBoard = new BehaviorSubject<Board>(null);
+  private defaultCallback = (err: any, text: string) => {
+    console.log('default', err, text);
+    return text;
+  };
 
   public activeBoardChanged = this.activeBoard.asObservable();
 
   constructor(private http: HttpClient) {
+    this.initMarked();
+  }
+
+  convertMarkdown(markdown: string, callback = this.defaultCallback, doCount = false): MarkedReturn {
+    this.checkCounts.total = 0;
+    this.checkCounts.complete = 0;
+
+    let retVal: MarkedReturn = { html: '', counts: {} };
+
+    retVal.html = marked(markdown, callback);
+
+    if (doCount) {
+      retVal.counts = this.checkCounts;
+    }
+
+    return retVal;
   }
 
   updateActiveBoard(board: Board): void {
@@ -124,5 +155,42 @@ export class BoardService {
                      boardData.ownIssuetracker,
                      boardData.sharedUser);
   }
+
+  private initMarked(): void {
+    let renderer = new marked.Renderer();
+
+    renderer.checkbox = isChecked => {
+      let text = '<i class="icon icon-check' + (isChecked ? '' : '-empty') + '"></i>';
+
+      this.checkCounts.total += 1;
+
+      if (isChecked) {
+        this.checkCounts.complete += 1;
+      }
+
+      return text;
+    };
+
+    renderer.link = (href, title, text) => {
+      let out = '<a href="' + href + '"';
+
+      if (title) {
+        out += ' title="' + title + '"';
+      }
+
+      out += ' target="tb_external" rel="noreferrer">' + text + '</a>';
+
+      return out;
+    };
+
+    marked.setOptions({
+      renderer,
+      smartypants: true,
+      highlight: code => {
+        return hljs.highlightAuto(code).value;
+      }
+    });
+  }
+
 }
 

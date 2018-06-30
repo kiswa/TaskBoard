@@ -20,5 +20,5 @@ after_success:
   - touch fakeconfig
   - echo "OAUTH_ACCESS_TOKEN=$OAUTH_ACCESS_TOKEN" > fakeconfig
   - ./dropbox_uploader.sh -f fakeconfig upload coverage/api coverage-$(php version.php)/
-  - ./dropbox_uploader.sh -f fakeconfig upload coverage/app coverage-$(php version.php)/
+  - ./dropbox_uploader.sh -f fakeconfig upload coverage/app/lcov-report coverage-$(php version.php)/
 

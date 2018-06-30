@@ -7,9 +7,6 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-import * as marked from 'marked';
-import * as hljs from 'highlight.js';
-
 import {
   ApiResponse,
   Board,
@@ -31,8 +28,6 @@ import { BoardService } from '../board.service';
   templateUrl: './task.component.html'
 })
 export class TaskDisplay implements OnInit {
-  private totalTasks: number;
-  private completeTasks: number;
   private isOverdue: boolean;
   private isNearlyDue: boolean;
 
@@ -54,7 +49,6 @@ export class TaskDisplay implements OnInit {
   @Input('boards')
   set boards(boards: Array<Board>) {
     this.boardsList = boards;
-    // this.generateContextMenuItems();
   }
 
   constructor(private auth: AuthService,
@@ -64,16 +58,10 @@ export class TaskDisplay implements OnInit {
               private notes: NotificationsService,
               private stringsService: StringsService) {
     this.onUpdateBoards = new EventEmitter<any>();
-    this.totalTasks = 0;
-    this.completeTasks = 0;
     this.percentComplete = 0;
 
     stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
-
-      if (this.taskData) {
-        // this.generateContextMenuItems();
-      }
     });
 
     auth.userChanged.subscribe(() => {
@@ -86,27 +74,21 @@ export class TaskDisplay implements OnInit {
   }
 
   ngOnInit() {
-    // Since marked is global, the counts need to be stored uniquely per task.
-    // String literal access needed because augmenting the type doesn't work.
-    marked['taskCounts'] = []; // tslint:disable-line
-    if (!this.taskData) {
-      return;
-    }
-
-    marked['taskCounts'][this.taskData.id] = { // tslint:disable-line
-      total: 0,
-      complete: 0
-    };
-
-    // this.generateContextMenuItems();
-    this.initMarked();
-    this.calcPercentComplete();
     this.checkDueDate();
+    this.convertTaskDescription();
   }
 
-  getTaskDescription(): string {
-    let html = marked(this.taskData.description, this.markedCallback);
-    return html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}"  }}');
+  private convertTaskDescription() {
+    let data = this.boardService.convertMarkdown(
+      this.taskData.description, this.markedCallback, true
+    );
+
+    data.html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}"  }}');
+    if (data.counts.total) {
+      this.percentComplete = data.counts.complete / data.counts.total;
+    }
+
+    this.taskData.html = this.sanitizer.bypassSecurityTrustHtml(data.html);
   }
 
   getPercentStyle() {
@@ -131,7 +113,12 @@ export class TaskDisplay implements OnInit {
     return yiq >= 140 ? '#333333' : '#efefef';
   }
 
-  changeTaskColumn() {
+  changeTaskColumn(event: any) {
+    if (event.target.tagName !== 'SELECT') {
+      return;
+    }
+    event.target.parentElement.parentElement.click();
+
     let select = document.getElementById('columnsList' + this.taskData.id) as HTMLSelectElement,
       id = +select[select.selectedIndex].value;
 
@@ -151,7 +138,12 @@ export class TaskDisplay implements OnInit {
       });
   }
 
-  copyTaskToBoard() {
+  copyTaskToBoard(event: any) {
+    if (event.target.tagName !== 'SELECT') {
+      return;
+    }
+    event.target.parentElement.parentElement.click();
+
     let select = document.getElementById('boardsList' + this.taskData.id +
       this.strings.boards_copyTaskTo.split(' ')[0]) as HTMLSelectElement;
 
@@ -184,7 +176,12 @@ export class TaskDisplay implements OnInit {
       });
   }
 
-  moveTaskToBoard() {
+  moveTaskToBoard(event: any) {
+    if (event.target.tagName !== 'SELECT') {
+      return;
+    }
+    event.target.parentElement.parentElement.click();
+
     let select = document.getElementById('boardsList' + this.taskData.id +
       this.strings.boards_moveTaskTo.split(' ')[0]) as HTMLSelectElement;
 
@@ -217,7 +214,7 @@ export class TaskDisplay implements OnInit {
   }
 
   private checkDueDate() {
-    if (this.taskData.due_date === '') {
+    if (!this.taskData || this.taskData.due_date === '') {
       return;
     }
 
@@ -269,127 +266,6 @@ export class TaskDisplay implements OnInit {
     });
 
     return text;
-  }
-
-  // private getMoveMenuItem() {
-  //   let menuText = this.strings.boards_moveTask +
-  //     ': <select id="columnsList' + this.taskData.id + '" ' +
-  //     '(click)="action($event)">' +
-  //     '<option value="0">' + this.strings.boards_selectColumn + '</option>';
-  //
-  //   this.activeBoard.columns.forEach((column: Column) => {
-  //     menuText += '<option value="' + column.id + '">' + column.name + '</option>';
-  //   });
-  //
-  //   menuText += '</select>';
-  //
-  //   let action = (event: any) => {
-  //     if (event.target.tagName !== 'SELECT') {
-  //       return;
-  //     }
-  //
-  //     this.changeTaskColumn();
-  //   };
-  //
-  //   return new ContextMenuItem(menuText, action, false, false, true);
-  // }
-
-  private calcPercentComplete() {
-    this.percentComplete = 0;
-
-    // String literal access needed because augmenting the type doesn't work.
-    marked['taskCounts'][this.taskData.id] = { // tslint:disable-line
-      total: 0,
-      complete: 0
-    };
-
-    marked(this.taskData.description);
-
-    if (marked['taskCounts'][this.taskData.id].total) { // tslint:disable-line
-      this.percentComplete = marked['taskCounts'][this.taskData.id].complete / // tslint:disable-line
-        marked['taskCounts'][this.taskData.id].total; // tslint:disable-line
-    }
-  }
-
-  // private generateContextMenuItems() {
-  //   this.contextMenuItems = [
-  //     new ContextMenuItem(this.strings.boards_viewTask, this.viewTask),
-  //     new ContextMenuItem(this.strings.boards_editTask, this.editTask),
-  //     new ContextMenuItem(this.strings.boards_removeTask, this.removeTask),
-  //     new ContextMenuItem('', null, true),
-  //     this.getMoveMenuItem(),
-  //     new ContextMenuItem('', null, true),
-  //     new ContextMenuItem(this.strings.boards_addTask, this.addTask)
-  //   ];
-  //
-  //   if (this.boardsList && this.boardsList.length > 1) {
-  //     this.contextMenuItems
-  //       .splice(3, 0,
-  //         new ContextMenuItem('', null, true),
-  //         this.getMenuItem(this.strings.boards_copyTaskTo),
-  //         this.getMenuItem(this.strings.boards_moveTaskTo));
-  //   }
-  // }
-
-  // private getMenuItem(text: string): ContextMenuItem {
-  //   let menuText = text + ': ' +
-  //     '<i class="icon icon-help-circled" ' +
-  //     'data-help="' + this.strings.boards_copyMoveHelp + '"></i> ' +
-  //     '<select id="boardsList' + this.taskData.id + text.split(' ')[0] + '" ' +
-  //     '(click)="action($event)">' +
-  //     '<option value="0">' + this.strings.boards_selectBoard + '</option>';
-  //
-  //   this.boardsList.forEach((board: Board) => {
-  //     if (board.name !== this.activeBoard.name) {
-  //       menuText += '<option value="' + board.id + '">' + board.name + '</option>';
-  //     }
-  //   });
-  //
-  //   menuText += '</select>';
-  //
-  //   let action = (event: any) => {
-  //     if (event.target.tagName !== 'SELECT') {
-  //       return;
-  //     }
-  //
-  //     if (text === this.strings.boards_copyTaskTo) {
-  //       this.copyTaskToBoard();
-  //       return;
-  //     }
-  //
-  //     this.moveTaskToBoard();
-  //   };
-  //
-  //   return new ContextMenuItem(menuText, action, false, false, true);
-  // }
-
-  private initMarked() {
-    let renderer = new marked.Renderer();
-
-    renderer.checkbox = isChecked => {
-      let text = '<i class="icon icon-check' + (isChecked ? '' : '-empty') + '"></i>';
-      return text;
-    };
-
-    renderer.link = (href, title, text) => {
-      let out = '<a href="' + href + '"';
-
-      if (title) {
-        out += ' title="' + title + '"';
-      }
-
-      out += ' target="tb_external" rel="noreferrer">' + text + '</a>';
-
-      return out;
-    };
-
-    marked.setOptions({
-      renderer,
-      smartypants: true,
-      highlight: code => {
-        return hljs.highlightAuto(code).value;
-      }
-    });
   }
 }
 

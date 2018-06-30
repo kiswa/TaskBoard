@@ -26,7 +26,7 @@ export class ApiInterceptor implements HttpInterceptor {
     const headers = {
       'Content-Type': 'application/json'
     };
-    const token = localStorage.getItem(this.JWT_KEY);
+    const token = sessionStorage.getItem(this.JWT_KEY);
 
     if (token !== null) {
       headers['Authorization'] = token;
@@ -45,14 +45,14 @@ export class ApiInterceptor implements HttpInterceptor {
 
         if ((evt.status === 401 || evt.status === 400) &&
             (evt.url + '').indexOf('login') === -1) {
-          localStorage.removeItem(this.JWT_KEY);
+          sessionStorage.removeItem(this.JWT_KEY);
           this.router.navigate(['']);
           return;
         }
 
         const response: ApiResponse = evt.body;
         if (response.data) {
-          localStorage.setItem(this.JWT_KEY, response.data[0]);
+          sessionStorage.setItem(this.JWT_KEY, response.data[0]);
         }
       })
     );

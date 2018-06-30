@@ -76,12 +76,7 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
 
     this.pageName = this.strings.boards;
 
-    sub = this.boardService.getBoards().subscribe((response: ApiResponse) => {
-      this.boards = [];
-      this.updateBoardsList(response.data[1]);
-      this.loading = false;
-    });
-    this.subs.push(sub);
+    this.updateBoards();
 
     sub = boardService.activeBoardChanged.subscribe((board: Board) => {
       if (!board) {
@@ -137,7 +132,14 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
       }
     });
 
-    this.dragula.dropModel.subscribe((value: any) => {
+    let makeCall = false;
+    this.dragula.dropModel.subscribe(async (value: any) => {
+      makeCall = !makeCall;
+
+      if (!makeCall) {
+        return;
+      }
+
       let taskId = +value[1].id,
         toColumnId = +value[2].parentNode.id,
         fromColumnId = +value[3].parentNode.id;
@@ -145,6 +147,8 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
       if (toColumnId === fromColumnId) {
         fromColumnId = -1;
       }
+
+      let updateList = [];
 
       this.activeBoard.columns.forEach(column => {
         if (column.id === toColumnId || column.id === fromColumnId) {
@@ -158,10 +162,17 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
             position++;
           });
 
-          let oneOff = this.boardService.updateColumn(column).subscribe();
-          oneOff.unsubscribe();
+          updateList.push(column);
         }
       });
+
+      const update = async (column) => {
+        this.boardService.updateColumn(column).subscribe();
+      }
+
+      for (let i = 0, len = updateList.length; i < len; ++i) {
+        await update(updateList[i]);
+      }
     });
   }
 
@@ -237,6 +248,13 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
     }
 
     return false;
+  }
+
+  private updateBoards(): void {
+    this.boardService.getBoards().subscribe((response: ApiResponse) => {
+      this.boards = [];
+      this.updateBoardsList(response.data[1]);
+    });
   }
 
   private updateBoardsList(boards: Array<any>): void {

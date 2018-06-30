@@ -9,9 +9,6 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-import * as marked from 'marked';
-import * as hljs from 'highlight.js';
-
 import {
   ApiResponse,
   ActivitySimple,
@@ -74,7 +71,8 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   @Input('column') columnData: Column;
   @Input('boards') boards: Array<Board>;
 
-  @Output('on-update-boards') onUpdateBoards: EventEmitter<any> = new EventEmitter<any>();
+  @Output('on-update-boards')
+  onUpdateBoards: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private elRef: ElementRef,
               private auth: AuthService,
@@ -99,11 +97,6 @@ export class ColumnDisplay implements OnInit, OnDestroy {
 
     let sub = stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
-
-      // this.contextMenuItems = [
-      //   new ContextMenuItem(this.strings.boards_addTask,
-      //                       this.getShowModalFunction())
-      // ];
     });
     this.subs.push(sub);
 
@@ -477,6 +470,11 @@ export class ColumnDisplay implements OnInit, OnDestroy {
                         updatedTask.ownAttachment,
                         updatedTask.sharedUser,
                         updatedTask.sharedCategory);
+    const data = this.boardService.convertMarkdown(task.description,
+      (_, text) => { return text; }, true);
+
+    task.html = data.html;
+
     return task;
   }
 
@@ -536,14 +534,9 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     return text;
   }
 
-  private getTaskDescription() {
-    let html = marked(this.viewModalProps.description, this.markedCallback);
-    return html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}" }}');
-  }
-
   private getComment(text: string) {
-    let html = marked(text, this.markedCallback);
-    return this.sanitizer.bypassSecurityTrustHtml(html);
+    let data = this.boardService.convertMarkdown(text, this.markedCallback);
+    return this.sanitizer.bypassSecurityTrustHtml(data.html);
   }
 
   private getUserName(userId: number) {
@@ -579,12 +572,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
       });
 
     this.newComment = '';
-    this.viewModalProps = new Task(viewTask.id, viewTask.title,
-                                   viewTask.description, viewTask.color,
-                                   viewTask.due_date, viewTask.points,
-                                   viewTask.position, viewTask.column_id,
-                                   viewTask.comments, viewTask.attachments,
-                                   viewTask.assignees, viewTask.categories);
+    this.viewModalProps = this.convertToTask(viewTask);
     this.checkDueDate();
 
     if (this.showActivity) {

@@ -87,7 +87,9 @@
 </div>
 
 <tb-context-menu>
-  <tb-context-menu-item>Column Test</tb-context-menu-item>
+  <tb-context-menu-item (click)="showModal()">
+    {{ strings['boards_addTask'] }}
+  </tb-context-menu-item>
 </tb-context-menu>
 
 <tb-modal *ngIf="activeBoard && columnData"
@@ -108,7 +110,7 @@
     </div>
 
     <div class="description" *ngIf="viewModalProps.description.length"
-      [innerHtml]="getTaskDescription()">
+      [innerHtml]="viewModalProps.html">
     </div>
 
     <div class="stats">

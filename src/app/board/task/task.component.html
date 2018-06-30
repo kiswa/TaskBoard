@@ -19,7 +19,7 @@
   </h4>
 
   <div class="description" *ngIf="!isCollapsed"
-    [innerHtml]="getTaskDescription()">
+    [innerHtml]="taskData.html">
   </div>
 
   <div class="stats">
@@ -56,9 +56,71 @@
   </div>
 
   <tb-context-menu>
-    <tb-context-menu-item>
-      Task Test
+    <tb-context-menu-item (click)="viewTask()">
+      {{ strings['boards_viewTask'] }}
     </tb-context-menu-item>
+    <tb-context-menu-item (click)="editTask()">
+      {{ strings['boards_editTask'] }}
+    </tb-context-menu-item>
+    <tb-context-menu-item (click)="removeTask()">
+      {{ strings['boards_removeTask'] }}
+    </tb-context-menu-item>
+
+    <div *ngIf="boardsList && boardsList.length > 1">
+      <tb-context-menu-item isSeparator="true"></tb-context-menu-item>
+
+      <tb-context-menu-item isCustomEvent="true">
+        {{ strings['boards_copyTaskTo'] }}:
+        <i class="icon icon-help-circled"
+           attr.data-help="{{ strings['boards_copyMoveHelp'] }}"></i>
+        <select id="boardsList{{ taskData.id }}{{ strings['boards_copyTaskTo'].split(' ')[0] }}"
+          (change)="copyTaskToBoard($event)">
+          <option value="0">{{ strings['boards_selectBoard'] }}</option>
+          <ng-container *ngFor="let board of boardsList">
+            <option *ngIf="board.id !== activeBoard.id" [value]="board.id">
+              {{ board.name }}
+            </option>
+          </ng-container>
+        </select>
+      </tb-context-menu-item>
+
+      <tb-context-menu-item isCustomEvent="true">
+        {{ strings['boards_moveTaskTo'] }}:
+        <i class="icon icon-help-circled"
+           attr.data-help="{{ strings['boards_copyMoveHelp'] }}"></i>
+        <select id="boardsList{{ taskData.id }}{{
+                strings['boards_moveTaskTo'].split(' ')[0] }}"
+          (change)="moveTaskToBoard($event)">
+          <option value="0">{{ strings['boards_selectBoard'] }}</option>
+          <ng-container *ngFor="let board of boardsList">
+            <option *ngIf="board.id !== activeBoard.id" [value]="board.id">
+              {{ board.name }}
+            </option>
+          </ng-container>
+        </select>
+      </tb-context-menu-item>
+    </div>
+
+    <div *ngIf="activeBoard.columns.length > 1">
+      <tb-context-menu-item isSeparator="true"></tb-context-menu-item>
+
+      <tb-context-menu-item isCustomEvent="true">
+        {{ strings['boards_moveTask'] }}:
+        <select id="columnsList{{ taskData.id }}" (change)="changeTaskColumn($event)">
+          <option value="0">{{ strings['boards_selectColumn'] }}</option>
+          <option *ngFor="let col of activeBoard.columns" [value]="col.id">
+          {{ col.name }}
+          </option>
+        </select>
+      </tb-context-menu-item>
+    </div>
+
+    <tb-context-menu-item isSeparator="true"></tb-context-menu-item>
+
+    <tb-context-menu-item (click)="addTask()">
+      {{ strings['boards_addTask'] }}
+    </tb-context-menu-item>
+
   </tb-context-menu>
 </div>
 

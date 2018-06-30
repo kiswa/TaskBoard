@@ -63,7 +63,7 @@ describe('ApiInterceptor', () => {
   it('adds Authorization header when JWT is present',
     inject([HttpClient, HttpTestingController],
       (http: HttpClient, httpMock: HttpTestingController) => {
-        localStorage.setItem('taskboard.jwt', 'fake');
+        sessionStorage.setItem('taskboard.jwt', 'fake');
 
         http.post('', {}).subscribe(response => {
           expect(response).toBeTruthy();
@@ -76,7 +76,7 @@ describe('ApiInterceptor', () => {
         expect(req.request.method).toEqual('POST');
 
         req.flush({ data: ['newToken'] });
-        expect(localStorage.getItem('taskboard.jwt')).toEqual('newToken');
+        expect(sessionStorage.getItem('taskboard.jwt')).toEqual('newToken');
       }
     )
   )
@@ -84,7 +84,7 @@ describe('ApiInterceptor', () => {
   it('handles errors and clears the JWT',
     inject([HttpClient, HttpTestingController],
       (http: HttpClient, httpMock: HttpTestingController) => {
-        localStorage.setItem('taskboard.jwt', 'fake');
+        sessionStorage.setItem('taskboard.jwt', 'fake');
 
         http.get('').subscribe(response => {
           expect(response).toBeTruthy();
@@ -100,7 +100,7 @@ describe('ApiInterceptor', () => {
 
         const error = new HttpErrorResponse({ status: 401 });
         req.flush(error);
-        expect(localStorage.getItem('Authorization')).toEqual(null);
+        expect(sessionStorage.getItem('Authorization')).toEqual(null);
       }
     )
   )
