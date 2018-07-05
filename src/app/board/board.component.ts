@@ -30,6 +30,7 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
   private subs: Array<any>;
 
   private hideFiltered: boolean;
+  private everyOtherDrop: boolean;
 
   public categoryFilter: number;
   public userFilter: number;
@@ -132,46 +133,31 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
       }
     });
 
-    let makeCall = false;
-    this.dragula.dropModel.subscribe(async (value: any) => {
-      makeCall = !makeCall;
-
-      if (!makeCall) {
-        return;
-      }
-
+    this.dragula.dropModel.subscribe((value: any) => {
       let taskId = +value[1].id,
         toColumnId = +value[2].parentNode.id,
         fromColumnId = +value[3].parentNode.id;
 
-      if (toColumnId === fromColumnId) {
-        fromColumnId = -1;
+      if (toColumnId !== fromColumnId) {
+        this.changeTaskColumn(taskId, toColumnId);
+        return;
       }
 
-      let updateList = [];
+      this.everyOtherDrop = !this.everyOtherDrop;
+      if (this.everyOtherDrop) {
+        for (var i = 0, len = this.activeBoard.columns.length; i < len; ++i) {
+          let column = this.activeBoard.columns[i];
 
-      this.activeBoard.columns.forEach(column => {
-        if (column.id === toColumnId || column.id === fromColumnId) {
-          let position = 1,
-            taskToUpdate: Task;
-
-          column.tasks.forEach(task => {
-            task.column_id = column.id;
-            task.position = position;
-
-            position++;
-          });
-
-          updateList.push(column);
+          if (column.id === toColumnId) {
+            let pos = 0;
+            this.activeBoard.columns[i].tasks.forEach(task => {
+              task.position = pos;
+              pos++;
+            });
+            this.boardService.updateColumn(column).subscribe();
+            break;
+          }
         }
-      });
-
-      const update = async (column) => {
-        this.boardService.updateColumn(column).subscribe();
-      }
-
-      for (let i = 0, len = updateList.length; i < len; ++i) {
-        await update(updateList[i]);
       }
     });
   }
@@ -321,5 +307,18 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
       this.noBoardsMessage = this.strings.boards_noBoardsMessageAdmin;
     }
   }
+
+  private changeTaskColumn(taskId: number, toColumnId: number) {
+    let column = this.activeBoard.columns
+      .find(col => col.id === toColumnId);
+    let task = column.tasks.find(ta => ta.id === taskId);
+
+    if (task) {
+      task.column_id = toColumnId;
+
+      this.boardService.updateTask(task).subscribe();
+    }
+  }
+
 }
 

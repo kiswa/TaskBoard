@@ -21,7 +21,7 @@ export class ContextMenuItem {
   @Input()
   isCustomEvent: boolean;
 
-  constructor(private el: ElementRef) {
+  constructor(public el: ElementRef) {
     const elem = el.nativeElement;
 
     elem.onclick = (event) => {

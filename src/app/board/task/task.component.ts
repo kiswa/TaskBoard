@@ -79,6 +79,10 @@ export class TaskDisplay implements OnInit {
   }
 
   private convertTaskDescription() {
+    if (!this.taskData || !this.taskData.description) {
+      return;
+    }
+
     let data = this.boardService.convertMarkdown(
       this.taskData.description, this.markedCallback, true
     );
@@ -241,6 +245,10 @@ export class TaskDisplay implements OnInit {
 
   // Needs anonymous function for proper `this` context.
   private markedCallback = (error: any, text: string) => {
+    if (!this.activeBoard.issue_trackers) {
+      return;
+    }
+
     this.activeBoard.issue_trackers.forEach(tracker => {
       let re = new RegExp(tracker.regex, 'ig');
       let replacements = new Array<any>();

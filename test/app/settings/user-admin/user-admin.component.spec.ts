@@ -145,6 +145,7 @@ describe('UserAdmin', () => {
         called = true;
       } };
     };
+    (<any>component.modal).isOpen = () => true;
 
     component.modalProps = <any>{
       prefix: true,

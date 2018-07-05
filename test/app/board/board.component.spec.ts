@@ -100,7 +100,6 @@ describe('BoardDisplay', () => {
     component.ngAfterContentInit();
 
     expect((<any>component.dragula).opts.moves).toEqual(jasmine.any(Function));
-    expect(component.activeBoard.columns[0].tasks[0].position).toEqual(1);
 
     const test = (<any>component.dragula).opts.moves(null, null, {
       classList: { contains: () => false }
@@ -182,7 +181,7 @@ describe('BoardDisplay', () => {
 
     component.boards = <any>[{}];
     expect(component.noBoards()).toEqual(false);
-  })
+  });
 
   it('updates the active board from a service', () => {
     component.boardService.updateActiveBoard(null);
@@ -195,7 +194,7 @@ describe('BoardDisplay', () => {
     component.auth.updateUser(<any>{ security_level: 1 });
 
     expect(component.activeUser).toEqual(jasmine.any(Object));
-  })
+  });
 
 });
 
