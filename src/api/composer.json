@@ -1,7 +1,7 @@
 {
     "require": {
         "monolog/monolog": "^1.18",
-        "gabordemooij/redbean": "^5.0",
+        "gabordemooij/redbean": "^5.1",
         "slim/slim": "^3.3",
         "firebase/php-jwt": "^5.0",
         "phpmailer/phpmailer": "^6.0",
