@@ -37,22 +37,20 @@ export class ApiInterceptor implements HttpInterceptor {
     });
 
     return next.handle(request).pipe(
-      tap((evt: HttpEvent<any>) => {
+      tap(evt => {
         if (evt instanceof HttpHeaderResponse ||
             !(evt instanceof HttpResponseBase)) {
-          return;
-        }
-
-        if ((evt.status === 401 || evt.status === 400) &&
-            (evt.url + '').indexOf('login') === -1) {
-          sessionStorage.removeItem(this.JWT_KEY);
-          this.router.navigate(['']);
           return;
         }
 
         const response: ApiResponse = evt.body;
         if (response.data) {
           sessionStorage.setItem(this.JWT_KEY, response.data[0]);
+        }
+      }, error => {
+        if ((error.status === 401 || error.status === 400)) {
+          sessionStorage.removeItem(this.JWT_KEY);
+          this.router.navigate(['/']);
         }
       })
     );

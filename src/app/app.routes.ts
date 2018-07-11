@@ -1,4 +1,4 @@
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { BoardDisplay } from './board/board.component';
 import { Login } from './login/login.component';
@@ -32,8 +32,4 @@ export const ROUTES: Routes = [
     canActivate: [ AuthGuard ]
   }
 ];
-
-export const ROUTE_COMPONENTS = [ Login ];
-
-export const APP_ROUTING = RouterModule.forRoot(ROUTES);
 

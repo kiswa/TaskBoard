@@ -55,14 +55,14 @@
   </div>
 </div>
 
-<div class="no-boards center" *ngIf="noBoards()">
+<div class="no-boards center" *ngIf="!loading && boards.length === 0">
   <h1>{{ strings['boards_noBoards'] }}</h1>
 
   <p>{{ noBoardsMessage }}</p>
 </div>
 
 <div class="no-boards center"
-  *ngIf="!loading && !activeBoard && !noBoards() && !activeUser.default_board_id">
+     *ngIf="!loading && !activeBoard && this.boards.length > 0 && !activeUser.default_board_id">
   <h1>{{ strings['boards_noDefault'] }}</h1>
 
   <p>{{ strings['boards_noDefaultMessage'] }}

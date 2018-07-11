@@ -277,6 +277,7 @@ class Auth extends BaseController {
         // If 'remember me' feature is desired, set the multiplier higher.
         // By default, a token will expire after half an hour, but can be
         // refreshed by a call to /api/refresh.
+
         return JWT::encode(array(
                     'exp' => time() + (60 * 30) * $mult, // 30 minutes * $mult
                     'uid' => (int)$userId,

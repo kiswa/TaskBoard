@@ -457,6 +457,43 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     return () => { this.showViewModal(taskId); };
   }
 
+  showModal(taskId: number = 0) {
+    if (taskId === 0) {
+      this.modalProps = new Task();
+      this.modalProps.column_id = this.columnData.id;
+
+      this.modal.open(this.MODAL_ID + this.columnData.id);
+      return;
+    }
+
+    let editTask = this.columnData.tasks.find(task => task.id === taskId);
+
+    this.modalProps = new Task(editTask.id, editTask.title,
+                               editTask.description, editTask.color,
+                               editTask.due_date, editTask.points,
+                               editTask.position, editTask.column_id,
+                               editTask.comments, editTask.attachments,
+                               [], []);
+
+    this.activeBoard.users.forEach(user => {
+      editTask.assignees.forEach(assignee => {
+        if (assignee.id === user.id) {
+          this.modalProps.assignees.push(user);
+        }
+      });
+    });
+
+    this.activeBoard.categories.forEach(category => {
+      editTask.categories.forEach(cat => {
+        if (cat.id === category.id) {
+          this.modalProps.categories.push(category);
+        }
+      });
+    });
+
+    this.modal.open(this.MODAL_ID + this.columnData.id);
+  }
+
   private convertToTask(updatedTask: any) {
     let task = new Task(updatedTask.id,
                         updatedTask.title,
@@ -581,43 +618,6 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     }
 
     this.modal.open(this.MODAL_VIEW_ID + this.columnData.id);
-  }
-
-  private showModal(taskId: number = 0) {
-    if (taskId === 0) {
-      this.modalProps = new Task();
-      this.modalProps.column_id = this.columnData.id;
-
-      this.modal.open(this.MODAL_ID + this.columnData.id);
-      return;
-    }
-
-    let editTask = this.columnData.tasks.find(task => task.id === taskId);
-
-    this.modalProps = new Task(editTask.id, editTask.title,
-                               editTask.description, editTask.color,
-                               editTask.due_date, editTask.points,
-                               editTask.position, editTask.column_id,
-                               editTask.comments, editTask.attachments,
-                               [], []);
-
-    this.activeBoard.users.forEach(user => {
-      editTask.assignees.forEach(assignee => {
-        if (assignee.id === user.id) {
-          this.modalProps.assignees.push(user);
-        }
-      });
-    });
-
-    this.activeBoard.categories.forEach(category => {
-      editTask.categories.forEach(cat => {
-        if (cat.id === category.id) {
-          this.modalProps.categories.push(category);
-        }
-      });
-    });
-
-    this.modal.open(this.MODAL_ID + this.columnData.id);
   }
 
   private preventEnter(event: any) {

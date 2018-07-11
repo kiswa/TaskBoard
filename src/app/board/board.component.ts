@@ -224,22 +224,13 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  noBoards(): boolean {
-    if (this.loading) {
-      return false;
-    }
-
-    if (!this.boards || this.boards.length === 0) {
-      return true;
-    }
-
-    return false;
-  }
-
   private updateBoards(): void {
     this.boardService.getBoards().subscribe((response: ApiResponse) => {
       this.boards = [];
-      this.updateBoardsList(response.data[1]);
+      if (response.data.length > 1) {
+        this.updateBoardsList(response.data[1]);
+      }
+      this.loading = false;
     });
   }
 
