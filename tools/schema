@@ -1,0 +1,70 @@
+CREATE TABLE `useroption` ( id INTEGER PRIMARY KEY AUTOINCREMENT , `new_tasks_at_bottom` INTEGER, `show_animations` INTEGER, `show_assignee` INTEGER, `multiple_tasks_per_row` INTEGER, `language` TEXT);
+CREATE TABLE `jwt` ( id INTEGER PRIMARY KEY AUTOINCREMENT , `secret` TEXT);
+CREATE TABLE `board` ( id INTEGER PRIMARY KEY AUTOINCREMENT , `name` TEXT, `is_active` INTEGER);
+CREATE TABLE `category` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`name` TEXT,`default_task_color` TEXT,`board_id` INTEGER  , FOREIGN KEY(`board_id`)
+						 REFERENCES `board`(`id`)
+						 ON DELETE CASCADE ON UPDATE CASCADE );
+CREATE INDEX index_foreignkey_category_board ON `category` (board_id) ;
+CREATE TABLE `issuetracker` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`url` TEXT,`regex` TEXT,`board_id` INTEGER  , FOREIGN KEY(`board_id`)
+						 REFERENCES `board`(`id`)
+						 ON DELETE CASCADE ON UPDATE CASCADE );
+CREATE INDEX index_foreignkey_issuetracker_board ON `issuetracker` (board_id) ;
+CREATE TABLE `column` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`name` TEXT,`position` INTEGER,`board_id` INTEGER  , `task_limit` INTEGER, FOREIGN KEY(`board_id`)
+						 REFERENCES `board`(`id`)
+						 ON DELETE CASCADE ON UPDATE CASCADE );
+CREATE INDEX index_foreignkey_column_board ON `column` (board_id) ;
+CREATE TABLE `board_user` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`user_id` INTEGER,`board_id` INTEGER  , FOREIGN KEY(`board_id`)
+						 REFERENCES `board`(`id`)
+						 ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(`user_id`)
+						 REFERENCES `user`(`id`)
+						 ON DELETE CASCADE ON UPDATE CASCADE );
+CREATE INDEX index_foreignkey_board_user_user ON `board_user` (user_id) ;
+CREATE INDEX index_foreignkey_board_user_board ON `board_user` (board_id) ;
+CREATE UNIQUE INDEX UQ_board_useruser_id__board_id ON `board_user` (`user_id`,`board_id`);
+CREATE TABLE `activity` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`user_id` INTEGER,`log_text` TEXT,`before` TEXT,`after` TEXT,`item_type` TEXT,`item_id` INTEGER,`timestamp` INTEGER  , FOREIGN KEY(`user_id`)
+						 REFERENCES `user`(`id`)
+						 ON DELETE SET NULL ON UPDATE SET NULL );
+CREATE INDEX index_foreignkey_activity_user ON `activity` (user_id) ;
+CREATE INDEX index_foreignkey_activity_item ON `activity` (item_id) ;
+CREATE TABLE `autoaction` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`trigger` INTEGER,`source_id` INTEGER,`type` INTEGER,`change_to` INTEGER,`board_id` INTEGER  , FOREIGN KEY(`board_id`)
+						 REFERENCES `board`(`id`)
+						 ON DELETE SET NULL ON UPDATE SET NULL );
+CREATE INDEX index_foreignkey_autoaction_board ON `autoaction` (board_id) ;
+CREATE INDEX index_foreignkey_autoaction_source ON `autoaction` (source_id) ;
+CREATE TABLE `task` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`title` TEXT,`description` TEXT,`color` TEXT,`due_date` TEXT,`points` INTEGER,`position` INTEGER,`column_id` INTEGER  , FOREIGN KEY(`column_id`)
+						 REFERENCES `column`(`id`)
+						 ON DELETE SET NULL ON UPDATE SET NULL );
+CREATE INDEX index_foreignkey_task_column ON `task` (column_id) ;
+CREATE TABLE `comment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`text` TEXT,`user_id` INTEGER,`task_id` INTEGER  , `timestamp` TEXT, `is_edited` INTEGER, FOREIGN KEY(`user_id`)
+						 REFERENCES `user`(`id`)
+						 ON DELETE SET NULL ON UPDATE SET NULL, FOREIGN KEY(`task_id`)
+						 REFERENCES `task`(`id`)
+						 ON DELETE SET NULL ON UPDATE SET NULL );
+CREATE INDEX index_foreignkey_comment_task ON `comment` (task_id) ;
+CREATE INDEX index_foreignkey_comment_user ON `comment` (user_id) ;
+CREATE TABLE `task_user` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`user_id` INTEGER,`task_id` INTEGER  , FOREIGN KEY(`task_id`)
+						 REFERENCES `task`(`id`)
+						 ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(`user_id`)
+						 REFERENCES `user`(`id`)
+						 ON DELETE CASCADE ON UPDATE CASCADE );
+CREATE INDEX index_foreignkey_task_user_user ON `task_user` (user_id) ;
+CREATE INDEX index_foreignkey_task_user_task ON `task_user` (task_id) ;
+CREATE UNIQUE INDEX UQ_task_useruser_id__task_id ON `task_user` (`user_id`,`task_id`);
+CREATE TABLE `category_task` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`category_id` INTEGER,`task_id` INTEGER  , FOREIGN KEY(`task_id`)
+						 REFERENCES `task`(`id`)
+						 ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(`category_id`)
+						 REFERENCES `category`(`id`)
+						 ON DELETE CASCADE ON UPDATE CASCADE );
+CREATE INDEX index_foreignkey_category_task_category ON `category_task` (category_id) ;
+CREATE INDEX index_foreignkey_category_task_task ON `category_task` (task_id) ;
+CREATE UNIQUE INDEX UQ_category_taskcategory_id__task_id ON `category_task` (`category_id`,`task_id`);
+CREATE TABLE `collapsed` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`user_id` INTEGER,`column_id` INTEGER  , FOREIGN KEY(`user_id`)
+						 REFERENCES `user`(`id`)
+						 ON DELETE SET NULL ON UPDATE SET NULL, FOREIGN KEY(`column_id`)
+						 REFERENCES `column`(`id`)
+						 ON DELETE SET NULL ON UPDATE SET NULL );
+CREATE INDEX index_foreignkey_collapsed_column ON `collapsed` (column_id) ;
+CREATE INDEX index_foreignkey_collapsed_user ON `collapsed` (user_id) ;
+CREATE TABLE `user` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ,`security_level` INTEGER,`username` TEXT,`password_hash` TEXT,`email` TEXT,`default_board_id` INTEGER,`user_option_id` INTEGER,`last_login` TEXT,`active_token` TEXT   );
+CREATE INDEX index_foreignkey_user_user_option ON `user` (user_option_id) ;
+CREATE INDEX index_foreignkey_user_default_board ON `user` (default_board_id) ;
