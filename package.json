@@ -26,7 +26,7 @@
   },
   "scripts": {
     "build": "ng b --output-hashing=none",
-    "build:prod": "npm-run-all -s \"build -- --prod --aot=false --build-optimizer=false\" api-changed",
+    "build:prod": "npm-run-all -s \"build -- --prod\" api-changed",
     "build:dev": "npm-run-all -s build api-changed",
     "watch": "npm-run-all -l -p \"build -- --watch\" dist-watch",
     "dist-watch": "nodemon -w dist/api/ -x \"npm run api-changed\"",
@@ -57,7 +57,7 @@
     "highlight.js": "^9.12.0",
     "marked": "^0.4.0",
     "ng2-dragula": "^1.5.0",
-    "node-sass": "^4.9.1",
+    "node-sass": "^4.9.2",
     "rxjs": "^6.2.1",
     "scss-base": "^1.4.0",
     "zone.js": "^0.8.26"
@@ -69,7 +69,7 @@
     "@angular/language-service": "^6.0.7",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "~10.5.1",
+    "@types/node": "~10.5.2",
     "bourbon": "5.0.1",
     "bourbon-neat": "1.9.0",
     "codelyzer": "^4.4.2",
