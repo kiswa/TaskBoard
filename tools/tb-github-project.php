@@ -177,6 +177,11 @@ class TbGitHubImport {
         $stmt->bindValue(':lang', 'en');
 
         $stmt->execute();
+
+        $optId = $this->db->lastInsertRowID();
+        $stmt = $this->db->prepare('UPDATE user SET user_option_id = ' . $optId .
+          ' WHERE id = ' . $adminId);
+        $stmt->execute();
       }
 
       $boardId = $this->cleanupExistingTables($project->name);
