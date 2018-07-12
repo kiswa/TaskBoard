@@ -168,21 +168,6 @@ describe('BoardDisplay', () => {
     expect(task.filtered).toEqual(false);
   });
 
-  it('has a function to check for boards', () => {
-    expect(component.noBoards).toEqual(jasmine.any(Function));
-
-    component.loading = true;
-    expect(component.noBoards()).toEqual(false);
-
-    component.loading = false;
-    component.boards = [];
-
-    expect(component.noBoards()).toEqual(true);
-
-    component.boards = <any>[{}];
-    expect(component.noBoards()).toEqual(false);
-  });
-
   it('updates the active board from a service', () => {
     component.boardService.updateActiveBoard(null);
     component.boardService.updateActiveBoard(<any>{});
