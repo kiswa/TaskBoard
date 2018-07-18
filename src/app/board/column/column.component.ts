@@ -278,8 +278,13 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   }
 
   uploadFile() {
+    if (!this.fileUpload) {
+      this.notes.add({ type: 'error', text: this.strings.boards_taskNoFileError });
+      return;
+    }
+
     let formData = new FormData();
-    formData.append('file', this.fileUpload, this.fileUpload.name);
+    formData.append('file', this.fileUpload);
 
     let headers = new Headers();
 

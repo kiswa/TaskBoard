@@ -198,6 +198,7 @@
     "boards_taskAddAttachment": "Agregar Archivos Adjuntos",
     "boards_taskEditAttachment": "Editar Archivos Adjuntos",
     "boards_taskRemoveAttachment": "Eliminar Archivos Adjuntos",
+    "boards_taskNoFileError": "Seleccione un archivo antes de cargarlo.",
     "boards_taskUpload": "Subir",
 
     "boards_task": "Tarea",

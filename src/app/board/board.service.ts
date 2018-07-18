@@ -10,6 +10,7 @@ import {
   ApiResponse,
   Board,
   Column,
+  Attachment,
   Comment,
   Task,
   User
@@ -132,6 +133,14 @@ export class BoardService {
 
   removeComment(commentId: number): Observable<ApiResponse> {
     return this.http.delete('api/comments/' + commentId)
+    .pipe(
+      map((response: ApiResponse) => { return response; }),
+      catchError((err) => { return of(<ApiResponse>err.error); })
+    );
+  }
+
+  uploadAttachment(attachment: Attachment): Observable<ApiResponse> {
+    return this.http.post('api/attachments', attachment)
     .pipe(
       map((response: ApiResponse) => { return response; }),
       catchError((err) => { return of(<ApiResponse>err.error); })

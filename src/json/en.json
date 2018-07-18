@@ -198,6 +198,7 @@
     "boards_taskAddAttachment": "Add Attachment",
     "boards_taskEditAttachment": "Edit Attachment",
     "boards_taskRemoveAttachment": "Remove Attachment",
+    "boards_taskNoFileError": "Select a file before uploading.",
     "boards_taskUpload": "Upload",
 
     "boards_task": "Task",
