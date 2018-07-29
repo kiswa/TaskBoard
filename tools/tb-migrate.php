@@ -12,7 +12,7 @@ class TbMigrate {
         } catch (Exception $e) {
             print "\t\tError opening 'taskboard.db'\n";
             print "  " . $e->getMessage() . "\n";
-            die();
+            return;
         }
 
         print "Opening 'taskboard.sqlite'...";
@@ -24,7 +24,7 @@ class TbMigrate {
         } catch (Exception $e) {
             print "\t\tError creating 'taskboard.sqlite'\n";
             print "  " . $e->getMessage() . "\n";
-            die();
+            return;
         }
     }
 
@@ -102,17 +102,17 @@ class TbMigrate {
 
     private function getActionType($row) {
         switch ($row['action_id']) {
-        case 0:
-            return 1;
-            break;
-        case 2:
-            return 4;
-            break;
-        case 3:
-            return 6;
-            break;
-        default:
-            return null;
+            case 0:
+                return 1;
+                break;
+            case 2:
+                return 4;
+                break;
+            case 3:
+                return 6;
+                break;
+            default:
+                return null;
         }
     }
 
@@ -290,8 +290,7 @@ class TbMigrate {
                 'VALUES (' . $row['assignee'] . ', ' . $row['id'] . ')');
             $this->newDb->exec('INSERT INTO category_task (category_id, task_id) ' .
                 'VALUES (' . $row['category'] . ', ' . $row['id'] . ')');
-        }, 'item', function ($lastId, $row) {
-        });
+        }, 'item');
     }
 
     private function migrateLane() {
@@ -304,25 +303,6 @@ class TbMigrate {
             $stmt->bindValue(':position', $row['position']);
             $stmt->bindValue(':board_id', $row['board_id']);
         }, 'lane');
-    }
-
-    private function migrateOption() {
-        $stmtStr = 'INSERT INTO useroption (id, new_tasks_at_bottom, ' .
-            'show_animations, show_assignee, multiple_tasks_per_row, language) ' .
-            'VALUES (:id, :atBottom, :anims, :assignee, 0, "en")';
-
-        $this->migrateTable($stmtStr, function (&$stmt, $row) {
-            $stmt->bindValue(':id', $row['id']);
-            $stmt->bindValue(':atBottom', isset($row['tasks_order'])
-                ? $row['tasks_order']
-                : $row['new_task_position']);
-            $stmt->bindValue(':anims', isset($row['animate'])
-                ? $row['animate']
-                : $row['show_animations']);
-            $stmt->bindValue(':assignee', isset($row['show_assignee'])
-                ? $row['show_assignee']
-                : 1);
-        }, 'option');
     }
 
     private function migrateUser() {

@@ -91,7 +91,6 @@ class TbGitHubImport {
             );
             $data = json_decode(curl_exec($this->ch));
 
-            $columns = [];
             $colPos = 1;
 
             foreach ($data as $column) {
@@ -135,7 +134,7 @@ class TbGitHubImport {
     }
 
     private function importData() {
-        foreach($this->projects as $project) {
+        foreach ($this->projects as $project) {
             print " Importing Project " . $project->name . "...\n";
 
             $exists = $this->db->querySingle('SELECT id FROM board WHERE name = "' .
@@ -216,7 +215,7 @@ class TbGitHubImport {
                 $stmt = $this->db->prepare('INSERT INTO task (title, description, ' .
                     'color, position, column_id) VALUES (:title, :description, :color,' .
                     ':pos, :col_id)');
-                foreach($column->cards as $card) {
+                foreach ($column->cards as $card) {
                     $stmt->bindValue(':title', $card->title);
                     $stmt->bindValue(':description', $card->description);
                     $stmt->bindValue(':color', $card->color);
