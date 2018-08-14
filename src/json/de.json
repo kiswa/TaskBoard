@@ -1,11 +1,11 @@
 {
-  "reset": "Reset",
-  "none": "None",
-  "yes": "Yes",
-  "no": "No",
-  "save": "Save",
-  "cancel": "Cancel",
-  "sortBy": "Sort By",
+  "reset": "Zurücksetzen",
+  "none": "Keine",
+  "yes": "Ja",
+  "no": "Nein",
+  "save": "Speichern",
+  "cancel": "Abbrechen",
+  "sortBy": "Sortieren nach",
 
   "dashboard": "Dashboard",
   "boards": "Boards",
