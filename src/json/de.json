@@ -9,8 +9,8 @@
 
   "dashboard": "Dashboard",
   "boards": "Boards",
-  "settings": "Settings",
-  "logout": "Logout",
+  "settings": "Einstellungen",
+  "logout": "Abmelden",
 
   "settings_userSettings": "My Settings",
   "settings_changePassword": "Change Password",
