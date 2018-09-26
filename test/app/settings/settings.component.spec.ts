@@ -4,6 +4,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 
+import { DragulaService } from 'ng2-dragula';
+
 import { Settings } from '../../../src/app/settings/settings.component';
 import { SettingsModule } from '../../../src/app/settings/settings.module';
 import { SettingsService } from '../../../src/app/settings/settings.service';
@@ -23,6 +25,7 @@ describe('Settings', () => {
       ],
       providers: [
         Title,
+        DragulaService,
         SettingsService,
         {
           provide: StringsService,
@@ -50,4 +53,3 @@ describe('Settings', () => {
   });
 
 });
-

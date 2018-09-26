@@ -17,15 +17,23 @@ export class RouterMock {
 
 export class DragulaMock {
   public opts;
-  public dropModel = new BehaviorSubject([
-    {},
-    { id: '1' },
-    { parentNode: { id: '1' } },
-    { parentNode: { id: '1' } }
-  ]);
-  public dragend = {
-    subscribe: (fn) => { fn(); }
-  };
+
+  dropModel () {
+    return {
+      subscribe: (fn) => {
+        fn([
+          {},
+          { id: '1' },
+          { parentNode: { id: '1' } },
+          { parentNode: { id: '1' } }
+        ]);
+      }
+    };
+  }
+
+  dragend () {
+    return { subscribe: (fn) => { fn(); } };
+  }
 
   find () {
     return { drake: {
@@ -33,9 +41,13 @@ export class DragulaMock {
     } };
   }
 
+  removeModel () {
+    return new BehaviorSubject({});
+  }
+
   destroy () {}
 
-  setOptions (name, opts) {
+  createGroup (_, opts) {
     this.opts = opts;
   }
 }
@@ -107,4 +119,3 @@ export class NotificationsServiceMock {
     this.noteAdded.next(note);
   }
 }
-

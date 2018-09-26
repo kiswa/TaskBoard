@@ -5,8 +5,8 @@ import { ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
-import { DragulaService } from 'ng2-dragula/ng2-dragula';
-import { DragulaModule } from 'ng2-dragula/ng2-dragula';
+import { DragulaService } from 'ng2-dragula/dist';
+import { DragulaModule } from 'ng2-dragula/dist';
 
 import { ColumnDisplay } from '../../../../src/app/board/column/column.component';
 import { TaskDisplay } from '../../../../src/app/board/task/task.component';
@@ -440,4 +440,3 @@ describe('ColumnDisplay', () => {
   });
 
 });
-

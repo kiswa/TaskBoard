@@ -8,8 +8,8 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
-import { DragulaService } from 'ng2-dragula/ng2-dragula';
-import { DragulaModule } from 'ng2-dragula/ng2-dragula';
+import { DragulaService } from 'ng2-dragula/dist';
+import { DragulaModule } from 'ng2-dragula/dist';
 
 import {
   AuthService,
@@ -182,4 +182,3 @@ describe('BoardDisplay', () => {
   });
 
 });
-

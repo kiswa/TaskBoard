@@ -3,8 +3,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { DragulaService } from 'ng2-dragula/ng2-dragula';
-import { DragulaModule } from 'ng2-dragula/ng2-dragula';
+import { DragulaService } from 'ng2-dragula/dist';
+import { DragulaModule } from 'ng2-dragula/dist';
 
 import { SharedModule } from '../../../../src/app/shared/shared.module';
 
@@ -301,4 +301,3 @@ describe('BoardAdmin', () => {
   });
 
 });
-
