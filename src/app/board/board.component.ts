@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterContentInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
-import { DragulaService } from 'ng2-dragula/ng2-dragula';
+import { DragulaService } from 'ng2-dragula/dist';
 
 import {
   ApiResponse,
@@ -127,13 +127,13 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
       this.dragula.destroy('tasks-bag');
     }
 
-    this.dragula.setOptions('tasks-bag', {
+    this.dragula.createGroup('tasks-bag', <any>{
       moves: (el: any, container: any, handle: any) => {
         return handle.classList.contains('drag-handle');
       }
     });
 
-    this.dragula.dropModel.subscribe((value: any) => {
+    this.dragula.dropModel('tasks-bag').subscribe((value: any) => {
       let taskId = +value[1].id,
         toColumnId = +value[2].parentNode.id,
         fromColumnId = +value[3].parentNode.id;

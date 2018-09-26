@@ -12,6 +12,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {
   ApiResponse,
   ActivitySimple,
+  Attachment,
   Board,
   Category,
   Column,
@@ -286,9 +287,17 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     let formData = new FormData();
     formData.append('file', this.fileUpload);
 
-    let headers = new Headers();
+    let attachment = new Attachment();
+    attachment.filename = this.fileUpload.name;
+    attachment.name = attachment.filename.split('.')[0];
+    attachment.type = this.fileUpload.type;
+    attachment.user_id = this.activeUser.id;
+    attachment.task_id = this.viewModalProps.id;
 
-    console.log(formData, headers); // tslint:disable-line
+    this.boardService.uploadAttachment(attachment, formData)
+      .subscribe(res => {
+        console.log(res);
+      });
   }
 
   addComment() {

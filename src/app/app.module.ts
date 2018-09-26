@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
-import { DragulaModule } from 'ng2-dragula/ng2-dragula';
+import { DragulaModule } from 'ng2-dragula/dist';
 
 import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
@@ -21,7 +21,7 @@ import { SharedModule } from './shared/shared.module';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    DragulaModule,
+    DragulaModule.forRoot(),
     BoardModule,
     DashboardModule,
     SettingsModule,

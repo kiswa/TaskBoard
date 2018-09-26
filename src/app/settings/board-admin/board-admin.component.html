@@ -160,7 +160,7 @@
   <div class="half-modal">
     <label>{{ strings['settings_columns'] }}</label>
     <ul class="modal-list" [hidden]="!modalProps.columns.length"
-      [dragula]="'columns-bag'" [dragulaModel]="modalProps.columns">
+      [dragula]="'columns-bag'" [(dragulaModel)]="modalProps.columns">
       <li *ngFor="let column of modalProps.columns; let i = index">
         <i class="icon icon-resize-vertical"></i>
         <inline-edit [text]="getPropertyValue('columns', 'name', i)"

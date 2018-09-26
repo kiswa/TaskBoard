@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import * as marked from 'marked';
 import * as hljs from 'highlight.js';
@@ -139,8 +139,12 @@ export class BoardService {
     );
   }
 
-  uploadAttachment(attachment: Attachment): Observable<ApiResponse> {
-    return this.http.post('api/attachments', attachment)
+  uploadAttachment(attachment: Attachment, data: FormData): Observable<ApiResponse> {
+    let headers = new HttpHeaders();
+    let options = { headers: headers, params: new HttpParams() };
+    options.params.set('attachment', JSON.stringify(attachment));
+
+    return this.http.post('api/attachments', data, options)
     .pipe(
       map((response: ApiResponse) => { return response; }),
       catchError((err) => { return of(<ApiResponse>err.error); })

@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 
-import { DragulaService } from 'ng2-dragula/ng2-dragula';
+import { DragulaService } from 'ng2-dragula/dist';
 
 import {
   ApiResponse,
@@ -109,14 +109,14 @@ export class BoardAdmin implements OnDestroy {
       this.dragula.destroy('columns-bag');
     }
 
-    this.dragula.setOptions('columns-bag', {
+    this.dragula.createGroup('columns-bag', <any>{
       moves: (el: any, container: any, handle: any) => {
         return handle.classList.contains('icon-resize-vertical');
       },
       mirrorContainer: ul
     });
 
-    this.dragula.dragend.subscribe(() => {
+    this.dragula.dragend('columns-bag').subscribe(() => {
       this.modalProps.columns.forEach((item, index) => {
         item.position = '' + index;
       });
