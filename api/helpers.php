@@ -3,7 +3,7 @@ use RedBeanPHP\R;
 // Patch for when using nginx instead of apache, source: http://php.net/manual/en/function.getallheaders.php#84262
 if (!function_exists('getallheaders')) {
     function getallheaders() {
-        $headers = '';
+        $headers = array();
 
         foreach ($_SERVER as $name => $value) {
             if (substr($name, 0, 5) == 'HTTP_') {
@@ -12,6 +12,9 @@ if (!function_exists('getallheaders')) {
                 )))] = $value;
             }
         }
+
+        if (0 === count($headers))
+            $headers = '';
 
         return $headers;
     }
