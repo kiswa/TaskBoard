@@ -2,13 +2,11 @@
 require_once('mailConfig.php');
 
 function getServerHost() {
-    $headers = apache_request_headers();
-
-    foreach($headers as $header => $value) {
-        if (strtolower($header) == 'host') {
-            return $value;
-        }
+    $hostname = '';
+    if (false !== ($headers = getallheaders())) {
+        $hostname = (isset($headers['Host']) ? $headers['Host'] : $hostname);
     }
+    return $hostname;
 }
 
 function createMailObject() {
