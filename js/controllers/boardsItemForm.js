@@ -45,7 +45,7 @@ function ($scope, BoardService) {
         },
         quickAddItem: function(laneId) {
             $('.itemModal').on('show.bs.modal', function(e) {
-                e.stopPropogation();
+                if (e.stopPropagation) e.stopPropagation();
             });
             this.title = $scope.quickAdd.title[laneId];
             $scope.submitItem(this);
