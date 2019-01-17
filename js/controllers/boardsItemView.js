@@ -46,16 +46,19 @@ function ($scope, $window, BoardService) {
 
     $scope.setColor = function(item) {
         var color = item.color;
-        if (item.color != $scope.currentBoard.ownCategory[0].color)
+        if($scope.currentBoard && $scope.currentBoard.ownCategory) {
+          if (item.color != $scope.currentBoard.ownCategory[0].color)
             return item.color;
-        $scope.currentBoard.ownCategory.forEach(function(cat) {
-            if(cat.id == item.category) {
-                color = cat.color;
-            }
-        });
+          $scope.currentBoard.ownCategory.forEach(function(cat) {
+              if(cat.id == item.category) {
+                  color = cat.color;
+              }
+          });
+        }
+
         return color;
     }
-    
+
     $scope.openItem = function(item, openModal) {
         if (undefined === openModal) {
             openModal = true;
