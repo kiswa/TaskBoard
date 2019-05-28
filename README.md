@@ -1,3 +1,4 @@
+![taskboard-horizontal.png](https://cdn.steemitimages.com/DQmeiKRekRafzGJPZwKwRqnwH9LxG7YmfGkuqttRqHqksxy/taskboard-horizontal.png)
 # **N O T I C E**
 
 TaskBoard is currently being re-written from scratch. The `master` and `dev` branches are still maintained, but are not getting new features at this time.
