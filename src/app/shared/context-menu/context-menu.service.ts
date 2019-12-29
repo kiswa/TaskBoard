@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 
-import { ContextMenu } from './context-menu.component';
+import { ContextMenuComponent } from './context-menu.component';
 
 @Injectable()
 export class ContextMenuService {
-  private menus: Array<ContextMenu> = [];
+  private menus: Array<ContextMenuComponent> = [];
 
   constructor() {
-    document.addEventListener('click', event => { this.closeAllMenus(); });
+    document.addEventListener('click', _ => { this.closeAllMenus(); });
   }
 
-  registerMenu(newMenu: ContextMenu) {
+  registerMenu(newMenu: ContextMenuComponent) {
     const index = this.menus.indexOf(newMenu);
 
     if (index === -1) {

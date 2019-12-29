@@ -98,6 +98,15 @@ class Boards extends BaseController {
         }
 
         $data = json_decode($request->getBody());
+
+        if (!property_exists($args, 'id')) {
+            $this->logger->addError('Update Board: ', [$data]);
+            $this->apiJson->addAlert('error', 'Error updating board. ' .
+                'Please check your entries and try again.');
+
+            return $this->jsonResponse($response);
+        }
+
         $board = R::load('board', (int)$args['id']);
 
         if (!$this->checkBoardAccess($board->id, $request)) {

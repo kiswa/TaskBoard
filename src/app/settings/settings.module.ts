@@ -6,33 +6,35 @@ import { RouterModule } from '@angular/router';
 import { DragulaModule } from 'ng2-dragula/dist';
 import { SharedModule } from '../shared/shared.module';
 
-import { AutoActions } from './auto-actions/auto-actions.component';
-import { BoardAdmin } from './board-admin/board-admin.component';
-import { Settings } from './settings.component';
-import { UserAdmin } from './user-admin/user-admin.component';
-import { UserSettings } from './user-settings/user-settings.component';
+import { SettingsService } from 'src/app/settings/settings.service';
+import { AutoActionsService } from 'src/app/settings/auto-actions/auto-actions.service';
+import { BoardAdminService } from 'src/app/settings/board-admin/board-admin.service';
+import { UserAdminService } from 'src/app/settings/user-admin/user-admin.service';
+import { UserSettingsService } from 'src/app/settings/user-settings/user-settings.service';
 
-import { AutoActionsService } from './auto-actions/auto-actions.service';
-import { BoardAdminService } from './board-admin/board-admin.service';
-import { SettingsService } from './settings.service';
-import { UserAdminService } from './user-admin/user-admin.service';
-import { UserSettingsService } from './user-settings/user-settings.service';
+import { AutoActionsComponent } from './auto-actions/auto-actions.component';
+import { BoardAdminComponent } from './board-admin/board-admin.component';
+import { SettingsComponent } from './settings.component';
+import { UserAdminComponent } from './user-admin/user-admin.component';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
+
+const declarationsAndExports = [
+  AutoActionsComponent,
+  BoardAdminComponent,
+  SettingsComponent,
+  UserAdminComponent,
+  UserSettingsComponent
+];
 
 @NgModule({
   imports: [
     CommonModule,
-    DragulaModule,
+    DragulaModule.forRoot(),
     FormsModule,
     RouterModule,
     SharedModule
   ],
-  declarations: [
-    AutoActions,
-    BoardAdmin,
-    Settings,
-    UserAdmin,
-    UserSettings
-  ],
+
   providers: [
     AutoActionsService,
     BoardAdminService,
@@ -40,12 +42,9 @@ import { UserSettingsService } from './user-settings/user-settings.service';
     UserAdminService,
     UserSettingsService
   ],
-  exports: [
-    AutoActions,
-    BoardAdmin,
-    Settings,
-    UserAdmin,
-    UserSettings
-  ]
+
+  declarations: declarationsAndExports,
+
+  exports: declarationsAndExports
 })
 export class SettingsModule { }

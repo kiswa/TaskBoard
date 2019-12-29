@@ -169,6 +169,7 @@
     "boards_taskDescription": "Description",
     "boards_taskDescriptionPlaceholder": "What needs to get done?",
     "boards_taskAssignees": "Assignees",
+    "boards_taskActivity": "Task Activity",
     "boards_taskCategories": "Categories",
     "boards_taskColumn": "Column",
     "boards_taskColor": "Color",

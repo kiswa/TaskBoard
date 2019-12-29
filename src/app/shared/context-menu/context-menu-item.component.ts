@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 
 @Component({
   selector: 'tb-context-menu-item',
@@ -14,7 +14,7 @@ import { Component, ElementRef, EventEmitter, Input } from '@angular/core';
     }
   }`]
 })
-export class ContextMenuItem {
+export class ContextMenuItemComponent {
   @Input()
   isSeparator: boolean;
 
@@ -24,19 +24,19 @@ export class ContextMenuItem {
   constructor(public el: ElementRef) {
     const elem = el.nativeElement;
 
-    elem.onclick = (event) => {
+    elem.onclick = (event: any) => {
       if (this.isSeparator || this.isCustomEvent) {
         this.killEvent(event);
         return;
       }
     };
 
-    elem.oncontextmenu = (event) => {
+    elem.oncontextmenu = (event: any) => {
       this.killEvent(event);
-    }
+    };
   }
 
-  private killEvent(event) {
+  private killEvent(event: any) {
     event.preventDefault();
     event.stopPropagation();
   }

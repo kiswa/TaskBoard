@@ -17,16 +17,16 @@ export class AutoActionsService {
   addAction(action: AutoAction): Observable<ApiResponse> {
     return this.http.post('api/autoactions', action)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   removeAction(action: AutoAction): Observable<ApiResponse> {
     return this.http.delete('api/autoactions/' + action.id)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 }

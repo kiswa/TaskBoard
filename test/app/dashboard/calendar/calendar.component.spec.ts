@@ -1,17 +1,17 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 
-import { Calendar } from '../../../../src/app/dashboard/calendar/calendar.component';
+import { CalendarComponent } from '../../../../src/app/dashboard/calendar/calendar.component';
 
 describe('Calendar', () => {
-  let component: Calendar,
-    fixture: ComponentFixture<Calendar>;
+  let component: CalendarComponent;
+  let fixture: ComponentFixture<CalendarComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
       ],
       declarations: [
-        Calendar
+        CalendarComponent
       ],
       providers: [
       ]
@@ -19,7 +19,7 @@ describe('Calendar', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Calendar);
+    fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;
   });
 

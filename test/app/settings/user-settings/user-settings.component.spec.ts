@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +7,6 @@ import { SharedModule } from '../../../../src/app/shared/shared.module';
 
 import {
   AuthService,
-  ModalService,
   NotificationsService,
   StringsService
 } from '../../../../src/app/shared/services';
@@ -15,18 +14,15 @@ import { SettingsService } from '../../../../src/app/settings/settings.service';
 import {
   UserSettingsService
 } from '../../../../src/app/settings/user-settings/user-settings.service';
-import { User } from '../../../../src/app/shared/models';
 import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
 
 import {
-  UserSettings
+  UserSettingsComponent
 } from '../../../../src/app/settings/user-settings/user-settings.component';
 
 describe('UserSettings', () => {
-  let component: UserSettings,
-    fixture: ComponentFixture<UserSettings>;
-
-  const getPrivateFunction = name => component[name].bind(component);
+  let component: UserSettingsComponent;
+  let fixture: ComponentFixture<UserSettingsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -37,7 +33,7 @@ describe('UserSettings', () => {
         SharedModule
       ],
       declarations: [
-        UserSettings
+        UserSettingsComponent
       ],
       providers: [
         NotificationsService,
@@ -50,7 +46,7 @@ describe('UserSettings', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserSettings);
+    fixture = TestBed.createComponent(UserSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -62,8 +58,8 @@ describe('UserSettings', () => {
   it('updates user options and calls a service', () => {
     let called = false;
 
-    (<any>component.users).changeUserOptions = () => {
-      return { subscribe: fn => {
+    (component.users as any).changeUserOptions = () => {
+      return { subscribe: (fn: any) => {
         fn({ alerts: [{}] });
         called = true;
       } };
@@ -102,8 +98,8 @@ describe('UserSettings', () => {
   it('calls a service to update a user\'s default board', () => {
     let called = false;
 
-    (<any>component.users).changeDefaultBoard = () => {
-      return { subscribe: fn => {
+    (component.users as any).changeDefaultBoard = () => {
+      return { subscribe: (fn: any) => {
         fn({ alerts: [], data: [{}, '{}'] });
         called = true;
       } };
@@ -118,8 +114,8 @@ describe('UserSettings', () => {
   it('calls a service to update a user\'s password', () => {
     let called = false;
 
-    (<any>component.users).changePassword = () => {
-      return { subscribe: fn => {
+    (component.users as any).changePassword = () => {
+      return { subscribe: (fn: any) => {
         fn({ alerts: [], data: [{}, '{}'] });
         called = true;
       } };
@@ -128,11 +124,11 @@ describe('UserSettings', () => {
     component.updatePassword();
     expect(called).toEqual(false);
 
-    component.changePassword = <any>{ current: 'test', newPass: 'tester', verPass: 'test' };
+    component.changePassword = { current: 'test', newPass: 'tester', verPass: 'test' } as any;
     component.updatePassword();
     expect(called).toEqual(false);
 
-    component.changePassword = <any>{ current: 'test', newPass: 'tester', verPass: 'tester' };
+    component.changePassword = { current: 'test', newPass: 'tester', verPass: 'tester' } as any;
     component.updatePassword();
 
     expect(called).toEqual(true);
@@ -141,8 +137,8 @@ describe('UserSettings', () => {
   it('calls a service to update a user\'s username', () => {
     let called = false;
 
-    (<any>component.users).changeUsername = () => {
-      return { subscribe: fn => {
+    (component.users as any).changeUsername = () => {
+      return { subscribe: (fn: any) => {
         fn({ alerts: [], data: [{}, '{}'] });
         called = true;
       } };
@@ -151,7 +147,7 @@ describe('UserSettings', () => {
     component.updateUsername();
     expect(called).toEqual(false);
 
-    component.changeUsername = <any>{ newName: 'test' };
+    component.changeUsername = { newName: 'test' } as any;
     component.updateUsername();
 
     expect(called).toEqual(true);
@@ -160,18 +156,18 @@ describe('UserSettings', () => {
   it('calls a service to update a user\'s email', () => {
     let called = false;
 
-    (<any>component.users).changeEmail = () => {
-      return { subscribe: fn => {
+    (component.users as any).changeEmail = () => {
+      return { subscribe: (fn: any) => {
         fn({ alerts: [], data: [{}, '{}'] });
         called = true;
       } };
     };
 
-    component.changeEmail = <any>{ newEmail: 'test' };
+    component.changeEmail = { newEmail: 'test' } as any;
     component.updateEmail();
     expect(called).toEqual(false);
 
-    component.changeEmail = <any>{ newEmail: 'test@test.net' };
+    component.changeEmail = { newEmail: 'test@test.net' } as any;
     component.updateEmail();
 
     expect(called).toEqual(true);

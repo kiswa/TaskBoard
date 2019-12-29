@@ -13,7 +13,6 @@ import {
   Attachment,
   Comment,
   Task,
-  User
 } from '../shared/models';
 
 interface MarkedReturn {
@@ -26,12 +25,8 @@ export class BoardService {
   private checkCounts = {
     total: 0,
     complete: 0
-  }
-  private activeBoard = new BehaviorSubject<Board>(null);
-  private defaultCallback = (err: any, text: string) => {
-    console.log('default', err, text);
-    return text;
   };
+  private activeBoard = new BehaviorSubject<Board>(null);
 
   public activeBoardChanged = this.activeBoard.asObservable();
 
@@ -43,7 +38,7 @@ export class BoardService {
     this.checkCounts.total = 0;
     this.checkCounts.complete = 0;
 
-    let retVal: MarkedReturn = { html: '', counts: {} };
+    const retVal: MarkedReturn = { html: '', counts: {} };
 
     retVal.html = marked(markdown, callback);
 
@@ -55,104 +50,109 @@ export class BoardService {
   }
 
   updateActiveBoard(board: Board): void {
-    let newBoard = this.convertBoardData(board);
+    const newBoard = this.convertBoardData(board);
     this.activeBoard.next(newBoard);
   }
 
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   toggleCollapsed(userId: number, columnId: number): Observable<ApiResponse> {
     return this.http.post('api/users/' + userId + '/cols', { id: columnId })
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   updateBoard(board: Board): Observable<ApiResponse> {
     return this.http.post('api/boards/' + board.id, board)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   updateColumn(column: Column): Observable<ApiResponse> {
     return this.http.post('api/columns/' + column.id, column)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   addTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks', task)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   updateTask(task: Task): Observable<ApiResponse> {
     return this.http.post('api/tasks/' + task.id, task)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   removeTask(taskId: number): Observable<ApiResponse> {
     return this.http.delete('api/tasks/' + taskId)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   getTaskActivity(taskId: number): Observable<ApiResponse> {
     return this.http.get('api/activity/task/' + taskId)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   updateComment(comment: Comment): Observable<ApiResponse> {
     return this.http.post('api/comments/' + comment.id, comment)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   removeComment(commentId: number): Observable<ApiResponse> {
     return this.http.delete('api/comments/' + commentId)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   uploadAttachment(attachment: Attachment, data: FormData): Observable<ApiResponse> {
-    let headers = new HttpHeaders();
-    let options = { headers: headers, params: new HttpParams() };
+    const headers = new HttpHeaders();
+    const options = { headers, params: new HttpParams() };
     options.params.set('attachment', JSON.stringify(attachment));
 
     return this.http.post('api/attachments', data, options)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   refreshToken(): void {
     this.http.post('api/refresh', {}).subscribe();
+  }
+
+  private defaultCallback = (err: any, text: string) => {
+    console.log('default', err, text);
+    return text;
   }
 
   private convertBoardData(boardData: any): Board {
@@ -170,10 +170,10 @@ export class BoardService {
   }
 
   private initMarked(): void {
-    let renderer = new marked.Renderer();
+    const renderer = new marked.Renderer();
 
     renderer.checkbox = isChecked => {
-      let text = '<i class="icon icon-check' + (isChecked ? '' : '-empty') + '"></i>';
+      const text = '<i class="icon icon-check' + (isChecked ? '' : '-empty') + '"></i>';
 
       this.checkCounts.total += 1;
 

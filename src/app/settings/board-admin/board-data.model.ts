@@ -28,7 +28,7 @@ export class BoardData {
   }
 
   removeColumn(column: any): void {
-    let index = this.columns.indexOf(column);
+    const index = this.columns.indexOf(column);
 
     if (index === -1) {
       return;
@@ -50,7 +50,7 @@ export class BoardData {
   }
 
   removeCategory(category: any): void {
-    let index = this.categories.indexOf(category);
+    const index = this.categories.indexOf(category);
 
     if (index === -1) {
       return;
@@ -73,7 +73,7 @@ export class BoardData {
   }
 
   removeIssueTracker(tracker: any): void {
-    let index = this.issue_trackers.indexOf(tracker);
+    const index = this.issue_trackers.indexOf(tracker);
 
     if (index === -1) {
       return;

@@ -20,8 +20,8 @@ export class AuthService {
   public userOptions: UserOptions = null;
   public userChanged = this.activeUser.asObservable();
 
-  constructor(constants: Constants, private http: HttpClient,
-              private router: Router, private strings: StringsService) {
+  constructor(public constants: Constants, private http: HttpClient,
+              public router: Router, private strings: StringsService) {
   }
 
   updateUser(user: User, userOpts?: UserOptions): void {
@@ -40,13 +40,13 @@ export class AuthService {
         this.updateUser(response.data[1], response.data[2]);
         return true;
       }),
-      catchError((err, caught) => { return of(false); })
+      catchError((_, __) => of(false))
     );
   }
 
   login(username: string, password: string,
         remember: boolean): Observable<ApiResponse> {
-      let json = JSON.stringify({
+      const json = JSON.stringify({
         username,
         password,
         remember
@@ -58,9 +58,9 @@ export class AuthService {
           this.updateUser(response.data[1], response.data[2]);
           return response;
         }),
-        catchError((err, caught) => {
+        catchError((err, _) => {
           this.updateUser(null, null);
-          return of(<ApiResponse>err.error);
+          return of(err.error as ApiResponse);
         })
       );
     }
@@ -75,12 +75,12 @@ export class AuthService {
   }
 
   private convertOpts(opts: any): UserOptions {
-    let converted = new UserOptions(+opts.id,
-                                    opts.new_tasks_at_bottom === '1',
-                                    opts.show_animations === '1',
-                                    opts.show_assignee === '1',
-                                    opts.multiple_tasks_per_row === '1',
-                                    opts.language);
+    const converted = new UserOptions(+opts.id,
+      opts.new_tasks_at_bottom === '1',
+      opts.show_animations === '1',
+      opts.show_assignee === '1',
+      opts.multiple_tasks_per_row === '1',
+      opts.language);
     return converted;
   }
 }

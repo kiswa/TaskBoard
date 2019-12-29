@@ -14,9 +14,7 @@ import { AuthService } from '../../src/app/shared/auth/auth.service';
 import { ApiInterceptor } from '../../src/app/app.api-http';
 
 describe('ApiInterceptor', () => {
-  const mockAuthService = {
-
-  };
+  const mockAuthService = { };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -49,9 +47,9 @@ describe('ApiInterceptor', () => {
           expect(response).toBeTruthy();
         });
 
-        const req = httpMock.expectOne(req =>
-          req.headers.has('Content-Type') &&
-          req.headers.get('Content-Type') === 'application/json'
+        const req = httpMock.expectOne(r =>
+          r.headers.has('Content-Type') &&
+          r.headers.get('Content-Type') === 'application/json'
         );
         expect(req.request.method).toEqual('GET');
 
@@ -69,9 +67,9 @@ describe('ApiInterceptor', () => {
           expect(response).toBeTruthy();
         });
 
-        const req = httpMock.expectOne(req =>
-          req.headers.has('Authorization') &&
-          req.headers.get('Authorization') === 'fake'
+        const req = httpMock.expectOne(r =>
+          r.headers.has('Authorization') &&
+          r.headers.get('Authorization') === 'fake'
         );
         expect(req.request.method).toEqual('POST');
 
@@ -79,7 +77,7 @@ describe('ApiInterceptor', () => {
         expect(sessionStorage.getItem('taskboard.jwt')).toEqual('newToken');
       }
     )
-  )
+  );
 
   it('handles errors and clears the JWT',
     inject([HttpClient, HttpTestingController],
@@ -88,13 +86,13 @@ describe('ApiInterceptor', () => {
 
         http.get('').subscribe(response => {
           expect(response).toBeTruthy();
-        }, error => {
-          expect(error).toBeTruthy();
+        }, err => {
+          expect(err).toBeTruthy();
         });
 
-        const req = httpMock.expectOne(req =>
-          req.headers.has('Content-Type') &&
-          req.headers.get('Content-Type') === 'application/json'
+        const req = httpMock.expectOne(r =>
+          r.headers.has('Content-Type') &&
+          r.headers.get('Content-Type') === 'application/json'
         );
         expect(req.request.method).toEqual('GET');
 
@@ -103,7 +101,7 @@ describe('ApiInterceptor', () => {
         expect(sessionStorage.getItem('Authorization')).toEqual(null);
       }
     )
-  )
+  );
 
 });
 

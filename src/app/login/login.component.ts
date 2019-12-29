@@ -15,14 +15,14 @@ import {
   selector: 'tb-login',
   templateUrl: './login.component.html'
 })
-export class Login implements OnInit {
+export class LoginComponent implements OnInit {
   version: string;
   username = '';
   password = '';
   remember = false;
   isSubmitted = false;
 
-  constructor(private constants: Constants, public authService: AuthService,
+  constructor(public constants: Constants, public authService: AuthService,
               private router: Router, private notes: NotificationsService) {
     this.version = constants.VERSION;
   }

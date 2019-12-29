@@ -8,7 +8,6 @@ import {
   ActionType,
   User,
   Board,
-  Notification
 } from '../../shared/models';
 import {
   AuthService,
@@ -24,28 +23,26 @@ import { AutoActionsService } from './auto-actions.service';
   templateUrl: './auto-actions.component.html',
   providers: [ AutoActionsService ]
 })
-export class AutoActions {
-  private noActionsMessage: string;
-
+export class AutoActionsComponent implements OnDestroy {
   private actionToRemove: AutoAction;
 
-  private autoActions: Array<AutoAction>;
-
-  private triggers: Array<Array<any>>;
-  private subs: Array<any>;
+  public autoActions: AutoAction[];
+  private subs: any[];
 
   private firstRun = true;
-  private isAddDisabled = true;
+  public isAddDisabled = true;
 
-  public boards: Array<Board>;
-  public triggerSources: Array<Array<any>>;
-  public actionSources: Array<Array<any>>;
-  public types: Array<Array<any>>;
-  public typesList: Array<Array<any>>;
+  public triggers: any[][];
+  public boards: Board[];
+  public triggerSources: any[][];
+  public actionSources: any[][];
+  public types: any[][];
+  public typesList: any[][];
 
   public newAction: AutoAction;
   public activeUser: User;
 
+  public noActionsMessage: string;
   public strings: any;
   public MODAL_CONFIRM_ID: string;
 
@@ -53,12 +50,12 @@ export class AutoActions {
   public loading = true;
   public hasInactiveBoards = false;
 
-  constructor(private auth: AuthService,
+  constructor(public auth: AuthService,
               public modal: ModalService,
               private settings: SettingsService,
               public actions: AutoActionsService,
               private notes: NotificationsService,
-              private stringsService: StringsService,
+              public stringsService: StringsService,
               private sanitizer: DomSanitizer) {
     this.newAction = new AutoAction();
     this.activeUser = new User();
@@ -74,14 +71,14 @@ export class AutoActions {
     });
     this.subs.push(sub);
 
-    sub = settings.boardsChanged.subscribe((boards: Array<Board>) => {
+    sub = settings.boardsChanged.subscribe((boards: Board[]) => {
       this.boards = boards;
       this.updateHasInactiveBoards();
     });
     this.subs.push(sub);
 
     sub = settings.actionsChanged
-      .subscribe((actionsList: Array<AutoAction>) => {
+      .subscribe((actionsList: AutoAction[]) => {
         this.updateActions(actionsList);
       });
     this.subs.push(sub);
@@ -96,13 +93,13 @@ export class AutoActions {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  updateActions(actionList: Array<AutoAction>) {
+  updateActions(actionList: AutoAction[]) {
     this.autoActions = actionList;
     this.updateHasInactiveBoards();
 
     this.autoActions.sort((a, b) => {
-      let nameA = this.getBoardName(a.board_id),
-        nameB = this.getBoardName(b.board_id);
+      const nameA = this.getBoardName(a.board_id);
+      const nameB = this.getBoardName(b.board_id);
 
       return nameA.localeCompare(nameB);
     });
@@ -257,10 +254,10 @@ export class AutoActions {
   }
 
   getBoardName(id: number): string {
-    let board = this.getBoard(+id);
+    const board = this.getBoard(+id);
 
     if (board) {
-      let note = +board.is_active ? '' : '*';
+      const note = +board.is_active ? '' : '*';
 
       return board.name + note;
     }
@@ -269,8 +266,8 @@ export class AutoActions {
   }
 
   getTriggerDescription(action: AutoAction): string {
-    let desc = '',
-      board = this.getBoard(action.board_id);
+    let desc = '';
+    const board = this.getBoard(action.board_id);
 
     if (!board) {
       return;
@@ -303,8 +300,8 @@ export class AutoActions {
   }
 
   getTypeDescription(action: AutoAction): SafeHtml {
-    let desc = '',
-      board = this.getBoard(action.board_id);
+    let desc = '';
+    const board = this.getBoard(action.board_id);
 
     if (!board) {
       return;
@@ -361,6 +358,11 @@ export class AutoActions {
     });
   }
 
+  showConfirmModal(action: AutoAction): void {
+    this.actionToRemove = action;
+    this.modal.open(this.MODAL_CONFIRM_ID);
+  }
+
   private updateHasInactiveBoards(): void {
     this.hasInactiveBoards = false;
 
@@ -382,39 +384,38 @@ export class AutoActions {
   }
 
   private buildSourcesArray(sourceArray: string,
-    name: string,
-    arrayName: string,
-    prop: string = 'name'): void {
-      this[sourceArray] =
-      [ [ null, this.strings['settings_select' + name ] ] ]; // tslint:disable-line
+                            name: string,
+                            arrayName: string,
+                            prop: string = 'name'): void {
+      this[sourceArray] = [[null, this.strings['settings_select' + name]]];
 
-      for (let i = 0; i < this.boards.length; ++i) {
-        if (this.boards[i].id !== this.newAction.board_id) {
+      for (const board of this.boards) {
+        if (board.id !== this.newAction.board_id) {
           continue;
         }
 
-        this.boards[i][arrayName].forEach((item: any) => {
+        board[arrayName].forEach((item: any) => {
           this[sourceArray].push([ item.id, item[prop] ]);
         });
       }
     }
 
   private getBoard(id: number): Board {
-    let board: Board = null;
+    let foundBoard: Board = null;
 
-    for (let i = 0; i < this.boards.length; ++i) {
-      if (+this.boards[i].id === +id) {
-        board = this.boards[i];
+    for (const board of this.boards) {
+      if (+board.id === +id) {
+        foundBoard = board;
         break;
       }
     }
 
-    return board;
+    return foundBoard;
   }
 
   private getNameFromArray(boardArray: Array<any>,
-    arrayItemId: number,
-    prop: string = 'name') {
+                           arrayItemId: number,
+                           prop: string = 'name') {
     let name = '';
 
     boardArray.forEach(item => {
@@ -448,9 +449,5 @@ export class AutoActions {
     }
   }
 
-  private showConfirmModal(action: AutoAction): void {
-    this.actionToRemove = action;
-    this.modal.open(this.MODAL_CONFIRM_ID);
-  }
 }
 

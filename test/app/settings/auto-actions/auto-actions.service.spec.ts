@@ -1,4 +1,4 @@
-import { TestBed, getTestBed } from '@angular/core/testing'
+import { TestBed, getTestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -26,14 +26,14 @@ describe('AutoActionsService', () => {
 
   afterEach(() => {
     httpMock.verify();
-  })
+  });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   it('adds an action', () => {
-    service.addAction(<any>{}).subscribe(response => {
+    service.addAction({} as any).subscribe(response => {
       expect(response.data.length).toEqual(0);
     });
 
@@ -41,7 +41,7 @@ describe('AutoActionsService', () => {
   });
 
   it('handles errors when adding an action', () => {
-    service.addAction(<any>{}).subscribe(() => {}, response => {
+    service.addAction({} as any).subscribe(() => {}, response => {
       expect(response.alerts.length).toEqual(1);
     });
 
@@ -49,7 +49,7 @@ describe('AutoActionsService', () => {
   });
 
   it('removes an action', () => {
-    service.removeAction(<any>{ id: 1 }).subscribe(response => {
+    service.removeAction({ id: 1 } as any).subscribe(response => {
       expect(response.data.length).toEqual(0);
     });
 
@@ -57,14 +57,14 @@ describe('AutoActionsService', () => {
   });
 
   it('handles errors when removing an action', () => {
-    service.removeAction(<any>{ id: 1 }).subscribe(() => {}, response => {
+    service.removeAction({ id: 1 } as any).subscribe(() => {}, response => {
       expect(response.alerts.length).toEqual(1);
     });
 
     testCall('api/autoactions/1', 'DELETE', true);
   });
 
-  const testCall = (url, method, isError = false) => {
+  const testCall = (url: string, method: string, isError = false) => {
     const req = httpMock.expectOne(url);
     expect(req.request.method).toEqual(method);
 

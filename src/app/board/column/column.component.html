@@ -158,7 +158,7 @@
   <div>
     <h3>{{ strings['boards_taskAddAttachment'] }}</h3>
     <input type="file" #fileupload (change)="fileChange(fileupload.files[0])">
-    <button (click)="uploadFile()">
+    <button (click)="uploadFile()" [disabled]="!fileupload.files[0]">
       <i class="icon icon-upload"></i>
       {{ strings['boards_taskUpload'] }}
     </button>
@@ -220,7 +220,7 @@
     *ngIf="showActivity">
     <div class="title">
       <h2>
-        Task Activity
+        {{ strings['boards_taskActivity'] }}
         <span class="right">
           <i class="icon icon-angle-double-down"
             *ngIf="!collapseActivity"

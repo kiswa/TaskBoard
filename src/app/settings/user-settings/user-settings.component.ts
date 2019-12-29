@@ -21,7 +21,7 @@ import {
   templateUrl: './user-settings.component.html',
   providers: [ UserSettingsService ]
 })
-export class UserSettings implements OnInit {
+export class UserSettingsComponent implements OnInit {
   public boards: Array<Board>;
   public user: User;
   public userOptions: UserOptions;
@@ -34,7 +34,7 @@ export class UserSettings implements OnInit {
               private notes: NotificationsService,
               private settings: SettingsService,
               public users: UserSettingsService,
-              private stringsService: StringsService) {
+              public stringsService: StringsService) {
     this.user = new User();
     this.changeEmail = new EmailForm();
 
@@ -131,6 +131,7 @@ export class UserSettings implements OnInit {
 
     if (this.changeUsername.newName === '') {
       this.notes.add(new Notification('error',
+        // tslint:disable-next-line
         this.strings['settings_usernameRequired']));
       this.changeUsername.submitted = false;
 
@@ -145,8 +146,8 @@ export class UserSettings implements OnInit {
 
         this.settings.getBoards()
           .subscribe((res: ApiResponse) => {
-            let boardData = res.data[1],
-              boards: Array<Board> = [];
+            const boardData = res.data[1];
+            const boards: Array<Board> = [];
 
             if (boardData) {
               boardData.forEach((board: any) => {
@@ -169,8 +170,8 @@ export class UserSettings implements OnInit {
     this.changeEmail.submitted = true;
 
     // https://davidcel.is/posts/stop-validating-email-addresses-with-regex/
-    let emailRegex = /.+@.+\..+/i;
-    let match = this.changeEmail.newEmail.match(emailRegex);
+    const emailRegex = /.+@.+\..+/i;
+    const match = this.changeEmail.newEmail.match(emailRegex);
 
     if (!match && this.changeEmail.newEmail !== '') {
       this.notes.add(new Notification('error', 'Invalid email address.'));

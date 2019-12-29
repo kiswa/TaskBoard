@@ -6,7 +6,7 @@ import { ContextMenuService } from './context-menu.service';
   selector: 'tb-context-menu',
   templateUrl: './context-menu.component.html'
 })
-export class ContextMenu {
+export class ContextMenuComponent {
   public isOpen = false;
 
   constructor(public el: ElementRef,

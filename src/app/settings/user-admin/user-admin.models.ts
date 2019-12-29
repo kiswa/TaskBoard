@@ -1,4 +1,4 @@
-import { User }  from '../../shared/models';
+import { User } from '../../shared/models';
 
 export class UserDisplay extends User {
   /* tslint:disable:variable-name */
@@ -9,7 +9,7 @@ export class UserDisplay extends User {
 }
 
 export class ModalUser extends UserDisplay {
-  public password: string = '';
+  public password = '';
   public password_verify: string = ''; // tslint:disable-line
   public boardAccess: Array<string> = [];
 

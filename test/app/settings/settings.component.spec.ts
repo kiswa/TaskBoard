@@ -1,17 +1,17 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 
-import { Settings } from '../../../src/app/settings/settings.component';
+import { SettingsComponent } from '../../../src/app/settings/settings.component';
 import { SettingsModule } from '../../../src/app/settings/settings.module';
 import { SettingsService } from '../../../src/app/settings/settings.service';
 import { StringsService } from '../../../src/app/shared/services';
 
 describe('Settings', () => {
-  let component: Settings,
-    fixture: ComponentFixture<Settings>;
+  let component: SettingsComponent;
+  let fixture: ComponentFixture<SettingsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -28,7 +28,7 @@ describe('Settings', () => {
           provide: StringsService,
           useValue: {
             stringsChanged: {
-              subscribe: fn => {
+              subscribe: (fn: any) => {
                 fn({ settings: 'Settings' });
                 return { unsubscribe: () => {} };
               }
@@ -40,13 +40,13 @@ describe('Settings', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Settings);
+    fixture = TestBed.createComponent(SettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('sets the title when constructed', () => {
-    expect((<any>component).title.getTitle()).toEqual('TaskBoard - Settings');
+    expect((component as any).title.getTitle()).toEqual('TaskBoard - Settings');
   });
 
 });

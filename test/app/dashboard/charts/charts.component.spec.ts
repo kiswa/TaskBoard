@@ -1,14 +1,14 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Title } from '@angular/platform-browser';
 
-import { Charts } from '../../../../src/app/dashboard/charts/charts.component';
+import { ChartsComponent } from '../../../../src/app/dashboard/charts/charts.component';
 import { DashboardModule } from '../../../../src/app/dashboard/dashboard.module';
 
 describe('Charts', () => {
-  let component: Charts,
-    fixture: ComponentFixture<Charts>;
+  let component: ChartsComponent;
+  let fixture: ComponentFixture<ChartsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,7 +24,7 @@ describe('Charts', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Charts);
+    fixture = TestBed.createComponent(ChartsComponent);
     component = fixture.componentInstance;
   });
 

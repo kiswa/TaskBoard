@@ -7,7 +7,7 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, } from '@angular/platform-browser';
 
 import {
   ApiResponse,
@@ -34,28 +34,30 @@ import { BoardService } from '../board.service';
   selector: 'tb-column',
   templateUrl: './column.component.html'
 })
-export class ColumnDisplay implements OnInit, OnDestroy {
-  private tasks: Array<Task>;
-  private viewTaskActivities: Array<ActivitySimple>;
-
-  private MODAL_ID: string;
-  private MODAL_VIEW_ID: string;
+export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
   private fileUpload: any;
   private subs = [];
 
+  public tasks: Task[];
+  public viewTaskActivities: ActivitySimple[];
+
   public showActivity: boolean;
+  public collapseActivity: boolean;
   public isOverdue: boolean;
   public isNearlyDue: boolean;
   public showLimitEditor: boolean;
+  public collapseTasks: boolean;
+  public saving: boolean;
+
   public taskLimit: number;
+  public taskToRemove: number;
+
   public newComment: string;
+  public sortOption: string;
+
   public templateElement: any;
   public strings: any;
-  public collapseTasks: boolean;
-  public sortOption: string;
-  public saving: boolean;
-  public taskToRemove: number;
 
   public commentEdit: Comment;
   public commentToRemove: Comment;
@@ -66,20 +68,25 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   public activeBoard: Board;
   public quickAdd: Task;
 
+  public MODAL_ID: string;
+  public MODAL_VIEW_ID: string;
   public MODAL_CONFIRM_ID: string;
   public MODAL_CONFIRM_COMMENT_ID: string;
 
+  // tslint:disable-next-line
   @Input('column') columnData: Column;
+  // tslint:disable-next-line
   @Input('boards') boards: Array<Board>;
 
+  // tslint:disable-next-line
   @Output('on-update-boards')
   onUpdateBoards: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private elRef: ElementRef,
+  constructor(public elRef: ElementRef,
               private auth: AuthService,
               private notes: NotificationsService,
               public modal: ModalService,
-              private stringsService: StringsService,
+              public stringsService: StringsService,
               public boardService: BoardService,
               private sanitizer: DomSanitizer) {
     this.templateElement = elRef.nativeElement;
@@ -220,7 +227,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
                          ? this.columnData.id + ''
                          : ''));
 
-        let boardData = response.data[2][0];
+        const boardData = response.data[2][0];
         boardData.ownColumn.forEach((column: any) => {
           if (!column.ownTask) {
             column.ownTask = [];
@@ -284,10 +291,10 @@ export class ColumnDisplay implements OnInit, OnDestroy {
       return;
     }
 
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('file', this.fileUpload);
 
-    let attachment = new Attachment();
+    const attachment = new Attachment();
     attachment.filename = this.fileUpload.name;
     attachment.name = attachment.filename.split('.')[0];
     attachment.type = this.fileUpload.type;
@@ -317,7 +324,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
           return;
         }
 
-        let updatedTask = response.data[1][0];
+        const updatedTask = response.data[1][0];
         this.replaceUpdatedTask(updatedTask);
 
         this.viewModalProps = this.convertToTask(updatedTask);
@@ -340,7 +347,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
           return;
         }
 
-        let updatedTask = response.data[1][0];
+        const updatedTask = response.data[1][0];
         this.replaceUpdatedTask(updatedTask);
 
         this.viewModalProps = this.convertToTask(updatedTask);
@@ -358,7 +365,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
       .subscribe((response: ApiResponse) => {
         response.alerts.forEach(note => this.notes.add(note));
 
-        let updatedTask = response.data[1][0];
+        const updatedTask = response.data[1][0];
         this.replaceUpdatedTask(updatedTask);
       });
   }
@@ -381,7 +388,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   }
 
   saveLimitChanges() {
-    let originalLimit = this.columnData.task_limit;
+    const originalLimit = this.columnData.task_limit;
 
     this.columnData.task_limit = this.taskLimit;
 
@@ -394,7 +401,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
           return;
         }
 
-        let colData = response.data[1][0];
+        const colData = response.data[1][0];
         this.columnData = new Column(colData.id,
                                      colData.name,
                                      colData.position,
@@ -408,10 +415,10 @@ export class ColumnDisplay implements OnInit, OnDestroy {
 
   // Expects a color in full HEX with leading #, e.g. #ffffe0
   getTextColor(color: string): string {
-    let r = parseInt(color.substr(1, 2), 16),
-      g = parseInt(color.substr(3, 2), 16),
-      b = parseInt(color.substr(5, 2), 16),
-      yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    const r = parseInt(color.substr(1, 2), 16);
+    const g = parseInt(color.substr(3, 2), 16);
+    const b = parseInt(color.substr(5, 2), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
     return yiq >= 140 ? '#333333' : '#efefef';
   }
@@ -435,16 +442,16 @@ export class ColumnDisplay implements OnInit, OnDestroy {
       return;
     }
 
-    let dueDate = new Date(this.viewModalProps.due_date);
+    const dueDate = new Date(this.viewModalProps.due_date);
 
     if (isNaN(dueDate.valueOf())) {
       return;
     }
 
-    let millisecondsPerDay = (1000 * 3600 * 24),
-      today = new Date(),
-      timeDiff = today.getTime() - dueDate.getTime(),
-      daysDiff = Math.ceil(timeDiff / millisecondsPerDay);
+    const millisecondsPerDay = (1000 * 3600 * 24);
+    const today = new Date();
+    const timeDiff = today.getTime() - dueDate.getTime();
+    const daysDiff = Math.ceil(timeDiff / millisecondsPerDay);
 
     if (daysDiff > 0) {
       // past due date
@@ -456,18 +463,18 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     }
   }
 
-  getRemoveTaskFunction(taskId: number): Function {
+  getRemoveTaskFunction(taskId: number): () => void {
     return () => {
       this.taskToRemove = taskId;
       this.modal.open(this.MODAL_CONFIRM_ID + this.columnData.id);
     };
   }
 
-  getShowModalFunction(taskId: number = 0): Function {
+  getShowModalFunction(taskId: number = 0): () => void {
     return () => { this.showModal(taskId); };
   }
 
-  getShowViewModalFunction(taskId: number): Function {
+  getShowViewModalFunction(taskId: number): () => void {
     return () => { this.showViewModal(taskId); };
   }
 
@@ -480,7 +487,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
       return;
     }
 
-    let editTask = this.columnData.tasks.find(task => task.id === taskId);
+    const editTask = this.columnData.tasks.find(task => task.id === taskId);
 
     this.modalProps = new Task(editTask.id, editTask.title,
                                editTask.description, editTask.color,
@@ -508,8 +515,53 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     this.modal.open(this.MODAL_ID + this.columnData.id);
   }
 
+  getComment(text: string) {
+    const data = this.boardService.convertMarkdown(text, this.markedCallback);
+    return this.sanitizer.bypassSecurityTrustHtml(data.html);
+  }
+
+  getUserName(userId: number) {
+    const user = this.activeBoard.users.find((test: User) => test.id === userId);
+
+    return user.username;
+  }
+
+  callBoardUpdate() {
+    this.onUpdateBoards.emit();
+  }
+
+  showViewModal(taskId: number) {
+    const viewTask = this.columnData.tasks.find(task => task.id === taskId);
+
+    this.viewTaskActivities = [];
+    this.boardService.getTaskActivity(viewTask.id)
+      .subscribe(response => {
+        response.data[1].forEach((item: any) => {
+          this.viewTaskActivities.push(
+            new ActivitySimple(item.text, item.timestamp));
+        });
+      });
+
+    this.newComment = '';
+    this.viewModalProps = this.convertToTask(viewTask);
+    this.checkDueDate();
+
+    if (this.showActivity) {
+      this.showActivity = false;
+      setTimeout(() => (this.showActivity = true), 500);
+    }
+
+    this.modal.open(this.MODAL_VIEW_ID + this.columnData.id);
+  }
+
+  preventEnter(event: any) {
+    if (event && event.stopPropagation) {
+      event.stopPropagation();
+    }
+  }
+
   private convertToTask(updatedTask: any) {
-    let task = new Task(updatedTask.id,
+    const task = new Task(updatedTask.id,
                         updatedTask.title,
                         updatedTask.description,
                         updatedTask.color,
@@ -522,7 +574,7 @@ export class ColumnDisplay implements OnInit, OnDestroy {
                         updatedTask.sharedUser,
                         updatedTask.sharedCategory);
     const data = this.boardService.convertMarkdown(task.description,
-      (_, text) => { return text; }, true);
+      (_, text) => text, true);
 
     task.html = data.html;
 
@@ -557,14 +609,14 @@ export class ColumnDisplay implements OnInit, OnDestroy {
   }
 
   // Needs anonymous function for proper `this` context.
-  private markedCallback = (error: any, text: string) => {
+  private markedCallback = (_: any, text: string) => {
     this.activeBoard.issue_trackers.forEach(tracker => {
-      let re = new RegExp(tracker.regex, 'ig');
-      let replacements = new Array<any>();
+      const re = new RegExp(tracker.regex, 'ig');
+      const replacements = new Array<any>();
       let result = re.exec(text);
 
       while (result !== null) {
-        let link = '<a href="' +
+        const link = '<a href="' +
           tracker.url.replace(/%BUGID%/g, result[1]) +
           '" target="tb_external" rel="noreferrer">' +
           result[0] + '</a>';
@@ -585,17 +637,6 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     return text;
   }
 
-  private getComment(text: string) {
-    let data = this.boardService.convertMarkdown(text, this.markedCallback);
-    return this.sanitizer.bypassSecurityTrustHtml(data.html);
-  }
-
-  private getUserName(userId: number) {
-    let user = this.activeBoard.users.find((test: User) => test.id === userId);
-
-    return user.username;
-  }
-
   private validateTask(task: Task) {
     if (task.title === '') {
       this.notes.add(
@@ -604,40 +645,6 @@ export class ColumnDisplay implements OnInit, OnDestroy {
     }
 
     return true;
-  }
-
-  private callBoardUpdate() {
-    this.onUpdateBoards.emit();
-  }
-
-  private showViewModal(taskId: number) {
-    let viewTask = this.columnData.tasks.find(task => task.id === taskId);
-
-    this.viewTaskActivities = [];
-    this.boardService.getTaskActivity(viewTask.id)
-      .subscribe(response => {
-        response.data[1].forEach((item: any) => {
-          this.viewTaskActivities.push(
-            new ActivitySimple(item.text, item.timestamp));
-        });
-      });
-
-    this.newComment = '';
-    this.viewModalProps = this.convertToTask(viewTask);
-    this.checkDueDate();
-
-    if (this.showActivity) {
-      this.showActivity = false;
-      setTimeout(() => (this.showActivity = true), 500);
-    }
-
-    this.modal.open(this.MODAL_VIEW_ID + this.columnData.id);
-  }
-
-  private preventEnter(event: any) {
-    if (event && event.stopPropagation) {
-      event.stopPropagation();
-    }
   }
 }
 

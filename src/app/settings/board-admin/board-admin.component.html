@@ -163,8 +163,8 @@
       [dragula]="'columns-bag'" [(dragulaModel)]="modalProps.columns">
       <li *ngFor="let column of modalProps.columns; let i = index">
         <i class="icon icon-resize-vertical"></i>
-        <inline-edit [text]="getPropertyValue('columns', 'name', i)"
-          (edit)="onPropertyEdit('columns', 'name', i, $event)"></inline-edit>
+        <tb-inline-edit [text]="getPropertyValue('columns', 'name', i)"
+          (edit)="onPropertyEdit('columns', 'name', i, $event)"></tb-inline-edit>
         <span class="actions">
           <i class="icon icon-trash-empty color-secondary"
             title="{{ strings['settings_removeColumn'] }}"
@@ -195,8 +195,8 @@
         <input type="color" [title]="strings['settings_defaultTaskColor']"
         [ngModel]="getColor(category)"
         (ngModelChange)="setCategoryColor($event, i)">
-        <inline-edit [text]="getPropertyValue('categories', 'name', i)"
-          (edit)="onPropertyEdit('categories', 'name', i, $event)"></inline-edit>
+        <tb-inline-edit [text]="getPropertyValue('categories', 'name', i)"
+          (edit)="onPropertyEdit('categories', 'name', i, $event)"></tb-inline-edit>
         <span class="actions">
           <i class="icon icon-trash-empty color-secondary"
             title="{{ strings['settings_removeCategory'] }}"
@@ -234,14 +234,14 @@
     <ul *ngIf="modalProps.issue_trackers.length" class="modal-list">
       <li class="double-edit"
         *ngFor="let tracker of modalProps.issue_trackers; let i = index">
-        <inline-edit class="first"
+        <tb-inline-edit class="first"
           [text]="getPropertyValue('issue_trackers', 'url', i)"
           (edit)="onPropertyEdit('issue_trackers', 'url', i, $event)">
-        </inline-edit>
-        <inline-edit class="last"
+        </tb-inline-edit>
+        <tb-inline-edit class="last"
           [text]="getPropertyValue('issue_trackers', 'regex', i)"
           (edit)="onPropertyEdit('issue_trackers', 'regex', i, $event)">
-        </inline-edit>
+        </tb-inline-edit>
         <span class="actions">
           <i class="icon icon-trash-empty color-secondary"
             (click)="modalProps.removeIssueTracker(tracker)"></i>

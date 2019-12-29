@@ -70,7 +70,7 @@ export class Board {
   }
 
   addColumn(name: string): void {
-    let column = new Column(0, name, this.columns.length);
+    const column = new Column(0, name, this.columns.length);
     this.columns.push(column);
   }
 

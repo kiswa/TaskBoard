@@ -6,10 +6,10 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'inline-edit',
+  selector: 'tb-inline-edit',
   templateUrl: './inline-edit.component.html'
 })
-export class InlineEdit {
+export class InlineEditComponent {
   public isDisplay = true;
 
   @Input() text: string;

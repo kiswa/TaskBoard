@@ -1,6 +1,5 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import { SharedModule } from '../../../../src/app/shared/shared.module';
 
@@ -8,7 +7,7 @@ import {
   ContextMenuService
 } from '../../../../src/app/shared/context-menu/context-menu.service';
 import {
-  ContextMenu
+  ContextMenuComponent
 } from '../../../../src/app/shared/context-menu/context-menu.component';
 
 class ElementRefMock {
@@ -16,9 +15,9 @@ class ElementRefMock {
 }
 
 describe('ContextMenu', () => {
-  let component: ContextMenu,
-    fixture: ComponentFixture<ContextMenu>,
-    elementRef: ElementRefMock;
+  let component: ContextMenuComponent;
+  let fixture: ComponentFixture<ContextMenuComponent>;
+  let elementRef: ElementRefMock;
 
   beforeEach(() => {
     elementRef = new ElementRefMock();
@@ -33,7 +32,7 @@ describe('ContextMenu', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ContextMenu);
+    fixture = TestBed.createComponent(ContextMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -43,7 +42,7 @@ describe('ContextMenu', () => {
   });
 
   it('captures parent oncontextmenu events', () => {
-    let parentElement = component.el.nativeElement.parentElement;
+    const parentElement = component.el.nativeElement.parentElement;
 
     expect(parentElement.oncontextmenu).toEqual(jasmine.any(Function));
 

@@ -7,12 +7,12 @@ import {
   NotificationsService
 } from '../../../../src/app/shared/notifications/notifications.service';
 import {
-  Notifications
+  NotificationsComponent
 } from '../../../../src/app/shared/notifications/notifications.component';
 
 describe('Notifications', () => {
-  let component: Notifications,
-    fixture: ComponentFixture<Notifications>;
+  let component: NotificationsComponent;
+  let fixture: ComponentFixture<NotificationsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -26,7 +26,7 @@ describe('Notifications', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Notifications);
+    fixture = TestBed.createComponent(NotificationsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -35,19 +35,20 @@ describe('Notifications', () => {
     expect(component).toBeTruthy();
   });
 
-  it('subscribes to note add events', fakeAsync(done => {
+  it('subscribes to note add events', fakeAsync(() => {
     const note = { type: 'info' };
-    (<any>component.notifications).addNote(note);
+    (component.notifications as any).addNote(note);
 
     tick(4000);
     expect(note.type).toEqual('info clicked');
   }));
 
   it('hides notes', fakeAsync(() => {
-    const hide = component['hide'].bind(component),
-      note = { type: 'test' };
+    // tslint:disable-next-line
+    const hide = component['hide'].bind(component);
+    const note = { type: 'test' };
 
-    component.notes = <any>[note];
+    component.notes = [note] as any;
 
     hide({});
     tick(4000);

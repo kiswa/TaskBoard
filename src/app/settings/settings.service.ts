@@ -11,7 +11,9 @@ import {
   AutoAction
 } from '../shared/models';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SettingsService {
   private users = new BehaviorSubject<Array<User>>([]);
   private boards = new BehaviorSubject<Array<Board>>([]);
@@ -31,8 +33,8 @@ export class SettingsService {
   getUsers(): Observable<ApiResponse> {
     return this.http.get('api/users')
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) => response),
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -46,8 +48,8 @@ export class SettingsService {
   getBoards(): Observable<ApiResponse> {
     return this.http.get('api/boards')
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) => response),
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -58,8 +60,8 @@ export class SettingsService {
   getActions(): Observable<ApiResponse> {
     return this.http.get('api/autoactions')
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) => response),
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 }

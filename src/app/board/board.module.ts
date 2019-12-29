@@ -6,29 +6,29 @@ import { RouterModule } from '@angular/router';
 import { DragulaModule } from 'ng2-dragula/dist';
 import { SharedModule } from '../shared/shared.module';
 
-import { BoardDisplay } from './board.component';
-import { ColumnDisplay } from './column/column.component';
-import { TaskDisplay } from './task/task.component';
+import { BoardDisplayComponent } from './board.component';
+import { ColumnDisplayComponent } from './column/column.component';
+import { TaskDisplayComponent } from './task/task.component';
 import { BoardService } from './board.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    DragulaModule,
+    DragulaModule.forRoot(),
     FormsModule,
     RouterModule,
     SharedModule
   ],
   declarations: [
-    BoardDisplay,
-    ColumnDisplay,
-    TaskDisplay
+    BoardDisplayComponent,
+    ColumnDisplayComponent,
+    TaskDisplayComponent
   ],
   providers: [ BoardService ],
   exports: [
-    BoardDisplay,
-    ColumnDisplay,
-    TaskDisplay
+    BoardDisplayComponent,
+    ColumnDisplayComponent,
+    TaskDisplayComponent,
   ]
 })
 export class BoardModule { }

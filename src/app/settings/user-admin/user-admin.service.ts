@@ -15,24 +15,24 @@ export class UserAdminService {
   addUser(user: ModalUser): Observable<ApiResponse> {
     return this.http.post('api/users', user)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   editUser(user: ModalUser): Observable<ApiResponse> {
     return this.http.post('api/users/' + user.id, user)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 
   removeUser(userId: number): Observable<ApiResponse> {
     return this.http.delete('api/users/' + userId)
     .pipe(
-      map((response: ApiResponse) => { return response; }),
-      catchError((err) => { return of(<ApiResponse>err.error); })
+      map((response: ApiResponse) =>  response),
+      catchError((err) =>  of(err.error as ApiResponse))
     );
   }
 }

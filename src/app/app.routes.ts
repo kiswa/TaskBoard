@@ -1,34 +1,34 @@
 import { Routes } from '@angular/router';
 
-import { BoardDisplay } from './board/board.component';
-import { Login } from './login/login.component';
-import { Settings } from './settings/settings.component';
-import { Dashboard } from './dashboard/dashboard.component';
+import { BoardDisplayComponent } from './board/board.component';
+import { LoginComponent } from './login/login.component';
+import { SettingsComponent } from './settings/settings.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './shared/auth/auth.guard';
 
 export const ROUTES: Routes = [
   {
     path: '',
-    component: Login
+    component: LoginComponent
   },
   {
     path: 'boards',
-    component: BoardDisplay,
+    component: BoardDisplayComponent,
     canActivate: [ AuthGuard ]
   },
   {
     path: 'boards/:id',
-    component: BoardDisplay,
+    component: BoardDisplayComponent,
     canActivate: [ AuthGuard ]
   },
   {
     path: 'settings',
-    component: Settings,
+    component: SettingsComponent,
     canActivate: [ AuthGuard ]
   },
   {
     path: 'dashboard',
-    component: Dashboard,
+    component: DashboardComponent,
     canActivate: [ AuthGuard ]
   }
 ];

@@ -1,15 +1,12 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ElementRef } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
-import { TaskDisplay } from '../../../../src/app/board/task/task.component';
+import { TaskDisplayComponent } from '../../../../src/app/board/task/task.component';
 import {
   AuthService,
   StringsService,
-  Constants,
   ModalService,
   NotificationsService
 } from '../../../../src/app/shared/services';
@@ -17,8 +14,8 @@ import { BoardService } from '../../../../src/app/board/board.service';
 import { SharedModule } from '../../../../src/app/shared/shared.module';
 
 describe('TaskDisplay', () => {
-  let component: TaskDisplay,
-    fixture: ComponentFixture<TaskDisplay>;
+  let component: TaskDisplayComponent;
+  let fixture: ComponentFixture<TaskDisplayComponent>;
 
   const eventMock = {
     target: {
@@ -38,7 +35,7 @@ describe('TaskDisplay', () => {
         SharedModule
       ],
       declarations: [
-        TaskDisplay
+        TaskDisplayComponent
       ],
       providers: [
         AuthService,
@@ -51,7 +48,7 @@ describe('TaskDisplay', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TaskDisplay);
+    fixture = TestBed.createComponent(TaskDisplayComponent);
     component = fixture.componentInstance;
   });
 
@@ -60,22 +57,22 @@ describe('TaskDisplay', () => {
   });
 
   it('implements OnInit', () => {
-    component.taskData = <any>{ id: 1, description: '' };
-    component.activeBoard = <any>{ id: 1, columns: [{ id: 1, name: 'test' }] };
+    component.taskData = { id: 1, description: '' } as any;
+    component.activeBoard = { id: 1, columns: [{ id: 1, name: 'test' }] } as any;
     component.ngOnInit();
 
-    component.taskData = <any>{ id: 1, description: '', due_date: '' };
+    component.taskData = { id: 1, description: '', due_date: '' } as any;
     component.ngOnInit();
 
-    component.taskData = <any>{ id: 1, description: '', due_date: '1/1/2018' };
+    component.taskData = { id: 1, description: '', due_date: '1/1/2018' } as any;
     component.ngOnInit();
 
     const today = new Date();
-    component.taskData = <any>{
+    component.taskData = {
       id: 1, description: '',
       due_date: (today.getMonth() + 1) + '/' +
         (today.getDate() + 1) + '/' + today.getFullYear()
-    };
+    } as any;
     component.ngOnInit();
 
     expect(component.taskData.id).toEqual(1);
@@ -84,11 +81,12 @@ describe('TaskDisplay', () => {
   it('parses task description markdown into text', () => {
     setupBoard();
     component.taskData.description = '# Make this HTML';
-    component.activeBoard.issue_trackers = <any>[
+    component.activeBoard.issue_trackers = [
       { regex: 'test', url: '%BUGID%' }
-    ];
+    ] as any;
     component.ngOnInit();
 
+    // tslint:disable-next-line
     expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
       .toEqual('<h1 id="make-this-html">Make this HTML</h1>\n');
   });
@@ -98,6 +96,7 @@ describe('TaskDisplay', () => {
     component.taskData.description = ' - [x] One\n - [ ] Two';
     component.ngOnInit();
 
+    // tslint:disable-next-line
     expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
       .toEqual('<ul>\n<li><i class="icon icon-check"></i>One</li>\n' +
         '<li><i class="icon icon-check-empty"></i>Two</li>\n</ul>\n');
@@ -108,6 +107,7 @@ describe('TaskDisplay', () => {
     component.taskData.description = '[link](google.com)';
     component.ngOnInit();
 
+    // tslint:disable-next-line
     expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
       .toContain('target="tb_external" rel="noreferrer"');
   });
@@ -117,7 +117,8 @@ describe('TaskDisplay', () => {
 
     const actual = component.getPercentStyle();
 
-    expect((<any>actual)['changingThisBreaksApplicationSecurity'])
+    // tslint:disable-next-line
+    expect((actual as any)['changingThisBreaksApplicationSecurity'])
       .toContain('width: 50%;');
   });
 
@@ -144,8 +145,8 @@ describe('TaskDisplay', () => {
   });
 
   it('calls a service to change a task\'s column', () => {
-    const select = document.createElement('select'),
-      option = document.createElement('option');
+    const select = document.createElement('select');
+    const option = document.createElement('option');
 
     select.id = 'columnsList1';
     select.selectedIndex = 0;
@@ -154,7 +155,7 @@ describe('TaskDisplay', () => {
     select.appendChild(option);
     document.body.appendChild(select);
 
-    component.taskData = <any>{ id: 1 };
+    component.taskData = { id: 1 } as any;
     component.changeTaskColumn(eventMock);
 
     const secondOpt = document.createElement('option');
@@ -163,12 +164,12 @@ describe('TaskDisplay', () => {
     select.appendChild(secondOpt);
     select.selectedIndex = 1;
 
-    (<any>component.boardService.updateTask) = () => {
-      return { subscribe: fn =>  fn(<any>{
+    (component.boardService.updateTask as any) = () => {
+      return { subscribe: (fn: any) =>  fn({
         status: 'success',
         alerts: [{}],
         data: [{}, {}, [{}]]
-      }) };
+      } as any) };
     };
 
     component.changeTaskColumn(eventMock);
@@ -176,8 +177,8 @@ describe('TaskDisplay', () => {
   });
 
   it('calls a service to copy a task to another board', () => {
-    const sel = document.createElement('select'),
-      opt = document.createElement('option');
+    const sel = document.createElement('select');
+    const opt = document.createElement('option');
 
     sel.id = 'boardsList1Copy';
     sel.selectedIndex = 0;
@@ -186,25 +187,25 @@ describe('TaskDisplay', () => {
     sel.appendChild(opt);
     document.body.appendChild(sel);
 
-    component.strings = <any>{ boards_copyTaskTo: 'Copy To' };
-    component.taskData = <any>{ id: 1 };
-    component.boardsList = <any>[
+    component.strings = { boards_copyTaskTo: 'Copy To' } as any;
+    component.taskData = { id: 1 } as any;
+    component.boardsList = [
       { id: 1, name: 'one', columns: [{ id: 1 }] },
       { id: 2, name: 'test' }
-    ];
+    ] as any;
 
     let emitted = false;
 
     component.onUpdateBoards.subscribe(() => emitted = true);
 
-    (<any>component.boardService.addTask) = () => {
-      return { subscribe: fn =>  fn(<any>{ status: 'success' }) };
+    (component.boardService.addTask as any) = () => {
+      return { subscribe: (fn: any) => fn({ status: 'success' } as any) };
     };
 
     component.copyTaskToBoard(eventMock);
 
-    (<any>component.boardService.addTask) = () => {
-      return { subscribe: fn =>  fn(<any>{ status: 'asdf', alerts: [{}] }) };
+    (component.boardService.addTask as any) = () => {
+      return { subscribe: (fn: any) => fn({ status: 'asdf', alerts: [{}] } as any) };
     };
 
     component.copyTaskToBoard(eventMock);
@@ -213,8 +214,8 @@ describe('TaskDisplay', () => {
   });
 
   it('calls a service to move a task to another board', () => {
-    const sel = document.createElement('select'),
-      opt = document.createElement('option');
+    const sel = document.createElement('select');
+    const opt = document.createElement('option');
 
     sel.id = 'boardsList1Move';
     sel.selectedIndex = 0;
@@ -223,25 +224,25 @@ describe('TaskDisplay', () => {
     sel.appendChild(opt);
     document.body.appendChild(sel);
 
-    component.strings = <any>{ boards_moveTaskTo: 'Move To' };
-    component.taskData = <any>{ id: 1 };
-    component.boardsList = <any>[
+    component.strings = { boards_moveTaskTo: 'Move To' } as any;
+    component.taskData = { id: 1 } as any;
+    component.boardsList = [
       { id: 1, name: 'one', columns: [{ id: 1 }] },
       { id: 2, name: 'test' }
-    ];
+    ] as any;
 
     let emitted = false;
 
     component.onUpdateBoards.subscribe(() => emitted = true);
 
-    (<any>component.boardService.updateTask) = () => {
-      return { subscribe: fn =>  fn(<any>{ status: 'success' }) };
+    (component.boardService.updateTask as any) = () => {
+      return { subscribe: (fn: any) => fn({ status: 'success' } as any) };
     };
 
     component.moveTaskToBoard(eventMock);
 
-    (<any>component.boardService.updateTask) = () => {
-      return { subscribe: fn =>  fn(<any>{ status: 'asdf', alerts: [{}] }) };
+    (component.boardService.updateTask as any) = () => {
+      return { subscribe: (fn: any) => fn({ status: 'asdf', alerts: [{}] } as any) };
     };
 
     component.moveTaskToBoard(eventMock);
@@ -252,16 +253,17 @@ describe('TaskDisplay', () => {
   function setupBoard() {
     const today = new Date();
 
-    component.activeBoard = <any>{
+    component.activeBoard = {
       id: 1,
       columns: [{ id: 1, name: 'test' }],
       issue_trackers: []
-    };
-    component.taskData = <any>{
+    } as any;
+
+    component.taskData = {
       id: 1, description: '',
       due_date: (today.getMonth() + 1) + '/' +
         (today.getDate() + 1) + '/' + today.getFullYear()
-    };
+    } as any;
   }
 });
 

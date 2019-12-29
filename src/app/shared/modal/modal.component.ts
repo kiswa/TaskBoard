@@ -10,19 +10,22 @@ import { ModalService } from './modal.service';
 @Component({
   selector: 'tb-modal',
   templateUrl: './modal.component.html',
+  // tslint:disable-next-line
   host: {
     '(document:keyup.enter)': 'keyup($event)',
     '(document:keyup.escape)': 'keyup($event)'
   }
 })
-export class Modal implements OnInit {
+export class ModalComponent implements OnInit {
+  // tslint:disable-next-line
   @Input('modal-id') modalId = '';
+  // tslint:disable-next-line
   @Input('modal-title') modalTitle = '';
   @Input() blocking = false;
   @Input() wide = false;
 
-  @ContentChild('focusMe') focusElement: any;
-  @ContentChild('defaultAction') defaultActionElement: any;
+  @ContentChild('focusMe', { static: false }) focusElement: any;
+  @ContentChild('defaultAction', { static: false }) defaultActionElement: any;
 
   isOpen = false;
   animate = true;
@@ -39,6 +42,7 @@ export class Modal implements OnInit {
   }
 
   filterClick(event: Event): void {
+    // tslint:disable-next-line
     event = event || window.event;
 
     // Prevent click from propagating to modal container
@@ -47,11 +51,13 @@ export class Modal implements OnInit {
     }
   }
 
-  private keyup(event: KeyboardEvent): void {
+  keyup(event: KeyboardEvent): void {
+    // tslint:disable-next-line
     if (event.keyCode === 27) {
       this.modalService.close(this.modalId, true);
     }
 
+    // tslint:disable-next-line
     if (event.keyCode === 13) {
       this.clickDefaultAction();
     }

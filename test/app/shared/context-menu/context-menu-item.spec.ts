@@ -2,25 +2,25 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 
 import {
-  ContextMenuItem
+  ContextMenuItemComponent
 } from '../../../../src/app/shared/context-menu/context-menu-item.component';
 
 @Component({
-  selector: 'host-component',
+  selector: 'tb-host-component',
   template: `<tb-context-menu-item [isSeparator]="true"></tb-context-menu-item>`
 })
 class TestHostComponent {
-  @ViewChild(ContextMenuItem)
-  public menuItem: ContextMenuItem;
+  @ViewChild(ContextMenuItemComponent, { static: false })
+  public menuItem: ContextMenuItemComponent;
 }
 
 describe('ContextMenuItem', () => {
-  let hostComponent: TestHostComponent,
-    hostFixture: ComponentFixture<TestHostComponent>;
+  let hostComponent: TestHostComponent;
+  let hostFixture: ComponentFixture<TestHostComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContextMenuItem, TestHostComponent ]
+      declarations: [ ContextMenuItemComponent, TestHostComponent ]
     }).compileComponents();
   });
 
@@ -35,8 +35,8 @@ describe('ContextMenuItem', () => {
   });
 
   it('handles clicks on the element', () => {
-    let pdCalled = false,
-      spCalled = false;
+    let pdCalled = false;
+    let spCalled = false;
 
     const evt = {
       preventDefault: () => {
@@ -54,8 +54,8 @@ describe('ContextMenuItem', () => {
   });
 
   it('handles context menu clicks on the element', () => {
-    let pdCalled = false,
-      spCalled = false;
+    let pdCalled = false;
+    let spCalled = false;
 
     const evt = {
       preventDefault: () => {

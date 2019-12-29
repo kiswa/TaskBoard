@@ -1,8 +1,7 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import { SharedModule } from '../../../../src/app/shared/shared.module';
 
@@ -21,12 +20,12 @@ import {
   AutoActionsService
 } from '../../../../src/app/settings/auto-actions/auto-actions.service';
 import {
-  AutoActions
+  AutoActionsComponent
 } from '../../../../src/app/settings/auto-actions/auto-actions.component';
 
 describe('AutoActions', () => {
-  let component: AutoActions,
-    fixture: ComponentFixture<AutoActions>;
+  let component: AutoActionsComponent;
+  let fixture: ComponentFixture<AutoActionsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -37,7 +36,7 @@ describe('AutoActions', () => {
         SharedModule
       ],
       declarations: [
-        AutoActions
+        AutoActionsComponent
       ],
       providers: [
         AuthService,
@@ -51,7 +50,7 @@ describe('AutoActions', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AutoActions);
+    fixture = TestBed.createComponent(AutoActionsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -61,18 +60,18 @@ describe('AutoActions', () => {
   });
 
   it('updates the list of automatic actions', () => {
-    component.boards = <any>[
+    component.boards = [
       { is_active: false, id: 1, name: 'First' },
       { is_active: true, id: 2, name: 'Second' }
-    ];
-    component.updateActions(<any>[{ board_id: 1 }, { board_id: 2 }]);
+    ] as any;
+    component.updateActions([{ board_id: 1 }, { board_id: 2 }] as any);
 
     expect(component.loading).toEqual(false);
   });
 
   it('calls a service to add a new action', () => {
-    (<any>component.actions).addAction = () => {
-      return { subscribe: fn => { fn({ alerts: [{}], data: [{}, []] }); } };
+    (component.actions as any).addAction = () => {
+      return { subscribe: (fn: any) => { fn({ alerts: [{}], data: [{}, []] }); } };
     };
 
     component.addNewAction();
@@ -81,46 +80,46 @@ describe('AutoActions', () => {
   });
 
   it('updates trigger sources', () => {
-    component.boards = <any>[{
+    component.boards = [{
       id: 1,
       columns: [{ id: 1, name: 'TestCol' }],
       users: [{ id: 1, username: 'tester' }],
       categories: [{ id: 1, name: 'TestCat' }]
-    }, { id: 2 }];
+    }, { id: 2 }] as any;
 
-    component.newAction = <any>{
+    component.newAction = {
       trigger: ActionTrigger.MovedToColumn,
       board_id: 1
-    };
+    } as any;
     component.updateTriggerSources();
 
     expect(component.triggerSources.length).toEqual(2);
 
-    component.newAction = <any>{
+    component.newAction = {
       trigger: ActionTrigger.AssignedToUser,
       board_id: 1
-    };
+    } as any;
     component.updateTriggerSources();
 
     expect(component.triggerSources.length).toEqual(2);
 
-    component.newAction = <any>{
+    component.newAction = {
       trigger: ActionTrigger.AddedToCategory,
       board_id: 1
-    };
+    } as any;
     component.updateTriggerSources();
 
     expect(component.triggerSources.length).toEqual(2);
 
-    component.newAction = <any>{
+    component.newAction = {
       trigger: ActionTrigger.PointsChanged,
       board_id: 1
-    };
+    } as any;
     component.updateTriggerSources();
 
     expect(component.types.length).toEqual(1);
 
-    component.newAction = <any>{ trigger: -1 };
+    component.newAction = { trigger: -1 } as any;
     component.typesList = null;
     component.updateTriggerSources();
 
@@ -128,53 +127,53 @@ describe('AutoActions', () => {
   });
 
   it('updates action sources', () => {
-    component.boards = <any>[{
+    component.boards = [{
       id: 1,
       columns: [{ id: 1, name: 'TestCol' }],
       users: [{ id: 1, username: 'tester' }],
       categories: [{ id: 1, name: 'TestCat' }]
-    }, { id: 2 }];
+    }, { id: 2 }] as any;
 
-    component.newAction = <any>{
+    component.newAction = {
       type: ActionType.SetCategory,
       board_id: 1
-    };
+    } as any;
     component.updateActionSources();
 
     expect(component.actionSources.length).toEqual(2);
 
-    component.newAction = <any>{
+    component.newAction = {
       type: ActionType.AddCategory,
       board_id: 1
-    };
+    } as any;
     component.updateActionSources();
 
     expect(component.actionSources.length).toEqual(2);
 
-    component.newAction = <any>{
+    component.newAction = {
       type: ActionType.SetAssignee,
       board_id: 1
-    };
+    } as any;
     component.updateActionSources();
 
     expect(component.actionSources.length).toEqual(2);
 
-    component.newAction = <any>{
+    component.newAction = {
       type: ActionType.AddAssignee,
       board_id: 1
-    };
+    } as any;
     component.updateActionSources();
 
     expect(component.actionSources.length).toEqual(2);
 
-    component.newAction = <any>{ type: ActionType.SetColor };
+    component.newAction = { type: ActionType.SetColor } as any;
     component.updateActionSources();
 
     expect(component.newAction.change_to).toEqual('#000000');
   });
 
   it('provides the name of a board by its ID', () => {
-    component.boards = <any>[{ id: 1, name: 'Test' }];
+    component.boards = [{ id: 1, name: 'Test' }] as any;
 
     let actual = component.getBoardName(1);
     expect(actual).toEqual('Test*');
@@ -190,18 +189,18 @@ describe('AutoActions', () => {
       settings_triggerAddedToCategory: 'Added To Category',
       settings_triggerPointsChanged: 'Points Changed'
     };
-    component.boards = <any>[{
+    component.boards = [{
       id: 1,
       columns: [{ id: 1, name: 'Test' }],
       users: [{ id: 1, username: 'tester' }],
       categories: [{ id: 1, name: 'Test' }]
-    }];
+    }] as any;
 
-    const action = <any>{
+    const action = {
       source_id: 1,
       board_id: 0,
       trigger: ActionTrigger.MovedToColumn
-    };
+    } as any;
     let actual = component.getTriggerDescription(action);
 
     expect(actual).toEqual(undefined);
@@ -228,20 +227,20 @@ describe('AutoActions', () => {
   });
 
   it('provides HTML for the description of an action\'s type', () => {
-    component.boards = <any>[{
+    component.boards = [{
       id: 1,
       columns: [{ id: 1, name: 'Test' }],
       users: [{ id: 1, username: 'tester' }],
       categories: [{ id: 1, name: 'Test' }]
-    }];
+    }] as any;
 
-    const action = <any>{
+    const action = {
       change_to: 'red',
       board_id: 0,
       type: ActionType.SetColor
-    },
-      safeValuePre = 'SafeValue must use [property]=binding: undefined ',
-      safeValuePost = ' (see http://g.co/ng/security#xss)';
+    } as any;
+    const safeValuePre = 'SafeValue must use [property]=binding: undefined ';
+    const safeValuePost = ' (see http://g.co/ng/security#xss)';
     let actual = component.getTypeDescription(action);
 
     expect(actual).toEqual(undefined);
@@ -298,8 +297,8 @@ describe('AutoActions', () => {
   });
 
   it('calls aservice to remove an automatic action', () => {
-    (<any>component.actions).removeAction = () => {
-      return { subscribe: fn => { fn({ alerts: [], data: [{}, []] }); } };
+    (component.actions as any).removeAction = () => {
+      return { subscribe: (fn: any) => { fn({ alerts: [], data: [{}, []] }); } };
     };
 
     component.saving = true;

@@ -8,9 +8,7 @@ import {
   ApiResponse,
   Board,
   Column,
-  Task,
   User,
-  Notification,
 } from '../shared/models';
 import {
   AuthService,
@@ -24,12 +22,8 @@ import { BoardService } from './board.service';
   selector: 'tb-board',
   templateUrl: './board.component.html'
 })
-export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
-  private strings: any;
-  private noBoardsMessage: string;
-  private subs: Array<any>;
-
-  private hideFiltered: boolean;
+export class BoardDisplayComponent implements OnInit, OnDestroy, AfterContentInit {
+  private subs: any[];
   private everyOtherDrop: boolean;
 
   public categoryFilter: number;
@@ -38,19 +32,24 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
 
   public activeUser: User;
   public activeBoard: Board;
-  public boards: Array<Board>;
+  public boards: Board[];
+
   public pageName: string;
+  public noBoardsMessage: string;
+
+  public strings: any;
 
   public loading: boolean;
+  public hideFiltered: boolean;
 
   constructor(public title: Title,
               private router: Router,
-              private active: ActivatedRoute,
+              public active: ActivatedRoute,
               public auth: AuthService,
               public boardService: BoardService,
-              private menuService: ContextMenuService,
-              private notes: NotificationsService,
-              private stringsService: StringsService,
+              public menuService: ContextMenuService,
+              public notes: NotificationsService,
+              public stringsService: StringsService,
               public dragula: DragulaService) {
     title.setTitle('TaskBoard - Kanban App');
 
@@ -97,7 +96,7 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
     this.subs.push(sub);
 
     sub = active.params.subscribe(params => {
-      let id = +params.id;
+      const id = +params.id;
 
       this.boardNavId = id ? id : null;
       this.updateActiveBoard();
@@ -121,22 +120,22 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
   }
 
   ngAfterContentInit() {
-    let bag = this.dragula.find('tasks-bag');
+    const bag = this.dragula.find('tasks-bag');
 
     if (bag) {
       this.dragula.destroy('tasks-bag');
     }
 
-    this.dragula.createGroup('tasks-bag', <any>{
-      moves: (el: any, container: any, handle: any) => {
+    this.dragula.createGroup('tasks-bag', {
+      moves: (_: any, __: any, handle: any) => {
         return handle.classList.contains('drag-handle');
       }
     });
 
     this.dragula.dropModel('tasks-bag').subscribe((value: any) => {
-      let taskId = +value[1].id,
-        toColumnId = +value[2].parentNode.id,
-        fromColumnId = +value[3].parentNode.id;
+      const taskId = +value[1].id;
+      const toColumnId = +value[2].parentNode.id;
+      const fromColumnId = +value[3].parentNode.id;
 
       if (toColumnId !== fromColumnId) {
         this.changeTaskColumn(taskId, toColumnId);
@@ -145,8 +144,8 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
 
       this.everyOtherDrop = !this.everyOtherDrop;
       if (this.everyOtherDrop) {
-        for (var i = 0, len = this.activeBoard.columns.length; i < len; ++i) {
-          let column = this.activeBoard.columns[i];
+        for (let i = 0, len = this.activeBoard.columns.length; i < len; ++i) {
+          const column = this.activeBoard.columns[i];
 
           if (column.id === toColumnId) {
             let pos = 0;
@@ -224,7 +223,7 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  private updateBoards(): void {
+  updateBoards(): void {
     this.boardService.getBoards().subscribe((response: ApiResponse) => {
       this.boards = [];
       if (response.data.length > 1) {
@@ -235,11 +234,11 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
   }
 
   private updateBoardsList(boards: Array<any>): void {
-    let activeBoards: Array<Board> = [];
+    const activeBoards: Array<Board> = [];
 
     if (boards) {
       boards.forEach((board: any) => {
-        let currentBoard = new Board(+board.id, board.name,
+        const currentBoard = new Board(+board.id, board.name,
                                      board.is_active === '1',
                                      board.ownColumn,
                                      board.ownCategory,
@@ -300,9 +299,9 @@ export class BoardDisplay implements OnInit, OnDestroy, AfterContentInit {
   }
 
   private changeTaskColumn(taskId: number, toColumnId: number) {
-    let column = this.activeBoard.columns
+    const column = this.activeBoard.columns
       .find(col => col.id === toColumnId);
-    let task = column.tasks.find(ta => ta.id === taskId);
+    const task = column.tasks.find(ta => ta.id === taskId);
 
     if (task) {
       task.column_id = toColumnId;

@@ -1,14 +1,14 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 
 import { SharedModule } from '../../../../src/app/shared/shared.module';
 
 import {
-  InlineEdit
+  InlineEditComponent
 } from '../../../../src/app/shared/inline-edit/inline-edit.component';
 
 describe('InlineEdit', () => {
-  let component: InlineEdit,
-    fixture: ComponentFixture<InlineEdit>;
+  let component: InlineEditComponent;
+  let fixture: ComponentFixture<InlineEditComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,7 +17,7 @@ describe('InlineEdit', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InlineEdit);
+    fixture = TestBed.createComponent(InlineEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -32,7 +32,7 @@ describe('InlineEdit', () => {
     let called = false;
     const el = { focus: () => called = true };
 
-    component.beginEdit(<any>el);
+    component.beginEdit(el as any);
     expect(component.isDisplay).toEqual(false);
 
     setTimeout(() => {
@@ -46,7 +46,7 @@ describe('InlineEdit', () => {
     const event = { stopPropagation: () => called = true };
 
     component.editDone('test');
-    component.editDone('test', <any>event);
+    component.editDone('test', event as any);
 
     expect(called).toEqual(true);
     expect(component.isDisplay).toEqual(true);

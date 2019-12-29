@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
 import { UserOptions } from '../models';
-import { Modal } from './modal.component';
+import { ModalComponent } from './modal.component';
 
 @Injectable()
 export class ModalService {
-  private modals: Array<Modal>;
+  private modals: Array<ModalComponent>;
   private userOptions: UserOptions;
 
-  constructor(private auth: AuthService) {
+  constructor(public auth: AuthService) {
     this.modals = [];
     this.userOptions = auth.userOptions;
   }
 
-  registerModal(newModal: Modal): void {
-    let modal = this.modals.find(modal => modal.modalId === newModal.modalId);
+  registerModal(newModal: ModalComponent): void {
+    const modal = this.modals.find(modall => modall.modalId === newModal.modalId);
 
     // Delete existing to replace the modal
     if (modal) {
@@ -26,7 +26,7 @@ export class ModalService {
   }
 
   isOpen(modalId: string): boolean {
-    let modal = this.modals.find(modal => modal.modalId === modalId);
+    const modal = this.modals.find(modall => modall.modalId === modalId);
 
     if (modal) {
       return modal.isOpen;
@@ -36,7 +36,7 @@ export class ModalService {
   }
 
   open(modalId: string): void {
-    let modal = this.modals.find(modal => modal.modalId === modalId);
+    const modal = this.modals.find(modall => modall.modalId === modalId);
 
     if (modal) {
       modal.animate = (this.userOptions.show_animations);
@@ -52,7 +52,7 @@ export class ModalService {
   }
 
   close(modalId: string, checkBlocking = false): void {
-    let modal = this.modals.find(modal => modal.modalId === modalId);
+    const modal = this.modals.find(modall => modall.modalId === modalId);
 
     if (modal) {
       if (checkBlocking && modal.blocking) {

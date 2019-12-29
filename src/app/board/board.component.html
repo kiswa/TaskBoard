@@ -23,7 +23,7 @@
     <label>
       {{ strings['boards_userFilter'] }}:
       <select [(ngModel)]="userFilter"
-        (change)="filterTasks('user')">
+        (change)="filterTasks()">
         <option [ngValue]="null">
           {{ strings['boards_filterByAny'] }}
         </option>
@@ -39,7 +39,7 @@
     <label>
       {{ strings['boards_categoryFilter'] }}:
       <select [(ngModel)]="categoryFilter"
-        (change)="filterTasks('cat')">
+        (change)="filterTasks()">
         <option [ngValue]="null">
           {{ strings['boards_filterByAny'] }}
         </option>

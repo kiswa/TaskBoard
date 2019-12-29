@@ -13,18 +13,19 @@ import { StringsService } from '../strings/strings.service';
   selector: 'tb-top-nav',
   templateUrl: './top-nav.component.html'
 })
-export class TopNav {
+export class TopNavComponent {
   public strings: any;
 
+  // tslint:disable-next-line
   @Input('page-name') pageName: string = '';
 
-  version: string = '';
-  username: string = '';
+  version = '';
+  username = '';
 
   constructor(public constants: Constants, private router: Router,
               public authService: AuthService,
               private notes: NotificationsService,
-              private stringsService: StringsService) {
+              public stringsService: StringsService) {
     this.version = constants.VERSION;
 
     authService.userChanged
@@ -37,7 +38,7 @@ export class TopNav {
 
   logout(): void {
     this.authService.logout().subscribe(res => {
-      let alert = res.alerts[0];
+      const alert = res.alerts[0];
       this.notes.add(new Notification(alert.type, alert.text));
 
       this.router.navigate(['']);

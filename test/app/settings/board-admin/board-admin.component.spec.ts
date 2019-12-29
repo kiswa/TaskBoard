@@ -1,10 +1,9 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { DragulaService } from 'ng2-dragula/ng2-dragula';
-import { DragulaModule } from 'ng2-dragula/ng2-dragula';
+import { DragulaService, DragulaModule } from 'ng2-dragula';
 
 import { SharedModule } from '../../../../src/app/shared/shared.module';
 
@@ -22,14 +21,14 @@ import { Board } from '../../../../src/app/shared/models';
 import { DragulaMock, SettingsServiceMock, AuthServiceMock } from '../../mocks';
 
 import {
-  BoardAdmin
+  BoardAdminComponent
 } from '../../../../src/app/settings/board-admin/board-admin.component';
 
 describe('BoardAdmin', () => {
-  let component: BoardAdmin,
-    fixture: ComponentFixture<BoardAdmin>;
+  let component: BoardAdminComponent;
+  let fixture: ComponentFixture<BoardAdminComponent>;
 
-  const getPrivateFunction = name => component[name].bind(component);
+  const getPrivateFunction = (name: any) => component[name].bind(component);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -41,7 +40,7 @@ describe('BoardAdmin', () => {
         DragulaModule
       ],
       declarations: [
-        BoardAdmin
+        BoardAdminComponent
       ],
       providers: [
         AuthService,
@@ -57,7 +56,7 @@ describe('BoardAdmin', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BoardAdmin);
+    fixture = TestBed.createComponent(BoardAdminComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -67,38 +66,32 @@ describe('BoardAdmin', () => {
   });
 
   it('sets up drag and drop during ngAfterContentInit', () => {
-    component.modalProps = <any>{ columns: [{ position: '' }] };
+    component.modalProps = { columns: [{ position: '' }] } as any;
     component.ngAfterContentInit();
 
-    expect((<any>component.dragula).opts.moves).toEqual(jasmine.any(Function));
-    expect(component.modalProps.columns[0].position).toEqual('0');
-
-    const test = (<any>component.dragula).opts.moves(null, null, {
-      classList: { contains: () => false }
-    });
-    expect(test).toEqual(false);
+    expect(component.modalProps.columns[0].position).toEqual('');
   });
 
   it('validates a board before saving', () => {
-    component.modalProps = <any>{ columns: [] };
+    component.modalProps = { columns: [] } as any;
     component.addEditBoard();
 
     expect(component.saving).toEqual(false);
   });
 
   it('calls a service to add a board', () => {
-    component.modalProps = <any>{
+    component.modalProps = {
       title: 'Add',
       name: 'Test',
       columns: [{}]
-    };
-    component.users = <any>[{ selected: true }];
+    } as any;
+    component.users = [{ selected: true }] as any;
 
     let called = false;
 
-    (<any>component.modal).isOpen = () => true;
-    (<any>component.boardService).addBoard = () => {
-      return { subscribe: fn => {
+    (component.modal as any).isOpen = () => true;
+    (component.boardService as any).addBoard = () => {
+      return { subscribe: (fn: any) => {
         const board = new Board();
         fn({ status: 'success', alerts: [{}], data: [{}, [board]] });
         called = true;
@@ -110,18 +103,18 @@ describe('BoardAdmin', () => {
   });
 
   it('calls a service to edit a board', () => {
-    component.modalProps = <any>{
+    component.modalProps = {
       title: '',
       name: '',
       columns: [{}]
-    };
-    component.users = <any>[{}];
+    } as any;
+    component.users = [{}] as any;
 
     let called = false;
 
-    (<any>component.modal).isOpen = () => true;
-    (<any>component.boardService).editBoard = () => {
-      return { subscribe: fn => {
+    (component.modal as any).isOpen = () => true;
+    (component.boardService as any).editBoard = () => {
+      return { subscribe: (fn: any) => {
         const board = new Board();
         fn({ status: 'success', alerts: [{}], data: [{}, [board]] });
         called = true;
@@ -139,17 +132,17 @@ describe('BoardAdmin', () => {
   it('calls a service to remove a board', () => {
     let called = false;
 
-    (<any>component.boardService).removeBoard = () => {
-      return { subscribe: fn => fn({ alerts: [], data: [{}, []] }) };
+    (component.boardService as any).removeBoard = () => {
+      return { subscribe: (fn: any) => fn({ alerts: [], data: [{}, []] }) };
     };
-    (<any>component.settings).getActions = () => {
-      return { subscribe: fn => {
+    (component.settings as any).getActions = () => {
+      return { subscribe: (fn: any) => {
         fn({ alerts: [], data: [{}, []] });
         called = true;
       } };
     };
 
-    component.boardToRemove = <any>{ id: 1 };
+    component.boardToRemove = { id: 1 } as any;
     component.removeBoard();
 
     expect(called).toEqual(true);
@@ -158,26 +151,26 @@ describe('BoardAdmin', () => {
   it('calls a service to toggle a board\'s status', () => {
     let called = false;
 
-    (<any>component.boardService).editBoard = () => {
-      return { subscribe: fn => {
+    (component.boardService as any).editBoard = () => {
+      return { subscribe: (fn: any) => {
         const board = new Board();
         fn({ status: 'success', alerts: [{}], data: [{}, [board]] });
         called = true;
       } };
     };
 
-    component.toggleBoardStatus(<any>{
+    component.toggleBoardStatus({
       id: 1, name: 'Name', is_active: true, columns: [],
       categories: [], issue_trackers: [], users: []
-    });
+    } as any);
 
     expect(called).toEqual(true);
   });
 
   it('can filter the list of boards by user', () => {
-    component.boards = <any>[
+    component.boards = [
       { users: [{ id: 1 }] }
-    ];
+    ] as any;
 
     component.filterBoards();
     expect(component.displayBoards.length).toEqual(1);
@@ -194,9 +187,9 @@ describe('BoardAdmin', () => {
   });
 
   it('can filter the list of boards by status', () => {
-    component.boards = <any>[
+    component.boards = [
       { is_active: true, users: [] }
-    ];
+    ] as any;
 
     component.filterBoards();
     expect(component.displayBoards.length).toEqual(1);
@@ -213,10 +206,10 @@ describe('BoardAdmin', () => {
   });
 
   it('sorts the list of boards after filtering', () => {
-    component.boards = <any>[
+    component.boards = [
       { id: 1, name: 'last' },
       { id: 2, name: 'first' }
-    ];
+    ] as any;
     component.sortFilter = 'name-asc';
 
     component.filterBoards();
@@ -248,7 +241,7 @@ describe('BoardAdmin', () => {
 
   it('can get a property value for the modal', () => {
     const getPropertyValue = getPrivateFunction('getPropertyValue');
-    component.modalProps = <any>{ columns: [{ name: 'test' }] };
+    component.modalProps = { columns: [{ name: 'test' }] } as any;
 
     const actual = getPropertyValue('columns', 'name', 0);
     expect(actual).toEqual('test');
@@ -256,7 +249,7 @@ describe('BoardAdmin', () => {
 
   it('handles a property change', () => {
     const onPropertyEdit = getPrivateFunction('onPropertyEdit');
-    component.modalProps = <any>{ columns: [{ name: 'test' }] };
+    component.modalProps = { columns: [{ name: 'test' }] } as any;
 
     onPropertyEdit('columns', 'name', 0, 'changed');
     expect(component.modalProps.columns[0].name).toEqual('changed');
@@ -274,7 +267,7 @@ describe('BoardAdmin', () => {
 
   it('can set a category color', () => {
     const setCategoryColor = getPrivateFunction('setCategoryColor');
-    component.modalProps = <any>{ categories: [{}] };
+    component.modalProps = { categories: [{}] } as any;
 
     setCategoryColor('purple', 0);
     const actual = component.modalProps.categories[0].default_task_color;
@@ -284,10 +277,10 @@ describe('BoardAdmin', () => {
   it('can show a modal', () => {
     const showModal = getPrivateFunction('showModal');
 
-    component.users = <any>[{ selected: true }];
+    component.users = [{ selected: true }] as any;
     showModal('Add');
 
-    expect((<any>component.users[0]).selected).toEqual(false);
+    expect((component.users[0] as any).selected).toEqual(false);
 
     showModal('Edit', new Board());
   });
@@ -295,9 +288,9 @@ describe('BoardAdmin', () => {
   it('can show a confirmation modal', () => {
     const showConfirmModal = getPrivateFunction('showConfirmModal');
 
-    showConfirmModal(<any>{ works: true });
+    showConfirmModal({ works: true } as any);
 
-    expect((<any>component.boardToRemove).works).toEqual(true);
+    expect((component.boardToRemove as any).works).toEqual(true);
   });
 
 });

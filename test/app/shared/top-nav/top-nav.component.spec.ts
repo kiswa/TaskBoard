@@ -1,9 +1,9 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { TopNav } from '../../../../src/app/shared/top-nav/top-nav.component';
+import { TopNavComponent } from '../../../../src/app/shared/top-nav/top-nav.component';
 import {
   Constants,
   AuthService,
@@ -12,8 +12,8 @@ import {
 } from '../../../../src/app/shared/services';
 
 describe('TopNav', () => {
-  let component: TopNav,
-    fixture: ComponentFixture<TopNav>;
+  let component: TopNavComponent;
+  let fixture: ComponentFixture<TopNavComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -22,7 +22,7 @@ describe('TopNav', () => {
         RouterTestingModule.withRoutes([]),
         FormsModule
       ],
-      declarations: [ TopNav ],
+      declarations: [ TopNavComponent ],
       providers: [
         RouterTestingModule,
         Constants,
@@ -34,7 +34,7 @@ describe('TopNav', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TopNav);
+    fixture = TestBed.createComponent(TopNavComponent);
     component = fixture.componentInstance;
   });
 
@@ -45,8 +45,8 @@ describe('TopNav', () => {
   it('can log out a user', () => {
     let called = false;
 
-    (<any>component.authService).logout = () => {
-      return { subscribe: fn => {
+    (component.authService as any).logout = () => {
+      return { subscribe: (fn: any) => {
         fn({ alerts: [{}] });
         called = true;
       } };
@@ -63,7 +63,7 @@ describe('TopNav', () => {
   });
 
   it('can navigate to a target route', () => {
-    let spy = spyOn((<any>component).router, 'navigate');
+    const spy = spyOn((component as any).router, 'navigate');
 
     component.navigateTo('test');
     expect(spy).toHaveBeenCalledWith(['/test']);

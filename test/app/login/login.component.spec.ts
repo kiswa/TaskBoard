@@ -1,10 +1,10 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { Login } from '../../../src/app/login/login.component';
-import { SharedModule } from '../../../src/app/shared/shared.module'
+import { LoginComponent } from '../../../src/app/login/login.component';
+import { SharedModule } from '../../../src/app/shared/shared.module';
 import {
   Constants,
   AuthService,
@@ -12,8 +12,8 @@ import {
 } from '../../../src/app/shared/services';
 
 describe('Login', () => {
-  let component: Login,
-    fixture: ComponentFixture<Login>;
+  let component: LoginComponent;
+  let fixture: ComponentFixture<LoginComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,7 +24,7 @@ describe('Login', () => {
         SharedModule
       ],
       declarations: [
-        Login
+        LoginComponent
       ],
       providers: [
         RouterTestingModule,
@@ -36,7 +36,7 @@ describe('Login', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Login);
+    fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
   });
 
@@ -45,11 +45,11 @@ describe('Login', () => {
   });
 
   it('implements OnInit', () => {
-    (<any>component.authService).authenticate = () => {
-      return { subscribe: fn => { fn(true); } };
+    (component.authService as any).authenticate = () => {
+      return { subscribe: (fn: any) => { fn(true); } };
     };
 
-    let spy = spyOn((<any>component).router, 'navigate');
+    const spy = spyOn((component as any).router, 'navigate');
 
     component.ngOnInit();
     expect(spy).toHaveBeenCalledWith(['/boards']);
@@ -58,7 +58,7 @@ describe('Login', () => {
   it('requires a username and password to log in', () => {
     let called = false;
 
-    (<any>component).notes = { add: () => { called = true; } };
+    (component as any).notes = { add: () => { called = true; } };
 
     component.login();
     expect(called).toEqual(true);
@@ -74,11 +74,11 @@ describe('Login', () => {
     component.username = 'name';
     component.password = 'pass';
 
-    (<any>component.authService).login = () => {
-      return { subscribe: fn => fn({ status: 'success', alerts:[{}] }) };
+    (component.authService as any).login = () => {
+      return { subscribe: (fn: any) => fn({ status: 'success', alerts: [{}] }) };
     };
 
-    let spy = spyOn((<any>component).router, 'navigate');
+    const spy = spyOn((component as any).router, 'navigate');
     component.login();
 
     expect(spy).toHaveBeenCalledWith(['/boards']);

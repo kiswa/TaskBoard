@@ -7,7 +7,7 @@ import { NotificationsService } from './notifications.service';
   selector: 'tb-notifications',
   templateUrl: './notifications.component.html'
 })
-export class Notifications {
+export class NotificationsComponent {
   public notes: Array<Notification>;
 
   constructor(public notifications: NotificationsService) {
@@ -20,8 +20,8 @@ export class Notifications {
       });
   }
 
-  private hide(note: Notification): void {
-    let index = this.notes.indexOf(note);
+  hide(note: Notification): void {
+    const index = this.notes.indexOf(note);
 
     if (index >= 0) {
       note.type += ' clicked';

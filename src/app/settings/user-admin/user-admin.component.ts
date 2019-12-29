@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { UserAdminService } from './user-admin.service';
 import { SettingsService } from '../settings.service';
+
 import {
   ApiResponse,
   Board,
@@ -14,6 +15,7 @@ import {
   NotificationsService,
   StringsService
 } from '../../shared/services';
+
 import {
   UserDisplay,
   ModalUser,
@@ -25,12 +27,12 @@ import {
   templateUrl: './user-admin.component.html',
   providers: [ UserAdminService ]
 })
-export class UserAdmin {
-  private users: Array<UserDisplay>;
+export class UserAdminComponent {
+  public users: UserDisplay[];
 
   public userToRemove: UserDisplay;
 
-  public boards: Array<Board>;
+  public boards: Board[];
   public activeUser: User;
   public modalProps: ModalProperties;
   public strings: any;
@@ -43,10 +45,10 @@ export class UserAdmin {
 
   constructor(public userService: UserAdminService,
               private notes: NotificationsService,
-              private auth: AuthService,
+              public auth: AuthService,
               private settings: SettingsService,
               public modal: ModalService,
-              private stringsService: StringsService) {
+              public stringsService: StringsService) {
     this.MODAL_ID = 'user-addEdit-form';
     this.MODAL_CONFIRM_ID = 'user-remove-confirm';
 
@@ -73,6 +75,7 @@ export class UserAdmin {
 
     stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
+      this.updateUserList();
     });
 
     settings.boardsChanged
@@ -97,7 +100,7 @@ export class UserAdmin {
       return;
     }
 
-    let isAdd = this.modalProps.prefix;
+    const isAdd = this.modalProps.prefix;
     this.saving = true;
 
     if (!this.validateModalUser()) {
@@ -139,6 +142,20 @@ export class UserAdmin {
     });
   }
 
+  showModal(isAdd: boolean = true, user?: UserDisplay): void {
+    this.modalProps = {
+      prefix: isAdd,
+      user: isAdd ? new ModalUser(new User()) : new ModalUser(user)
+    };
+
+    this.modal.open(this.MODAL_ID);
+  }
+
+  showConfirmModal(user: UserDisplay): void {
+    this.userToRemove = user;
+    this.modal.open(this.MODAL_CONFIRM_ID);
+  }
+
   private closeModal(status: string): void {
     if (status === 'success') {
       this.modal.close(this.MODAL_ID);
@@ -151,7 +168,7 @@ export class UserAdmin {
   private getBoards(): void {
     this.settings.getBoards()
     .subscribe((response: ApiResponse) => {
-      let boards = response.data[1];
+      const boards = response.data[1];
       this.boards = [];
 
       if (boards) {
@@ -212,7 +229,7 @@ export class UserAdmin {
   }
 
   private validateModalUser(): boolean {
-    let user = this.modalProps.user;
+    const user = this.modalProps.user;
 
     if (user.username === '') {
       this.notes.add(
@@ -232,8 +249,8 @@ export class UserAdmin {
       return false;
     }
 
-    let emailRegex = /.+@.+\..+/i;
-    let match = user.email.match(emailRegex);
+    const emailRegex = /.+@.+\..+/i;
+    const match = user.email.match(emailRegex);
 
     if (!match && user.email !== '') {
       this.notes.add(
@@ -244,22 +261,8 @@ export class UserAdmin {
     return true;
   }
 
-  private showModal(isAdd: boolean = true, user?: UserDisplay): void {
-    this.modalProps = {
-      prefix: isAdd,
-      user: isAdd ? new ModalUser(new User()) : new ModalUser(user)
-    };
-
-    this.modal.open(this.MODAL_ID);
-  }
-
-  private showConfirmModal(user: UserDisplay): void {
-    this.userToRemove = user;
-    this.modal.open(this.MODAL_CONFIRM_ID);
-  }
-
   private getDefaultBoardName(user: UserDisplay): string {
-    let filtered = this.boards
+    const filtered = this.boards
       .filter(board => board.id === user.default_board_id);
 
     if (filtered.length) {
@@ -285,7 +288,7 @@ export class UserAdmin {
       }
     });
 
-    this.settings.updateUsers(<Array<User>> this.users);
+    this.settings.updateUsers(this.users as User[]);
   }
 }
 

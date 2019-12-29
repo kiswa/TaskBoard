@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpErrorResponse,
   HttpHeaderResponse,
   HttpResponseBase,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpResponse
 } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -29,6 +27,7 @@ export class ApiInterceptor implements HttpInterceptor {
     const token = sessionStorage.getItem(this.JWT_KEY);
 
     if (token !== null) {
+      // tslint:disable-next-line
       headers['Authorization'] = token;
     }
 

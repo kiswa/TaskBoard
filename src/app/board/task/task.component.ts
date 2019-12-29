@@ -5,12 +5,11 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import {
   ApiResponse,
   Board,
-  Column,
   Notification,
   Task,
   UserOptions
@@ -27,23 +26,29 @@ import { BoardService } from '../board.service';
   selector: 'tb-task',
   templateUrl: './task.component.html'
 })
-export class TaskDisplay implements OnInit {
-  private isOverdue: boolean;
-  private isNearlyDue: boolean;
-
+export class TaskDisplayComponent implements OnInit {
+  public isOverdue: boolean;
+  public isNearlyDue: boolean;
   public strings: any;
   public percentComplete: number;
   public activeBoard: Board;
   public userOptions: UserOptions;
   public boardsList: Array<Board>;
 
+  // tslint:disable-next-line
   @Input('task') taskData: Task;
+  // tslint:disable-next-line
   @Input('add-task') addTask: Function;
+  // tslint:disable-next-line
   @Input('edit-task') editTask: Function;
+  // tslint:disable-next-line
   @Input('view-task') viewTask: Function;
+  // tslint:disable-next-line
   @Input('remove-task') removeTask: Function;
+  // tslint:disable-next-line
   @Input('collapse') isCollapsed: boolean;
 
+  // tslint:disable-next-line
   @Output('on-update-boards') onUpdateBoards: EventEmitter<any>;
 
   @Input('boards')
@@ -51,12 +56,12 @@ export class TaskDisplay implements OnInit {
     this.boardsList = boards;
   }
 
-  constructor(private auth: AuthService,
+  constructor(public auth: AuthService,
               private sanitizer: DomSanitizer,
               public boardService: BoardService,
-              private modal: ModalService,
+              public modal: ModalService,
               private notes: NotificationsService,
-              private stringsService: StringsService) {
+              public stringsService: StringsService) {
     this.onUpdateBoards = new EventEmitter<any>();
     this.percentComplete = 0;
 
@@ -83,7 +88,7 @@ export class TaskDisplay implements OnInit {
       return;
     }
 
-    let data = this.boardService.convertMarkdown(
+    const data = this.boardService.convertMarkdown(
       this.taskData.description, this.markedCallback, true
     );
 
@@ -109,10 +114,10 @@ export class TaskDisplay implements OnInit {
 
   // Expects a color in full HEX with leading #, e.g. #ffffe0
   getTextColor(color: string): string {
-    let r = parseInt(color.substr(1, 2), 16),
-      g = parseInt(color.substr(3, 2), 16),
-      b = parseInt(color.substr(5, 2), 16),
-      yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    const r = parseInt(color.substr(1, 2), 16);
+    const g = parseInt(color.substr(3, 2), 16);
+    const b = parseInt(color.substr(5, 2), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
     return yiq >= 140 ? '#333333' : '#efefef';
   }
@@ -123,8 +128,9 @@ export class TaskDisplay implements OnInit {
     }
     event.target.parentElement.parentElement.click();
 
-    let select = document.getElementById('columnsList' + this.taskData.id) as HTMLSelectElement,
-      id = +select[select.selectedIndex].value;
+    const select = document.getElementById('columnsList' + this.taskData.id) as
+      HTMLSelectElement;
+    const id = +(select[select.selectedIndex] as HTMLOptionElement).value;
 
     if (id === 0) {
       return;
@@ -148,11 +154,11 @@ export class TaskDisplay implements OnInit {
     }
     event.target.parentElement.parentElement.click();
 
-    let select = document.getElementById('boardsList' + this.taskData.id +
+    const select = document.getElementById('boardsList' + this.taskData.id +
       this.strings.boards_copyTaskTo.split(' ')[0]) as HTMLSelectElement;
 
-    let newBoardId = +select[select.selectedIndex].value;
-    let taskData = { ...this.taskData };
+    const newBoardId = +(select[select.selectedIndex] as HTMLOptionElement).value;
+    const taskData = { ...this.taskData };
     let boardData: Board;
 
     this.boardsList.forEach(board => {
@@ -186,10 +192,10 @@ export class TaskDisplay implements OnInit {
     }
     event.target.parentElement.parentElement.click();
 
-    let select = document.getElementById('boardsList' + this.taskData.id +
+    const select = document.getElementById('boardsList' + this.taskData.id +
       this.strings.boards_moveTaskTo.split(' ')[0]) as HTMLSelectElement;
 
-    let newBoardId = +select[select.selectedIndex].value;
+    const newBoardId = +(select[select.selectedIndex] as HTMLOptionElement).value;
     let boardData: Board;
 
     this.boardsList.forEach(board => {
@@ -222,16 +228,16 @@ export class TaskDisplay implements OnInit {
       return;
     }
 
-    let dueDate = new Date(this.taskData.due_date);
+    const dueDate = new Date(this.taskData.due_date);
 
     if (isNaN(dueDate.valueOf())) {
       return;
     }
 
-    let millisecondsPerDay = (1000 * 3600 * 24),
-      today = new Date(),
-      timeDiff = today.getTime() - dueDate.getTime(),
-      daysDiff = Math.ceil(timeDiff / millisecondsPerDay);
+    const millisecondsPerDay = (1000 * 3600 * 24);
+    const today = new Date();
+    const timeDiff = today.getTime() - dueDate.getTime();
+    const daysDiff = Math.ceil(timeDiff / millisecondsPerDay);
 
     if (daysDiff > 0) {
       // past due date
@@ -244,18 +250,18 @@ export class TaskDisplay implements OnInit {
   }
 
   // Needs anonymous function for proper `this` context.
-  private markedCallback = (error: any, text: string) => {
+  private markedCallback = (_: any, text: string) => {
     if (!this.activeBoard.issue_trackers) {
       return;
     }
 
     this.activeBoard.issue_trackers.forEach(tracker => {
-      let re = new RegExp(tracker.regex, 'ig');
-      let replacements = new Array<any>();
+      const re = new RegExp(tracker.regex, 'ig');
+      const replacements = new Array<any>();
       let result = re.exec(text);
 
       while (result !== null) {
-        let link = '<a href="' +
+        const link = '<a href="' +
           tracker.url.replace(/%BUGID%/g, result[1]) +
           '" target="tb_external" rel="noreferrer">' +
           result[0] + '</a>';

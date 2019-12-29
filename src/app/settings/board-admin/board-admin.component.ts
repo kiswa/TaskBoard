@@ -1,6 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, AfterContentInit } from '@angular/core';
 
-import { DragulaService } from 'ng2-dragula/dist';
+import { DragulaService } from 'ng2-dragula';
 
 import {
   ApiResponse,
@@ -26,17 +26,15 @@ class SelectableUser extends User {
 @Component({
   selector: 'tb-board-admin',
   templateUrl: './board-admin.component.html',
-  providers: [ BoardAdminService ]
+  providers: [ DragulaService, BoardAdminService ]
 })
-export class BoardAdmin implements OnDestroy {
-  private noBoardsMessage: string;
+export class BoardAdminComponent implements OnDestroy, AfterContentInit {
 
-  private firstRun = true;
-  private subs: Array<any>;
+  private subs: any[];
 
-  public displayBoards: Array<Board>;
-  public users: Array<User>;
-  public boards: Array<Board>;
+  public displayBoards: Board[];
+  public users: SelectableUser[];
+  public boards: Board[];
   public activeUser: User;
   public modalProps: BoardData;
   public boardToRemove: Board;
@@ -49,16 +47,17 @@ export class BoardAdmin implements OnDestroy {
   public userFilter: string;
   public statusFilter: string;
   public sortFilter: string;
+  public noBoardsMessage: string;
 
   public MODAL_ID: string;
   public MODAL_CONFIRM_ID: string;
 
-  constructor(private auth: AuthService,
+  constructor(public auth: AuthService,
               public modal: ModalService,
               public settings: SettingsService,
               public boardService: BoardAdminService,
               private notes: NotificationsService,
-              private stringsService: StringsService,
+              public stringsService: StringsService,
               public dragula: DragulaService) {
     this.MODAL_ID = 'board-addedit-form';
     this.MODAL_CONFIRM_ID = 'board-remove-confirm';
@@ -80,12 +79,12 @@ export class BoardAdmin implements OnDestroy {
     });
     this.subs.push(sub);
 
-    sub = settings.usersChanged.subscribe((users: Array<User>) => {
+    sub = settings.usersChanged.subscribe((users: User[]) => {
       this.updateUsersList(users);
     });
     this.subs.push(sub);
 
-    sub = settings.boardsChanged.subscribe((boards: Array<Board>) => {
+    sub = settings.boardsChanged.subscribe((boards: Board[]) => {
       this.updateBoardsList(boards);
     });
     this.subs.push(sub);
@@ -102,15 +101,15 @@ export class BoardAdmin implements OnDestroy {
   }
 
   ngAfterContentInit() {
-    let ul = document.getElementsByClassName('modal-list')[0];
-    let bag = this.dragula.find('columns-bag');
+    const ul = document.getElementsByClassName('modal-list')[0];
+    const bag = this.dragula.find('columns-bag');
 
     if (bag !== undefined) {
       this.dragula.destroy('columns-bag');
     }
 
-    this.dragula.createGroup('columns-bag', <any>{
-      moves: (el: any, container: any, handle: any) => {
+    this.dragula.createGroup('columns-bag', {
+      moves(_: any, __: any, handle: any) {
         return handle.classList.contains('icon-resize-vertical');
       },
       mirrorContainer: ul
@@ -128,7 +127,7 @@ export class BoardAdmin implements OnDestroy {
       return;
     }
 
-    let isAdd = this.modalProps.title === 'Add';
+    const isAdd = this.modalProps.title === 'Add';
 
     this.saving = true;
     this.setBoardUsers();
@@ -167,7 +166,7 @@ export class BoardAdmin implements OnDestroy {
   }
 
   toggleBoardStatus(board: Board): void {
-    let boardData = new BoardData('', board.id, board.name,
+    const boardData = new BoardData('', board.id, board.name,
       !board.is_active, board.columns,
       board.categories, board.issue_trackers,
       board.users);
@@ -179,14 +178,14 @@ export class BoardAdmin implements OnDestroy {
   }
 
   filterBoards(): void {
-    let userBoards = this.filterBoardsByUser(),
-    statusBoards = this.filterBoardsByStatus();
+    const userBoards = this.filterBoardsByUser();
+    const statusBoards = this.filterBoardsByStatus();
 
     this.displayBoards = [];
 
     this.boards.forEach((board: Board) => {
-      let foundInUserBoards = false,
-        foundInStatusBoards = false;
+      let foundInUserBoards = false;
+      let foundInStatusBoards = false;
 
       userBoards.forEach((userBoard: Board) => {
         if (userBoard.id === board.id) {
@@ -243,12 +242,12 @@ export class BoardAdmin implements OnDestroy {
     }
   }
 
-  private filterBoardsByUser(): Array<Board> {
+  private filterBoardsByUser(): Board[] {
     if (+this.userFilter === -1) {
       return this.deepCopy(this.boards);
     }
 
-    let filteredBoards: Array<Board> = [];
+    const filteredBoards: Board[] = [];
 
     this.boards.forEach((board: Board) => {
       let userFound = false;
@@ -267,12 +266,12 @@ export class BoardAdmin implements OnDestroy {
     return filteredBoards;
   }
 
-  private filterBoardsByStatus(): Array<Board> {
+  private filterBoardsByStatus(): Board[] {
     if (+this.statusFilter === -1) {
       return this.deepCopy(this.boards);
     }
 
-    let filteredBoards: Array<Board> = [];
+    const filteredBoards: Board[] = [];
 
     this.boards.forEach((board: Board) => {
       if ((board.is_active && +this.statusFilter === 1) ||
@@ -308,7 +307,7 @@ export class BoardAdmin implements OnDestroy {
       this.modal.close(this.MODAL_ID);
       this.modal.close(this.MODAL_CONFIRM_ID);
 
-      let boards = Array<Board>();
+      const boards: Board[] = [];
       response.data[1].forEach((board: any) => {
         boards.push(new Board(+board.id, board.name,
           board.is_active === '1', board.ownColumn,
@@ -324,7 +323,7 @@ export class BoardAdmin implements OnDestroy {
   private setBoardUsers(): void {
     this.modalProps.users = [];
 
-    this.users.forEach((user: SelectableUser) => {
+    this.users.forEach(user => {
       if (user.selected) {
         this.modalProps.users.push(user);
       }
@@ -356,7 +355,7 @@ export class BoardAdmin implements OnDestroy {
     }
   }
 
-  private updateUsersList(users: Array<any>): void {
+  private updateUsersList(users: any[]): void {
     this.users = [];
     this.hasBAUsers = false;
 
@@ -372,7 +371,7 @@ export class BoardAdmin implements OnDestroy {
     });
   }
 
-  private updateBoardsList(boards: Array<Board>): void {
+  private updateBoardsList(boards: Board[]): void {
     this.boards = boards;
 
     this.boards.forEach(board => {
@@ -381,27 +380,21 @@ export class BoardAdmin implements OnDestroy {
       });
     });
 
-    this.displayBoards = this.deepCopy(this.boards);
     this.filterBoards();
-
-    if (this.firstRun) {
-      this.firstRun = false;
-      return;
-    }
 
     this.loading = false;
   }
 
-  private getPropertyValue(obj: string, prop: string, i: number): string {
+  public getPropertyValue(obj: string, prop: string, i: number): string {
     return this.modalProps[obj][i][prop];
   }
 
-  private onPropertyEdit(obj: string, prop: string,
-                         i: number, value: any): void {
+  public onPropertyEdit(obj: string, prop: string,
+                        i: number, value: any): void {
     this.modalProps[obj][i][prop] = value;
   }
 
-  private getColor(category: any): string {
+  public getColor(category: any): string {
     if (category.default_task_color) {
       return category.default_task_color;
     }
@@ -409,16 +402,17 @@ export class BoardAdmin implements OnDestroy {
     return category.defaultColor;
   }
 
-  private setCategoryColor(color: any, index: number): void {
+  public setCategoryColor(color: any, index: number): void {
     this.modalProps.categories[index].default_task_color = color;
   }
 
   private deepCopy(source: any): any {
-    let output: any, value: any, key: any;
+    let output: any;
+    let value: any;
 
     output = Array.isArray(source) ? [] : {};
 
-    for (key in source) {
+    for (const key in source) {
       if (source.hasOwnProperty(key)) {
         value = source[key];
         output[key] = (typeof value === 'object') ?
@@ -429,8 +423,8 @@ export class BoardAdmin implements OnDestroy {
     return output;
   }
 
-  private showModal(title: string, board?: Board): void {
-    let isAdd = (title === 'Add');
+  public showModal(title: string, board?: Board): void {
+    const isAdd = (title === 'Add');
 
     this.modalProps = new BoardData(title);
 
@@ -446,7 +440,7 @@ export class BoardAdmin implements OnDestroy {
       this.modalProps.issue_trackers = this.deepCopy(board.issue_trackers);
 
       this.users.forEach((user: SelectableUser) => {
-        let filtered = board.users.filter(u => +u.id === user.id);
+        const filtered = board.users.filter(u => +u.id === user.id);
 
         user.selected = filtered.length > 0;
       });
@@ -455,7 +449,7 @@ export class BoardAdmin implements OnDestroy {
     this.modal.open(this.MODAL_ID);
   }
 
-  private showConfirmModal(board: Board): void {
+  public showConfirmModal(board: Board): void {
     this.boardToRemove = board;
     this.modal.open(this.MODAL_CONFIRM_ID);
   }

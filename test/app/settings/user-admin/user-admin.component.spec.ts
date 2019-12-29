@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing'
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
@@ -19,17 +19,15 @@ import { User } from '../../../../src/app/shared/models';
 import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
 
 import {
-  UserDisplay, ModalUser
+  UserDisplay
 } from '../../../../src/app/settings/user-admin/user-admin.models';
 import {
-  UserAdmin
+  UserAdminComponent
 } from '../../../../src/app/settings/user-admin/user-admin.component';
 
 describe('UserAdmin', () => {
-  let component: UserAdmin,
-    fixture: ComponentFixture<UserAdmin>;
-
-  const getPrivateFunction = name => component[name].bind(component);
+  let component: UserAdminComponent;
+  let fixture: ComponentFixture<UserAdminComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -40,7 +38,7 @@ describe('UserAdmin', () => {
         SharedModule
       ],
       declarations: [
-        UserAdmin
+        UserAdminComponent
       ],
       providers: [
         ModalService,
@@ -54,7 +52,7 @@ describe('UserAdmin', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserAdmin);
+    fixture = TestBed.createComponent(UserAdminComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -66,24 +64,24 @@ describe('UserAdmin', () => {
   it('calls a service to add a user', () => {
     let called = false;
 
-    (<any>component.modal).isOpen = () => true;
-    (<any>component.userService).addUser = () => {
-      return { subscribe: fn => {
+    (component.modal as any).isOpen = () => true;
+    (component.userService as any).addUser = () => {
+      return { subscribe: (fn: any) => {
         const user = new User();
         fn({ status: 'success', alerts: [{}], data: [{}, [user]] });
         called = true;
       } };
     };
 
-    component.modalProps = <any>{
+    component.modalProps = {
       prefix: true,
-      user: <any>{
+      user: {
         username: 'test',
         password: 'pass',
         password_verify: 'pass',
         email: 'you@me.net'
-      }
-    };
+      } as any
+    } as any;
 
     component.addEditUser();
     expect(called).toEqual(true);
@@ -92,12 +90,11 @@ describe('UserAdmin', () => {
   it('calls a service to edit a user', () => {
     let called = false;
 
-    (<any>component.modal).isOpen = () => true;
-    (<any>component.userService).editUser = () => {
-      return { subscribe: fn => {
+    (component.modal as any).isOpen = () => true;
+    (component.userService as any).editUser = () => {
+      return { subscribe: (fn: any) => {
         const user = new User();
         user.board_access = [1];
-        const mUser = new ModalUser(user);
 
         fn({ status: 'success',
           alerts: [{}],
@@ -106,15 +103,15 @@ describe('UserAdmin', () => {
       } };
     };
 
-    component.modalProps = <any>{
+    component.modalProps = {
       prefix: false,
-      user: <any>{
+      user: {
         username: 'test',
         password: 'pass',
         password_verify: 'pass',
         email: 'you@me.net'
-      }
-    };
+      } as any
+    } as any;
 
     component.addEditUser();
     expect(called).toEqual(true);
@@ -123,8 +120,8 @@ describe('UserAdmin', () => {
   it('calls a service to remove a user', () => {
     let called = false;
 
-    (<any>component.userService).removeUser = () => {
-      return { subscribe: fn => {
+    (component.userService as any).removeUser = () => {
+      return { subscribe: (fn: any) => {
         fn({ status: 'success', alerts: [{}], data: [{}, []] });
         called = true;
       } };
@@ -138,21 +135,21 @@ describe('UserAdmin', () => {
   it('validates modal user data', () => {
     let called = false;
 
-    (<any>component.userService).addUser = () => {
+    (component.userService as any).addUser = () => {
       return { subscribe: fn => {
         const user = new User();
         fn({ status: 'success', alerts: [{}], data: [{}, [user]] });
         called = true;
       } };
     };
-    (<any>component.modal).isOpen = () => true;
+    (component.modal as any).isOpen = () => true;
 
-    component.modalProps = <any>{
+    component.modalProps = {
       prefix: true,
       user: {
         username: ''
       }
-    };
+    } as any;
 
     component.addEditUser();
     expect(called).toEqual(false);

@@ -145,7 +145,7 @@ button {
 }
 
 .row {
-  @include row();
+  @include grid-container();
 
   padding: 7px;
 }

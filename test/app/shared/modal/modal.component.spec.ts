@@ -6,11 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../../../../src/app/shared/shared.module';
 
 import { ModalService } from '../../../../src/app/shared/services';
-import { Modal } from '../../../../src/app/shared/modal/modal.component';
+import { ModalComponent } from '../../../../src/app/shared/modal/modal.component';
 
 describe('Modal', () => {
-  let component: Modal,
-    fixture: ComponentFixture<Modal>;
+  let component: ModalComponent;
+  let fixture: ComponentFixture<ModalComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -25,7 +25,7 @@ describe('Modal', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Modal);
+    fixture = TestBed.createComponent(ModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -37,43 +37,48 @@ describe('Modal', () => {
   it('calls the modal service to close', () => {
     component.modalId = 'MODAL';
 
-    (<any>component.modalService).close = (id, checkBlocking) => {
-      expect(id).toEqual('MODAL');
-      expect(checkBlocking).toEqual(false);
-    };
+    (component.modalService as any).close =
+      (id: string, checkBlocking: boolean) => {
+        expect(id).toEqual('MODAL');
+        expect(checkBlocking).toEqual(false);
+      };
 
     component.close();
 
-    (<any>component.modalService).close = (id, checkBlocking) => {
-      expect(id).toEqual('MODAL');
-      expect(checkBlocking).toEqual(true);
-    };
+    (component.modalService as any).close =
+      (id: string, checkBlocking: boolean) => {
+        expect(id).toEqual('MODAL');
+        expect(checkBlocking).toEqual(true);
+      };
 
     component.close(true);
   });
 
   it('filters click events', () => {
-    window.event = <any>{};
+    (window as any).event = {} as any;
     component.filterClick(null);
 
     let called = false;
     const event = { stopPropagation: () => called = true };
 
-    component.filterClick(<any>event);
+    component.filterClick(event as any);
     expect(called).toEqual(true);
   });
 
   it('handles the Escape key', () => {
+    // tslint:disable-next-line
     const keyUp = component['keyup'].bind(component);
 
-    (<any>component.modalService).close = (id, checkBlocking) => {
-      expect(checkBlocking).toEqual(true);
-    };
+    (component.modalService as any).close =
+      (_: any, checkBlocking: boolean) => {
+        expect(checkBlocking).toEqual(true);
+      };
 
-    keyUp(<any>{ keyCode: 27 });
+    keyUp({ keyCode: 27 } as any);
   });
 
   it('handles the Enter key', () => {
+    // tslint:disable-next-line
     const keyUp = component['keyup'].bind(component);
     let called = false;
 
@@ -81,7 +86,7 @@ describe('Modal', () => {
       click: () => called = true
     } };
 
-    keyUp(<any>{ keyCode: 13 });
+    keyUp({ keyCode: 13 } as any);
     expect(called).toEqual(true);
   });
 
