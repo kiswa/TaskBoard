@@ -17,15 +17,6 @@ export class RouterMock {
 
 export class DragulaMock {
   public opts: any;
-  public dragend = {
-    subscribe: (fn: any) => { fn(); }
-  };
-
-  find() {
-    return { drake: {
-      containers: []
-    } };
-  }
 
   dropModel() {
     return {
@@ -40,13 +31,23 @@ export class DragulaMock {
     };
   }
 
-  destroy() {}
-
-  createGroup(_: string, opts: any) {
-    this.opts = opts;
+  dragend() {
+    return { subscribe: (fn: any) => { fn(); } };
   }
 
-  setOptions(_: any, opts: any) {
+  find() {
+    return { drake: {
+      containers: []
+    } };
+  }
+
+  removeModel() {
+    return new BehaviorSubject({});
+  }
+
+  destroy() {}
+
+  createGroup(_: any, opts: any) {
     this.opts = opts;
   }
 }
@@ -118,4 +119,3 @@ export class NotificationsServiceMock {
     this.noteAdded.next(note);
   }
 }
-
