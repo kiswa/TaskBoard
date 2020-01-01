@@ -1,10 +1,13 @@
 # TaskBoard
 
- [![Build Status](https://travis-ci.org/kiswa/TaskBoard.svg)](https://travis-ci.org/kiswa/TaskBoard) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/77952f4ac9b44e9fbebe7758442d356d)](https://www.codacy.com/app/kiswa-com/TaskBoard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kiswa/TaskBoard&amp;utm_campaign=Badge_Grade) [![Join the chat at https://gitter.im/kiswa/TaskBoard](https://badges.gitter.im/kiswa/TaskBoard.svg)](https://gitter.im/kiswa/TaskBoard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join the discussion at https://reddit.com/r/TaskBoard](https://cdn.rawgit.com/kiswa/TaskBoard/09444718053f7405636ab2205ad0f12413df7a20/reddit.svg)](https://reddit.com/r/TaskBoard)
+[![Build Status](https://travis-ci.org/kiswa/TaskBoard.svg)](https://travis-ci.org/kiswa/TaskBoard) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/77952f4ac9b44e9fbebe7758442d356d)](https://www.codacy.com/app/kiswa-com/TaskBoard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kiswa/TaskBoard&amp;utm_campaign=Badge_Grade) [![Join the chat at https://gitter.im/kiswa/TaskBoard](https://badges.gitter.im/kiswa/TaskBoard.svg)](https://gitter.im/kiswa/TaskBoard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join the discussion at https://reddit.com/r/TaskBoard](https://cdn.rawgit.com/kiswa/TaskBoard/09444718053f7405636ab2205ad0f12413df7a20/reddit.svg)](https://reddit.com/r/TaskBoard)
 
-A [Kanban](http://en.wikipedia.org/wiki/Kanban_board)-inspired app for keeping track of things that need to get done.
+A [Kanban](http://en.wikipedia.org/wiki/Kanban_board)-inspired app for keeping
+track of things that need to get done.
 
-The goal of TaskBoard is to provide a simple and clean interface to a functional and minimal application for keeping track of tasks. **It's not trying to be the next Trello or LeanKit.**
+The goal of TaskBoard is to provide a simple and clean interface to a
+functional and minimal application for keeping track of tasks.
+**It's not trying to be the next Trello or LeanKit.**
 
 ## Installation
 
@@ -118,7 +121,7 @@ Developing on TaskBoard is pretty simple too.
 4. Run `npm i` to install dependencies (this also installs the API dependencies)
 5. Run `npm run watch` for the build to automatically run after any change
 
-#### Unit Tests
+### Unit Tests
 
 Both the API and App are unit tested. To run all tests, use the command
 `npm run test`. For only one set, run `npm run test:api` or `npm run test:app`.
@@ -161,18 +164,20 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
 
 ## How It's Made
 
-##### Front End
+### Front End
 
 * [Angular](https://angular.io/) single-page app (not AngularJS)
-* [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS library & grid
+* [Bourbon](http://bourbon.io/) and [Neat](http://neat.bourbon.io/) SCSS
+library & grid
 * [scss-base](https://www.npmjs.com/package/scss-base) for the base styling
 * [marked](https://github.com/chjj/marked) Markdown parser
 * [dragula](https://github.com/bevacqua/dragula) Drag-and-drop
 * [Chartist.js](https://gionkunz.github.io/chartist-js/) for all charts
 
-##### Back End
+### Back End
 
-* [Slim Framework](http://www.slimframework.com/) and [RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
+* [Slim Framework](http://www.slimframework.com/) and
+[RedBeanPHP](http://www.redbeanphp.com/) for a RESTful API
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer) for sending emails
 * [JWT](https://jwt.io/) authentication
 * [SQLite](https://www.sqlite.org/) database
