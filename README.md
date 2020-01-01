@@ -206,5 +206,4 @@ TypeScript |    36 |    884 |     181 |   3110
 PHP        |    11 |    742 |      16 |   2205
 *SUM:*     |  *47* | *1626* |   *197* | *5315*
 
-
 Command: `cloc --exclude-ext=xml test/`

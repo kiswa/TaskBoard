@@ -372,7 +372,7 @@ describe('ColumnDisplay', () => {
 
     const today = new Date();
     const yesterday = new Date(
-      today.getFullYear(), today.getMonth(), today.getDay() - 1
+      today.getFullYear(), today.getMonth(), today.getDay() - 2
     );
 
     component.viewModalProps = { due_date: today } as any;
