@@ -183,24 +183,23 @@ Because I like seeing the numbers.
 
 ### `src`
 
-Language     |   Files |    Blank | Comment |     Code
--------------|--------:|---------:|--------:|---------:
-TypeScript   |      63 |      910 |     116 |     3913
-PHP          |      19 |      628 |      27 |     2003
-HTML         |      20 |      159 |       0 |     1482
-SASS         |      14 |      269 |      12 |     1213
-__SUM:__     | __116__ | __1966__ | __155__ | __8611__
+Language   | Files |  Blank | Comment |   Code
+-----------|------:|-------:|--------:|-------:
+TypeScript |    63 |    910 |     116 |   3913
+PHP        |    19 |    628 |      27 |   2003
+HTML       |    20 |    159 |       0 |   1482
+SASS       |    14 |    269 |      12 |   1213
+*SUM:*     | *116* | *1966* |   *155* | *8611*
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
 
 ### `test`
 
-Language     |  Files |    Blank | Comment |     Code
--------------|-------:|---------:|--------:|---------:
-TypeScript   |     36 |      884 |     181 |     3110
-PHP          |     11 |      742 |      16 |     2205
-__SUM:__     | __47__ | __1626__ | __197__ | __5315__
+Language   | Files |  Blank | Comment |   Code
+-----------|------:|-------:|--------:|-------:
+TypeScript |    36 |    884 |     181 |   3110
+PHP        |    11 |    742 |      16 |   2205
+*SUM:*     |  *47* | *1626* |   *197* | *5315*
 
 
 Command: `cloc --exclude-ext=xml test/`
-
