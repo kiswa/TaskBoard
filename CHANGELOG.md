@@ -2,14 +2,13 @@
 
 ### New Features
 
- * Complete re-write
- * Conversion script for migrating to new database format (sqlite only)
+* Complete re-write
+* Conversion script for migrating to new database format (sqlite only)
 
 ### Updates
 
- * N/A
+* N/A
 
 ### Bug Fixes
 
- * N/A
-
+* N/A

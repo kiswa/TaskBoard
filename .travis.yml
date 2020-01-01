@@ -1,13 +1,13 @@
 language: php
 php:
-  - '7.0'
-  - '7.1'
   - '7.2'
+  - '7.3'
+  - '7.4'
 script:
   - npm test
 before_script:
-  - nvm install 10
-  - nvm use 10
+  - nvm install 13
+  - nvm use 13
   - npm i -g npm@6
   - npm i
   - touch tests.db
