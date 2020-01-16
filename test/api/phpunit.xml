@@ -1,6 +1,6 @@
 <phpunit>
     <testsuites>
-        <testsuite>
+        <testsuite name="api">
             <directory>./</directory>
         </testsuite>
     </testsuites>

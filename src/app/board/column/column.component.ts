@@ -281,10 +281,12 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
       });
   }
 
+  /* istanbul ignore next */
   fileChange(file: File) {
     this.fileUpload = file;
   }
 
+  /* istanbul ignore next */
   uploadFile() {
     if (!this.fileUpload) {
       this.notes.add({ type: 'error', text: this.strings.boards_taskNoFileError });

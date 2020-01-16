@@ -82,7 +82,7 @@ describe('ApiInterceptor', () => {
   it('handles errors and clears the JWT',
     inject([HttpClient, HttpTestingController],
       (http: HttpClient, httpMock: HttpTestingController) => {
-        sessionStorage.setItem('taskboard.jwt', 'fake');
+        sessionStorage.setItem('taskboard.jwt', null);
 
         http.get('').subscribe(response => {
           expect(response).toBeTruthy();

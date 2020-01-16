@@ -134,6 +134,7 @@ export class BoardService {
     );
   }
 
+  /* istanbul ignore next */
   uploadAttachment(attachment: Attachment, data: FormData): Observable<ApiResponse> {
     const headers = new HttpHeaders();
     const options = { headers, params: new HttpParams() };
@@ -151,7 +152,10 @@ export class BoardService {
   }
 
   private defaultCallback = (err: any, text: string) => {
-    console.log('default', err, text);
+    if (err) {
+      return '';
+    }
+
     return text;
   }
 

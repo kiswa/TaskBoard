@@ -44,6 +44,8 @@ describe('ContextMenu', () => {
   it('captures parent oncontextmenu events', () => {
     const parentElement = component.el.nativeElement.parentElement;
 
+    component.el.nativeElement.appendChild(document.createElement('div'));
+
     expect(parentElement.oncontextmenu).toEqual(jasmine.any(Function));
 
     parentElement.oncontextmenu({

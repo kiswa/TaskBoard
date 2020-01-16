@@ -1,23 +1,23 @@
 {
-    "require": {
-        "monolog/monolog": "^1.18",
-        "gabordemooij/redbean": "^5.1",
-        "slim/slim": "^3.3",
-        "firebase/php-jwt": "^5.0",
-        "phpmailer/phpmailer": "^6.0",
-        "phpunit/phpunit": "^6.0",
-        "myclabs/php-enum": "^1.5"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Matthew Ross",
-            "email": "root@matthewross.me",
-            "homepage": "https://matthewross.me",
-            "role": "Developer"
-        }
-    ],
-    "autoload": {
-        "classmap": [ "controllers", "helpers" ]
+  "require": {
+    "monolog/monolog": "^2.0",
+    "gabordemooij/redbean": "^5.4",
+    "slim/slim": "^4.3",
+    "firebase/php-jwt": "^5.0",
+    "phpmailer/phpmailer": "^6.1",
+    "phpunit/phpunit": "^8.5",
+    "myclabs/php-enum": "^1.7"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Matthew Ross",
+      "email": "root@matthewross.me",
+      "homepage": "https://matthewross.me",
+      "role": "Developer"
     }
+  ],
+  "autoload": {
+    "classmap": [ "controllers", "helpers" ]
+  }
 }

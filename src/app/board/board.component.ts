@@ -132,6 +132,7 @@ export class BoardDisplayComponent implements OnInit, OnDestroy, AfterContentIni
       }
     });
 
+    /* istanbul ignore next */
     this.dragula.dropModel('tasks-bag').subscribe((value: any) => {
       const taskId = +value[1].id;
       const toColumnId = +value[2].parentNode.id;
@@ -298,6 +299,7 @@ export class BoardDisplayComponent implements OnInit, OnDestroy, AfterContentIni
     }
   }
 
+  /* istanbul ignore next */
   private changeTaskColumn(taskId: number, toColumnId: number) {
     const column = this.activeBoard.columns
       .find(col => col.id === toColumnId);

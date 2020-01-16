@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 
+/* istanbul ignore next */
 @Component({
   selector: 'tb-calendar',
   templateUrl: './calendar.component.html'

@@ -3,370 +3,373 @@ require_once __DIR__ . '/../Mocks.php';
 use RedBeanPHP\R;
 
 class BoardsTest extends PHPUnit\Framework\TestCase {
-    private $boards;
+  private $boards;
 
-    public static function setupBeforeClass() {
-        try {
-            R::setup('sqlite:tests.db');
-        } catch (Exception $ex) {
-        }
+  public static function setUpBeforeClass(): void {
+    try {
+      R::setup('sqlite:tests.db');
+    } catch (Exception $ex) {
     }
+  }
+
+  public function setUp(): void {
+    R::nuke();
+    Auth::CreateInitialAdmin(new ContainerMock());
+
+    $this->boards = new Boards(new ContainerMock());
+  }
 
-    public function setUp() {
-        R::nuke();
-        Auth::CreateInitialAdmin(new ContainerMock());
+  public function testGetAllBoards() {
+    $this->createBoard();
 
-        $this->boards = new Boards(new ContainerMock());
-    }
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
 
-    public function testGetAllBoards() {
-        $this->createBoard();
+    $boards = $this->boards->getAllBoards($request,
+      new ResponseMock, null);
+    $this->assertEquals(2, count($boards->data));
+    $this->assertEquals('success', $boards->status);
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
+  public function testGetAllBoardsNotFound() {
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
 
-        $boards = $this->boards->getAllBoards($request,
-            new ResponseMock, null);
-        $this->assertEquals(2, count($boards->data));
-        $this->assertEquals('success', $boards->status);
-    }
+    $actual = $this->boards->getAllBoards($request,
+      new ResponseMock(), null);
+    $this->assertEquals('No boards in database.',
+      $actual->alerts[0]['text']);
+  }
 
-    public function testGetAllBoardsNotFound() {
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
+  public function testGetAllBoardsUnprivileged() {
+    DataMock::CreateUnprivilegedUser();
 
-        $actual = $this->boards->getAllBoards($request,
-            new ResponseMock(), null);
-        $this->assertEquals('No boards in database.',
-            $actual->alerts[0]['text']);
-    }
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt(2)];
 
-    public function testGetAllBoardsUnprivileged() {
-        DataMock::CreateUnprivilegedUser();
+    $actual = $this->boards->getAllBoards($request,
+      new ResponseMock(), null);
+    $this->assertEquals('Insufficient privileges.',
+      $actual->alerts[0]['text']);
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt(2)];
+  public function testGetBoard() {
+    $this->createBoard();
 
-        $actual = $this->boards->getAllBoards($request,
-            new ResponseMock(), null);
-        $this->assertEquals('Insufficient privileges.',
-            $actual->alerts[0]['text']);
-    }
+    $args = [];
+    $args['id'] = 1;
 
-    public function testGetBoard() {
-        $this->createBoard();
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
 
-        $args = [];
-        $args['id'] = 1;
+    $actual = $this->boards->getBoard($request,
+      new ResponseMock(), $args);
+    $this->assertEquals('success', $actual->status);
+    $this->assertEquals(2, count($actual->data));
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
+  public function testGetBoardUnprivileged() {
+    DataMock::CreateUnprivilegedUser();
 
-        $actual = $this->boards->getBoard($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('success', $actual->status);
-        $this->assertEquals(2, count($actual->data));
-    }
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt(2)];
 
-    public function testGetBoardUnprivileged() {
-        DataMock::CreateUnprivilegedUser();
+    $actual = $this->boards->getBoard($request,
+      new ResponseMock(), null);
+    $this->assertEquals('Insufficient privileges.',
+      $actual->alerts[0]['text']);
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt(2)];
+  public function testGetBoardNotFound() {
+    $args = [];
+    $args['id'] = 1;
 
-        $actual = $this->boards->getBoard($request,
-            new ResponseMock(), null);
-        $this->assertEquals('Insufficient privileges.',
-            $actual->alerts[0]['text']);
-    }
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
 
-    public function testGetBoardNotFound() {
-        $args = [];
-        $args['id'] = 1;
+    $actual = $this->boards->getBoard($request,
+      new ResponseMock(), $args);
+    $this->assertEquals('No board found for ID 1.',
+      $actual->alerts[0]['text']);
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
+  public function testGetBoardForbidden() {
+    $this->createBoard();
+    DataMock::CreateBoardAdminUser();
 
-        $actual = $this->boards->getBoard($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('No board found for ID 1.',
-            $actual->alerts[0]['text']);
-    }
+    $args = [];
+    $args['id'] = 1;
 
-    public function testGetBoardForbidden() {
-        $this->createBoard();
-        DataMock::CreateBoardAdminUser();
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt(2)];
 
-        $args = [];
-        $args['id'] = 1;
+    $actual = $this->boards->getBoard($request,
+      new ResponseMock(), $args);
+    $this->assertEquals('Access restricted.',
+      $actual->alerts[0]['text']);
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt(2)];
+  public function testAddBoard() {
+    $data = $this->getBoardData();
 
-        $actual = $this->boards->getBoard($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('Access restricted.',
-            $actual->alerts[0]['text']);
-    }
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
+    $request->payload = $data;
 
-    public function testAddBoard() {
-        $data = $this->getBoardData();
+    $actual = $this->boards->addBoard($request,
+      new ResponseMock(), null);
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
-        $request->payload = $data;
+    $this->assertEquals('Board test added.',
+      $actual->alerts[0]['text']);
+  }
 
-        $actual = $this->boards->addBoard($request,
-            new ResponseMock(), null);
+  public function testAddBoardUnprivileged() {
+    DataMock::CreateUnprivilegedUser();
 
-        $this->assertEquals('Board test added.',
-            $actual->alerts[0]['text']);
-    }
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt(2)];
 
-    public function testAddBoardUnprivileged() {
-        DataMock::CreateUnprivilegedUser();
+    $actual = $this->boards->addBoard($request,
+      new ResponseMock(), null);
+    $this->assertEquals('Insufficient privileges.',
+      $actual->alerts[0]['text']);
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt(2)];
+  public function testAddBoardInvalid() {
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
+    $request->invalidPayload = true;
 
-        $actual = $this->boards->addBoard($request,
-            new ResponseMock(), null);
-        $this->assertEquals('Insufficient privileges.',
-            $actual->alerts[0]['text']);
-    }
+    $response = $this->boards->addBoard($request,
+      new ResponseMock(), null);
 
-    public function testAddBoardInvalid() {
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
-        $request->invalidPayload = true;
+    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('error', $response->alerts[0]['type']);
+  }
 
-        $response = $this->boards->addBoard($request,
-            new ResponseMock(), null);
+  public function testUpdateBoard() {
+    $board = $this->getBoardUpdateData();
 
-        $this->assertEquals('failure', $response->status);
-        $this->assertEquals('error', $response->alerts[0]['type']);
-    }
+    $args = [];
+    $args['id'] = $board->id;
 
-    public function testUpdateBoard() {
-        $board = $this->getBoardUpdateData();
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
+    $request->payload = $board;
 
-        $args = [];
-        $args['id'] = $board->id;
+    $response = $this->boards->updateBoard($request,
+      new ResponseMock(), $args);
+    $this->assertEquals('success', $response->status);
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
-        $request->payload = $board;
+  public function testUpdateBoardUnprivileged() {
+    DataMock::CreateUnprivilegedUser();
 
-        $response = $this->boards->updateBoard($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('success', $response->status);
-    }
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt(2)];
 
-    public function testUpdateBoardUnprivileged() {
-        DataMock::CreateUnprivilegedUser();
+    $actual = $this->boards->updateBoard($request,
+      new ResponseMock(), null);
+    $this->assertEquals('Insufficient privileges.',
+      $actual->alerts[0]['text']);
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt(2)];
+  public function testUpdateBoardInvalid() {
+    $this->createBoard();
 
-        $actual = $this->boards->updateBoard($request,
-            new ResponseMock(), null);
-        $this->assertEquals('Insufficient privileges.',
-            $actual->alerts[0]['text']);
-    }
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
+    $request->invalidPayload = true;
 
-    public function testUpdateBoardInvalid() {
-        $this->createBoard();
+    $response = $this->boards->updateBoard($request,
+      new ResponseMock(), null);
+    $this->assertEquals('error', $response->alerts[0]['type']);
+  }
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
-        $request->invalidPayload = true;
+  public function testUpdateBoardColumn() {
+    $board = $this->getBoardUpdateData();
+    $board->columns[0]->name = 'changed';
 
-        $response = $this->boards->updateBoard($request,
-            new ResponseMock(), null);
-        $this->assertEquals('error', $response->alerts[0]['type']);
-    }
+    $args = [];
+    $args['id'] = $board->id;
 
-    public function testUpdateBoardColumn() {
-        $board = $this->getBoardUpdateData();
-        $board->columns[0]->name = 'changed';
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
+    $request->payload = $board;
 
-        $args = [];
-        $args['id'] = $board->id;
+    $response = $this->boards->updateBoard($request,
+      new ResponseMock(), $args);
+
+    $cols = $response->data[1][0]['ownColumn'];
+    $this->assertEquals('success', $response->status);
+    $this->assertEquals('changed', $cols[0]['name']);
+  }
+
+  public function testUpdateBoardNotFound() {
+    $this->createBoard();
+
+    $board = $this->getBoardData();
+    $board->id = 3;
+    unset($board->columns[0]->board_id);
+    unset($board->categories[0]->board_id);
+    unset($board->issue_trackers[0]->board_id);
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
-        $request->payload = $board;
-
-        $response = $this->boards->updateBoard($request,
-            new ResponseMock(), $args);
+    $args = [];
+    $args['id'] = $board->id;
 
-        $cols = $response->data[1][0]['ownColumn'];
-        $this->assertEquals('success', $response->status);
-        $this->assertEquals('changed', $cols[0]['name']);
-    }
-
-    public function testUpdateBoardNotFound() {
-        $this->createBoard();
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
+    $request->payload = $board;
 
-        $board = $this->getBoardData();
-        $board->id = 3;
-        unset($board->columns[0]->board_id);
-        unset($board->categories[0]->board_id);
-        unset($board->issue_trackers[0]->board_id);
+    $response = $this->boards->updateBoard($request,
+      new ResponseMock(), $args);
+    $this->assertEquals('error', $response->alerts[0]['type']);
+  }
 
-        $args = [];
-        $args['id'] = $board->id;
+  public function testUpdateBoardForbidden() {
+    DataMock::CreateBoardAdminUser();
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
-        $request->payload = $board;
+    $args = [];
+    $args['id'] = 1;
+
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt(2)];
 
-        $response = $this->boards->updateBoard($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('error', $response->alerts[0]['type']);
-    }
+    $actual = $this->boards->updateBoard($request,
+      new ResponseMock(), $args);
+    $this->assertEquals('Access restricted.',
+      $actual->alerts[0]['text']);
+  }
+
+  public function testRemoveBoard() {
+    $this->createBoard();
+
+    $args = [];
+    $args['id'] = 1;
 
-    public function testUpdateBoardForbidden() {
-        DataMock::CreateBoardAdminUser();
-
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt(2)];
+    $action = R::dispense('autoaction');
+    $action->board_id = 1;
+    R::store($action);
 
-        $actual = $this->boards->updateBoard($request,
-            new ResponseMock(), null);
-        $this->assertEquals('Access restricted.',
-            $actual->alerts[0]['text']);
-    }
-
-    public function testRemoveBoard() {
-        $this->createBoard();
-
-        $args = [];
-        $args['id'] = 1;
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
 
-        $action = R::dispense('autoaction');
-        $action->board_id = 1;
-        R::store($action);
+    $actual = $this->boards->removeBoard($request,
+      new ResponseMock(), $args);
+    $this->assertEquals('Board test removed.',
+      $actual->alerts[0]['text']);
+  }
+
+  public function testRemoveBoardUnprivileged() {
+    DataMock::CreateUnprivilegedUser();
 
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt(2)];
 
-        $actual = $this->boards->removeBoard($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('Board test removed.',
-            $actual->alerts[0]['text']);
-    }
-
-    public function testRemoveBoardUnprivileged() {
-        DataMock::CreateUnprivilegedUser();
-
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt(2)];
-
-        $actual = $this->boards->removeBoard($request,
-            new ResponseMock(), null);
-        $this->assertEquals('Insufficient privileges.',
-            $actual->alerts[0]['text']);
-    }
-
-    public function testRemoveBoardInvalid() {
-        $request = new RequestMock();
-        $request->header = [DataMock::GetJwt()];
-
-        $args = [];
-        $args['id'] = 1; // No such board
-
-        $this->boards = new Boards(new ContainerMock());
-
-        $response = $this->boards->removeBoard($request,
-            new ResponseMock(), $args);
-        $this->assertEquals('failure', $response->status);
-    }
-
-    private function getBoardUpdateData() {
-        $this->createBoard();
-        $existing = R::load('board', 1);
-
-        $column = R::dispense('column');
-        $column->name = 'one';
-        $column->position = 1;
-        $existing->xownColumnList[] = $column;
-        $column = R::dispense('column');
-        $column->name = 'two';
-        $column->position = 2;
-        $existing->xownColumnList[] = $column;
-        $category = R::dispense('category');
-        $existing->xownCategoryList[] = $category;
-        R::store($existing);
-
-        $user = R::dispense('user');
-        $user->username = 'test';
-        R::store($user);
-
-        $board = $this->getBoardData();
-        $board->id = 1;
-
-        $newColumn = new stdClass();
-        $newColumn->name = 'col1';
-        $newColumn->position = 0;
-
-        $board->columns[] = $newColumn;
-        $board->users[] = $user->export();
-
-        $board->issue_trackers[0]->board_id = 1;
-        $board->categories = [];
-
-        return $board;
-    }
-
-    private function getBoardData() {
-        $board = new stdClass();
-        $tracker = new stdClass();
-        $category = new stdClass();
-        $column = new stdClass();
-
-        $column->name = 'col2';
-        $column->position = 1;
-        $column->id = 1;
-        $column->board_id = 1;
-
-        $category->name = 'cat 1';
-        $category->default_task_color = '';
-        $category->board_id = 1;
-
-        $tracker->url = 'testing';
-        $tracker->regex = '';
-        $tracker->board_id = 1;
-
-        $board->name = 'test';
-        $board->is_active = true;
-        $board->sharedUserList[] = R::load('user', 1);
-
-        $board->issue_trackers[] = $tracker;
-        $board->categories[] = $category;
-        $board->columns[] = $column;
-        $board->users = [];
-
-        return $board;
-    }
-
-    private function createBoard() {
-        $board = R::dispense('board');
-        $column = R::dispense('column');
-        $task = R::dispense('task');
-
-        $task->sharedUserList[] = R::load('user', 1);
-
-        $column->name = 'test';
-        $column->position = 0;
-        $column->xownTaskList[] = $task;
-
-        $board->name = 'test';
-        $board->is_active = true;
-        $board->sharedUserList[] = R::load('user', 1);
-        $board->xownColumnList[] = $column;
-
-        R::store($board);
-    }
+    $actual = $this->boards->removeBoard($request,
+      new ResponseMock(), null);
+    $this->assertEquals('Insufficient privileges.',
+      $actual->alerts[0]['text']);
+  }
+
+  public function testRemoveBoardInvalid() {
+    $request = new RequestMock();
+    $request->header = [DataMock::GetJwt()];
+
+    $args = [];
+    $args['id'] = 1; // No such board
+
+    $this->boards = new Boards(new ContainerMock());
+
+    $response = $this->boards->removeBoard($request,
+      new ResponseMock(), $args);
+    $this->assertEquals('failure', $response->status);
+  }
+
+  private function getBoardUpdateData() {
+    $this->createBoard();
+    $existing = R::load('board', 1);
+
+    $column = R::dispense('column');
+    $column->name = 'one';
+    $column->position = 1;
+    $existing->xownColumnList[] = $column;
+    $column = R::dispense('column');
+    $column->name = 'two';
+    $column->position = 2;
+    $existing->xownColumnList[] = $column;
+    $category = R::dispense('category');
+    $existing->xownCategoryList[] = $category;
+    R::store($existing);
+
+    $user = R::dispense('user');
+    $user->username = 'test';
+    R::store($user);
+
+    $board = $this->getBoardData();
+    $board->id = 1;
+
+    $newColumn = new stdClass();
+    $newColumn->name = 'col1';
+    $newColumn->position = 0;
+
+    $board->columns[] = $newColumn;
+    $board->users[] = $user->export();
+
+    $board->issue_trackers[0]->board_id = 1;
+    $board->categories = [];
+
+    return $board;
+  }
+
+  private function getBoardData() {
+    $board = new stdClass();
+    $tracker = new stdClass();
+    $category = new stdClass();
+    $column = new stdClass();
+
+    $column->name = 'col2';
+    $column->position = 1;
+    $column->id = 1;
+    $column->board_id = 1;
+
+    $category->name = 'cat 1';
+    $category->default_task_color = '';
+    $category->board_id = 1;
+
+    $tracker->url = 'testing';
+    $tracker->regex = '';
+    $tracker->board_id = 1;
+
+    $board->name = 'test';
+    $board->is_active = true;
+    $board->sharedUserList[] = R::load('user', 1);
+
+    $board->issue_trackers[] = $tracker;
+    $board->categories[] = $category;
+    $board->columns[] = $column;
+    $board->users = [];
+
+    return $board;
+  }
+
+  private function createBoard() {
+    $board = R::dispense('board');
+    $column = R::dispense('column');
+    $task = R::dispense('task');
+
+    $task->sharedUserList[] = R::load('user', 1);
+
+    $column->name = 'test';
+    $column->position = 0;
+    $column->xownTaskList[] = $task;
+
+    $board->name = 'test';
+    $board->is_active = true;
+    $board->sharedUserList[] = R::load('user', 1);
+    $board->xownColumnList[] = $column;
+
+    R::store($board);
+  }
 }
 

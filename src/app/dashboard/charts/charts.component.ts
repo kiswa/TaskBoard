@@ -1,6 +1,7 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
 import * as Chartist from 'chartist';
 
+/* istanbul ignore next */
 @Component({
   selector: 'tb-charts',
   templateUrl: './charts.component.html'
