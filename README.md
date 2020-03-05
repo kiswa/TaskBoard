@@ -1,8 +1,21 @@
-![taskboard-horizontal.png](https://cdn.steemitimages.com/DQmeiKRekRafzGJPZwKwRqnwH9LxG7YmfGkuqttRqHqksxy/taskboard-horizontal.png)
+[taskboard-horizontal.png](https://cdn.steemitimages.com/DQmeiKRekRafzGJPZwKwRqnwH9LxG7YmfGkuqttRqHqksxy/taskboard-horizontal.png)
 # **N O T I C E**
 
 TaskBoard is currently being re-written from scratch. The `master` and `dev` branches are still maintained, but are not getting new features at this time.
 
+## Taskboard 0.31 (php5) Windows -IIS compatible Install
+Steps
+1. Extract 0.31 to IIS directory, set as application, give IIS_IUSER permissions R/W
+2. Install PHP v5,  Register handler mapping for C:\Program Files (x86)\PHP\v5.6\php-cgi.exe 
+  (Note: wont work with php 7, you can have 5/7 side by side and register php5 handler mapping for just this directory)
+
+### Mods to make Windows compatible
+1. Converted .htaccess to Web.config for api directory (api\web.config)
+2. Added \Vendor\ files
+3. Converted .htaccess to Web.config for vendor directory ( vendor\slim\web.config)
+4. Install missing deploy using .\build\install_depends.cmd (php composer.phar self-update & php composer.phar self-update install)
+
+## New 'Rewrite' Branch (php 7)
 If you'd like to see how it's progressing, take a look at [the `re-write` branch](https://github.com/kiswa/TaskBoard/tree/re-write) (keeping in mind it's still a work in progress at this point) or the [GitHub Project](https://github.com/kiswa/TaskBoard/projects/1?fullscreen=true).
 
 # TaskBoard
