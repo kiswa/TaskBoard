@@ -189,20 +189,20 @@ Because I like seeing the numbers.
 
 Language   | Files |  Blank | Comment |   Code
 -----------|------:|-------:|--------:|-------:
-TypeScript |    63 |    910 |     116 |   3913
-PHP        |    19 |    628 |      27 |   2003
-HTML       |    20 |    159 |       0 |   1482
-SASS       |    14 |    269 |      12 |   1213
-*SUM:*     | *116* | *1966* |   *155* | *8611*
+TypeScript |    63 |    898 |     142 |   3861
+PHP        |    18 |    639 |      24 |   2000
+HTML       |    20 |    159 |       0 |   1481
+SASS       |    14 |    271 |      12 |   1220
+*SUM:*     | *115* | *1967* |   *178* | *8562*
 
-Command: `cloc --exclude-dir=vendor --exclude-ext=json src/`
+Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
 
 ### `test`
 
 Language   | Files |  Blank | Comment |   Code
 -----------|------:|-------:|--------:|-------:
-TypeScript |    36 |    884 |     181 |   3110
-PHP        |    11 |    742 |      16 |   2205
-*SUM:*     |  *47* | *1626* |   *197* | *5315*
+TypeScript |    36 |    919 |       7 |   3192
+PHP        |    11 |    753 |      16 |   2238
+*SUM:*     |  *47* | *1672* |    *23* | *5430*
 
 Command: `cloc --exclude-ext=xml test/`
