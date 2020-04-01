@@ -1,6 +1,5 @@
 import { Component, OnDestroy, AfterContentInit } from '@angular/core';
-
-import { DragulaService } from 'ng2-dragula';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import {
   ApiResponse,
@@ -26,7 +25,7 @@ class SelectableUser extends User {
 @Component({
   selector: 'tb-board-admin',
   templateUrl: './board-admin.component.html',
-  providers: [ DragulaService, BoardAdminService ]
+  providers: [ BoardAdminService ]
 })
 export class BoardAdminComponent implements OnDestroy, AfterContentInit {
 
@@ -57,8 +56,7 @@ export class BoardAdminComponent implements OnDestroy, AfterContentInit {
               public settings: SettingsService,
               public boardService: BoardAdminService,
               private notes: NotificationsService,
-              public stringsService: StringsService,
-              public dragula: DragulaService) {
+              public stringsService: StringsService) {
     this.MODAL_ID = 'board-addedit-form';
     this.MODAL_CONFIRM_ID = 'board-remove-confirm';
 
@@ -101,25 +99,25 @@ export class BoardAdminComponent implements OnDestroy, AfterContentInit {
   }
 
   ngAfterContentInit() {
-    const ul = document.getElementsByClassName('modal-list')[0];
-    const bag = this.dragula.find('columns-bag');
-
-    if (bag !== undefined) {
-      this.dragula.destroy('columns-bag');
-    }
-
-    this.dragula.createGroup('columns-bag', {
-      moves(_: any, __: any, handle: any) {
-        return handle.classList.contains('icon-resize-vertical');
-      },
-      mirrorContainer: ul
-    });
-
-    this.dragula.dragend('columns-bag').subscribe(() => {
-      this.modalProps.columns.forEach((item, index) => {
-        item.position = '' + index;
-      });
-    });
+    // const ul = document.getElementsByClassName('modal-list')[0];
+    // const bag = this.dragula.find('columns-bag');
+    //
+    // if (bag !== undefined) {
+    //   this.dragula.destroy('columns-bag');
+    // }
+    //
+    // this.dragula.createGroup('columns-bag', {
+    //   moves(_: any, __: any, handle: any) {
+    //     return handle.classList.contains('icon-resize-vertical');
+    //   },
+    //   mirrorContainer: ul
+    // });
+    //
+    // this.dragula.dragend('columns-bag').subscribe(() => {
+    //   this.modalProps.columns.forEach((item, index) => {
+    //     item.position = '' + index;
+    //   });
+    // });
   }
 
   addEditBoard(): void {

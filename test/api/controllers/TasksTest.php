@@ -14,9 +14,9 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
   public function setUp(): void {
     R::nuke();
-    Auth::CreateInitialAdmin(new ContainerMock());
+    Auth::CreateInitialAdmin(new LoggerMock());
 
-    $this->tasks = new Tasks(new ContainerMock());
+    $this->tasks = new Tasks(new LoggerMock());
   }
 
   public function testGetTask() {
@@ -29,8 +29,8 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::getJwt()];
 
     $actual = $this->tasks->getTask($request, new ResponseMock(), $args);
-    $this->assertEquals('success', $actual->status);
-    $this->assertEquals(2, count($actual->data));
+    $this->assertEquals('success', $actual->body->data->status);
+    $this->assertEquals(2, count($actual->body->data->data));
   }
 
   public function testGetTaskNotFound() {
@@ -42,7 +42,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->tasks->getTask($request, new ResponseMock(), $args);
     $this->assertEquals('No task found for ID 1.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
 
   }
 
@@ -58,7 +58,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->tasks->getTask($request, new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetTaskUnprivileged() {
@@ -69,7 +69,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->tasks->getTask($request, new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddTask() {
@@ -89,7 +89,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->payload = $data;
 
     $actual = $this->tasks->addTask($request, new ResponseMock(), null);
-    $this->assertEquals('success', $actual->status);
+    $this->assertEquals('success', $actual->body->data->status);
   }
 
   public function testAddTaskTop() {
@@ -107,7 +107,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->payload = $data;
 
     $actual = $this->tasks->addTask($request, new ResponseMock(), null);
-    $this->assertEquals('success', $actual->status);
+    $this->assertEquals('success', $actual->body->data->status);
   }
 
   public function testAddTaskUnprivileged() {
@@ -118,7 +118,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->tasks->addTask($request, new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddTaskInvalid() {
@@ -129,8 +129,8 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $response = $this->tasks->addTask($request,
       new ResponseMock(), null);
 
-    $this->assertEquals('failure', $response->status);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('failure', $response->body->data->status);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testAddTaskForbidden() {
@@ -146,7 +146,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->tasks->addTask($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateTask() {
@@ -165,8 +165,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->tasks->updateTask($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
-    $this->assertEquals('updated', $response->data[1][0]['title']);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateTaskWithActions() {
@@ -195,9 +194,9 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->tasks->updateTask($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
 
-    $updated = $response->data[1][0];
+    $updated = $response->body->data->data[1][0];
     $this->assertEquals('updated', $updated['title']);
     $this->assertEquals('#cdcdcd', $updated['color']);
     $this->assertEquals(2, (int)$updated['sharedUser'][0]['id']);
@@ -215,7 +214,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->tasks->updateTask($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateTaskInvalid() {
@@ -228,11 +227,11 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->tasks->updateTask($request,
       new ResponseMock(), $args);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
 
     $response = $this->tasks->updateTask($request,
       new ResponseMock(), null);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testUpdateTaskUnprivileged() {
@@ -244,7 +243,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $actual = $this->tasks->updateTask($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateTaskForbidden() {
@@ -265,7 +264,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $actual = $this->tasks->updateTask($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveTask() {
@@ -280,7 +279,8 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $actual = $this->tasks->removeTask($request,
       new ResponseMock(), $args);
 
-    $this->assertEquals('Task test removed.', $actual->alerts[0]['text']);
+    $this->assertEquals('Task test removed.',
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveTaskUnprivileged() {
@@ -295,7 +295,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $actual = $this->tasks->removeTask($request,
       new ResponseMock(), $args);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveTaskInvalid() {
@@ -307,7 +307,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->tasks->removeTask($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   public function testRemoveTaskForbidden() {
@@ -323,7 +323,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $actual = $this->tasks->removeTask($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   private function addActions() {

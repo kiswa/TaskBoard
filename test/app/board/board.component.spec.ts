@@ -8,8 +8,6 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
-import { DragulaService } from 'ng2-dragula/dist';
-import { DragulaModule } from 'ng2-dragula/dist';
 
 import {
   AuthService,
@@ -26,7 +24,7 @@ import { BoardDisplayComponent } from '../../../src/app/board/board.component';
 import { BoardService } from '../../../src/app/board/board.service';
 import { ColumnDisplayComponent } from '../../../src/app/board/column/column.component';
 import { TaskDisplayComponent } from '../../../src/app/board/task/task.component';
-import { RouterMock, BoardServiceMock, DragulaMock } from '../mocks';
+import { RouterMock, BoardServiceMock } from '../mocks';
 
 describe('BoardDisplay', () => {
   let component: BoardDisplayComponent;
@@ -38,7 +36,6 @@ describe('BoardDisplay', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         FormsModule,
-        DragulaModule,
         SettingsModule,
         SharedModule,
         DashboardModule
@@ -57,7 +54,6 @@ describe('BoardDisplay', () => {
         ContextMenuService,
         NotificationsService,
         { provide: BoardService, useClass: BoardServiceMock },
-        { provide: DragulaService, useClass: DragulaMock },
         { provide: Router, useClass: RouterMock },
         {
           provide: ActivatedRoute,
@@ -91,20 +87,6 @@ describe('BoardDisplay', () => {
     const location = TestBed.get(Location);
     expect(component.boardNavId).toEqual(2);
     expect(location.path()).toEqual('/boards/2');
-  });
-
-  it('sets up drag and drop during ngAfterContentInit', () => {
-    component.activeBoard = { columns: [
-      { id: 1, tasks: [{}] }
-    ] } as any;
-    component.ngAfterContentInit();
-
-    expect((component.dragula as any).opts.moves).toEqual(jasmine.any(Function));
-
-    const test = (component.dragula as any).opts.moves(null, null, {
-      classList: { contains: () => false }
-    });
-    expect(test).toEqual(false);
   });
 
   it('has a function to open a board', () => {

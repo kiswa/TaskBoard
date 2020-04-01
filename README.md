@@ -171,7 +171,6 @@ If you find a bug, please post it on the [Issue Tracker](https://github.com/kisw
 library & grid
 * [scss-base](https://www.npmjs.com/package/scss-base) for the base styling
 * [marked](https://github.com/chjj/marked) Markdown parser
-* [dragula](https://github.com/bevacqua/dragula) Drag-and-drop
 * [Chartist.js](https://gionkunz.github.io/chartist-js/) for all charts
 
 ### Back End

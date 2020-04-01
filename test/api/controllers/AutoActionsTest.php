@@ -14,9 +14,9 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
 
   public function setUp(): void {
     R::nuke();
-    Auth::CreateInitialAdmin(new ContainerMock());
+    Auth::CreateInitialAdmin(new LoggerMock());
 
-    $this->actions = new AutoActions(new ContainerMock());
+    $this->actions = new AutoActions(new LoggerMock());
   }
 
   public function testGetAllActions() {
@@ -26,24 +26,24 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->actions->getAllActions($request,
       new ResponseMock(), null);
     $this->assertEquals('No automatic actions in database.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
 
-    $this->actions = new AutoActions(new ContainerMock());
+    $this->actions = new AutoActions(new LoggerMock());
     $this->createAutoAction();
 
     $actual = $this->actions->getAllActions($request,
       new ResponseMock(), null);
-    $this->assertEquals(1, count($actual->data[1]));
-    $this->assertEquals('success', $actual->status);
+    $this->assertEquals(2, count($actual->body->data->data));
+    $this->assertEquals('success', $actual->body->data->status);
 
     DataMock::CreateStandardUser();
-    $this->actions = new AutoActions(new ContainerMock());
+    $this->actions = new AutoActions(new LoggerMock());
     $request->header = [DataMock::GetJwt(2)];
 
     $actual = $this->actions->getAllActions($request,
       new ResponseMock(), null);
-    $this->assertEquals(0, count($actual->data[1]));
-    $this->assertEquals('failure', $actual->status);
+    $this->assertEquals(0, count($actual->body->data->data[1]));
+    $this->assertEquals('failure', $actual->body->data->status);
   }
 
   public function testGetAllActionsUnprivileged() {
@@ -55,7 +55,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->actions->getAllActions($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddAction() {
@@ -70,7 +70,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->actions->addAction($request,
       new ResponseMock(), null);
-    $this->assertEquals('success', $actual->alerts[0]['type']);
+    $this->assertEquals('success', $actual->body->data->alerts[0]['type']);
   }
 
   public function testAddActionUnprivileged() {
@@ -82,7 +82,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->actions->addAction($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddActionInvalid() {
@@ -92,7 +92,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->actions->addAction($request,
       new ResponseMock, null);
-    $this->assertEquals('failure', $actual->status);
+    $this->assertEquals('failure', $actual->body->data->status);
   }
 
   public function testAddActionForbidden() {
@@ -109,7 +109,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->actions->addAction($request,
       new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveAction() {
@@ -124,7 +124,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->actions->removeAction($request,
       new ResponseMock(), $args);
     $this->assertEquals('Automatic action removed.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveActionForbidden() {
@@ -137,12 +137,12 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
     $args = [];
     $args['id'] = 1;
 
-    $this->actions = new AutoActions(new ContainerMock());
+    $this->actions = new AutoActions(new LoggerMock());
 
     $actual = $this->actions->removeAction($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveActionUnprivileged() {
@@ -158,7 +158,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->actions->removeAction($request,
       new ResponseMock(), $args);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemovedActionInvalid() {
@@ -170,7 +170,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->actions->removeAction($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $actual->status);
+    $this->assertEquals('failure', $actual->body->data->status);
   }
 
   private function getDefaultAction() {

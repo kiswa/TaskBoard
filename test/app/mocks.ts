@@ -15,43 +15,6 @@ export class RouterMock {
   }
 }
 
-export class DragulaMock {
-  public opts: any;
-
-  dropModel() {
-    return {
-      subscribe: (fn: any) => {
-        fn([
-          {},
-          { id: '1' },
-          { parentNode: { id: '1' } },
-          { parentNode: { id: '1' } }
-        ]);
-      }
-    };
-  }
-
-  dragend() {
-    return { subscribe: (fn: any) => { fn(); } };
-  }
-
-  find() {
-    return { drake: {
-      containers: []
-    } };
-  }
-
-  removeModel() {
-    return new BehaviorSubject({});
-  }
-
-  destroy() {}
-
-  createGroup(_: any, opts: any) {
-    this.opts = opts;
-  }
-}
-
 export class BoardServiceMock {
   public activeBoardChanged =
     new BehaviorSubject({ id: 0, name: 'Test', columns: [] });

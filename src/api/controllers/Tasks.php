@@ -13,7 +13,7 @@ class Tasks extends BaseController {
     $task = R::load('task', (int)$args['id']);
 
     if ((int)$task->id === 0) {
-      $this->logger->addError('Attemt to load task ' .
+      $this->logger->error('Attemt to load task ' .
         $args['id'] . ' failed.');
       $this->apiJson->addAlert('error', 'No task found for ID ' .
         $args['id'] . '.');
@@ -45,7 +45,7 @@ class Tasks extends BaseController {
     $column = R::load('column', $task->column_id);
 
     if ((int)$column->id === 0) {
-      $this->logger->addError('Add Task: ', [$task]);
+      $this->logger->error('Add Task: ', [$task]);
       $this->apiJson->addAlert('error', 'Error adding task. ' .
         'Please check your entries and try again.');
 
@@ -87,7 +87,7 @@ class Tasks extends BaseController {
     $data = json_decode($request->getBody());
 
     if (is_null($args) || !array_key_exists('id', $args)) {
-      $this->logger->addError('Update Task: ', [$data]);
+      $this->logger->error('Update Task: ', [$data]);
       $this->apiJson->addAlert('error', 'Error updating task. Please try again.');
 
       return $this->jsonResponse($response);
@@ -101,7 +101,7 @@ class Tasks extends BaseController {
       : 0;
 
     if ($task->id === 0 || ((int)$task->id !== (int)$update->id)) {
-      $this->logger->addError('Update Task: ', [$task, $update]);
+      $this->logger->error('Update Task: ', [$task, $update]);
       $this->apiJson->addAlert('error', 'Error updating task ' .
         $task->title . '. Please try again.');
 
@@ -151,7 +151,7 @@ class Tasks extends BaseController {
     $task = R::load('task', $id);
 
     if ((int)$task->id !== $id || (int)$task->id === 0) {
-      $this->logger->addError('Remove Task: ', [$task]);
+      $this->logger->error('Remove Task: ', [$task]);
       $this->apiJson->addAlert('error', 'Error removing task. ' .
         'No task found for ID ' . $id . '.');
 

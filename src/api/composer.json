@@ -6,7 +6,10 @@
     "firebase/php-jwt": "^5.0",
     "phpmailer/phpmailer": "^6.1",
     "phpunit/phpunit": "^8.5",
-    "myclabs/php-enum": "^1.7"
+    "myclabs/php-enum": "^1.7",
+    "slim/psr7": "^1.0",
+    "php-di/php-di": "^6.0",
+    "selective/basepath": "^0.2.0"
   },
   "license": "MIT",
   "authors": [

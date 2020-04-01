@@ -14,9 +14,9 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
   public function setUp(): void {
     R::nuke();
-    Auth::CreateInitialAdmin(new ContainerMock());
+    Auth::CreateInitialAdmin(new LoggerMock());
 
-    $this->columns = new Columns(new ContainerMock());
+    $this->columns = new Columns(new LoggerMock());
   }
 
   public function testGetColumn() {
@@ -30,8 +30,8 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->columns->getColumn($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $actual->status);
-    $this->assertEquals(2, count($actual->data));
+    $this->assertEquals('success', $actual->body->data->status);
+    $this->assertEquals(2, count($actual->body->data->data));
   }
 
   public function testGetColumnNotFound() {
@@ -43,7 +43,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->columns->getColumn($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $actual->status);
+    $this->assertEquals('failure', $actual->body->data->status);
   }
 
   public function testGetColumnUnprivileged() {
@@ -56,7 +56,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
       new ResponseMock(), null);
 
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetColumnForbidden() {
@@ -72,7 +72,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->columns->getColumn($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddColumn() {
@@ -88,7 +88,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->columns->addColumn($request,
       new ResponseMock(), null);
-    $this->assertEquals('success', $actual->status);
+    $this->assertEquals('success', $actual->body->data->status);
   }
 
   public function testAddColumnUnprivileged() {
@@ -100,7 +100,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->columns->addColumn($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddColumnInvalid() {
@@ -111,8 +111,8 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
     $response = $this->columns->addColumn($request,
       new ResponseMock(), null);
 
-    $this->assertEquals('failure', $response->status);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('failure', $response->body->data->status);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testAddColumnForbidden() {
@@ -129,7 +129,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->columns->addColumn($request,
       new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateColumn() {
@@ -148,7 +148,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->columns->updateColumn($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateColumnUnprivileged() {
@@ -161,7 +161,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->columns->updateColumn($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateColumnForbidden() {
@@ -179,12 +179,12 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt(2)];
     $request->payload = $column;
 
-    $this->columns = new Columns(new ContainerMock());
+    $this->columns = new Columns(new LoggerMock());
 
     $actual = $this->columns->updateColumn($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateColumnInvalid() {
@@ -197,11 +197,11 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->columns->updateColumn($request,
       new ResponseMock(), $args);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
 
     $response = $this->columns->updateColumn($request,
       new ResponseMock(), null);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testRemoveColumn() {
@@ -215,7 +215,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->columns->removeColumn($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $actual->status);
+    $this->assertEquals('success', $actual->body->data->status);
   }
 
   public function testRemoveColumnUnprivileged() {
@@ -227,7 +227,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->columns->removeColumn($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveColumnInvalid() {
@@ -239,7 +239,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->columns->removeColumn($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   public function testRemoveColumnForbidden() {
@@ -255,7 +255,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->columns->removeColumn($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   private function getColumnData() {

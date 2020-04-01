@@ -13,7 +13,7 @@ class Attachments extends BaseController {
     $attachment = R::load('attachment', (int)$args['id']);
 
     if ($attachment->id === 0) {
-      $this->logger->addError('Attempt to load attachment ' .
+      $this->logger->error('Attempt to load attachment ' .
         $args['id'] . ' failed.');
       $this->apiJson->addAlert('error', 'No attachment found for ID ' .
         $args['id'] . '.');
@@ -47,7 +47,7 @@ class Attachments extends BaseController {
     $task = R::load('task', $attachment->task_id);
 
     if ($task->id === 0) {
-      $this->logger->addError('Add Attachment: ', [$attachment]);
+      $this->logger->error('Add Attachment: ', [$attachment]);
       $this->apiJson->addAlert('error', 'Error adding attachment. ' .
         'Please try again.');
 
@@ -97,7 +97,7 @@ class Attachments extends BaseController {
     } // @codeCoverageIgnore
 
     if ((int)$attachment->id !== $id) {
-      $this->logger->addError('Remove Attachment: ', [$attachment]);
+      $this->logger->error('Remove Attachment: ', [$attachment]);
       $this->apiJson->addAlert('error', 'Error removing attachment. ' .
         'No attachment found for ID ' . $id . '.');
 

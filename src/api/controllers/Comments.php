@@ -13,7 +13,7 @@ class Comments extends BaseController {
     $comment = R::load('comment', (int)$args['id']);
 
     if ($comment->id === 0) {
-      $this->logger->addError('Attempt to load comment ' .
+      $this->logger->error('Attempt to load comment ' .
         $args['id'] . ' failed.');
       $this->apiJson->addAlert('error', 'No comment found for ID ' .
         $args['id'] . '.');
@@ -48,7 +48,7 @@ class Comments extends BaseController {
 
     $task = R::load('task', $comment->task_id);
     if ($task->id === 0) {
-      $this->logger->addError('Add Comment: ', [$comment]);
+      $this->logger->error('Add Comment: ', [$comment]);
       $this->apiJson->addAlert('error', 'Error adding comment. ' .
         'Please try again.');
 
@@ -82,7 +82,7 @@ class Comments extends BaseController {
     $data = json_decode($request->getBody());
 
     if (is_null($args) || !$args['id']) {
-      $this->logger->addError('Update Comment: ', [$data]);
+      $this->logger->error('Update Comment: ', [$data]);
       $this->apiJson->addAlert('error', 'Error updating comment. ' .
         'Please try again.');
 
@@ -110,7 +110,7 @@ class Comments extends BaseController {
       : 0;
 
     if ($comment->id === 0 || ((int)$comment->id !== (int)$update->id)) {
-      $this->logger->addError('Update Comment: ', [$comment]);
+      $this->logger->error('Update Comment: ', [$comment]);
       $this->apiJson->addAlert('error', 'Error updating comment. ' .
         'Please try again.');
 
@@ -163,7 +163,7 @@ class Comments extends BaseController {
     } // @codeCoverageIgnore
 
     if ((int)$comment->id !== $id) {
-      $this->logger->addError('Remove Comment: ', [$comment]);
+      $this->logger->error('Remove Comment: ', [$comment]);
       $this->apiJson->addAlert('error', 'Error removing comment. ' .
         'No comment found for ID ' . $id . '.');
 

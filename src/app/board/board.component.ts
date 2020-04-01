@@ -1,8 +1,6 @@
-import { Component, OnInit, OnDestroy, AfterContentInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-
-import { DragulaService } from 'ng2-dragula/dist';
 
 import {
   ApiResponse,
@@ -20,11 +18,10 @@ import { BoardService } from './board.service';
 
 @Component({
   selector: 'tb-board',
-  templateUrl: './board.component.html'
+  templateUrl: './board.component.html',
 })
-export class BoardDisplayComponent implements OnInit, OnDestroy, AfterContentInit {
+export class BoardDisplayComponent implements OnInit, OnDestroy {
   private subs: any[];
-  private everyOtherDrop: boolean;
 
   public categoryFilter: number;
   public userFilter: number;
@@ -49,8 +46,7 @@ export class BoardDisplayComponent implements OnInit, OnDestroy, AfterContentIni
               public boardService: BoardService,
               public menuService: ContextMenuService,
               public notes: NotificationsService,
-              public stringsService: StringsService,
-              public dragula: DragulaService) {
+              public stringsService: StringsService) {
     title.setTitle('TaskBoard - Kanban App');
 
     this.boardNavId = null;
@@ -117,49 +113,6 @@ export class BoardDisplayComponent implements OnInit, OnDestroy, AfterContentIni
 
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe());
-  }
-
-  ngAfterContentInit() {
-    const bag = this.dragula.find('tasks-bag');
-
-    if (bag) {
-      this.dragula.destroy('tasks-bag');
-    }
-
-    this.dragula.createGroup('tasks-bag', {
-      moves: (_: any, __: any, handle: any) => {
-        return handle.classList.contains('drag-handle');
-      }
-    });
-
-    /* istanbul ignore next */
-    this.dragula.dropModel('tasks-bag').subscribe((value: any) => {
-      const taskId = +value[1].id;
-      const toColumnId = +value[2].parentNode.id;
-      const fromColumnId = +value[3].parentNode.id;
-
-      if (toColumnId !== fromColumnId) {
-        this.changeTaskColumn(taskId, toColumnId);
-        return;
-      }
-
-      this.everyOtherDrop = !this.everyOtherDrop;
-      if (this.everyOtherDrop) {
-        for (let i = 0, len = this.activeBoard.columns.length; i < len; ++i) {
-          const column = this.activeBoard.columns[i];
-
-          if (column.id === toColumnId) {
-            let pos = 0;
-            this.activeBoard.columns[i].tasks.forEach(task => {
-              task.position = pos;
-              pos++;
-            });
-            this.boardService.updateColumn(column).subscribe();
-            break;
-          }
-        }
-      }
-    });
   }
 
   goToBoard(): void {

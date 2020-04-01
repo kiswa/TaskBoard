@@ -14,9 +14,9 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
 
   public function setUp(): void {
     R::nuke();
-    Auth::CreateInitialAdmin(new ContainerMock());
+    Auth::CreateInitialAdmin(new LoggerMock());
 
-    $this->attachments = new Attachments(new ContainerMock());
+    $this->attachments = new Attachments(new LoggerMock());
   }
 
   public function testGetAttachment() {
@@ -29,17 +29,17 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->attachments->getAttachment($request,
       new ResponseMock(), $args);
     $this->assertEquals('No attachment found for ID 1.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
 
     $this->createAttachment();
     $request->header = [DataMock::GetJwt()];
 
-    $this->attachments = new Attachments(new ContainerMock());
+    $this->attachments = new Attachments(new LoggerMock());
 
     $actual = $this->attachments->getAttachment($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $actual->status);
-    $this->assertEquals(2, count($actual->data));
+    $this->assertEquals('success', $actual->body->data->status);
+    $this->assertEquals(2, count($actual->body->data->data));
   }
 
   public function testGetAttachmentInvalid() {
@@ -51,7 +51,7 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->attachments->getAttachment($request,
       new ResponseMock(), $args);
-    $this->assertEquals('error', $actual->alerts[0]['type']);
+    $this->assertEquals('error', $actual->body->data->alerts[0]['type']);
   }
 
   public function testGetAttachmentForbidden() {
@@ -62,19 +62,19 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->attachments->getAttachment(new RequestMock(),
       new ResponseMock(), $args);
-    $this->assertEquals('error', $actual->alerts[0]['type']);
+    $this->assertEquals('error', $actual->body->data->alerts[0]['type']);
 
     DataMock::CreateBoardAdminUser();
 
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $this->attachments = new Attachments(new ContainerMock());
+    $this->attachments = new Attachments(new LoggerMock());
 
     $actual = $this->attachments->getAttachment($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddAttachment() {
@@ -94,7 +94,8 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->attachments->addAttachment($request,
       new ResponseMock(), null);
-    $this->assertEquals('Attachment added.', $actual->alerts[0]['text']);
+    $this->assertEquals('Attachment added.',
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddAttachmentInvalid() {
@@ -104,8 +105,8 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->attachments->addAttachment($request,
       new ResponseMock(), null);
-    $this->assertEquals('failure', $actual->status);
-    $this->assertEquals('error', $actual->alerts[0]['type']);
+    $this->assertEquals('failure', $actual->body->data->status);
+    $this->assertEquals('error', $actual->body->data->alerts[0]['type']);
   }
 
   public function testAddAttachmentForbidden() {
@@ -124,17 +125,17 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->attachments->addAttachment($request,
       new ResponseMock(), null);
-    $this->assertEquals('error', $actual->alerts[0]['type']);
+    $this->assertEquals('error', $actual->body->data->alerts[0]['type']);
 
     DataMock::CreateBoardAdminUser();
     $request->header = [DataMock::GetJwt(2)];
 
-    $this->attachments = new Attachments(new ContainerMock());
+    $this->attachments = new Attachments(new LoggerMock());
 
     $actual = $this->attachments->addAttachment($request,
       new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveAttachment() {
@@ -149,7 +150,7 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->attachments->removeAttachment($request,
       new ResponseMock(), $args);
     $this->assertEquals('Attachment file.png removed.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveUnprivileged() {
@@ -165,7 +166,7 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->attachments->removeAttachment($request,
       new ResponseMock(), $args);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveAttachmentUserSecurity() {
@@ -181,7 +182,7 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->attachments->removeAttachment($request,
       new ResponseMock(), $args);
     $this->assertEquals('You do not have sufficient permissions to ' .
-      'remove this attachment.', $actual->alerts[0]['text']);
+      'remove this attachment.', $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveAttachmentForbidden() {
@@ -197,7 +198,7 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->attachments->removeAttachment($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveBadAttachment() {
@@ -212,7 +213,7 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->attachments->removeAttachment($request,
       new ResponseMock(), $args);
     $this->assertEquals('Error removing attachment. ' .
-      'No attachment found for ID 2.', $actual->alerts[0]['text']);
+      'No attachment found for ID 2.', $actual->body->data->alerts[0]['text']);
   }
 
   private function createAttachment() {

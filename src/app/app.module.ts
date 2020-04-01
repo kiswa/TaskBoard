@@ -3,8 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-
-import { DragulaModule } from 'ng2-dragula/dist';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
@@ -21,9 +20,9 @@ import { SharedModule } from './shared/shared.module';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    DragulaModule.forRoot(),
     BoardModule,
     DashboardModule,
+    DragDropModule,
     SettingsModule,
     SharedModule,
     RouterModule.forRoot(ROUTES)

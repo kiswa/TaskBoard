@@ -14,9 +14,9 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
   public function setUp(): void {
     R::nuke();
-    Auth::CreateInitialAdmin(new ContainerMock());
+    Auth::CreateInitialAdmin(new LoggerMock());
 
-    $this->boards = new Boards(new ContainerMock());
+    $this->boards = new Boards(new LoggerMock());
   }
 
   public function testGetAllBoards() {
@@ -27,8 +27,8 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $boards = $this->boards->getAllBoards($request,
       new ResponseMock, null);
-    $this->assertEquals(2, count($boards->data));
-    $this->assertEquals('success', $boards->status);
+    $this->assertEquals(2, count($boards->body->data->data));
+    $this->assertEquals('success', $boards->body->data->status);
   }
 
   public function testGetAllBoardsNotFound() {
@@ -38,7 +38,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->getAllBoards($request,
       new ResponseMock(), null);
     $this->assertEquals('No boards in database.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetAllBoardsUnprivileged() {
@@ -50,7 +50,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->getAllBoards($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetBoard() {
@@ -64,8 +64,8 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->boards->getBoard($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $actual->status);
-    $this->assertEquals(2, count($actual->data));
+    $this->assertEquals('success', $actual->body->data->status);
+    $this->assertEquals(2, count($actual->body->data->data));
   }
 
   public function testGetBoardUnprivileged() {
@@ -77,7 +77,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->getBoard($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetBoardNotFound() {
@@ -90,7 +90,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->getBoard($request,
       new ResponseMock(), $args);
     $this->assertEquals('No board found for ID 1.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetBoardForbidden() {
@@ -106,7 +106,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->getBoard($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddBoard() {
@@ -120,7 +120,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
       new ResponseMock(), null);
 
     $this->assertEquals('Board test added.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddBoardUnprivileged() {
@@ -132,7 +132,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->addBoard($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddBoardInvalid() {
@@ -143,8 +143,8 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $response = $this->boards->addBoard($request,
       new ResponseMock(), null);
 
-    $this->assertEquals('failure', $response->status);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('failure', $response->body->data->status);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testUpdateBoard() {
@@ -159,7 +159,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->boards->updateBoard($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateBoardUnprivileged() {
@@ -171,7 +171,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->updateBoard($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateBoardInvalid() {
@@ -183,7 +183,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->boards->updateBoard($request,
       new ResponseMock(), null);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testUpdateBoardColumn() {
@@ -200,8 +200,8 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $response = $this->boards->updateBoard($request,
       new ResponseMock(), $args);
 
-    $cols = $response->data[1][0]['ownColumn'];
-    $this->assertEquals('success', $response->status);
+    $cols = $response->body->data->data[1][0]['ownColumn'];
+    $this->assertEquals('success', $response->body->data->status);
     $this->assertEquals('changed', $cols[0]['name']);
   }
 
@@ -223,7 +223,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->boards->updateBoard($request,
       new ResponseMock(), $args);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testUpdateBoardForbidden() {
@@ -238,7 +238,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->updateBoard($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveBoard() {
@@ -257,7 +257,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->removeBoard($request,
       new ResponseMock(), $args);
     $this->assertEquals('Board test removed.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveBoardUnprivileged() {
@@ -269,7 +269,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->removeBoard($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveBoardInvalid() {
@@ -279,11 +279,11 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $args = [];
     $args['id'] = 1; // No such board
 
-    $this->boards = new Boards(new ContainerMock());
+    $this->boards = new Boards(new LoggerMock());
 
     $response = $this->boards->removeBoard($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   private function getBoardUpdateData() {

@@ -40,7 +40,8 @@ export class BoardService {
 
     const retVal: MarkedReturn = { html: '', counts: {} };
 
-    retVal.html = marked(markdown, callback);
+    retVal.html = marked(markdown);
+    callback(false, retVal.html);
 
     if (doCount) {
       retVal.counts = this.checkCounts;

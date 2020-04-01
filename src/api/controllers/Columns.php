@@ -13,7 +13,7 @@ class Columns extends BaseController {
     $column = R::load('column', (int)$args['id']);
 
     if ((int)$column->id === 0) {
-      $this->logger->addError('Attempt to load column ' .
+      $this->logger->error('Attempt to load column ' .
         $args['id'] . ' failed.');
       $this->apiJson->addAlert('error', 'No column found for ID ' .
         $args['id'] . '.');
@@ -46,7 +46,7 @@ class Columns extends BaseController {
     $board = R::load('board', $column->board_id);
 
     if ((int)$board->id === 0) {
-      $this->logger->addError('Add Column: ', [$column]);
+      $this->logger->error('Add Column: ', [$column]);
       $this->apiJson->addAlert('error', 'Error adding column. ' .
         'Please try again.');
 
@@ -81,7 +81,7 @@ class Columns extends BaseController {
     $data = json_decode($request->getBody());
 
     if (is_null($args) || !array_key_exists('id', $args)) {
-      $this->logger->addError('Update Task: ', [$data]);
+      $this->logger->error('Update Task: ', [$data]);
       $this->apiJson->addAlert('error', 'Error updating task. Please try again.');
 
       return $this->jsonResponse($response);
@@ -95,7 +95,7 @@ class Columns extends BaseController {
       : 0;
 
     if ($column->id === 0 || (int)$column->id !== (int)$update->id) {
-      $this->logger->addError('Update Column: ', [$column, $update]);
+      $this->logger->error('Update Column: ', [$column, $update]);
       $this->apiJson->addAlert('error', 'Error updating column ' .
         $update->name . '. Please try again.');
 
@@ -133,7 +133,7 @@ class Columns extends BaseController {
     $column = R::load('column', $id);
 
     if ((int)$column->id !== $id) {
-      $this->logger->addError('Remove Column: ', [$column]);
+      $this->logger->error('Remove Column: ', [$column]);
       $this->apiJson->addAlert('error', 'Error removing column. ' .
         'No column found for ID ' . $id . '.');
 

@@ -14,9 +14,9 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
   public function setUp(): void {
     R::nuke();
-    Auth::CreateInitialAdmin(new ContainerMock());
+    Auth::CreateInitialAdmin(new LoggerMock());
 
-    $this->comments = new Comments(new ContainerMock());
+    $this->comments = new Comments(new LoggerMock());
   }
 
   public function testGetComment() {
@@ -30,8 +30,8 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->getComment($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $actual->status);
-    $this->assertEquals(2, count($actual->data));
+    $this->assertEquals('success', $actual->body->data->status);
+    $this->assertEquals(2, count($actual->body->data->data));
   }
 
   public function testGetCommentNotFound() {
@@ -44,7 +44,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->getComment($request,
       new ResponseMock(), $args);
     $this->assertEquals('No comment found for ID 1.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetCommentForbidden() {
@@ -57,12 +57,12 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $this->comments = new Comments(new ContainerMock());
+    $this->comments = new Comments(new LoggerMock());
 
     $actual = $this->comments->getComment($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetCommentUnprivileged() {
@@ -74,7 +74,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->getComment($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddComment() {
@@ -87,7 +87,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->addComment($request,
       new ResponseMock(), null);
-    $this->assertEquals('success', $actual->status);
+    $this->assertEquals('success', $actual->body->data->status);
   }
 
   public function testAddCommentUnprivileged() {
@@ -101,7 +101,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->addComment($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddCommentInvalid() {
@@ -111,8 +111,8 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->addComment($request,
       new ResponseMock(), null);
-    $this->assertEquals('failure', $actual->status);
-    $this->assertEquals('error', $actual->alerts[0]['type']);
+    $this->assertEquals('failure', $actual->body->data->status);
+    $this->assertEquals('error', $actual->body->data->alerts[0]['type']);
   }
 
   public function testAddCommentForbidden() {
@@ -127,7 +127,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->addComment($request,
       new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateComment() {
@@ -146,7 +146,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->comments->updateComment($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateCommentInvalid() {
@@ -159,11 +159,11 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->comments->updateComment($request,
       new ResponseMock(), $args);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
 
     $response = $this->comments->updateComment($request,
       new ResponseMock(), null);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testUpdateCommentUnprivileged() {
@@ -175,7 +175,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->updateComment($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateCommentForbidden() {
@@ -196,7 +196,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->updateComment($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateCommentUserSecurity() {
@@ -213,7 +213,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
       new ResponseMock(), $args);
 
     $this->assertEquals('You do not have sufficient permissions to ' .
-      'update this comment.', $actual->alerts[0]['text']);
+      'update this comment.', $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveComment() {
@@ -227,7 +227,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->removeComment($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $actual->status);
+    $this->assertEquals('success', $actual->body->data->status);
   }
 
   public function testRemoveCommentUnprivileged() {
@@ -239,7 +239,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->removeComment($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveCommentInvalid() {
@@ -251,7 +251,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->comments->removeComment($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   public function testRemoveCommentForbidden() {
@@ -267,7 +267,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->removeComment($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveCommentUserSecurity() {
@@ -277,7 +277,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $args = [];
     $args['id'] = 1;
 
-    $this->comments = new Comments(new ContainerMock());
+    $this->comments = new Comments(new LoggerMock());
 
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
@@ -286,7 +286,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
       new ResponseMock(), $args);
 
     $this->assertEquals('You do not have sufficient permissions to ' .
-      'remove this comment.', $actual->alerts[0]['text']);
+      'remove this comment.', $actual->body->data->alerts[0]['text']);
   }
 
 

@@ -28,7 +28,7 @@ class Users extends BaseController {
     $user = R::load('user', $id);
 
     if ($user->id === 0) {
-      $this->logger->addError('Attempt to load user ' . $id .
+      $this->logger->error('Attempt to load user ' . $id .
         ' failed.');
       $this->apiJson->addAlert('error', 'No user found for ID ' .
         $id . '.');
@@ -76,7 +76,7 @@ class Users extends BaseController {
     }
 
     if ($user->id === -1) {
-      $this->logger->addError('Add User: ', [$user]);
+      $this->logger->error('Add User: ', [$user]);
       $this->apiJson->addAlert('error', 'Error adding user. ' .
         'Please check your entries and try again.');
 
@@ -124,7 +124,7 @@ class Users extends BaseController {
     $user = R::load('user', (int)$args['id']);
 
     if (!property_exists($data, 'id')) {
-      $this->logger->addError('Update User: ', [$user, $data]);
+      $this->logger->error('Update User: ', [$user, $data]);
       $this->apiJson->addAlert('error', 'Error updating user. ' .
         'Please check your entries and try again.');
 
@@ -142,7 +142,7 @@ class Users extends BaseController {
 
     if (isset($data->new_password) && isset($data->old_password)) {
       if (!$this->verifyPassword($data, $user)) {
-        $this->logger->addError('Update User: ', [$user, $update]);
+        $this->logger->error('Update User: ', [$user, $update]);
         return $this->jsonResponse($response);
       }
 
@@ -163,7 +163,7 @@ class Users extends BaseController {
     BeanLoader::LoadUser($update, json_encode($data));
 
     if ((int)$user->id !== (int)$update->id) {
-      $this->logger->addError('Update User: ', [$user, $update]);
+      $this->logger->error('Update User: ', [$user, $update]);
       $this->apiJson->addAlert('error', 'Error updating user. ' .
         'Please check your entries and try again.');
 
@@ -219,7 +219,7 @@ class Users extends BaseController {
     }
 
     if ($userOpts->id !== $update->id) {
-      $this->logger->addError('Update User Options: ',
+      $this->logger->error('Update User Options: ',
         [$userOpts, $update]);
       $this->apiJson->addAlert('error', 'Error updating user options. ' .
         'Please check your entries and try again.');
@@ -293,7 +293,7 @@ class Users extends BaseController {
     $user = R::load('user', $id);
 
     if ((int)$user->id !== $id) {
-      $this->logger->addError('Remove User: ', [$user]);
+      $this->logger->error('Remove User: ', [$user]);
       $this->apiJson->addAlert('error', 'Error removing user. ' .
         'No user found for ID ' . $id . '.');
 

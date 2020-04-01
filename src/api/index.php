@@ -1,11 +1,50 @@
 <?php
-require './vendor/autoload.php';
+use Slim\Factory\AppFactory;
+use Slim\Exception\HttpNotFoundException;
+use Slim\Psr7\Response;
+
+use Selective\BasePath\BasePathDetector;
 
 use RedBeanPHP\R;
+
+require './vendor/autoload.php';
+
 R::setup('sqlite:taskboard.sqlite');
 
-$app = new Slim\App();
-require 'app-setup.php';
+$container = new DI\Container();
+AppFactory::setContainer($container);
+
+$app = AppFactory::create();
+$basePath = (new BasePathDetector($_SERVER))->getBasePath();
+
+$app->setBasePath($basePath .  '/api');
+$app->addRoutingMiddleware();
+
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+
+$container = $app->getContainer();
+
+// Inject a Monolog logger into the dependency container
+$container->set('logger', function() {
+  $logger = new Monolog\Logger('API');
+
+  $logger->pushHandler(new Monolog\Handler\StreamHandler(
+    'logs/api.log', Monolog\Logger::INFO)
+  );
+
+  return $logger;
+});
+
+$errorMiddleware->setErrorHandler(HttpNotFoundException::class,
+  function ($request, $exception, $displayErrorDetails) {
+    $response = new Response();
+
+    $response->withHeader('Content-Type', 'application/json')
+             ->getBody()->write('{ message: "Matching API call not found." }');
+
+    return $response->withStatus(404);
+  }
+);
 
 Auth::CreateInitialAdmin();
 Auth::CreateJwtSigningKey();

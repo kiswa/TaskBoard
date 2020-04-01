@@ -92,8 +92,6 @@ class Auth extends BaseController {
       return $response->withStatus(401);
     }
 
-    $response->getBody()->write($jwt);
-
     return $response;
   }
 
@@ -120,14 +118,14 @@ class Auth extends BaseController {
     $user = R::findOne('user', 'username = ?', [$data->username]);
 
     if ($user === null) {
-      $this->logger->addError('Login: ', [$data]);
+      $this->logger->error('Login: ', [$data]);
       $this->apiJson->addAlert('error', 'Invalid username or password.');
 
       return $this->jsonResponse($response, 401);
     }
 
     if (!password_verify($data->password, $user->password_hash)) {
-      $this->logger->addError('Login: ', [$data]);
+      $this->logger->error('Login: ', [$data]);
       $this->apiJson->addAlert('error', 'Invalid username or password.');
 
       return $this->jsonResponse($response, 401);

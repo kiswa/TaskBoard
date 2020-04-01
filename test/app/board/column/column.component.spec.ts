@@ -3,9 +3,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { DragulaService } from 'ng2-dragula/dist';
-import { DragulaModule } from 'ng2-dragula/dist';
-
 import { ColumnDisplayComponent } from '../../../../src/app/board/column/column.component';
 import { TaskDisplayComponent } from '../../../../src/app/board/task/task.component';
 import {
@@ -39,7 +36,6 @@ describe('ColumnDisplay', () => {
         HttpClientTestingModule,
         FormsModule,
         RouterTestingModule,
-        DragulaModule,
         SharedModule
       ],
       declarations: [
@@ -47,7 +43,6 @@ describe('ColumnDisplay', () => {
         TaskDisplayComponent
       ],
       providers: [
-        DragulaService,
         AuthService,
         NotificationsService,
         ModalService,

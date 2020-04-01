@@ -3,11 +3,6 @@ use RedBeanPHP\R;
 use Firebase\JWT\JWT;
 
 class AppMock {
-
-  public function getContainer() {
-    return new ContainerMock();
-  }
-
 }
 
 $app = new AppMock();
@@ -73,12 +68,24 @@ class DataMock {
   }
 }
 
-class LoggerMock {
+class LoggerMock implements Psr\Container\ContainerInterface {
+  public function get($name) {
+    if ($name === 'logger') {
+      return new Logger();
+    }
 
-  public function addInfo() {
+    return null;
   }
 
-  public function addError() {
+  public function has($id) {}
+}
+
+class Logger {
+
+  public function info() {
+  }
+
+  public function error() {
     // Uncomment to log errors to file
     // The tests cover errors, so there will be plenty to sift through
     // $msg = func_get_arg(0);
@@ -94,14 +101,6 @@ class LoggerMock {
     // $strings = ob_get_clean();
 
     // file_put_contents('tests.log', [$err, $strings], FILE_APPEND);
-  }
-
-}
-
-class ContainerMock {
-
-  public function get() {
-    return new LoggerMock();
   }
 
 }
@@ -150,8 +149,8 @@ class ResponseMock {
     $this->body = new RequestBodyMock();
   }
 
-  public function withJson($apiJson) {
-    return $apiJson;
+  public function withHeader($name, $value) {
+    return $this;
   }
 
   public function withStatus($status) {
@@ -173,13 +172,33 @@ class ResponseMock {
 class RequestBodyMock {
   public $data;
 
+  public function __construct() {
+    $this->data = new ApiJson();
+  }
+
   public function __toString() {
     return $this->data;
   }
 
-  public function write($string) {
-    $this->data = $string;
-  }
+  public function rewind() {}
+
+    public function write($string) {
+      $data = json_decode($string, true);
+
+      foreach($data as $key => $value) {
+        if ($key === 'alerts') {
+          $this->data->alerts = [];
+
+          foreach($data['alerts'] as $item) {
+            $this->data->alerts[] = $item;
+          }
+
+          continue;
+        }
+
+        $this->data->{$key} = $value;
+      }
+    }
 
 }
 

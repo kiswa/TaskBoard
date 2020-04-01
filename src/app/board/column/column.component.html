@@ -72,8 +72,8 @@
   </button>
 </div>
 
-<div class="tasks" *ngIf="columnData"
-  [dragula]="'tasks-bag'" [(dragulaModel)]="columnData.tasks">
+<div class="tasks" *ngIf="columnData" cdkDropList
+  [cdkDropListData]="columnData.tasks">
   <tb-task class="task-container" [id]="task.id"
     *ngFor="let task of columnData.tasks"
     [task]="task" [boards]="boards"

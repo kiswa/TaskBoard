@@ -3,9 +3,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { DragulaService } from 'ng2-dragula/dist';
-import { DragulaModule } from 'ng2-dragula/dist';
-
 import { SharedModule } from '../../../../src/app/shared/shared.module';
 
 import {
@@ -19,7 +16,7 @@ import {
   BoardAdminService
 } from '../../../../src/app/settings/board-admin/board-admin.service';
 import { Board } from '../../../../src/app/shared/models';
-import { DragulaMock, SettingsServiceMock, AuthServiceMock } from '../../mocks';
+import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
 
 import {
   BoardAdminComponent
@@ -38,7 +35,6 @@ describe('BoardAdmin', () => {
         HttpClientTestingModule,
         FormsModule,
         SharedModule,
-        DragulaModule
       ],
       declarations: [
         BoardAdminComponent
@@ -49,7 +45,6 @@ describe('BoardAdmin', () => {
         NotificationsService,
         StringsService,
         BoardAdminService,
-        { provide: DragulaService, useClass: DragulaMock },
         { provide: SettingsService, useClass: SettingsServiceMock },
         { provide: AuthService, useClass: AuthServiceMock }
       ]

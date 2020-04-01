@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
-import { DragulaModule } from 'ng2-dragula/dist';
 import { SharedModule } from '../shared/shared.module';
 
 import { BoardDisplayComponent } from './board.component';
@@ -14,7 +14,7 @@ import { BoardService } from './board.service';
 @NgModule({
   imports: [
     CommonModule,
-    DragulaModule.forRoot(),
+    DragDropModule,
     FormsModule,
     RouterModule,
     SharedModule

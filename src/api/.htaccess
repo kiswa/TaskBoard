@@ -6,4 +6,4 @@ RewriteRule ^(.*)$ - [E=BASE:%1]
 RewriteRule ^taskboard.sqlite$ %{ENV_BASE}index.php [QSA,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ %{ENV:BASE}index.php [QSA,L]
+RewriteRule ^(.*)$ %{ENV:BASE}index.php/ [QSA,L]

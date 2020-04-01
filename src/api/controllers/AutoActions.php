@@ -41,7 +41,7 @@ class AutoActions extends BaseController {
     $board = R::load('board', $action->board_id);
 
     if ($board->id === 0) {
-      $this->logger->addError('Add Action: ', [$action]);
+      $this->logger->error('Add Action: ', [$action]);
       $this->apiJson->addAlert('error',
         'Error adding automatic action. ' .
         'Please check your entries and try again.');
@@ -81,7 +81,7 @@ class AutoActions extends BaseController {
     $action = R::load('autoaction', $id);
 
     if ((int)$action->id !== $id) {
-      $this->logger->addError('Remove Action: ', [$action]);
+      $this->logger->error('Remove Action: ', [$action]);
       $this->apiJson->addAlert('error', 'Error removing action. ' .
         'No action found for ID ' . $id . '.');
 

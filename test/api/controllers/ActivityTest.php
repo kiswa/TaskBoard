@@ -14,9 +14,9 @@ class ActivityTest extends PHPUnit\Framework\TestCase {
 
   public function setUp(): void {
     R::nuke();
-    Auth::CreateInitialAdmin(new ContainerMock());
+    Auth::CreateInitialAdmin(new LoggerMock());
 
-    $this->activity = new Activity(new ContainerMock());
+    $this->activity = new Activity(new LoggerMock());
   }
 
   public function testGetActivityInvalid() {
@@ -29,7 +29,7 @@ class ActivityTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->activity->getActivity($request,
       new ResponseMock(), $args);
-    $this->assertEquals('error', $actual->alerts[0]['type']);
+    $this->assertEquals('error', $actual->body->data->alerts[0]['type']);
   }
 
   public function testGetActivityForbidden() {
@@ -46,7 +46,7 @@ class ActivityTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->activity->getActivity($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Access restricted.', $actual->alerts[0]['text']);
+    $this->assertEquals('Access restricted.', $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetActivityForTask() {
@@ -61,8 +61,8 @@ class ActivityTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->activity->getActivity($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $actual->status);
-    $this->assertEquals(3, count($actual->data[1]));
+    $this->assertEquals('success', $actual->body->data->status);
+    $this->assertEquals(3, count($actual->body->data->data[1]));
   }
 
   private function setupTaskActivity() {

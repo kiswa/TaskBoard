@@ -14,9 +14,9 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
   public function setUp(): void {
     R::nuke();
-    Auth::CreateInitialAdmin(new ContainerMock());
+    Auth::CreateInitialAdmin(new LoggerMock());
 
-    $this->users = new Users(new ContainerMock());
+    $this->users = new Users(new LoggerMock());
   }
 
   public function testGetAllUsers() {
@@ -27,19 +27,19 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->users->getAllUsers($request,
       new ResponseMock(), null);
-    $this->assertEquals(2, count($actual->data[1]));
+    $this->assertEquals(2, count($actual->body->data->data));
 
     DataMock::CreateUnprivilegedUser();
 
-    $this->users = new Users(new ContainerMock());
+    $this->users = new Users(new LoggerMock());
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(3)];
 
     $actual = $this->users->getAllUsers($request,
       new ResponseMock(), null);
-    $this->assertEquals('error', $actual->alerts[0]['type']);
+    $this->assertEquals('error', $actual->body->data->alerts[0]['type']);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetUser() {
@@ -54,8 +54,8 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $actual = $this->users->getUser($request,
       new ResponseMock(), $args);
 
-    $this->assertEquals('success', $actual->status);
-    $this->assertEquals(2, count($actual->data));
+    $this->assertEquals('success', $actual->body->data->status);
+    $this->assertEquals(2, count($actual->body->data->data));
   }
 
   public function testGetUserUnprivileged() {
@@ -70,7 +70,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $actual = $this->users->getUser($request,
       new ResponseMock(), $args);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetUserNotFound() {
@@ -83,7 +83,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $actual = $this->users->getUser($request,
       new ResponseMock(), $args);
     $this->assertEquals('No user found for ID 2.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetUserForbidden() {
@@ -96,12 +96,12 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(3)];
 
-    $this->users = new Users(new ContainerMock());
+    $this->users = new Users(new LoggerMock());
 
     $actual = $this->users->getUser($request,
       new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddUser() {
@@ -117,7 +117,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->users->addUser($request,
       new ResponseMock(), null);
-    $this->assertEquals('success', $actual->status);
+    $this->assertEquals('success', $actual->body->data->status);
   }
 
   public function testAddDuplicateUser() {
@@ -130,7 +130,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->users->addUser($request,
       new ResponseMock(), null);
-    $this->assertEquals('failure', $actual->status);
+    $this->assertEquals('failure', $actual->body->data->status);
   }
 
   public function testAddUserUnprivileged() {
@@ -145,7 +145,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $actual = $this->users->addUser($request,
       new ResponseMock(), $args);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testAddBadUser() {
@@ -156,8 +156,8 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $response = $this->users->addUser($request,
       new ResponseMock(), null);
 
-    $this->assertEquals('failure', $response->status);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('failure', $response->body->data->status);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testUpdateUser() {
@@ -179,7 +179,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateUserRemoveDefaultBoard() {
@@ -198,7 +198,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateUserPassword() {
@@ -223,7 +223,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateUserBadPassword() {
@@ -243,7 +243,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   public function testUpdateUserInvalid() {
@@ -263,7 +263,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('error', $response->alerts[0]['type']);
+    $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
   public function testUpdateUserUnprivileged() {
@@ -275,7 +275,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $actual = $this->users->updateUser($request,
       new ResponseMock(), null);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testUpdateUserRestricted() {
@@ -293,7 +293,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->users->updateUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $actual->status);
+    $this->assertEquals('failure', $actual->body->data->status);
   }
 
   public function testUpdateUserBadId() {
@@ -313,7 +313,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   public function testUpdateUserNameInUse() {
@@ -332,7 +332,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   public function testUpdateUserOptions() {
@@ -351,7 +351,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUserOptions($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateUserOptionsRestricted() {
@@ -363,13 +363,13 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $this->users = new Users(new ContainerMock());
+    $this->users = new Users(new LoggerMock());
     $response = $this->users->updateUserOptions($request,
       new ResponseMock(), $args);
 
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
     $this->assertEquals('Access restricted.',
-      $response->alerts[0]['text']);
+      $response->body->data->alerts[0]['text']);
   }
 
   public function testUpdateUserOptionsUnprivileged() {
@@ -387,7 +387,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUserOptions($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   public function testUpdateUserOptionsBadId() {
@@ -405,7 +405,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUserOptions($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   public function testToggleCollapsed() {
@@ -424,19 +424,19 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     // Collapse the column
     $response = $this->users->toggleCollapsed($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
 
     // Expand the column
     $response = $this->users->toggleCollapsed($request,
       new ResponseMock(), $args);
-    $this->assertEquals('success', $response->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testToggleCollapsedNoAccess() {
     $response = $this->users->toggleCollapsed(new RequestMock(),
       new ResponseMock(), null);
 
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
 
     $data = new stdClass();
     $data->id = 1;
@@ -451,7 +451,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $response = $this->users->toggleCollapsed($request,
       new ResponseMock(), $args);
 
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   public function testRemoveUser() {
@@ -467,7 +467,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
       new ResponseMock(), $args);
 
     $this->assertEquals('User tester removed.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveUserUnprivileged() {
@@ -482,7 +482,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $actual = $this->users->removeUser($request,
       new ResponseMock(), $args);
     $this->assertEquals('Insufficient privileges.',
-      $actual->alerts[0]['text']);
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveBadUser() {
@@ -494,7 +494,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->removeUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->status);
+    $this->assertEquals('failure', $response->body->data->status);
   }
 
   private function getUserData() {

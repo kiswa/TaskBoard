@@ -34,7 +34,7 @@ class Boards extends BaseController {
     $board = R::load('board', (int)$args['id']);
 
     if ($board->id === 0) {
-      $this->logger->addError('Attempt to load board ' . $args['id'] .
+      $this->logger->error('Attempt to load board ' . $args['id'] .
         ' failed.');
       $this->apiJson->addAlert('error', 'No board found for ID ' .
         $args['id'] . '.');
@@ -68,7 +68,7 @@ class Boards extends BaseController {
     $this->includeAdmins($board);
 
     if ($board->id === -1) {
-      $this->logger->addError('Add Board: ', [$board]);
+      $this->logger->error('Add Board: ', [$board]);
       $this->apiJson->addAlert('error', 'Error adding board. ' .
         'Please check your entries and try again.');
 
@@ -100,7 +100,7 @@ class Boards extends BaseController {
     $data = json_decode($request->getBody());
 
     if (is_null($args) || !array_key_exists('id', $args)) {
-      $this->logger->addError('Update Board: ', [$data]);
+      $this->logger->error('Update Board: ', [$data]);
       $this->apiJson->addAlert('error', 'Error updating board. ' .
         'Please check your entries and try again.');
 
@@ -118,7 +118,7 @@ class Boards extends BaseController {
       ? $board->id : 0;
 
     if ($update->id === 0 || ($board->id !== $update->id)) {
-      $this->logger->addError('Update Board: ', [$board, $update]);
+      $this->logger->error('Update Board: ', [$board, $update]);
       $this->apiJson->addAlert('error', 'Error updating board. ' .
         'Please check your entries and try again.');
 
@@ -153,7 +153,7 @@ class Boards extends BaseController {
     $board = R::load('board', $id);
 
     if ((int)$board->id !== $id) {
-      $this->logger->addError('Remove Board: ', [$board]);
+      $this->logger->error('Remove Board: ', [$board]);
       $this->apiJson->addAlert('error', 'Error removing board. ' .
         'No board found for ID ' . $id  . '.');
 
