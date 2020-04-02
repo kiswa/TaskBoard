@@ -304,8 +304,10 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     attachment.task_id = this.viewModalProps.id;
 
     this.boardService.uploadAttachment(attachment, formData)
-      .subscribe(res => {
-        console.log(res);
+      .subscribe(response => {
+        response.alerts.forEach(note => this.notes.add(note));
+
+        console.log(response);
       });
   }
 
@@ -330,6 +332,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
         this.replaceUpdatedTask(updatedTask);
 
         this.viewModalProps = this.convertToTask(updatedTask);
+        this.updateTaskActivity(this.viewModalProps.id);
       });
   }
 
@@ -353,6 +356,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
         this.replaceUpdatedTask(updatedTask);
 
         this.viewModalProps = this.convertToTask(updatedTask);
+        this.updateTaskActivity(this.viewModalProps.id);
       });
   }
 
@@ -369,6 +373,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
         const updatedTask = response.data[1][0];
         this.replaceUpdatedTask(updatedTask);
+        this.updateTaskActivity(this.viewModalProps.id);
       });
   }
 
@@ -523,7 +528,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   }
 
   getUserName(userId: number) {
-    const user = this.activeBoard.users.find((test: User) => test.id === userId);
+    const user = this.activeBoard.users.find((test: User) => test.id === +userId);
 
     return user.username;
   }
@@ -535,17 +540,10 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   showViewModal(taskId: number) {
     const viewTask = this.columnData.tasks.find(task => task.id === taskId);
 
-    this.viewTaskActivities = [];
-    this.boardService.getTaskActivity(viewTask.id)
-      .subscribe(response => {
-        response.data[1].forEach((item: any) => {
-          this.viewTaskActivities.push(
-            new ActivitySimple(item.text, item.timestamp));
-        });
-      });
+    this.updateTaskActivity(taskId);
 
     this.newComment = '';
-    this.viewModalProps = this.convertToTask(viewTask);
+    this.viewModalProps = Object.assign({}, viewTask);
     this.checkDueDate();
 
     if (this.showActivity) {
@@ -560,6 +558,18 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     if (event && event.stopPropagation) {
       event.stopPropagation();
     }
+  }
+
+  private updateTaskActivity(id: number) {
+    this.viewTaskActivities = [];
+
+    this.boardService.getTaskActivity(id)
+      .subscribe(response => {
+        response.data[1].forEach((item: any) => {
+          this.viewTaskActivities.push(
+            new ActivitySimple(item.text, item.timestamp));
+        });
+      });
   }
 
   private convertToTask(updatedTask: any) {
@@ -601,6 +611,10 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
   private updateTaskComments(task: Task, newComments: Array<any>) {
     task.comments = [];
+
+    if (!newComments) {
+      return;
+    }
 
     newComments.forEach(comment => {
       task.comments.push(

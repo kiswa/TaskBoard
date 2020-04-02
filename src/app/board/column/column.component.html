@@ -173,7 +173,8 @@
 
       <textarea *ngIf="comment.isEdit"
         [(ngModel)]="commentEdit.text"
-        (keyup.enter)="$event.stopPropagation()"></textarea>
+        (keyup.control.enter)="comment.isEdit = false;editComment()"
+        (keyup.enter)="preventEnter($event)"></textarea>
 
       <div class="byline">
         {{ comment.is_edited ? strings['boards_editedBy']
@@ -208,8 +209,9 @@
   <div class="clearfix">
     <h3>{{ strings['boards_taskAddComment'] }}</h3>
     <textarea rows="5" [(ngModel)]="newComment"
+      (keyup.control.enter)="addComment()"
       (keyup.enter)="preventEnter($event)"></textarea>
-    <button class="right" (click)="addComment()">
+    <button class="right" (click)="addComment()" [disabled]="newComment?.length === 0">
       <i class="icon icon-comment-empty"></i>
       {{ strings['boards_taskAddComment'] }}
     </button>
