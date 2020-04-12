@@ -92,6 +92,8 @@ added to it, and tasks can be dragged to other columns as they progress
 Boards may also have categories for additional organization, *e.g.* `Bug`,
 `Enhancement`, `New Feature`.
 
+![Boards Page](./.github/boards.png)
+
 ### Tasks
 
 A task only has to have a Title to be added to a board, but there is much more
@@ -100,8 +102,7 @@ and include options for Due Date, Color, Points (an optional difficulty
 rating), and Category.
 
 TaskBoard uses a [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#table-of-contents)
-parser for the Description, allowing for better display of details
-(like this readme).
+parser for the Description, allowing for better display of details (like this readme).
 
 Once a task has been entered, it may have Comments (also supporting Markdown)
 or Attachments added to it by viewing the task detail. There is a link to edit
@@ -110,6 +111,8 @@ the task, which takes you to a modal much like the original add task dialog.
 For admin users, there is also a link to delete the task. This view also shows
 the task's activity log on the side of the screen, displaying the complete
 history of events related to the task.
+
+![Tasks](./.github/tasks.png)
 
 ## Development
 
@@ -189,11 +192,11 @@ Because I like seeing the numbers.
 
 Language   | Files |  Blank | Comment |   Code
 -----------|------:|-------:|--------:|-------:
-TypeScript |    63 |    898 |     142 |   3861
+TypeScript |    63 |    902 |     142 |   3871
 PHP        |    18 |    639 |      24 |   2000
-HTML       |    20 |    159 |       0 |   1481
-SASS       |    14 |    271 |      12 |   1220
-*SUM:*     | *115* | *1967* |   *178* | *8562*
+HTML       |    20 |    159 |       0 |   1485
+SASS       |    13 |    274 |      10 |   1231
+**SUM:**   |**114**|**1974**|  **176**|**8587**
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
 
@@ -201,8 +204,8 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
 
 Language   | Files |  Blank | Comment |   Code
 -----------|------:|-------:|--------:|-------:
-TypeScript |    36 |    919 |       7 |   3192
+TypeScript |    36 |    918 |       7 |   3190
 PHP        |    11 |    753 |      16 |   2238
-*SUM:*     |  *47* | *1672* |    *23* | *5430*
+**SUM:**   | **47**|**1671**|   **23**|**5428**
 
 Command: `cloc --exclude-ext=xml test/`
