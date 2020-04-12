@@ -258,6 +258,7 @@
     {{ strings['boards_taskDescription'] }}
     <textarea name="description" rows="5"
       [placeholder]="strings['boards_taskDescriptionPlaceholder']"
+      (keyup.control.enter)="modalProps.id === 0 ? addTask() : updateTask()"
       (keyup.enter)="preventEnter($event)"
       [(ngModel)]="modalProps.description"></textarea>
   </label>
