@@ -9,6 +9,10 @@
 
   .half-page {
     @include grid-column(9 of 18);
+
+    @media(max-width: 1100px) {
+      @include grid-column(18 of 18);
+    }
   }
 
   .half-modal {
@@ -263,6 +267,11 @@
     .hold-bottom {
       bottom: 7px;
       position: absolute;
+
+      @media(max-width: 720px) {
+        right: 10px;
+        top: 310px;
+      }
     }
 
     .autosize {
@@ -272,11 +281,32 @@
 
     .tall {
       margin-top: 2.5em;
+
+      @media(max-width: 720px) {
+        margin-top: 1rem;
+      }
     }
 
     .half {
-      @include grid-column(4.5 of 9);
+      @include grid-column(4.73 of 9);
+
+      @media(max-width: 1100px) {
+        @include grid-column(9 of 18);
+      }
+
+      @media(max-width: 720px) {
+        @include grid-column(18 of 18);
+
+        &:last-of-type {
+          margin-left: 0;
+        }
+      }
+
       padding: 7px;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
 
       input,
       button {
