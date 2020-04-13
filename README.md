@@ -191,8 +191,8 @@ Because I like seeing the numbers.
 
 ### `src`
 
-Language   |   Files |    Blank |  Comment |   Code
------------|--------:|---------:|---------:|-------:
+Language   |   Files |    Blank |  Comment |    Code
+-----------|--------:|---------:|---------:|---------:
 TypeScript |    63   |    902   |    142   |   3871
 PHP        |    18   |    639   |     24   |   2000
 HTML       |    20   |    159   |      0   |   1485
@@ -203,8 +203,8 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
 
 ### `test`
 
-Language   |  Files |    Blank |  Comment |   Code
------------|-------:|---------:|---------:|-------:
+Language   |  Files |    Blank |  Comment |    Code
+-----------|-------:|---------:|---------:|---------:
 TypeScript |   36   |    918   |      7   |   3190
 PHP        |   11   |    753   |     16   |   2238
 **SUM:**   | **47** | **1671** |   **23** | **5428**
