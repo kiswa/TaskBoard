@@ -72,9 +72,11 @@
   </button>
 </div>
 
-<div class="tasks" *ngIf="columnData" cdkDropList
-  [cdkDropListData]="columnData.tasks">
-  <tb-task class="task-container" [id]="task.id"
+<div class="tasks" *ngIf="columnData"
+  cdkDropList
+  [cdkDropListData]="columnData.tasks"
+  (cdkDropListDropped)="drop($event, +columnData.id - 1)">
+  <tb-task class="task-container" [id]="task.id" cdkDrag
     *ngFor="let task of columnData.tasks"
     [task]="task" [boards]="boards"
     [add-task]="getShowModalFunction()"

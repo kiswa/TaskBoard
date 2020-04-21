@@ -73,7 +73,7 @@
   <p></p>
 </div>
 
-<div class="board" *ngIf="activeBoard">
+<div class="board" cdkDropListGroup *ngIf="activeBoard">
   <tb-column class="column" [id]="column.id"
     *ngFor="let column of activeBoard.columns"
     [column]="column"

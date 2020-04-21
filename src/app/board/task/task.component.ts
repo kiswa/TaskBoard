@@ -6,6 +6,7 @@ import {
   Output
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 import {
   ApiResponse,
@@ -81,23 +82,6 @@ export class TaskDisplayComponent implements OnInit {
   ngOnInit() {
     this.checkDueDate();
     this.convertTaskDescription();
-  }
-
-  private convertTaskDescription() {
-    if (!this.taskData || !this.taskData.description) {
-      return;
-    }
-
-    const data = this.boardService.convertMarkdown(
-      this.taskData.description, this.markedCallback, true
-    );
-
-    data.html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}"  }}');
-    if (data.counts.total) {
-      this.percentComplete = data.counts.complete / data.counts.total;
-    }
-
-    this.taskData.html = this.sanitizer.bypassSecurityTrustHtml(data.html);
   }
 
   getPercentStyle() {
@@ -221,6 +205,23 @@ export class TaskDisplayComponent implements OnInit {
 
         response.alerts.forEach(note => this.notes.add(note));
       });
+  }
+
+  private convertTaskDescription() {
+    if (!this.taskData || !this.taskData.description) {
+      return;
+    }
+
+    const data = this.boardService.convertMarkdown(
+      this.taskData.description, this.markedCallback, true
+    );
+
+    data.html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}"  }}');
+    if (data.counts.total) {
+      this.percentComplete = data.counts.complete / data.counts.total;
+    }
+
+    this.taskData.html = this.sanitizer.bypassSecurityTrustHtml(data.html);
   }
 
   private checkDueDate() {

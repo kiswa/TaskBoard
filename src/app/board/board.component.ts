@@ -6,7 +6,7 @@ import {
   ApiResponse,
   Board,
   Column,
-  User,
+  User
 } from '../shared/models';
 import {
   AuthService,
@@ -180,9 +180,11 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
   updateBoards(): void {
     this.boardService.getBoards().subscribe((response: ApiResponse) => {
       this.boards = [];
+
       if (response.data.length > 1) {
         this.updateBoardsList(response.data[1]);
       }
+
       this.loading = false;
     });
   }
@@ -193,12 +195,12 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
     if (boards) {
       boards.forEach((board: any) => {
         const currentBoard = new Board(+board.id, board.name,
-                                     board.is_active === '1',
-                                     board.ownColumn,
-                                     board.ownCategory,
-                                     board.ownAutoAction,
-                                     board.ownIssuetracker,
-                                     board.sharedUser);
+                                       board.is_active === '1',
+                                       board.ownColumn,
+                                       board.ownCategory,
+                                       board.ownAutoAction,
+                                       board.ownIssuetracker,
+                                       board.sharedUser);
         if (currentBoard.is_active) {
           activeBoards.push(currentBoard);
         }
@@ -249,19 +251,6 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
 
     if (+activeUser.security_level === 1) {
       this.noBoardsMessage = this.strings.boards_noBoardsMessageAdmin;
-    }
-  }
-
-  /* istanbul ignore next */
-  private changeTaskColumn(taskId: number, toColumnId: number) {
-    const column = this.activeBoard.columns
-      .find(col => col.id === toColumnId);
-    const task = column.tasks.find(ta => ta.id === taskId);
-
-    if (task) {
-      task.column_id = toColumnId;
-
-      this.boardService.updateTask(task).subscribe();
     }
   }
 

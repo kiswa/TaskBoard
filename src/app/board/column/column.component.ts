@@ -8,6 +8,11 @@ import {
   Output
 } from '@angular/core';
 import { DomSanitizer, } from '@angular/platform-browser';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem
+} from '@angular/cdk/drag-drop';
 
 import {
   ApiResponse,
@@ -39,7 +44,6 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   private fileUpload: any;
   private subs = [];
 
-  public tasks: Task[];
   public viewTaskActivities: ActivitySimple[];
 
   public showActivity: boolean;
@@ -90,7 +94,6 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
               public boardService: BoardService,
               private sanitizer: DomSanitizer) {
     this.templateElement = elRef.nativeElement;
-    this.tasks = [];
     this.collapseTasks = false;
     this.sortOption = 'pos';
 
@@ -238,6 +241,24 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
         this.boardService.refreshToken();
         this.saving = false;
       });
+  }
+
+  drop(event: CdkDragDrop<string[]>, colIndex: number) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data,
+        event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data, event.previousIndex, event.currentIndex);
+    }
+
+    this.activeBoard.columns[colIndex].tasks.forEach((item, index) => {
+      item.position = index + 1;
+      item.column_id = this.activeBoard.columns[colIndex].id;
+    });
+
+    const task = this.activeBoard.columns[colIndex].tasks[event.currentIndex];
+    this.boardService.updateTask(task).subscribe(() => {});
   }
 
   updateTask() {
