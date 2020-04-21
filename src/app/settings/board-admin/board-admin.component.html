@@ -159,9 +159,12 @@
 
   <div class="half-modal">
     <label>{{ strings['settings_columns'] }}</label>
-    <ul class="modal-list" [hidden]="!modalProps.columns.length" cdkDropList>
-      <li cdkDrag *ngFor="let column of modalProps.columns; let i = index">
-        <i class="icon icon-resize-vertical"></i>
+    <ul class="modal-list" [hidden]="!modalProps.columns.length"
+      cdkDropList [cdkDropListData]="modalProps.columns"
+      (cdkDropListDropped)="dropColumns($event)">
+      <li class="drag-item" cdkDrag
+        *ngFor="let column of modalProps.columns; let i = index">
+        <i class="icon icon-resize-vertical" cdkDragHandle></i>
         <tb-inline-edit [text]="getPropertyValue('columns', 'name', i)"
           (edit)="onPropertyEdit('columns', 'name', i, $event)"></tb-inline-edit>
         <span class="actions">

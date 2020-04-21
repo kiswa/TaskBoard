@@ -1,5 +1,9 @@
-import { Component, OnDestroy, AfterContentInit } from '@angular/core';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Component, OnDestroy } from '@angular/core';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem
+} from '@angular/cdk/drag-drop';
 
 import {
   ApiResponse,
@@ -27,7 +31,7 @@ class SelectableUser extends User {
   templateUrl: './board-admin.component.html',
   providers: [ BoardAdminService ]
 })
-export class BoardAdminComponent implements OnDestroy, AfterContentInit {
+export class BoardAdminComponent implements OnDestroy {
 
   private subs: any[];
 
@@ -98,26 +102,13 @@ export class BoardAdminComponent implements OnDestroy, AfterContentInit {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  ngAfterContentInit() {
-    // const ul = document.getElementsByClassName('modal-list')[0];
-    // const bag = this.dragula.find('columns-bag');
-    //
-    // if (bag !== undefined) {
-    //   this.dragula.destroy('columns-bag');
-    // }
-    //
-    // this.dragula.createGroup('columns-bag', {
-    //   moves(_: any, __: any, handle: any) {
-    //     return handle.classList.contains('icon-resize-vertical');
-    //   },
-    //   mirrorContainer: ul
-    // });
-    //
-    // this.dragula.dragend('columns-bag').subscribe(() => {
-    //   this.modalProps.columns.forEach((item, index) => {
-    //     item.position = '' + index;
-    //   });
-    // });
+  dropColumns(event: CdkDragDrop<string[]>) {
+    moveItemInArray(event.container.data,
+      event.previousIndex, event.currentIndex);
+
+    this.modalProps.columns.forEach((item, index) => {
+      item.position = index;
+    });
   }
 
   addEditBoard(): void {

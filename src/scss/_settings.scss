@@ -1,3 +1,40 @@
+.drag-item.cdk-drag-preview {
+  background: $white;
+  border: 1px solid $color-border;
+  border-radius: 3px;
+  display: block;
+  list-style: none;
+  padding: 0 7px;
+
+  .icon-resize-vertical {
+    border-right: 1px solid $color-border;
+    cursor: move;
+    margin-left: -5px;
+    margin-right: .5em;
+    width: 1.5em;
+  }
+
+  .inline-edit {
+    display: inline-block;
+    width: 82%;
+
+    .icon {
+      cursor: pointer;
+      float: right;
+      margin-top: 4px;
+    }
+  }
+
+  .actions {
+    float: right;
+  }
+
+  .badge {
+    margin-left: 5px;
+    margin-right: 13px;
+  }
+}
+
 .settings {
   @include clearfix();
 
@@ -288,7 +325,7 @@
     }
 
     .half {
-      @include grid-column(4.73 of 9);
+      @include grid-column(4.5 of 9);
 
       @media(max-width: 1100px) {
         @include grid-column(9 of 18);
