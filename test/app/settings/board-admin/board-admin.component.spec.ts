@@ -61,13 +61,6 @@ describe('BoardAdmin', () => {
     expect(component).toBeTruthy();
   });
 
-  it('sets up drag and drop during ngAfterContentInit', () => {
-    component.modalProps = { columns: [{ position: '' }] } as any;
-    component.ngAfterContentInit();
-
-    expect(component.modalProps.columns[0].position).toEqual('');
-  });
-
   it('validates a board before saving', () => {
     component.modalProps = { columns: [] } as any;
     component.addEditBoard();
