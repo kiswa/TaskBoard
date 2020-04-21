@@ -18,7 +18,7 @@ is not supported). See [PHP Supported Versions](https://www.php.net/supported-ve
 
 The server must have `sqlite3` and `php7-sqlite` installed.
 
-If you're comfortable changing code, you can use any database [supported by RedBeanPHP](http://www.redbeanphp.com/index.php?p=/connection).
+If you're comfortable changing code, you can use any database [supported by RedBeanPHP](https://redbeanphp.com/index.php?p=/connection).
 
 ### Install
 
