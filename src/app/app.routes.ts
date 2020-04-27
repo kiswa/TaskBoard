@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { BoardDisplayComponent } from './board/board.component';
+import { FileViewerComponent } from './files/file-viewer.component';
 import { LoginComponent } from './login/login.component';
 import { SettingsComponent } from './settings/settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -30,6 +31,10 @@ export const ROUTES: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [ AuthGuard ]
+  },
+  {
+    path: 'files/:hash',
+    component: FileViewerComponent,
   }
 ];
 

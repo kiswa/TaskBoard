@@ -4,8 +4,7 @@ use RedBeanPHP\R;
 class Attachments extends BaseController {
 
   public function getAttachment($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -33,14 +32,19 @@ class Attachments extends BaseController {
   }
 
   public function addAttachment($request, $response) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
 
+    if (!file_exists('uploads/')) {
+      mkdir('uploads', 0777, true);
+    }
+
+    $body = $request->getBody();
     $attachment = R::dispense('attachment');
-    if (!BeanLoader::LoadAttachment($attachment, $request->getBody())) {
+
+    if (!BeanLoader::LoadAttachment($attachment, $body)) {
       $attachment->task_id = 0;
     }
 
@@ -58,6 +62,11 @@ class Attachments extends BaseController {
       return $this->jsonResponse($response, 403);
     }
 
+    $body = json_decode($body);
+    $attachment->diskfilename = sha1($body->filename);
+
+    file_put_contents('uploads/' . $attachment->diskfilename, $body->data);
+
     R::store($attachment);
 
     $actor = R::load('user', Auth::GetUserId($request));
@@ -73,8 +82,7 @@ class Attachments extends BaseController {
   }
 
   public function removeAttachment($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -110,7 +118,9 @@ class Attachments extends BaseController {
     }
 
     $before = $attachment;
-    $attachment->delete();
+    R::trash($attachment);
+
+    unlink('uploads/' . $before->diskfilename);
 
     $this->dbLogger->logChange($actor->id,
       $actor->username .' removed attachment ' . $before->name,

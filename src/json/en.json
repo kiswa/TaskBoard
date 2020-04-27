@@ -9,6 +9,7 @@
 
     "dashboard": "Dashboard",
     "boards": "Boards",
+    "files": "File Viewer",
     "settings": "Settings",
     "logout": "Logout",
 
@@ -155,6 +156,8 @@
     "boards_confirmRemoveTask": "Confirm Task Removal",
     "boards_confirmWarning": "Removing a task cannot be undone.",
     "boards_confirmContinue": "Continue?",
+    "boards_confirmRemoveAttachment": "Confirm Attachment Removal",
+    "boards_confirmWarningAttachment": "Removing an attachment cannot be undone.",
     "boards_confirmRemoveComment": "Confirm Comment Removal",
     "boards_confirmWarningComment": "Removing a comment cannot be undone.",
 
@@ -201,6 +204,10 @@
     "boards_taskRemoveAttachment": "Remove Attachment",
     "boards_taskNoFileError": "Select a file before uploading.",
     "boards_taskUpload": "Upload",
+    "boards_taskUploadedBy": "Uploaded by",
+    "boards_taskUploadedOn": "on",
+    "boards_taskView": "View",
+    "boards_taskDownload": "Download",
 
     "boards_task": "Task",
     "boards_taskComplete": "Complete",

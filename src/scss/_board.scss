@@ -377,6 +377,33 @@
       }
     }
 
+    .list-group {
+      border: 1px solid $color-border;
+      border-radius: 3px;
+
+      .list-group-item {
+        padding: 7px;
+
+        &:nth-of-type(even) {
+          background-color: $color-table-row;
+        }
+
+        .detail {
+          margin-left: 7px;
+        }
+
+        .pull-right {
+          color: $color-primary;
+          float: right;
+          margin-top: -2.8rem;
+
+          i {
+            margin-left: 7px;
+          }
+        }
+      }
+    }
+
     .comment {
       @include shadow-low;
 

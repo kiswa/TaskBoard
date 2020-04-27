@@ -44,6 +44,7 @@ export class Task {
     attachmentArray.forEach((attachment: any) => {
       this.attachments.push(new Attachment(+attachment.id,
         attachment.filename,
+        attachment.diskfilename,
         attachment.name,
         attachment.type,
         +attachment.user_id,
