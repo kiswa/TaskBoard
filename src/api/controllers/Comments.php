@@ -4,8 +4,7 @@ use RedBeanPHP\R;
 class Comments extends BaseController {
 
   public function getComment($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -35,8 +34,7 @@ class Comments extends BaseController {
   }
 
   public function addComment($request, $response) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -73,8 +71,7 @@ class Comments extends BaseController {
   }
 
   public function updateComment($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -139,8 +136,7 @@ class Comments extends BaseController {
   }
 
   public function removeComment($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }

@@ -53,7 +53,7 @@ class TbGitHubImport {
 
   private function getInfo() {
     $this->user = readline("Enter your GitHub user name: ");
-    $this->pass = readline("Enter your GitHub password: ");
+    $this->pass = readline("Enter your GitHub access token: ");
     $this->repo = readline("What repo do you want to export projects from? ");
   }
 

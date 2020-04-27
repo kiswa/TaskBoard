@@ -4,8 +4,7 @@ use RedBeanPHP\R;
 class Tasks extends BaseController {
 
   public function getTask($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -33,8 +32,7 @@ class Tasks extends BaseController {
   }
 
   public function addTask($request, $response) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -78,8 +76,7 @@ class Tasks extends BaseController {
   }
 
   public function updateTask($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -141,8 +138,7 @@ class Tasks extends BaseController {
   }
 
   public function removeTask($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }

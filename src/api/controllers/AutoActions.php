@@ -4,8 +4,7 @@ use RedBeanPHP\R;
 class AutoActions extends BaseController {
 
   public function getAllActions($request, $response) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -27,8 +26,7 @@ class AutoActions extends BaseController {
   }
 
   public function addAction($request, $response) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::BOARD_ADMIN);
+    $status = $this->secureRoute($request, $response, SecurityLevel::BOARD_ADMIN);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }

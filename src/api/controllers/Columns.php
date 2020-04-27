@@ -4,8 +4,7 @@ use RedBeanPHP\R;
 class Columns extends BaseController {
 
   public function getColumn($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -32,8 +31,7 @@ class Columns extends BaseController {
   }
 
   public function addColumn($request, $response) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::BOARD_ADMIN);
+    $status = $this->secureRoute($request, $response, SecurityLevel::BOARD_ADMIN);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -72,8 +70,7 @@ class Columns extends BaseController {
   }
 
   public function updateColumn($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::BOARD_ADMIN);
+    $status = $this->secureRoute($request, $response, SecurityLevel::BOARD_ADMIN);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -123,8 +120,7 @@ class Columns extends BaseController {
   }
 
   public function removeColumn($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::BOARD_ADMIN);
+    $status = $this->secureRoute($request, $response, SecurityLevel::BOARD_ADMIN);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }

@@ -4,8 +4,7 @@ use RedBeanPHP\R;
 class Boards extends BaseController {
 
   public function getAllBoards($request, $response) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -25,8 +24,7 @@ class Boards extends BaseController {
   }
 
   public function getBoard($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::USER);
+    $status = $this->secureRoute($request, $response, SecurityLevel::USER);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -54,8 +52,7 @@ class Boards extends BaseController {
   }
 
   public function addBoard($request, $response) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::ADMIN);
+    $status = $this->secureRoute($request, $response, SecurityLevel::ADMIN);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }
@@ -143,8 +140,7 @@ class Boards extends BaseController {
   }
 
   public function removeBoard($request, $response, $args) {
-    $status = $this->secureRoute($request, $response,
-      SecurityLevel::ADMIN);
+    $status = $this->secureRoute($request, $response, SecurityLevel::ADMIN);
     if ($status !== 200) {
       return $this->jsonResponse($response, $status);
     }

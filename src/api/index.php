@@ -36,7 +36,7 @@ $container->set('logger', function() {
 });
 
 $errorMiddleware->setErrorHandler(HttpNotFoundException::class,
-  function ($request, $exception, $displayErrorDetails) {
+  function () {
     $response = new Response();
 
     $response->withHeader('Content-Type', 'application/json')
