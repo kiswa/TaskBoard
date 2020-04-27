@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import * as marked from 'marked';
 import * as hljs from 'highlight.js';
@@ -59,7 +59,7 @@ export class BoardService {
     return this.http.get('api/boards')
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -67,7 +67,7 @@ export class BoardService {
     return this.http.post('api/users/' + userId + '/cols', { id: columnId })
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -75,7 +75,7 @@ export class BoardService {
     return this.http.post('api/boards/' + board.id, board)
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -83,7 +83,7 @@ export class BoardService {
     return this.http.post('api/columns/' + column.id, column)
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -91,7 +91,7 @@ export class BoardService {
     return this.http.post('api/tasks', task)
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -99,7 +99,7 @@ export class BoardService {
     return this.http.post('api/tasks/' + task.id, task)
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -107,7 +107,7 @@ export class BoardService {
     return this.http.delete('api/tasks/' + taskId)
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -115,7 +115,7 @@ export class BoardService {
     return this.http.get('api/activity/task/' + taskId)
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -123,7 +123,7 @@ export class BoardService {
     return this.http.post('api/comments/' + comment.id, comment)
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
@@ -131,33 +131,29 @@ export class BoardService {
     return this.http.delete('api/comments/' + commentId)
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
   }
 
   /* istanbul ignore next */
-  uploadAttachment(attachment: Attachment, data: FormData): Observable<ApiResponse> {
-    const headers = new HttpHeaders();
-    const options = { headers, params: new HttpParams() };
-    options.params.set('attachment', JSON.stringify(attachment));
-
-    return this.http.post('api/attachments', data, options)
+  uploadAttachment(attachment: Attachment): Observable<ApiResponse> {
+    return this.http.post('api/attachments', attachment)
     .pipe(
       map((response: ApiResponse) =>  response),
-      catchError((err) =>  of(err.error as ApiResponse))
+      catchError((err) => of(err.error as ApiResponse))
     );
+  }
+
+  removeAttachment(id: number): Observable<ApiResponse> {
+    return this.http.delete('api/attachments/' + id)
+    .pipe(
+      map((response: ApiResponse) =>  response),
+      catchError((err) => of(err.error as ApiResponse))
+    )
   }
 
   refreshToken(): void {
     this.http.post('api/refresh', {}).subscribe();
-  }
-
-  private defaultCallback = (err: any, text: string) => {
-    if (err) {
-      return '';
-    }
-
-    return text;
   }
 
   private convertBoardData(boardData: any): Board {
@@ -172,6 +168,14 @@ export class BoardService {
                      boardData.ownAutoAction,
                      boardData.ownIssuetracker,
                      boardData.sharedUser);
+  }
+
+  private defaultCallback = (err: any, text: string) => {
+    if (err) {
+      return '';
+    }
+
+    return text;
   }
 
   private initMarked(): void {

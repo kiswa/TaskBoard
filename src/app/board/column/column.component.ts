@@ -65,6 +65,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
   public commentEdit: Comment;
   public commentToRemove: Comment;
+  public attachmentToRemove: Attachment;
   public viewModalProps: Task;
   public modalProps: Task;
   public userOptions: UserOptions;
@@ -75,6 +76,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   public MODAL_ID: string;
   public MODAL_VIEW_ID: string;
   public MODAL_CONFIRM_ID: string;
+  public MODAL_CONFIRM_ATTACHMENT_ID: string;
   public MODAL_CONFIRM_COMMENT_ID: string;
 
   // tslint:disable-next-line
@@ -100,6 +102,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     this.MODAL_ID = 'add-task-form-';
     this.MODAL_VIEW_ID = 'view-task-form-';
     this.MODAL_CONFIRM_ID = 'task-remove-confirm';
+    this.MODAL_CONFIRM_ATTACHMENT_ID = 'attachment-remove-confirm';
     this.MODAL_CONFIRM_COMMENT_ID = 'comment-remove-confirm';
 
     this.quickAdd = new Task();
@@ -167,6 +170,10 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     this.subs.forEach(sub => (sub.unsubscribe()));
   }
 
+  userName(id: number) {
+    return this.activeBoard.users.find(u => u.id === id).username;
+  }
+
   sortTasks() {
     switch (this.sortOption) {
       case 'pos':
@@ -204,7 +211,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     this.collapseTasks = !this.collapseTasks;
   }
 
-  updateTaskColorByCategory(event: Array<Category>) {
+  updateTaskColorByCategory(event: Category[]) {
     this.modalProps.categories = event;
     this.modalProps.color = event[event.length - 1].default_task_color;
   }
@@ -314,22 +321,45 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', this.fileUpload);
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      const attachment = new Attachment();
 
-    const attachment = new Attachment();
-    attachment.filename = this.fileUpload.name;
-    attachment.name = attachment.filename.split('.')[0];
-    attachment.type = this.fileUpload.type;
-    attachment.user_id = this.activeUser.id;
-    attachment.task_id = this.viewModalProps.id;
+      attachment.filename = this.fileUpload.name;
+      attachment.name = attachment.filename.split('.').slice(0, -1).join('.');
+      attachment.type = this.fileUpload.type;
+      attachment.user_id = this.activeUser.id;
+      attachment.task_id = this.viewModalProps.id;
+      attachment.data = fileReader.result;
 
-    this.boardService.uploadAttachment(attachment, formData)
-      .subscribe(response => {
-        response.alerts.forEach(note => this.notes.add(note));
+      this.boardService.uploadAttachment(attachment)
+        .subscribe(response => {
+          response.alerts.forEach(note => this.notes.add(note));
 
-        console.log(response);
-      });
+          if (response.status === 'success') {
+            this.viewModalProps.attachments.push(attachment);
+          }
+        });
+    }
+
+    fileReader.readAsBinaryString(this.fileUpload);
+  }
+
+  viewFile(hash: string) {
+    window.open(`./files/${hash}`, 'tb-file-view');
+  }
+
+  removeAttachment() {
+    this.boardService.removeAttachment(this.attachmentToRemove.id).subscribe(res => {
+      res.alerts.forEach(note => this.notes.add(note));
+
+      if (res.status === 'success') {
+        const index = this.viewModalProps.attachments
+          .findIndex(x => x.id === this.attachmentToRemove.id);
+
+        this.viewModalProps.attachments.splice(index, 1);
+      }
+    });
   }
 
   addComment() {
@@ -630,7 +660,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updateTaskComments(task: Task, newComments: Array<any>) {
+  private updateTaskComments(task: Task, newComments: any[]) {
     task.comments = [];
 
     if (!newComments) {

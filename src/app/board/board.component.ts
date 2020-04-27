@@ -25,7 +25,7 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
 
   public categoryFilter: number;
   public userFilter: number;
-  public boardNavId: number;
+  public boardNavId: number | null;
 
   public activeUser: User;
   public activeBoard: Board;

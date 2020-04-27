@@ -6,7 +6,6 @@ import {
   Output
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 import {
   ApiResponse,
@@ -143,14 +142,9 @@ export class TaskDisplayComponent implements OnInit {
 
     const newBoardId = +(select[select.selectedIndex] as HTMLOptionElement).value;
     const taskData = { ...this.taskData };
-    let boardData: Board;
+    const boardData = this.boardsList.find(board => board.id === newBoardId);
 
-    this.boardsList.forEach(board => {
-      if (board.id === newBoardId) {
-        taskData.column_id = board.columns[0].id;
-        boardData = board;
-      }
-    });
+    taskData.column_id = boardData.columns[0].id;
 
     this.boardService.addTask(taskData)
       .subscribe((response: ApiResponse) => {

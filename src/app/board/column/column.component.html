@@ -155,6 +155,31 @@
 
   <div *ngIf="viewModalProps.attachments.length">
     <h3>{{ strings['boards_taskAttachments'] }}</h3>
+    <div class="list-group">
+      <div class="list-group-item" *ngFor="let item of viewModalProps.attachments">
+        {{ item.filename }}
+        <div class="detail small">
+          {{ strings['boards_taskUploadedBy'] }}: {{ userName(item.user_id) }}
+          {{ strings['boards_taskUploadedOn'] }} {{ item.timestamp * 1000 | date:'full' }}
+        </div>
+
+        <div class="pull-right">
+          <i class="icon icon-eye"
+            [title]="strings['boards_taskView'] + ' ' + item.filename"
+            (click)="viewFile(item.diskfilename)"></i>
+
+          <i class="icon icon-download"
+            [title]="strings['boards_taskDownload'] + ' ' + item.filename"
+            ></i>
+
+          <i class="icon icon-trash-empty"
+             [title]="strings['settings_remove'] + ' ' + item.filename"
+            (click)="attachmentToRemove = item;
+            modal.open(MODAL_CONFIRM_ATTACHMENT_ID +
+            (columnData ? columnData.id : ''))"></i>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div>
@@ -339,6 +364,25 @@
     </button>
     <button #defaultAction #focusMe
       (click)="modal.close(MODAL_CONFIRM_ID + (columnData ? columnData.id : ''))">
+      {{ strings['no'] }}
+    </button>
+  </div>
+</tb-modal>
+
+<tb-modal modal-title="{{ strings['boards_confirmRemoveAttachment'] }}" blocking="true"
+  modal-id="{{ MODAL_CONFIRM_ATTACHMENT_ID + (columnData ? columnData.id : '') }}">
+  <div class="center">
+    {{ strings['boards_confirmWarningAttachment'] }}<br>
+    {{ strings['boards_confirmContinue'] }}
+  </div>
+  <div class="buttons">
+    <button class="flat"
+      (click)="modal.close(MODAL_CONFIRM_ATTACHMENT_ID
+      + (columnData ? columnData.id : '')); removeAttachment()">
+      {{ strings['yes'] }}
+    </button>
+    <button #defaultAction #focusMe
+      (click)="modal.close(MODAL_CONFIRM_ATTACHMENT_ID + (columnData ? columnData.id : ''))">
       {{ strings['no'] }}
     </button>
   </div>
