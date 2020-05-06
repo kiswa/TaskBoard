@@ -51,11 +51,6 @@ export class TaskDisplayComponent implements OnInit {
   // tslint:disable-next-line
   @Output('on-update-boards') onUpdateBoards: EventEmitter<any>;
 
-  @Input('boards')
-  set boards(boards: Array<Board>) {
-    this.boardsList = boards;
-  }
-
   constructor(public auth: AuthService,
               private sanitizer: DomSanitizer,
               public boardService: BoardService,

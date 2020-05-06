@@ -137,41 +137,24 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
         task.filtered = false;
 
         if (this.userFilter) {
-          let found = false;
+          let found = (this.userFilter === -1 && task.assignees.length === 0);
 
-          if (this.userFilter === -1 &&
-            task.assignees.length === 0) {
+          if (task.assignees.some(user => user.id === this.userFilter)) {
             found = true;
           }
 
-          task.assignees.forEach(user => {
-            if (user.id === this.userFilter) {
-              found = true;
-            }
-          });
-
-          if (!found) {
-            task.filtered = true;
-          }
+          task.filtered = !found;
         }
 
         if (this.categoryFilter) {
-          let found = false;
+          let found = (this.categoryFilter === -1 &&
+                      task.categories.length === 0);
 
-          if (this.categoryFilter === -1 &&
-            task.categories.length === 0) {
+          if (task.categories.some(cat => cat.id === this.categoryFilter)) {
             found = true;
           }
 
-          task.categories.forEach(cat => {
-            if (cat.id === this.categoryFilter) {
-              found = true;
-            }
-          });
-
-          if (!found) {
-            task.filtered = true;
-          }
+          task.filtered = !found;
         }
       });
     });
@@ -224,13 +207,15 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.boards.forEach(board => {
-      if (board.id === this.boardNavId) {
-        this.activeBoard = board;
-        this.boardService.updateActiveBoard(board);
-        this.pageName = board.name;
-      }
-    });
+    const board = this.boards.find(b => (b.id === this.boardNavId));
+
+    if (!board) {
+      return;
+    }
+
+    this.activeBoard = board;
+    this.boardService.updateActiveBoard(board);
+    this.pageName = board.name;
   }
 
   private updateActiveUser(activeUser: User) {

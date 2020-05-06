@@ -3,14 +3,13 @@
 <div class="board-nav">
   <label *ngIf="boards && boards.length">
     {{ strings['boards_selectBoard'] }}:
-    <select [(ngModel)]="boardNavId"
-      (change)="goToBoard()">
+
+    <select [(ngModel)]="boardNavId" (change)="goToBoard()">
       <option [ngValue]="null">
         {{ strings['boards_selectBoard'] }}...
       </option>
 
-      <option *ngFor="let board of boards"
-        [ngValue]="board.id">
+      <option *ngFor="let board of boards" [ngValue]="board.id">
         {{ board.name }}
       </option>
     </select>
@@ -19,33 +18,33 @@
   <div class="right" *ngIf="activeBoard">
     <label>
       {{ strings['boards_hideFiltered'] }}:
+
       <input type="checkbox" [(ngModel)]="hideFiltered"
-      (change)="toggleFiltered()">
+             (change)="toggleFiltered()">
     </label>
 
     <label>
       {{ strings['boards_userFilter'] }}:
-      <select [(ngModel)]="userFilter"
-        (change)="filterTasks()">
+
+      <select [(ngModel)]="userFilter" (change)="filterTasks()">
         <option [ngValue]="null">
           {{ strings['boards_filterByAny'] }}
         </option>
 
         <option [ngValue]="-1">
-          {{ strings['boards_filterByUnassigned'] }}
+         {{ strings['boards_filterByUnassigned'] }}
         </option>
 
-        <option *ngFor="let user of activeBoard.users"
-          [ngValue]="user.id">
-          {{ user.username }}
+        <option *ngFor="let user of activeBoard.users" [ngValue]="user.id">
+         {{ user.username }}
         </option>
       </select>
     </label>
 
     <label>
       {{ strings['boards_categoryFilter'] }}:
-      <select [(ngModel)]="categoryFilter"
-        (change)="filterTasks()">
+
+      <select [(ngModel)]="categoryFilter" (change)="filterTasks()">
         <option [ngValue]="null">
           {{ strings['boards_filterByAny'] }}
         </option>
@@ -55,7 +54,7 @@
         </option>
 
         <option *ngFor="let category of activeBoard.categories"
-          [ngValue]="category.id">
+                [ngValue]="category.id">
           {{ category.name }}
         </option>
       </select>
@@ -72,7 +71,7 @@
 
 <div class="no-boards center"
      *ngIf="!loading && !activeBoard && this.boards.length > 0 &&
-            !activeUser.default_board_id">
+     !activeUser.default_board_id">
   <h1>{{ strings['boards_noDefault'] }}</h1>
 
   <p>{{ strings['boards_noDefaultMessage'] }}
@@ -85,10 +84,8 @@
 </div>
 
 <div class="board" cdkDropListGroup *ngIf="activeBoard">
-  <tb-column class="column" [id]="column.id"
-    *ngFor="let column of activeBoard.columns"
-    [column]="column"
-    [boards]="boards"
-    (on-update-boards)="updateBoards()"></tb-column>
+  <tb-column class="column" [id]="column.id" [column]="column"
+             *ngFor="let column of activeBoard.columns"
+             (on-update-boards)="updateBoards()"></tb-column>
 </div>
 

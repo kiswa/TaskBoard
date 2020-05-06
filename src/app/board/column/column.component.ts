@@ -81,8 +81,6 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
   // tslint:disable-next-line
   @Input('column') columnData: Column;
-  // tslint:disable-next-line
-  @Input('boards') boards: Array<Board>;
 
   // tslint:disable-next-line
   @Output('on-update-boards')
@@ -247,6 +245,8 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
         this.boardService.updateActiveBoard(boardData);
         this.boardService.refreshToken();
         this.saving = false;
+      }, err => {
+        this.notes.add({ type: 'error', text: err.toString() });
       });
   }
 
@@ -337,6 +337,9 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
           response.alerts.forEach(note => this.notes.add(note));
 
           if (response.status === 'success') {
+            attachment.id = response.data[1].id;
+            attachment.diskfilename = response.data[1].diskfilename;
+
             this.viewModalProps.attachments.push(attachment);
           }
         });
