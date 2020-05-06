@@ -9,7 +9,7 @@
     </span>
   </h1>
 
-  <div class="buttons">
+  <div class="buttons" *ngIf="showButtons">
     <button [ngClass]="{ flat: !isActive('dashboard') }"
       (click)="navigateTo('dashboard')">{{ strings['dashboard'] }}</button>
     <button [ngClass]="{ flat: !isActive('boards') }"

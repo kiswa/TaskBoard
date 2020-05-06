@@ -19,6 +19,9 @@ export class TopNavComponent {
   // tslint:disable-next-line
   @Input('page-name') pageName: string = '';
 
+  // tslint:disable-next-line
+  @Input('show-buttons') showButtons: boolean = true;
+
   version = '';
   username = '';
 
