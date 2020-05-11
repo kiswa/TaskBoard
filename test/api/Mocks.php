@@ -21,6 +21,11 @@ class DataMock {
 
     $user = R::load('user', $userId);
     $user->active_token = $jwt;
+
+    if ($userId == 3) {
+      $user->security_level = SecurityLevel::UNPRIVILEGED;
+    }
+
     R::store($user);
 
     return $jwt;

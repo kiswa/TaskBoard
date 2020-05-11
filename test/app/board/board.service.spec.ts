@@ -4,7 +4,7 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 
-import { BoardService } from '../../../src/app/board/board.service';
+import { BoardService } from 'src/app/board/board.service';
 
 describe('BoardService', () => {
   let injector: TestBed;
@@ -16,7 +16,7 @@ describe('BoardService', () => {
     expect(req.request.method).toEqual(method);
 
     if (isError) {
-      req.flush({ alerts: [{}] }, { status: 500, statusText: '' });
+      req.flush({ alerts: [{}], data: [] }, { status: 500, statusText: '' });
     } else {
       req.flush({ data: [] });
     }
@@ -185,6 +185,22 @@ describe('BoardService', () => {
     testCall('api/activity/task/1', 'GET', true);
   });
 
+  it('adds a comment', () => {
+    service.addComment(<any>{ id: 1 }).subscribe(response => {
+      expect(response.data.length).toEqual(0);
+    });
+
+    testCall('api/comments', 'POST', true);
+  });
+
+  it('handles errors on comment add', () => {
+    service.addComment(null).subscribe(() => {}, response => {
+      expect(response.alerts.length).toEqual(1);
+    });
+
+    testCall('api/comments', 'POST');
+  });
+
   it('updates a comment', () => {
     service.updateComment(<any>{ id: 1 }).subscribe(response => {
       expect(response.data.length).toEqual(0);
@@ -215,6 +231,54 @@ describe('BoardService', () => {
     });
 
     testCall('api/comments/1', 'DELETE', true);
+  });
+
+  it('adds an attachment', () => {
+    service.addAttachment(<any>{ id: 1 }).subscribe(response => {
+      expect(response.data.length).toEqual(0);
+    });
+
+    testCall('api/attachments', 'POST');
+  });
+
+  it('handles errors on attachment add', () => {
+    service.addAttachment(<any>{ id: 1 }).subscribe(response => {
+      expect(response.alerts.length).toEqual(1);
+    });
+
+    testCall('api/attachments', 'POST', true);
+  });
+
+  it('removes an attachment', () => {
+    service.removeAttachment(1).subscribe(response => {
+      expect(response.data.length).toEqual(0);
+    });
+
+    testCall('api/attachments/1', 'DELETE');
+  });
+
+  it('handles errors on attachment remove', () => {
+    service.removeAttachment(1).subscribe(response => {
+      expect(response.alerts.length).toEqual(1);
+    });
+
+    testCall('api/attachments/1', 'DELETE', true);
+  });
+
+  it('uploads a file', () => {
+    service.uploadAttachment(null, 'asdf').subscribe(response => {
+      expect(response.data.length).toEqual(0);
+    });
+
+    testCall('api/upload/asdf', 'POST');
+  });
+
+  it('handles errors on file upload', () => {
+    service.uploadAttachment(null, 'asdf').subscribe(response => {
+      expect(response.alerts.length).toEqual(1);
+    });
+
+    testCall('api/upload/asdf', 'POST', true);
   });
 
   it('refreshes the API token', () => {

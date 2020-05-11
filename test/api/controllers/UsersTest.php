@@ -94,7 +94,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $args['id'] = 1;
 
     $request = new RequestMock();
-    $request->header = [DataMock::GetJwt(3)];
+    $request->header = [DataMock::GetJwt(4)];
 
     $this->users = new Users(new LoggerMock());
 

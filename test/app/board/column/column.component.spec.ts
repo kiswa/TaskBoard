@@ -2,6 +2,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { ColumnDisplayComponent } from '../../../../src/app/board/column/column.component';
 import { TaskDisplayComponent } from '../../../../src/app/board/task/task.component';
@@ -36,18 +37,26 @@ describe('ColumnDisplay', () => {
         HttpClientTestingModule,
         FormsModule,
         RouterTestingModule,
-        SharedModule
+        SharedModule,
       ],
       declarations: [
         ColumnDisplayComponent,
-        TaskDisplayComponent
+        TaskDisplayComponent,
       ],
       providers: [
         AuthService,
         NotificationsService,
         ModalService,
         StringsService,
-        BoardService
+        BoardService,
+        {
+          provide: DomSanitizer,
+          useValue: {
+            sanitize: (_: any, val: string) => val,
+            bypassSecurityTrustResourceUrl: (val: string) => val,
+            bypassSecurityTrustHtml: (val: string) => val,
+          },
+        },
       ]
     }).compileComponents();
   });
@@ -72,6 +81,13 @@ describe('ColumnDisplay', () => {
     expect(component.templateElement.classList.contains('collapsed')).toEqual(true);
   });
 
+  it('gets a username', () => {
+    component.activeBoard = <any>{ users: [<any>{ id: 1, username: 'hi' }] };
+    const username = component.userName(1);
+
+    expect(username).toEqual('hi');
+  });
+
   it('sorts tasks', () => {
     component.columnData = { tasks: [
       { position: 2, due_date: '1/1/2018', points: 1 },
@@ -93,7 +109,7 @@ describe('ColumnDisplay', () => {
 
   it('calls a service to toggle collapsed state', () => {
     (component.boardService.toggleCollapsed as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ data: [{}, [1]] } as any) };
+      return { subscribe: (fn: any) => fn({ data: [{}, [1]] } as any) };
     };
     component.activeUser = { id: 1, collapsed: [] } as any;
     component.columnData = { id: 1 } as any;
@@ -121,11 +137,13 @@ describe('ColumnDisplay', () => {
   });
 
   it('calls a service to add a task', () => {
+    component.columnData = { id: 1 } as any;
+
     component.addTask();
     expect(component.saving).toEqual(false);
 
     (component.boardService.addTask as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ status: 'error', alerts: [{}] } as any) };
+      return { subscribe: (fn: any) => fn({ status: 'error', alerts: [{}] } as any) };
     };
 
     component.modalProps = { title: 'Testing' } as any;
@@ -133,7 +151,12 @@ describe('ColumnDisplay', () => {
     expect(component.saving).toEqual(false);
 
     (component.boardService.addTask as any) = () => {
-      return { subscribe: (fn: any) =>  fn({
+      return { subscribe: (_: any, err: any) => { err('Err'); } }
+    }
+    component.addTask();
+
+    (component.boardService.addTask as any) = () => {
+      return { subscribe: (fn: any) => fn({
         status: 'success',
         alerts: [],
         data: [{}, {}, [{ ownColumn: [{}] }]]
@@ -142,14 +165,37 @@ describe('ColumnDisplay', () => {
 
     component.addTask();
     expect(component.saving).toEqual(false);
-    });
+  });
+
+  it('handles drop events', () => {
+    const prev =  { data: {} };
+    const evt = {
+      currentIndex: 0,
+      previousContainer: prev,
+      container: prev
+    }
+
+    component.activeBoard = {
+      columns: [{ id: 1, tasks: [{ id: 1 }, { id: 2 }] }, { id: 3 }]
+    } as any;
+    component.moveItemInArray = () => true;
+    component.transferArrayItem = () => true;
+
+    component.drop(evt as any, 0);
+    expect(component.activeBoard.columns[0].tasks[0].position).toEqual(1);
+
+    evt.previousContainer = { data: {} };
+
+    component.drop(evt as any, 0);
+    expect(component.activeBoard.columns[0].tasks[0].position).toEqual(1);
+  });
 
   it('calls a service to update a task', () => {
     component.updateTask();
     expect(component.saving).toEqual(false);
 
     (component.boardService.updateTask as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ status: 'error', alerts: [{}] } as any) };
+      return { subscribe: (fn: any) => fn({ status: 'error', alerts: [{}] } as any) };
     };
 
     component.modalProps = { title: 'Testing' } as any;
@@ -157,7 +203,7 @@ describe('ColumnDisplay', () => {
     expect(component.saving).toEqual(false);
 
     (component.boardService.updateTask as any) = () => {
-      return { subscribe: (fn: any) =>  fn({
+      return { subscribe: (fn: any) => fn({
         status: 'success',
         alerts: [],
         data: [{}, {}, [{ ownColumn: [{}] }]]
@@ -197,6 +243,86 @@ describe('ColumnDisplay', () => {
     expect(called).toEqual(true);
   });
 
+  it('handles file input changes', () => {
+    const file = { test: true };
+
+    component.fileChange(file as any);
+    expect(component.fileUpload).toEqual(file);
+  });
+
+  it('calls a service to add a file', () => {
+    let called = false;
+
+    component.notes.noteAdded.subscribe(() => { called = true; });
+    component.addFile();
+
+    expect(called).toEqual(true);
+
+    component.fileUpload = {
+      name: 'test.png',
+      type: 'image/png',
+    };
+    component.activeUser = { id: 1 } as any;
+    component.viewModalProps = { id: 1, attachments: [] } as any;
+
+    (component.boardService.addAttachment as any) = () => {
+      return { subscribe: (fn: any) => fn({ status: 'error' } as any) };
+    };
+
+    component.addFile();
+    expect(component.fileUploading).toEqual(false);
+
+    (component.boardService.addAttachment as any) = () => {
+      return { subscribe: (fn: any) => fn({
+        status: 'success',
+        data: [{}, { id: 3, diskfilename: 'asdfghjkl' }],
+        alerts: [{}]
+      }) };
+    };
+
+    (component.boardService.uploadAttachment as any) = () => {
+      return { subscribe: (fn: any) => fn({ status: 'success', alerts: [{}] }) };
+    };
+
+    component.addFile();
+    expect(component.fileUploading).toEqual(false);
+  });
+
+  it('opens a file viewer in a new window', () => {
+    spyOn(window, 'open');
+
+    component.viewFile('asdf');
+
+    expect(window.open).toHaveBeenCalledWith('./files/asdf', 'tb-file-view');
+  });
+
+  it('provides a way to get a the URL for a file', () => {
+    const url = component.getUrl('asdf').toString();
+
+    expect(url).toEqual('./api/uploads/asdf');
+  });
+
+  it('calls a service to remove a file', () => {
+    (component.boardService.removeAttachment as any) = () => {
+      return { subscribe: (fn: any) => fn({ status: 'error', alerts: [] }) };
+    };
+
+    component.attachmentToRemove = { id: 0 } as any;
+    component.removeAttachment();
+
+    (component.boardService.removeAttachment as any) = () => {
+      return { subscribe: (fn: any) => fn({
+        status: 'success',
+        alerts: [{}],
+      }) };
+    };
+
+    component.viewModalProps.attachments = [{ id: 0 } as any];
+    component.removeAttachment();
+
+    expect(component.viewModalProps.attachments.length).toEqual(0);
+  });
+
   it('calls a service to add a comment', () => {
     component.viewModalProps.id = 0;
     component.addComment();
@@ -208,21 +334,22 @@ describe('ColumnDisplay', () => {
 
     expect(component.newComment).toEqual('');
 
-    (component.boardService.updateTask as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ status: 'error' } as any) };
+    (component.boardService.addComment as any) = () => {
+      return { subscribe: (fn: any) => fn({ status: 'error', alerts: [] } as any) };
     };
 
+    component.newComment = 'Testing.';
     component.addComment();
     expect(component.newComment).toEqual('');
 
-    (component.boardService.updateTask as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ status: 'success', data: [{}, [
+    (component.boardService.addComment as any) = () => {
+      return { subscribe: (fn: any) => fn({ status: 'success', data: [{}, [
         mockTask, { id: 2 }
-      ]] } as any) };
+      ]], alerts: [{}] } as any) };
     };
 
     component.activeBoard = {
-      columns: [{ id: 1, tasks: [{ id: 1 }, { id: 2 }] }, { id: 2 }]
+      columns: [{ id: 1, tasks: [{ id: 1 }, { id: 2 }] }, { id: 3 }]
     } as any;
 
     component.addComment();
@@ -239,7 +366,7 @@ describe('ColumnDisplay', () => {
     component.commentEdit = { is_edited: false, user_id: 0 } as any;
 
     (component.boardService.updateComment as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ status: 'error', alerts: [{}] } as any) };
+      return { subscribe: (fn: any) => fn({ status: 'error', alerts: [{}] } as any) };
     };
 
     component.editComment();
@@ -250,7 +377,7 @@ describe('ColumnDisplay', () => {
     } as any;
 
     (component.boardService.updateComment as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ status: 'success', alerts: [{}],
+      return { subscribe: (fn: any) => fn({ status: 'success', alerts: [{}],
         data: [{}, [mockTask]]
       } as any) };
     };
@@ -271,7 +398,7 @@ describe('ColumnDisplay', () => {
     } as any;
 
     (component.boardService.removeComment as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ alerts: [{}],
+      return { subscribe: (fn: any) => fn({ alerts: [{}],
         data: [{}, [mockTask]]
       } as any) };
     };
@@ -310,14 +437,14 @@ describe('ColumnDisplay', () => {
     component.taskLimit = 2;
 
     (component.boardService.updateColumn as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ status: 'error', alerts: [{}] } as any) };
+      return { subscribe: (fn: any) => fn({ status: 'error', alerts: [{}] } as any) };
     };
 
     component.saveLimitChanges();
     expect(component.columnData.task_limit).toEqual(3);
 
     (component.boardService.updateColumn as any) = () => {
-      return { subscribe: (fn: any) =>  fn({ status: 'success', alerts: [], data: [
+      return { subscribe: (fn: any) => fn({ status: 'success', alerts: [], data: [
         {}, [{
           id: 1, name: 'test', position: 1,
           board_id: 1, task_limit: 2, ownTask: []
@@ -429,6 +556,34 @@ describe('ColumnDisplay', () => {
     view();
 
     expect(component.viewModalProps.column_id).toEqual(1);
+  });
+
+  it('gets a comment converted from markdown', () => {
+    component.activeBoard = { issue_trackers: [] } as any;
+
+    const comment = component.getComment('# Testing');
+
+    expect(comment).toEqual('<h1 id="testing">Testing</h1>\n');
+  });
+
+  it('gets a username by user id', () => {
+    component.activeBoard = {
+      users: [{ id: 1, username: 'test' } as any]
+    } as any;
+
+    const uname = component.getUserName(1);
+
+    expect(uname).toEqual('test');
+  });
+
+  it('can call board update with an emitter', () => {
+    let called = false;
+
+    component.onUpdateBoards.subscribe(() => { called = true; });
+
+    component.callBoardUpdate();
+
+    expect(called).toEqual(true);
   });
 
 });
