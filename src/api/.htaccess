@@ -7,3 +7,9 @@ RewriteRule ^taskboard.sqlite$ %{ENV_BASE}index.php [QSA,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ %{ENV:BASE}index.php/ [QSA,L]
+
+php_value upload_max_filesize 80M
+php_value post_max_size 100M
+php_value file_uploads On
+php_value memory_limit 256M
+
