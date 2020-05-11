@@ -77,8 +77,11 @@ $app->post('/comments/{id}', 'Comments:updateComment'); // BoardAdmin or submitt
 $app->delete('/comments/{id}', 'Comments:removeComment'); // BoardAdmin or submitter (with board access)
 
 $app->get('/attachments/{id}', 'Attachments:getAttachment'); // User (with board access)
+$app->get('/attachments/hash/{hash}', 'Attachments:getAttachmentByHash'); // User (with board access)
 $app->post('/attachments', 'Attachments:addAttachment'); // User (with board access)
 $app->delete('/attachments/{id}', 'Attachments:removeAttachment'); // BoardAdmin or submitter (with board access)
+
+$app->post('/upload/{hash}', 'Attachments:uploadFile'); // User (with board access)
 
 $app->get('/users', 'Users:getAllUsers'); // User (by board access)
 $app->get('/users/{id}', 'Users:getUser'); // User (by board access)

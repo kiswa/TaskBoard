@@ -62,9 +62,10 @@ class Comments extends BaseController {
     $actor = R::load('user', Auth::GetUserId($request));
     $this->dbLogger->logChange($actor->id,
       $actor->username . ' added comment ' . $comment->id . '.',
-      '', json_encode($comment), 'comment', $comment->id);
+      '', json_encode($comment), 'comment', $comment->task_id);
 
     $this->apiJson->setSuccess();
+    $this->apiJson->addData(R::exportAll($task));
     $this->apiJson->addAlert('success', 'Comment added.');
 
     return $this->jsonResponse($response);
@@ -94,8 +95,7 @@ class Comments extends BaseController {
     if ((int)$actor->security_level === SecurityLevel::USER) {
       if ($actor->id !== $comment->user_id) {
         $this->apiJson->addAlert('error',
-          'You do not have sufficient permissions ' .
-          'to update this comment.');
+          'You do not have sufficient permissions to update this comment.');
 
         return $this->jsonResponse($response);
       }
@@ -123,8 +123,7 @@ class Comments extends BaseController {
 
     $this->dbLogger->logChange($actor->id,
       $actor->username . ' updated comment ' . $update->id,
-      json_encode($comment), json_encode($update),
-      'comment', $update->id);
+      json_encode($comment), json_encode($update), 'comment', $update->task_id);
 
     $this->apiJson->setSuccess();
     $this->apiJson->addAlert('success', 'Comment updated.');
@@ -175,8 +174,8 @@ class Comments extends BaseController {
     R::trash($comment);
 
     $this->dbLogger->logChange($actor->id,
-      $actor->username . ' removed comment ' . $before->id,
-      json_encode($before), '', 'comment', $id);
+      $actor->username . ' removed comment ' . $id,
+      json_encode($before), '', 'comment', $before->task_id);
 
     $this->apiJson->setSuccess();
     $this->apiJson->addAlert('success', 'Comment removed.');

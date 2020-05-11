@@ -15,7 +15,7 @@ class Activity extends BaseController {
     // TODO: More activity types
     if ($args['type'] === 'task') {
       if (!$this->checkBoardAccess($this->getBoardId((int)$args['id']),
-        $request)) {
+          $request)) {
         return $this->jsonResponse($response, 403);
       }
 
@@ -36,42 +36,22 @@ class Activity extends BaseController {
   }
 
   private function sortLogs($a, $b) {
-    if ($a->timestamp === $b->timestamp) {
-      return 0; // @codeCoverageIgnore
-    }
-
-    return $a->timestamp > $b->timestamp ? -1 : 1;
+    return $b->timestamp - $a->timestamp;
   }
 
   private function getTaskActivity($taskId) {
-    $task = R::load('task', $taskId);
     $logs = [];
-    $commentIds = [];
-    $attachmentIds = [];
 
-    foreach ($task->ownComment as $comment) {
-      $commentIds[] = (int)$comment->id;
-    }
-
-    foreach ($task->ownAttachment as $attachment) {
-      $attachmentIds[] = (int)$attachment->id;
-    }
-
-    $taskActivity = R::find('activity',
-      'item_type="task" AND item_id=?',
+    $taskActivity = R::find('activity', 'item_type="task" AND item_id=?',
       [$taskId]);
     $this->addLogItems($logs, $taskActivity);
 
-    $commentActivity =
-      R::find('activity', 'item_type="comment" AND '.
-      'item_id IN(' . R::genSlots($commentIds) . ')',
-      $commentIds);
+    $commentActivity = R::find('activity', 'item_type="comment" AND item_id=?',
+      [$taskId]);
     $this->addLogItems($logs, $commentActivity);
 
-    $attachmentActivity =
-      R::find('activity', 'item_type="attachment" AND '.
-      'item_id IN(' . R::genSlots($attachmentIds) . ')',
-      $attachmentIds);
+    $attachmentActivity = R::find('activity', 'item_type="attachment" AND ' .
+      'item_id=?', [$taskId]);
     $this->addLogItems($logs, $attachmentActivity);
 
     usort($logs, array("Activity", "sortLogs"));
