@@ -325,8 +325,15 @@
       cursor: pointer;
     }
 
-    [type="file"] {
-      width: 80%;
+    .file-upload {
+      input {
+        margin-right: 7px;
+        width: 84.7%;
+      }
+
+      button {
+        margin-right: 0;
+      }
     }
 
     .details {
@@ -390,6 +397,10 @@
 
         .detail {
           margin-left: 7px;
+        }
+
+        a {
+          text-decoration: none;
         }
 
         .pull-right {
