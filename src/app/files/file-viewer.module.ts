@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 
 import { FileViewerComponent } from './file-viewer.component';
+import { FileViewerService } from './file-viewer.service';
 
 @NgModule({
   imports: [
@@ -14,6 +15,9 @@ import { FileViewerComponent } from './file-viewer.component';
   ],
   declarations: [
     FileViewerComponent
+  ],
+  providers: [
+    FileViewerService
   ],
   exports: [
     FileViewerComponent

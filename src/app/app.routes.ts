@@ -35,6 +35,7 @@ export const ROUTES: Routes = [
   {
     path: 'files/:hash',
     component: FileViewerComponent,
+    canActivate: [ AuthGuard ]
   }
 ];
 

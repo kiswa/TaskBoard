@@ -7,7 +7,7 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
-import { DomSanitizer, } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -40,12 +40,15 @@ import { BoardService } from '../board.service';
   templateUrl: './column.component.html'
 })
 export class ColumnDisplayComponent implements OnInit, OnDestroy {
+  public moveItemInArray: any;
+  public transferArrayItem: any;
+  public fileUpload: any;
 
-  private fileUpload: any;
   private subs = [];
 
   public viewTaskActivities: ActivitySimple[];
 
+  public fileUploading: boolean;
   public showActivity: boolean;
   public collapseActivity: boolean;
   public isOverdue: boolean;
@@ -88,7 +91,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
   constructor(public elRef: ElementRef,
               private auth: AuthService,
-              private notes: NotificationsService,
+              public notes: NotificationsService,
               public modal: ModalService,
               public stringsService: StringsService,
               public boardService: BoardService,
@@ -106,6 +109,9 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     this.quickAdd = new Task();
     this.modalProps = new Task();
     this.viewModalProps = new Task();
+
+    this.moveItemInArray = moveItemInArray;
+    this.transferArrayItem = transferArrayItem;
 
     let sub = stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
@@ -231,9 +237,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this.modal.close(this.MODAL_ID + (this.columnData
-                         ? this.columnData.id + ''
-                         : ''));
+        this.modal.close(this.MODAL_ID + this.columnData.id + '');
 
         const boardData = response.data[2][0];
         boardData.ownColumn.forEach((column: any) => {
@@ -252,10 +256,10 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
   drop(event: CdkDragDrop<string[]>, colIndex: number) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data,
+      this.moveItemInArray(event.container.data,
         event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(event.previousContainer.data,
+      this.transferArrayItem(event.previousContainer.data,
         event.container.data, event.previousIndex, event.currentIndex);
     }
 
@@ -286,9 +290,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
         }
 
         this.boardService.updateActiveBoard(response.data[2][0]);
-        this.modal.close(this.MODAL_ID + (this.columnData
-                         ? this.columnData.id + ''
-                         : ''));
+        this.modal.close(this.MODAL_ID + this.columnData?.id + '');
 
         this.boardService.refreshToken();
         this.saving = false;
@@ -309,60 +311,63 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
       });
   }
 
-  /* istanbul ignore next */
   fileChange(file: File) {
     this.fileUpload = file;
   }
 
-  /* istanbul ignore next */
-  uploadFile() {
+  addFile() {
     if (!this.fileUpload) {
-      this.notes.add({ type: 'error', text: this.strings.boards_taskNoFileError });
+      this.notes
+        .add({ type: 'error', text: this.strings.boards_taskNoFileError });
       return;
     }
 
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      const attachment = new Attachment();
+    this.fileUploading = true;
+    const attachment = new Attachment();
 
-      attachment.filename = this.fileUpload.name;
-      attachment.name = attachment.filename.split('.').slice(0, -1).join('.');
-      attachment.type = this.fileUpload.type;
-      attachment.user_id = this.activeUser.id;
-      attachment.task_id = this.viewModalProps.id;
-      attachment.data = fileReader.result;
+    attachment.filename = this.fileUpload.name;
+    attachment.name = attachment.filename.split('.').slice(0, -1).join('.');
+    attachment.type = this.fileUpload.type;
+    attachment.user_id = this.activeUser.id;
+    attachment.task_id = this.viewModalProps.id;
 
-      this.boardService.uploadAttachment(attachment)
-        .subscribe(response => {
-          response.alerts.forEach(note => this.notes.add(note));
+    this.boardService.addAttachment(attachment).subscribe(response => {
+      if (response.status !== 'success') {
+        this.fileUploading = false;
+        this.resetFileInput();
 
-          if (response.status === 'success') {
-            attachment.id = response.data[1].id;
-            attachment.diskfilename = response.data[1].diskfilename;
+        return;
+      }
 
-            this.viewModalProps.attachments.push(attachment);
-          }
-        });
-    }
+      attachment.id = response.data[1].id;
+      attachment.diskfilename = response.data[1].diskfilename;
 
-    fileReader.readAsBinaryString(this.fileUpload);
+      this.uploadFile(attachment, response);
+    });
   }
 
   viewFile(hash: string) {
     window.open(`./files/${hash}`, 'tb-file-view');
   }
 
+  getUrl(hash: string) {
+    const url = `./api/uploads/${hash}`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
   removeAttachment() {
-    this.boardService.removeAttachment(this.attachmentToRemove.id).subscribe(res => {
-      res.alerts.forEach(note => this.notes.add(note));
+    this.boardService.removeAttachment(this.attachmentToRemove.id)
+      .subscribe(res => {
+        res.alerts.forEach(note => this.notes.add(note));
 
-      if (res.status === 'success') {
-        const index = this.viewModalProps.attachments
-          .findIndex(x => x.id === this.attachmentToRemove.id);
+        if (res.status === 'success') {
+          const index = this.viewModalProps.attachments
+            .findIndex(x => x.id === this.attachmentToRemove.id);
 
-        this.viewModalProps.attachments.splice(index, 1);
-      }
-    });
+          this.viewModalProps.attachments.splice(index, 1);
+          this.updateTaskActivity(this.viewModalProps.id);
+        }
+      });
   }
 
   addComment() {
@@ -370,14 +375,15 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.viewModalProps.comments.push(
-      new Comment(0, this.newComment, this.activeUser.id,
-                  this.viewModalProps.id));
+    const comment = new Comment(0, this.newComment, this.activeUser.id,
+      this.viewModalProps.id);
 
     this.newComment = '';
 
-    this.boardService.updateTask(this.viewModalProps)
+    this.boardService.addComment(comment)
       .subscribe((response: ApiResponse) => {
+        response.alerts.forEach(note => this.notes.add(note));
+
         if (response.status !== 'success') {
           return;
         }
@@ -582,7 +588,8 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   }
 
   getUserName(userId: number) {
-    const user = this.activeBoard.users.find((test: User) => test.id === +userId);
+    const user = this.activeBoard.users
+      .find((test: User) => test.id === +userId);
 
     return user.username;
   }
@@ -612,6 +619,34 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     if (event && event.stopPropagation) {
       event.stopPropagation();
     }
+  }
+
+  private uploadFile(attachment: Attachment, response: ApiResponse) {
+      const data = new FormData();
+      data.append('file', this.fileUpload);
+
+      this.boardService.uploadAttachment(data, attachment.diskfilename)
+        .subscribe(res => {
+          res.alerts.forEach(note => this.notes.add(note));
+
+          this.fileUploading = false;
+          this.resetFileInput();
+
+          if (res.status === 'success') {
+            response.alerts.forEach(note => this.notes.add(note));
+
+            this.viewModalProps.attachments.push(attachment);
+            this.updateTaskActivity(this.viewModalProps.id);
+          }
+        });
+  }
+
+  private resetFileInput() {
+    const upload = document.getElementsByClassName('fileuploadinput');
+
+    Array.from(upload).forEach((input: any) => {
+      input.value = '';
+    })
   }
 
   private updateTaskActivity(id: number) {

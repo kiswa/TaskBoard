@@ -178,8 +178,11 @@
           <i class="icon icon-eye" (click)="viewFile(item.diskfilename)"
              [title]="strings['boards_taskView'] + ' ' + item.filename"></i>
 
-          <i class="icon icon-download" [title]="strings['boards_taskDownload']
-                                                 + ' ' + item.filename"></i>
+          <a [href]="getUrl(item.diskfilename)" download="{{ item.filename }}">
+            <i class="icon icon-download"
+               [title]="strings['boards_taskDownload'] + ' ' +
+                        item.filename"></i>
+          </a>
 
           <i class="icon icon-trash-empty"
              [title]="strings['settings_remove'] + ' ' + item.filename"
@@ -191,12 +194,14 @@
     </div>
   </div>
 
-  <div>
+  <div class="file-upload">
     <h3>{{ strings['boards_taskAddAttachment'] }}</h3>
 
-    <input type="file" #fileupload (change)="fileChange(fileupload.files[0])">
+    <input type="file" class="fileuploadinput" #fileupload
+           (change)="fileChange(fileupload.files[0])">
 
-    <button (click)="uploadFile()" [disabled]="!fileupload.files[0]">
+    <button (click)="addFile()"
+            [disabled]="!fileupload.files[0] || fileUploading">
       <i class="icon icon-upload"></i>
 
       {{ strings['boards_taskUpload'] }}

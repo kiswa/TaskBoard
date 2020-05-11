@@ -123,6 +123,14 @@ export class BoardService {
     );
   }
 
+  addComment(comment: Comment): Observable<ApiResponse> {
+    return this.http.post('api/comments', comment)
+    .pipe(
+      map((response: ApiResponse) => response),
+      catchError((err) => of(err.error as ApiResponse))
+    );
+  }
+
   updateComment(comment: Comment): Observable<ApiResponse> {
     return this.http.post('api/comments/' + comment.id, comment)
     .pipe(
@@ -139,9 +147,16 @@ export class BoardService {
     );
   }
 
-  /* istanbul ignore next */
-  uploadAttachment(attachment: Attachment): Observable<ApiResponse> {
+  addAttachment(attachment: Attachment): Observable<ApiResponse> {
     return this.http.post('api/attachments', attachment)
+    .pipe(
+      map((response: ApiResponse) => response),
+      catchError((err) => of(err.error as ApiResponse))
+    );
+  }
+
+  uploadAttachment(data: FormData, hash: string): Observable<ApiResponse> {
+    return this.http.post('api/upload/' + hash, data)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
