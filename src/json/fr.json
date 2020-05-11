@@ -9,6 +9,8 @@
 
     "dashboard": "Tableau de bord",
     "boards": "Tableaux",
+    "files": "Visionneuse de fichiers",
+    "attachment": "Attachement",
     "settings": "Paramètres",
     "logout": "Déconnexion",
 
@@ -152,9 +154,11 @@
     "boards_limitCancel": "Annuler",
     "boards_limitSave": "Enregistrer",
     "boards_quickAdd": "Ajout rapide de tâche – titre seulement",
-    "boards_confirmRemoveTask": "Confirmation de la suppression de tâche",
+    "boards_confirmRemoveTask": "Confirmer la suppression de tâche",
     "boards_confirmWarning": "La suppression de tâche ne peut pas être annulé.",
     "boards_confirmContinue": "Continuer?",
+    "boards_confirmRemoveAttachment": "Confirmer la suppression de la pièce jointe",
+    "boards_confirmWarningAttachment": "La suppression d'une pièce jointe ne peut pas être annulé.",
     "boards_confirmRemoveComment": "Confirmation de la suppression de commentaire",
     "boards_confirmWarningComment": "La suppression de commentaire ne peut pas être annulé.",
 
@@ -169,6 +173,7 @@
     "boards_taskDescription": "Description",
     "boards_taskDescriptionPlaceholder": "Que faut-il faire?",
     "boards_taskAssignees": "Assigné(s)",
+    "boards_taskActivity": "Activité de tâche",
     "boards_taskCategories": "Catégorie(s)",
     "boards_taskColumn": "Colonne",
     "boards_taskColor": "Couleur",
@@ -200,6 +205,10 @@
     "boards_taskRemoveAttachment": "Supprimer la pièce-jointe",
     "boards_taskNoFileError": "Sélectionnez un fichier avant d'envoyer.",
     "boards_taskUpload": "Envoyer",
+    "boards_taskUploadedBy": "Envoyée par",
+    "boards_taskUploadedOn": "par",
+    "boards_taskView": "Voir",
+    "boards_taskDownload": "Télécharger",
 
     "boards_task": "Tâche",
     "boards_taskComplete": "Terminée",
