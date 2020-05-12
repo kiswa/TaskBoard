@@ -77,6 +77,7 @@
 <div class="tasks" *ngIf="columnData" cdkDropList
      [cdkDropListData]="columnData.tasks"
      (cdkDropListDropped)="drop($event, +columnData.id - 1)">
+
   <tb-task class="task-container" [id]="task.id" cdkDrag
            *ngFor="let task of columnData.tasks"
            [task]="task" [add-task]="getShowModalFunction()"
@@ -212,7 +213,7 @@
     <h3>{{ strings['boards_taskComments'] }}</h3>
 
     <div class="comment" *ngFor="let comment of viewModalProps.comments">
-      <div [innerHTML]="getComment(comment.text)" *ngIf="!comment.isEdit"></div>
+      <div [innerHTML]="comment.html" *ngIf="!comment.isEdit"></div>
 
       <textarea *ngIf="comment.isEdit" [(ngModel)]="commentEdit.text"
                 (keyup.control.enter)="comment.isEdit = false;editComment()"
@@ -298,7 +299,10 @@
     {{ strings['boards_taskTitle'] }}
 
     <input type="text" name="title" #focusMe [(ngModel)]="modalProps.title"
-           [placeholder]="strings['boards_taskTitlePlaceholder']">
+           [placeholder]="strings['boards_taskTitlePlaceholder']"
+           (keyup.control.enter)="modalProps.id === 0 ? addTask()
+                                  : updateTask()"
+           (keyup.enter)="preventEnter($event)">
   </label>
 
   <label>
@@ -321,7 +325,7 @@
     </select>
   </label>
 
-  <label>
+  <label *ngIf="modalProps.categories.length">
     {{ strings['boards_taskCategories'] }}
 
     <select name="categories" multiple [ngModel]="modalProps.categories"

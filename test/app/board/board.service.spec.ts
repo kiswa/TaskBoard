@@ -60,9 +60,10 @@ describe('BoardService', () => {
   });
 
   it('converts markdown', () => {
-    const actual = service.convertMarkdown('# Test');
-
-    expect(actual.html).toEqual('<h1 id="test">Test</h1>\n');
+    service.convertMarkdown('# Test')
+      .then(actual => {
+        expect(actual.html).toEqual('<h1 id="test">Test</h1>\n');
+      });
   });
 
   it('handles errors when getting all boards', () => {

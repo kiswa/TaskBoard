@@ -84,6 +84,8 @@
 </div>
 
 <div class="board" cdkDropListGroup *ngIf="activeBoard">
+  <div class="loading" *ngIf="loading">{{ strings['loading'] }}...</div>
+
   <tb-column class="column" [id]="column.id" [column]="column"
              *ngFor="let column of activeBoard.columns"
              (on-update-boards)="updateBoards()"></tb-column>

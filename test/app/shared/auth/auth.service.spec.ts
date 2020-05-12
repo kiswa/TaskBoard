@@ -52,7 +52,7 @@ describe('AuthService', () => {
   });
 
   it('authenticates a user', () => {
-    service.authenticate().subscribe(response => {
+    service.authenticate('').subscribe(response => {
       expect(response).toEqual(true);
     });
 
@@ -60,7 +60,7 @@ describe('AuthService', () => {
   });
 
   it('handles errors on authenticate', () => {
-    service.authenticate().subscribe(response => {
+    service.authenticate('').subscribe(response => {
       expect(response).toEqual(false);
     });
 
@@ -91,7 +91,7 @@ describe('AuthService', () => {
     testCall('api/logout', 'POST');
   });
 
-  const testCall = (url, method, isError = false) => {
+  const testCall = (url: string, method: string, isError = false) => {
     const req = httpMock.expectOne({ method, url });
     expect(req.request.method).toEqual(method);
 

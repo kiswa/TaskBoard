@@ -20,6 +20,8 @@ export class AuthService {
   public userOptions: UserOptions = null;
   public userChanged = this.activeUser.asObservable();
 
+  public attemptedRoute: string;
+
   constructor(public constants: Constants, private http: HttpClient,
               public router: Router, private strings: StringsService) {
   }
@@ -33,7 +35,11 @@ export class AuthService {
     this.activeUser.next(user);
   }
 
-  authenticate(): Observable<boolean> {
+  authenticate(url: string, isLogin = false): Observable<boolean> {
+    if (!isLogin) {
+      this.attemptedRoute = url;
+    }
+
     return this.http.post('api/authenticate', null)
     .pipe(
       map((response: ApiResponse) => {
@@ -46,24 +52,20 @@ export class AuthService {
 
   login(username: string, password: string,
         remember: boolean): Observable<ApiResponse> {
-      const json = JSON.stringify({
-        username,
-        password,
-        remember
-      });
+    const json = JSON.stringify({ username, password, remember });
 
-      return this.http.post('api/login', json)
-      .pipe(
-        map((response: ApiResponse) => {
-          this.updateUser(response.data[1], response.data[2]);
-          return response;
-        }),
-        catchError((err, _) => {
-          this.updateUser(null, null);
-          return of(err.error as ApiResponse);
-        })
-      );
-    }
+    return this.http.post('api/login', json)
+    .pipe(
+      map((response: ApiResponse) => {
+        this.updateUser(response.data[1], response.data[2]);
+        return response;
+      }),
+      catchError((err, _) => {
+        this.updateUser(null, null);
+        return of(err.error as ApiResponse);
+      })
+    );
+  }
 
   logout(): Observable<ApiResponse> {
     return this.http.post('api/logout', null)

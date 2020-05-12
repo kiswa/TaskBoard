@@ -78,48 +78,77 @@ describe('TaskDisplay', () => {
     expect(component.taskData.id).toEqual(1);
   });
 
-  it('parses task description markdown into text', () => {
+  it('parses task description markdown into text', done => {
     setupBoard();
     component.taskData.description = '# Make this HTML';
     component.activeBoard.issue_trackers = [
-      { regex: 'test', url: '%BUGID%' }
-    ] as any;
+      { id: 1, regex: 'test', url: '%BUGID%' }
+    ];
     component.ngOnInit();
 
-    // tslint:disable-next-line
-    expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
-      .toEqual('<h1 id="make-this-html">Make this HTML</h1>\n');
+    setTimeout(() => {
+      // tslint:disable-next-line
+      expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
+        .toEqual('<h1 id="make-this-html">Make this HTML</h1>\n');
+      done();
+    }, 100);
   });
 
-  it('handles checklists in markdown', () => {
+  it('handles checklists in markdown', done => {
     setupBoard();
     component.taskData.description = ' - [x] One\n - [ ] Two';
     component.ngOnInit();
 
-    // tslint:disable-next-line
-    expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
-      .toEqual('<ul>\n<li><i class="icon icon-check"></i>One</li>\n' +
-        '<li><i class="icon icon-check-empty"></i>Two</li>\n</ul>\n');
+    setTimeout(() => {
+      // tslint:disable-next-line
+      expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
+        .toEqual('<ul>\n<li><i class="icon icon-check"></i>One</li>\n' +
+          '<li><i class="icon icon-check-empty"></i>Two</li>\n</ul>\n');
+      done();
+    }, 100);
   });
 
-  it('adds attributes to links in markdown', () => {
+  it('adds attributes to links in markdown', done => {
     setupBoard();
     component.taskData.description = '[link](google.com)';
     component.ngOnInit();
 
-    // tslint:disable-next-line
-    expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
-      .toContain('target="tb_external" rel="noreferrer"');
+    setTimeout(() => {
+      // tslint:disable-next-line
+      expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
+        .toContain('target="tb_external" rel="noreferrer"');
+      done();
+    }, 100);
   });
 
-  it('provides a custom style for percentage of task completed', () => {
+  it('handles issue trackers in markdown', done => {
+    setupBoard();
+    component.activeBoard.issue_trackers = [
+      { id: 1, url: 'TaskBoard/issues/%BUGID%', regex: '(?:Issue)?#(\\d+)' }
+    ];
+
+    component.taskData.description = '#123';
+    component.ngOnInit();
+
+    setTimeout(() => {
+      // tslint:disable-next-line
+      expect(component.taskData.html['changingThisBreaksApplicationSecurity'])
+        .toContain('href="TaskBoard/issues/123"');
+      done();
+    }, 100);
+  });;
+
+  it('provides a custom style for percentage of task completed', done => {
     component.percentComplete = .5;
 
     const actual = component.getPercentStyle();
 
-    // tslint:disable-next-line
-    expect((actual as any)['changingThisBreaksApplicationSecurity'])
-      .toContain('width: 50%;');
+    setTimeout(() => {
+      // tslint:disable-next-line
+      expect((actual as any)['changingThisBreaksApplicationSecurity'])
+        .toContain('width: 50%;');
+      done();
+    }, 100);
   });
 
   it('provides a custom title for percentage of task completed', () => {

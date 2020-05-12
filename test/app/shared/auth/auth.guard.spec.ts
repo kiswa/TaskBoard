@@ -28,7 +28,8 @@ describe('AuthGuard', () => {
   it('implements CanActivate', () => {
     let actual = false;
 
-    service.canActivate().subscribe(value => actual = value);
+    service.canActivate(null, { url: '' } as any)
+      .subscribe(value => actual = value);
 
     expect(actual).toEqual(true);
   });

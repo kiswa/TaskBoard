@@ -20,10 +20,12 @@ export class ApiInterceptor implements HttpInterceptor {
 
   constructor(private router: Router) {}
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(request: HttpRequest<any>, next: HttpHandler):
+    Observable<HttpEvent<any>> {
+
     const headers = (request.body instanceof FormData)
-    ? { }
-    : { 'Content-Type': 'application/json' };
+      ? { }
+      : { 'Content-Type': 'application/json' };
     const token = sessionStorage.getItem(this.JWT_KEY);
 
     if (token !== null) {

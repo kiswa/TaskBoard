@@ -29,6 +29,11 @@
   white-space: nowrap;
   width: 100%;
 
+  .loading {
+    font-size: 24px;
+    width: 100%;
+  }
+
   .icon-minus-squared-alt,
   .icon-plus-squared-alt {
     cursor: pointer;
@@ -366,7 +371,7 @@
     .description {
       max-height: 20em;
       overflow: auto;
-      padding: 1em;
+      padding: 0 1em;
 
       .checklist {
         list-style: none;
@@ -380,6 +385,7 @@
       margin-top: 12px;
 
       button {
+        margin: 0;
         width: 45%;
       }
     }

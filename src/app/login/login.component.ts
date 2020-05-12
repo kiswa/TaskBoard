@@ -28,12 +28,12 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.authenticate()
-    .subscribe(isAuth => {
-      if (isAuth) {
-        this.router.navigate(['/boards']);
-      }
-    });
+    this.authService.authenticate(undefined, true)
+      .subscribe(isAuth => {
+        if (isAuth) {
+          this.router.navigate(['/boards']);
+        }
+      });
   }
 
   login(): void {
@@ -53,6 +53,15 @@ export class LoginComponent implements OnInit {
       });
 
       if (response.status === 'success') {
+        if (this.authService.attemptedRoute?.length) {
+          this.router.navigate([this.authService.attemptedRoute]);
+
+          this.authService.attemptedRoute = undefined;
+          this.isSubmitted = false;
+
+          return;
+        }
+
         this.router.navigate(['/boards']);
       }
 

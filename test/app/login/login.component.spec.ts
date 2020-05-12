@@ -82,6 +82,11 @@ describe('Login', () => {
     component.login();
 
     expect(spy).toHaveBeenCalledWith(['/boards']);
+
+    component.authService.attemptedRoute = '/boards/2';
+    component.login();
+
+    expect(spy).toHaveBeenCalledWith(['/boards/2']);
   });
 });
 

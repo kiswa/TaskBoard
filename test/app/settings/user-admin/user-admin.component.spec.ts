@@ -132,6 +132,25 @@ describe('UserAdmin', () => {
     expect(called).toEqual(true);
   });
 
+  it('shows a modal', () => {
+    component.showModal();
+    expect(component.modalProps.prefix).toEqual(true);
+
+    const user = new UserDisplay(1);
+    user.board_access = [1, 2];
+
+    component.showModal(false, user);
+    expect(component.modalProps.prefix).toEqual(false);
+  });
+
+  it('shows a confirmation modal', () => {
+    const user = new UserDisplay(1);
+
+    component.showConfirmModal(user);
+
+    expect(component.userToRemove).toEqual(user);
+  });
+
   it('validates modal user data', () => {
     let called = false;
 

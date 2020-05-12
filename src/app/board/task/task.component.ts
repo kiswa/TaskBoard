@@ -141,7 +141,7 @@ export class TaskDisplayComponent implements OnInit {
 
     taskData.column_id = boardData.columns[0].id;
 
-    this.boardService.addTask(taskData)
+    this.boardService.addTask(taskData as any)
       .subscribe((response: ApiResponse) => {
         if (response.status === 'success') {
           this.notes.add(
@@ -201,16 +201,17 @@ export class TaskDisplayComponent implements OnInit {
       return;
     }
 
-    const data = this.boardService.convertMarkdown(
-      this.taskData.description, this.markedCallback, true
-    );
+    this.boardService
+      .convertMarkdown(this.taskData.description, this.markedCallback, true)
+      .then(data => {
+        data.html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}"  }}');
 
-    data.html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}"  }}');
-    if (data.counts.total) {
-      this.percentComplete = data.counts.complete / data.counts.total;
-    }
+        if (data.counts.total) {
+          this.percentComplete = data.counts.complete / data.counts.total;
+        }
 
-    this.taskData.html = this.sanitizer.bypassSecurityTrustHtml(data.html);
+        this.taskData.html = this.sanitizer.bypassSecurityTrustHtml(data.html);
+      });
   }
 
   private checkDueDate() {
@@ -241,31 +242,22 @@ export class TaskDisplayComponent implements OnInit {
 
   // Needs anonymous function for proper `this` context.
   private markedCallback = (_: any, text: string) => {
-    if (!this.activeBoard.issue_trackers) {
-      return;
-    }
-
     this.activeBoard.issue_trackers.forEach(tracker => {
       const re = new RegExp(tracker.regex, 'ig');
       const replacements = new Array<any>();
+
       let result = re.exec(text);
 
       while (result !== null) {
-        const link = '<a href="' +
-          tracker.url.replace(/%BUGID%/g, result[1]) +
-          '" target="tb_external" rel="noreferrer">' +
-          result[0] + '</a>';
+        const link = '<a href="' + tracker.url.replace(/%BUGID%/g, result[1]) +
+          '" target="tb_external" rel="noreferrer">' + result[0] + '</a>';
 
-        replacements.push({
-          str: result[0],
-          link
-        });
+        replacements.push({ str: result[0], link });
         result = re.exec(text);
       }
 
       for (let i = replacements.length - 1; i >= 0; --i) {
-        text = text.replace(replacements[i].str,
-          replacements[i].link);
+        text = text.replace(replacements[i].str, replacements[i].link);
       }
     });
 

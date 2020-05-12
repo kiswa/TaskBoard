@@ -1,4 +1,6 @@
 <?php
+
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\Factory\AppFactory;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Psr7\Response;
@@ -35,12 +37,24 @@ $container->set('logger', function() {
   return $logger;
 });
 
+$container->set('strings', function() {
+  $json = file_get_contents('../json/en.json');
+
+  return json_decode($json);
+});
+
 $errorMiddleware->setErrorHandler(HttpNotFoundException::class,
-  function () {
+  function (ServerRequestInterface $request) {
     $response = new Response();
 
+    $message = 'Matching API call not found.';
+
+    if (strpos($request->getUri()->getPath(), 'uploads')) {
+      $message = 'File not found.';
+    }
+
     $response->withHeader('Content-Type', 'application/json')
-             ->getBody()->write('{ message: "Matching API call not found." }');
+             ->getBody()->write('{ message: "' . $message . '" }');
 
     return $response->withStatus(404);
   }

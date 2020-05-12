@@ -110,6 +110,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     this.modalProps = new Task();
     this.viewModalProps = new Task();
 
+    // These are kept locally to allow override in tests.
     this.moveItemInArray = moveItemInArray;
     this.transferArrayItem = transferArrayItem;
 
@@ -175,7 +176,9 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   }
 
   userName(id: number) {
-    return this.activeBoard.users.find(u => u.id === id).username;
+    const user = this.activeBoard.users.find(u => u.id === id);
+
+    return user ? user.username : this.strings.none;
   }
 
   sortTasks() {
@@ -582,11 +585,6 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     this.modal.open(this.MODAL_ID + this.columnData.id);
   }
 
-  getComment(text: string) {
-    const data = this.boardService.convertMarkdown(text, this.markedCallback);
-    return this.sanitizer.bypassSecurityTrustHtml(data.html);
-  }
-
   getUserName(userId: number) {
     const user = this.activeBoard.users
       .find((test: User) => test.id === +userId);
@@ -602,6 +600,22 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     const viewTask = this.columnData.tasks.find(task => task.id === taskId);
 
     this.updateTaskActivity(taskId);
+
+    this.boardService
+      .convertMarkdown(viewTask.description, this.markedCallback)
+      .then(data => {
+        data.html.replace(/(\{)([^}]+)(\})/g, '{{ "{" }}$2{{ "}"  }}');
+
+        this.viewModalProps.html =
+          this.sanitizer.bypassSecurityTrustHtml(data.html);
+      });
+
+    viewTask.comments.forEach(comment => {
+      this.boardService.convertMarkdown(comment.text, this.markedCallback)
+        .then(data => {
+          comment.html = this.sanitizer.bypassSecurityTrustHtml(data.html);
+        });
+    });
 
     this.newComment = '';
     this.viewModalProps = Object.assign({}, viewTask);
@@ -663,22 +677,17 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
   private convertToTask(updatedTask: any) {
     const task = new Task(updatedTask.id,
-                        updatedTask.title,
-                        updatedTask.description,
-                        updatedTask.color,
-                        updatedTask.due,
-                        updatedTask.points,
-                        updatedTask.position,
-                        updatedTask.column_id,
-                        updatedTask.ownComment,
-                        updatedTask.ownAttachment,
-                        updatedTask.sharedUser,
-                        updatedTask.sharedCategory);
-    const data = this.boardService.convertMarkdown(task.description,
-      (_, text) => text, true);
-
-    task.html = data.html;
-
+                          updatedTask.title,
+                          updatedTask.description,
+                          updatedTask.color,
+                          updatedTask.due,
+                          updatedTask.points,
+                          updatedTask.position,
+                          updatedTask.column_id,
+                          updatedTask.ownComment,
+                          updatedTask.ownAttachment,
+                          updatedTask.sharedUser,
+                          updatedTask.sharedCategory);
     return task;
   }
 
@@ -718,24 +727,19 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     this.activeBoard.issue_trackers.forEach(tracker => {
       const re = new RegExp(tracker.regex, 'ig');
       const replacements = new Array<any>();
+
       let result = re.exec(text);
 
       while (result !== null) {
-        const link = '<a href="' +
-          tracker.url.replace(/%BUGID%/g, result[1]) +
-          '" target="tb_external" rel="noreferrer">' +
-          result[0] + '</a>';
+        const link = '<a href="' + tracker.url.replace(/%BUGID%/g, result[1]) +
+          '" target="tb_external" rel="noreferrer">' + result[0] + '</a>';
 
-        replacements.push({
-          str: result[0],
-          link
-        });
+        replacements.push({ str: result[0], link });
         result = re.exec(text);
       }
 
       for (let i = replacements.length - 1; i >= 0; --i) {
-        text = text.replace(replacements[i].str,
-          replacements[i].link);
+        text = text.replace(replacements[i].str, replacements[i].link);
       }
     });
 

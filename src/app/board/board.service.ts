@@ -34,14 +34,14 @@ export class BoardService {
     this.initMarked();
   }
 
-  convertMarkdown(markdown: string, callback = this.defaultCallback, doCount = false): MarkedReturn {
+  async convertMarkdown(markdown: string, callback = this.defaultCallback,
+                        doCount = false): Promise<MarkedReturn> {
     this.checkCounts.total = 0;
     this.checkCounts.complete = 0;
 
     const retVal: MarkedReturn = { html: '', counts: {} };
 
-    retVal.html = marked(markdown);
-    callback(false, retVal.html);
+    retVal.html = callback(false, marked(markdown));
 
     if (doCount) {
       retVal.counts = this.checkCounts;

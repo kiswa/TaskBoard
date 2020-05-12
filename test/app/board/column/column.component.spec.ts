@@ -558,14 +558,6 @@ describe('ColumnDisplay', () => {
     expect(component.viewModalProps.column_id).toEqual(1);
   });
 
-  it('gets a comment converted from markdown', () => {
-    component.activeBoard = { issue_trackers: [] } as any;
-
-    const comment = component.getComment('# Testing');
-
-    expect(comment).toEqual('<h1 id="testing">Testing</h1>\n');
-  });
-
   it('gets a username by user id', () => {
     component.activeBoard = {
       users: [{ id: 1, username: 'test' } as any]

@@ -1,4 +1,8 @@
+import { SafeHtml } from '@angular/platform-browser';
+
 export class Comment {
+  public html: SafeHtml;
+
   constructor(public id: number = 0,
               public text: string = '',
               public user_id: number = 0, // tslint:disable-line
