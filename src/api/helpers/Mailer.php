@@ -4,7 +4,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 class Mailer {
   // Edit these values for your email setup.
   const USE_SENDMAIL = true; // If false, uses SMTP settings below
-  const FROM_EMAIL = 'taskboard@' . $_SERVER['HTTP_HOST'];
+  const FROM_EMAIL = 'taskboard@hostname.com';
   const FROM_NAME = 'TaskBoard';
 
   // SMTP Settings - Not used if USE_SENDMAIL is true
