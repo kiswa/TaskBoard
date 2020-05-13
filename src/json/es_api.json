@@ -64,8 +64,8 @@
   "api_userBadPword": "Error al actualizar el usuario. Contraseña actual incorrecta.",
 
   "mail_sent": "Correo electrónico enviado",
-  "mail_error": "Error al enviar el correo electrónico",
-  "mail_subject": "Notificación del tablero de tareas",
+  "mail_error": "Error al enviar el correo electrónico",
+  "mail_subject": "Notificación del tablero de tareas",
 
   "mail_template_openBoardLink": "<br><br><a href=\"%hostUrl%/boards/%boardId%\">Abrir TaskBoard</a>",
   "mail_template_editBoard": "%username% tablero editado %boardName%",

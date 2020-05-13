@@ -45,9 +45,9 @@ class Mailer {
 
     if (!$this->mail->send()) {
       return $this->strings->mail_error;
-    } else {
-      return $this->strings->mail_sent;
     }
+
+    return $this->strings->mail_sent;
   }
 
   private function parseTemplate($data) {

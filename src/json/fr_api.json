@@ -62,10 +62,10 @@
   "api_userRemoved": "Utilisateur supprimé ",
   "api_usernameExists": "Le nom d'utilisateur existe déjà. Modifiez le nom d'utilisateur et réessayez.",
   "api_userBadPword": "Erreur lors de la mise à jour de l'utilisateur. Mot de passe actuel incorrect.",
-  
-  "mail_sent": "E-mail envoyé.",
-  "mail_error": "E-mail non envoyé.",
-  "mail_subject": "Notification TaskBoard",
+
+  "mail_sent":"E-mail envoyé.",
+  "mail_error":"E-mail non envoyé.",
+  "mail_subject":"Notification TaskBoard",
 
   "mail_template_openBoardLink": "<br><br><a href=\"%hostUrl%/boards/%boardId%\">Ouvrir TaskBoard</a>",
   "mail_template_editBoard": "%username% a modifié la carte %boardName%",
