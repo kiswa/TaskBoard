@@ -61,5 +61,17 @@
   "api_userRemoveError": "Error removing user. No user found for ID ",
   "api_userRemoved": "User removed ",
   "api_usernameExists": "Username already exists. Change the username and try again.",
-  "api_userBadPword": "Error updating user. Incorrect current password."
+  "api_userBadPword": "Error updating user. Incorrect current password.",
+
+  "mail_sent": "Email sent.",
+  "mail_error": "Email failed to send.",
+  "mail_subject": "TaskBoard Notification",
+
+  "mail_template_openBoardLink": "<br><br><a href=\"%hostUrl%/boards/%boardId%\">Open TaskBoard</a>",
+  "mail_template_editBoard": "%username% edited board %boardName%",
+  "mail_template_editComment": "%username% edited comment in board %boardName%.<br>Task: %taskName%<br>Comment: %comment%",
+  "mail_template_editTask": "%username% edited task in board %boardName%.<br>Task: %taskName%<br>Description: %taskDescription%<br>Due Date: %taskDueDate%<br>Asignees: %taskAssignees%<br>Categories: %taskCategories%<br>Points: %taskPoints%<br>Column: %taskColumnName%<br>Position: %taskPosition%",
+  "mail_template_newBoard": "%username% added board %boardName%",
+  "mail_template_newComment": "%username% added a comment in board %boardName%.<br>Task: %taskName%<br>Comment: %comment%",
+  "mail_template_newTask": "%username% added a task in board %boardName%.<br>Task: %taskName%<br>Description: %taskDescription%<br>Due Date: %taskDueDate%<br>Asignees: %taskAssignees%<br>Categories: %taskCategories%<br>Points: %taskPoints%<br>Column: %taskColumnName%<br>Position: %taskPosition%"
 }

@@ -7,11 +7,13 @@ abstract class BaseController {
   protected $logger;
   protected $dbLogger;
   protected $strings;
+  protected $mailer;
 
   public function __construct(ContainerInterface $container) {
     $this->apiJson = new ApiJson();
     $this->logger = $container->get('logger');
     $this->dbLogger = new DbLogger();
+    $this->mailer = new Mailer('en');
 
     $this->loadStrings('en'); // Default to English
   }
@@ -73,9 +75,12 @@ abstract class BaseController {
 
   private function loadStrings($lang) {
     $json = '{}';
+
     if (!$lang) {
       $lang = 'en';
     }
+
+    $this->mailer = new Mailer($lang);
 
     try {
       $json =

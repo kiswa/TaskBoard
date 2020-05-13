@@ -61,5 +61,17 @@
   "api_userRemoveError": "Erreur lors de la suppression de l'utilisateur. Aucun utilisateur trouvé pour l'ID ",
   "api_userRemoved": "Utilisateur supprimé ",
   "api_usernameExists": "Le nom d'utilisateur existe déjà. Modifiez le nom d'utilisateur et réessayez.",
-  "api_userBadPword": "Erreur lors de la mise à jour de l'utilisateur. Mot de passe actuel incorrect."
+  "api_userBadPword": "Erreur lors de la mise à jour de l'utilisateur. Mot de passe actuel incorrect.",
+  
+  "mail_sent": "E-mail envoyé.",
+  "mail_error": "E-mail non envoyé.",
+  "mail_subject": "Notification TaskBoard",
+
+  "mail_template_openBoardLink": "<br><br><a href=\"%hostUrl%/boards/%boardId%\">Ouvrir TaskBoard</a>",
+  "mail_template_editBoard": "%username% a modifié la carte %boardName%",
+  "mail_template_editComment": "%username% commentaire modifié dans le tableau %boardName%.<br>Tâche: %taskName%<br>Commentaire: %comment%",
+  "mail_template_editTask": "%username% tâche modifiée dans la carte %boardName%.<br>Tâche: %taskName%<br>Description: %taskDescription%<br>Date d'échéance: %taskDueDate%<br>Destinataires: %taskAssignees%<br>Catégories: %taskCategories%<br>Points: %taskPoints%<br>Colonne: %taskColumnName%<br>Position: %taskPosition%",
+  "mail_template_newBoard": "%username% a ajouté la carte %boardName%",
+  "mail_template_newComment": "%username% a ajouté un commentaire dans le tableau %boardName%.<br>Tâche: %taskName%<br>Commentaire: %comment%",
+  "mail_template_newTask": "%username% a ajouté une tâche dans la carte %boardName%.<br>Tâche: %taskName%<br>Description: %taskDescription%<br>Date d'échéance: %taskDueDate%<br>Destinataires: %taskAssignees%<br>Catégories: %taskCategories%<br>Points: %taskPoints%<br>Colonne: %taskColumnName%<br>Position: %taskPosition%"
 }

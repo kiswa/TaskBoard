@@ -61,5 +61,17 @@
   "api_userRemoveError": "Error al eliminar usuario. No se encontró ningún usuario para ID ",
   "api_userRemoved": "Usuario eliminado ",
   "api_usernameExists": "El nombre de usuario ya existe. Cambie el nombre de usuario e intente nuevamente.",
-  "api_userBadPword": "Error al actualizar el usuario. Contraseña actual incorrecta."
+  "api_userBadPword": "Error al actualizar el usuario. Contraseña actual incorrecta.",
+
+  "mail_sent": "Correo electrónico enviado",
+  "mail_error": "Error al enviar el correo electrónico",
+  "mail_subject": "Notificación del tablero de tareas",
+
+  "mail_template_openBoardLink": "<br><br><a href=\"%hostUrl%/boards/%boardId%\">Abrir TaskBoard</a>",
+  "mail_template_editBoard": "%username% tablero editado %boardName%",
+  "mail_template_editComment": "%username% comentario editado en el tablero %boardName%.<br>Tarea: %taskName%<br>Comentario: %comment%",
+  "mail_template_editTask": "%username% tarea editada en el tablero %boardName%.<br>Tarea: %taskName%<br>Descripción: %taskDescription%<br>Fecha de vencimiento: %taskDueDate%<br>Asignees: %taskAssignees%<br>Categorías: %taskCategories%<br>Puntos: %taskPoints%<br>Columna: %taskColumnName%<br>Posición: %taskPosition% ",
+  "mail_template_newBoard": "%username% placa agregada %boardName%",
+  "mail_template_newComment": "%username% agregó un comentario en el tablero %boardName%.<br>Tarea: %taskName%<br>Comentario: %comment%",
+  "mail_template_newTask": "%username% agregó una tarea en el tablero %boardName%.<br>Tarea: %taskName%<br>Descripción: %taskDescription%<br>Fecha de vencimiento: %taskDueDate%<br>Asignees: %taskAssignees%<br>Categorías: %taskCategories%<br>Puntos: %taskPoints%<br>Columna: %taskColumnName%<br>Posición: %taskPosition% "
 }
