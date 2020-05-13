@@ -26,9 +26,11 @@ If you're comfortable changing code, you can use any database [supported by RedB
 
 Installing TaskBoard is as easy as 1, 2, 3!
 
-1. Download [the latest release](#) (or whatever version you want)
+1. Download [the latest release](#) since v1.0.0
 2. Extract it to your webserver
 3. Verify the `api` directory is writable
+
+Optionally, you will want to edit `api/helpers/mailer.php` if you intend to use email features.
 
 ### Server Config
 
@@ -196,10 +198,10 @@ Because I like seeing the numbers.
 Language   |   Files |    Blank |  Comment |    Code
 -----------|--------:|---------:|---------:|---------:
 TypeScript |    66   |    959   |    120   |   4060
-PHP        |    18   |    665   |     24   |   2043
-HTML       |    21   |    257   |      0   |   1538
+PHP        |    19   |    704   |     33   |   2133
+HTML       |    21   |    257   |      0   |   1537
 SASS       |    14   |    296   |     10   |   1338
-**SUM:**   | **119** | **2177** |  **154** | **8978**
+**SUM:**   | **120** | **2216** |  **163** | **9068**
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
 
