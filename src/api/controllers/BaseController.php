@@ -6,11 +6,21 @@ abstract class BaseController {
   protected $apiJson;
   protected $logger;
   protected $dbLogger;
+  protected $strings;
 
   public function __construct(ContainerInterface $container) {
     $this->apiJson = new ApiJson();
     $this->logger = $container->get('logger');
     $this->dbLogger = new DbLogger();
+
+    $this->loadStrings('en'); // Default to English
+  }
+
+  public function setStrings($userOptionId) {
+    $userOpts = R::load('useroption', $userOptionId);
+    $lang = $userOpts->language;
+
+    $this->loadStrings($lang);
   }
 
   public function jsonResponse($response, $status = 200) {
@@ -26,7 +36,7 @@ abstract class BaseController {
 
   public function checkBoardAccess($boardId, $request) {
     if (!Auth::HasBoardAccess($request, $boardId)) {
-      $this->apiJson->addAlert('error', 'Access restricted.');
+      $this->apiJson->addAlert('error', $this->strings->api_accessRestricted);
 
       return false;
     }
@@ -50,14 +60,33 @@ abstract class BaseController {
 
     $user = R::load('user', Auth::GetUserId($request));
     if ((int)$user->security_level > $securityLevel) {
-      $this->apiJson->addAlert('error', 'Insufficient privileges.');
+      $this->apiJson->addAlert('error', $this->strings->api_accessRestricted);
 
       return 403;
     }
 
+    $this->setStrings($user->userOptionId);
     $this->apiJson->addData($request->getHeader('Authorization'));
 
     return $status;
+  }
+
+  private function loadStrings($lang) {
+    $json = '{}';
+    if (!$lang) {
+      $lang = 'en';
+    }
+
+    try {
+      $json =
+        file_get_contents(__DIR__ . '/../../strings/' .  $lang . '_api.json');
+    } catch (Exception $ex) {
+      $ex->getMessage();
+
+      $json = file_get_contents(__DIR__ . '/../../json/' . $lang . '_api.json');
+    }
+
+    $this->strings = json_decode($json);
   }
 }
 

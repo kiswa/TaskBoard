@@ -268,7 +268,7 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->attachments->uploadFile($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -283,7 +283,7 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->attachments->removeAttachment($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Attachment file.png removed.',
+    $this->assertEquals('Attachment removed (file.png).',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -299,7 +299,7 @@ class AttachmentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->attachments->removeAttachment($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 

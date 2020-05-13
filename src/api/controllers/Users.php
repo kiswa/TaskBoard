@@ -30,14 +30,14 @@ class Users extends BaseController {
     if ($user->id === 0) {
       $this->logger->error('Attempt to load user ' . $id .
         ' failed.');
-      $this->apiJson->addAlert('error', 'No user found for ID ' .
+      $this->apiJson->addAlert('error', $this->strings->api_noUserId .
         $id . '.');
 
       return $this->jsonResponse($response);
     }
 
     if (!in_array($id, $userIds)) {
-      $this->apiJson->addAlert('error', 'Access restricted.');
+      $this->apiJson->addAlert('error', $this->strings->api_accessRestricted);
 
       return $this->jsonResponse($response, 403);
     }
@@ -77,8 +77,7 @@ class Users extends BaseController {
 
     if ($user->id === -1) {
       $this->logger->error('Add User: ', [$user]);
-      $this->apiJson->addAlert('error', 'Error adding user. ' .
-        'Please check your entries and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_userError);
 
       return $this->jsonResponse($response);
     }
@@ -107,8 +106,8 @@ class Users extends BaseController {
       '', json_encode($user), 'user', $user->id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success',
-      'User ' . $user->username . ' added.');
+    $this->apiJson->addAlert('success', $this->strings->api_userAdded .
+      '(' . $user->username . ').');
     $this->apiJson->addData($this->getAllUsersCleaned($request));
 
     return $this->jsonResponse($response);
@@ -125,8 +124,7 @@ class Users extends BaseController {
 
     if (!property_exists($data, 'id')) {
       $this->logger->error('Update User: ', [$user, $data]);
-      $this->apiJson->addAlert('error', 'Error updating user. ' .
-        'Please check your entries and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_userUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -164,8 +162,7 @@ class Users extends BaseController {
 
     if ((int)$user->id !== (int)$update->id) {
       $this->logger->error('Update User: ', [$user, $update]);
-      $this->apiJson->addAlert('error', 'Error updating user. ' .
-        'Please check your entries and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_userUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -187,8 +184,8 @@ class Users extends BaseController {
       'user', $update->id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success',
-      'User ' . $update->username . ' updated.');
+    $this->apiJson->addAlert('success', $this->strings->api_userUpdated .
+      '(' . $update->username . ').');
     $this->apiJson->addData(json_encode($this->cleanUser($update)));
 
     return $this->jsonResponse($response);
@@ -204,7 +201,7 @@ class Users extends BaseController {
     $actor = R::load('user', Auth::GetUserId($request));
 
     if ($actor->id !== $user->id) {
-      $this->apiJson->addAlert('error', 'Access restricted.');
+      $this->apiJson->addAlert('error', $this->strings->api_accessRestricted);
 
       return $this->jsonResponse($response, 403);
     }
@@ -221,8 +218,7 @@ class Users extends BaseController {
     if ($userOpts->id !== $update->id) {
       $this->logger->error('Update User Options: ',
         [$userOpts, $update]);
-      $this->apiJson->addAlert('error', 'Error updating user options. ' .
-        'Please check your entries and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_userOptError);
 
       return $this->jsonResponse($response);
     }
@@ -235,7 +231,7 @@ class Users extends BaseController {
       'user_option', $update->id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success', 'User options updated.');
+    $this->apiJson->addAlert('success', $this->strings->api_userOptUpdated);
     $this->apiJson->addData(json_encode($update));
     $this->apiJson->addData(json_encode($this->cleanUser($user)));
 
@@ -252,7 +248,7 @@ class Users extends BaseController {
     $actor = R::load('user', Auth::GetUserId($request));
 
     if ($actor->id !== $user->id) {
-      $this->apiJson->addAlert('error', 'Access restricted.');
+      $this->apiJson->addAlert('error', $this->strings->api_accessRestricted);
 
       return $this->jsonResponse($response, 403);
     }
@@ -294,8 +290,8 @@ class Users extends BaseController {
 
     if ((int)$user->id !== $id) {
       $this->logger->error('Remove User: ', [$user]);
-      $this->apiJson->addAlert('error', 'Error removing user. ' .
-        'No user found for ID ' . $id . '.');
+      $this->apiJson->addAlert('error', $this->strings->api_userRemoveError .
+        $id . '.');
 
       return $this->jsonResponse($response);
     }
@@ -309,8 +305,8 @@ class Users extends BaseController {
       json_encode($before), '', 'user', $id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success',
-      'User ' . $before->username . ' removed.');
+    $this->apiJson->addAlert('success', $this->strings->api_userRemoved .
+      '(' . $before->username . ').');
     $this->apiJson->addData($this->getAllUsersCleaned($request));
 
     return $this->jsonResponse($response);
@@ -438,8 +434,7 @@ class Users extends BaseController {
     $existing = R::findOne('user', 'username = ?', [ $data->username ]);
 
     if ($existing) {
-      $this->apiJson->addAlert('error', 'Username already exists. ' .
-        'Change the username and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_usernameExists);
       return true;
     }
 
@@ -452,7 +447,7 @@ class Users extends BaseController {
         return true;
       }
 
-      $this->apiJson->addAlert('error', 'Access restricted.');
+      $this->apiJson->addAlert('error', $this->strings->api_accessRestricted);
       return false;
     }
 
@@ -461,8 +456,7 @@ class Users extends BaseController {
 
   private function verifyPassword($data, $user) {
     if (!password_verify($data->old_password, $user->password_hash)) {
-      $this->apiJson->addAlert('error', 'Error updating user. ' .
-        'Incorrect current password.');
+      $this->apiJson->addAlert('error', $this->strings->api_userBadPword);
       return false;
     }
 

@@ -49,7 +49,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->boards->getAllBoards($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -76,7 +76,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->boards->getBoard($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -119,7 +119,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->boards->addBoard($request,
       new ResponseMock(), null);
 
-    $this->assertEquals('Board test added.',
+    $this->assertEquals('Board added (test).',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -131,7 +131,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->boards->addBoard($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -170,7 +170,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->boards->updateBoard($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -256,7 +256,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->boards->removeBoard($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Board test removed.',
+    $this->assertEquals('Board removed (test).',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -268,7 +268,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->boards->removeBoard($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 

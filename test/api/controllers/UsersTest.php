@@ -38,7 +38,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $actual = $this->users->getAllUsers($request,
       new ResponseMock(), null);
     $this->assertEquals('error', $actual->body->data->alerts[0]['type']);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -69,7 +69,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->users->getUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -144,7 +144,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->users->addUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -274,7 +274,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->users->updateUser($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -466,7 +466,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
     $actual = $this->users->removeUser($request,
       new ResponseMock(), $args);
 
-    $this->assertEquals('User tester removed.',
+    $this->assertEquals('User removed (tester).',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -481,7 +481,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->users->removeUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 

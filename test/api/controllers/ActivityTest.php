@@ -44,9 +44,9 @@ class ActivityTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $actual = $this->activity->getActivity($request,
-      new ResponseMock(), $args);
-    $this->assertEquals('Access restricted.', $actual->body->data->alerts[0]['text']);
+    $actual = $this->activity->getActivity($request, new ResponseMock(), $args);
+    $this->assertEquals('Access restricted.',
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testGetActivityForTask() {

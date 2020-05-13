@@ -14,7 +14,7 @@ class Comments extends BaseController {
     if ($comment->id === 0) {
       $this->logger->error('Attempt to load comment ' .
         $args['id'] . ' failed.');
-      $this->apiJson->addAlert('error', 'No comment found for ID ' .
+      $this->apiJson->addAlert('error', $this->strings->api_noCommentId .
         $args['id'] . '.');
 
       return $this->jsonResponse($response);
@@ -47,8 +47,7 @@ class Comments extends BaseController {
     $task = R::load('task', $comment->task_id);
     if ($task->id === 0) {
       $this->logger->error('Add Comment: ', [$comment]);
-      $this->apiJson->addAlert('error', 'Error adding comment. ' .
-        'Please try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_commentError);
 
       return $this->jsonResponse($response);
     }
@@ -66,7 +65,7 @@ class Comments extends BaseController {
 
     $this->apiJson->setSuccess();
     $this->apiJson->addData(R::exportAll($task));
-    $this->apiJson->addAlert('success', 'Comment added.');
+    $this->apiJson->addAlert('success', $this->strings->api_commentAdded);
 
     return $this->jsonResponse($response);
   }
@@ -81,8 +80,7 @@ class Comments extends BaseController {
 
     if (is_null($args) || !$args['id']) {
       $this->logger->error('Update Comment: ', [$data]);
-      $this->apiJson->addAlert('error', 'Error updating comment. ' .
-        'Please try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_commentUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -94,8 +92,7 @@ class Comments extends BaseController {
     // may update it. If higher level, update is allowed.
     if ((int)$actor->security_level === SecurityLevel::USER) {
       if ($actor->id !== $comment->user_id) {
-        $this->apiJson->addAlert('error',
-          'You do not have sufficient permissions to update this comment.');
+        $this->apiJson->addAlert('error', $this->strings->api_accessRestricted);
 
         return $this->jsonResponse($response);
       }
@@ -108,8 +105,7 @@ class Comments extends BaseController {
 
     if ($comment->id === 0 || ((int)$comment->id !== (int)$update->id)) {
       $this->logger->error('Update Comment: ', [$comment]);
-      $this->apiJson->addAlert('error', 'Error updating comment. ' .
-        'Please try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_commentUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -126,7 +122,7 @@ class Comments extends BaseController {
       json_encode($comment), json_encode($update), 'comment', $update->task_id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success', 'Comment updated.');
+    $this->apiJson->addAlert('success', $this->strings->api_commentUpdated);
 
     $task = R::load('task', $comment->task_id);
     $this->apiJson->addData(R::exportAll($task));
@@ -149,9 +145,7 @@ class Comments extends BaseController {
     // may delete it. If higher level, delete is allowed.
     if ((int)$actor->security_level === SecurityLevel::USER) {
       if ($actor->id !== $comment->user_id) {
-        $this->apiJson->addAlert('error',
-          'You do not have sufficient permissions ' .
-          'to remove this comment.');
+        $this->apiJson->addAlert('error', $this->strings->api_accessRestricted);
 
         return $this->jsonResponse($response);
       }
@@ -159,8 +153,8 @@ class Comments extends BaseController {
 
     if ((int)$comment->id !== $id) {
       $this->logger->error('Remove Comment: ', [$comment]);
-      $this->apiJson->addAlert('error', 'Error removing comment. ' .
-        'No comment found for ID ' . $id . '.');
+      $this->apiJson->addAlert('error', $this->strings->api_commentRemoveError .
+        $id . '.');
 
       return $this->jsonResponse($response);
     }
@@ -178,7 +172,7 @@ class Comments extends BaseController {
       json_encode($before), '', 'comment', $before->task_id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success', 'Comment removed.');
+    $this->apiJson->addAlert('success', $this->strings->api_commentRemoved);
 
     $task = R::load('task', $comment->task_id);
     $this->apiJson->addData(R::exportAll($task));

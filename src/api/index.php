@@ -37,12 +37,6 @@ $container->set('logger', function() {
   return $logger;
 });
 
-$container->set('strings', function() {
-  $json = file_get_contents('../json/en.json');
-
-  return json_decode($json);
-});
-
 $errorMiddleware->setErrorHandler(HttpNotFoundException::class,
   function (ServerRequestInterface $request) {
     $response = new Response();

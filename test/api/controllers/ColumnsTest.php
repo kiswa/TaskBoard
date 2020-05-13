@@ -55,7 +55,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->columns->getColumn($request,
       new ResponseMock(), null);
 
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -99,7 +99,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->columns->addColumn($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -160,7 +160,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->columns->updateColumn($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -226,7 +226,7 @@ class ColumnsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->columns->removeColumn($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 

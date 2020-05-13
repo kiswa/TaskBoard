@@ -12,9 +12,8 @@ class Tasks extends BaseController {
     $task = R::load('task', (int)$args['id']);
 
     if ((int)$task->id === 0) {
-      $this->logger->error('Attemt to load task ' .
-        $args['id'] . ' failed.');
-      $this->apiJson->addAlert('error', 'No task found for ID ' .
+      $this->logger->error('Attempt to load task ' . $args['id'] . ' failed.');
+      $this->apiJson->addAlert('error', $this->strings->api_noTaskId .
         $args['id'] . '.');
 
       return $this->jsonResponse($response);
@@ -44,8 +43,7 @@ class Tasks extends BaseController {
 
     if ((int)$column->id === 0) {
       $this->logger->error('Add Task: ', [$task]);
-      $this->apiJson->addAlert('error', 'Error adding task. ' .
-        'Please check your entries and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_taskError);
 
       return $this->jsonResponse($response);
     }
@@ -65,8 +63,8 @@ class Tasks extends BaseController {
       '', json_encode($task), 'task', $task->id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success', 'Task ' .
-      $task->title . ' added.');
+    $this->apiJson->addAlert('success', $this->strings->api_taskAdded .
+      '(' .  $task->title . ').');
     $this->apiJson->addData(R::exportAll($task));
 
     $board = R::load('board', $column->board_id);
@@ -85,7 +83,7 @@ class Tasks extends BaseController {
 
     if (is_null($args) || !array_key_exists('id', $args)) {
       $this->logger->error('Update Task: ', [$data]);
-      $this->apiJson->addAlert('error', 'Error updating task. Please try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_taskUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -99,8 +97,7 @@ class Tasks extends BaseController {
 
     if ($task->id === 0 || ((int)$task->id !== (int)$update->id)) {
       $this->logger->error('Update Task: ', [$task, $update]);
-      $this->apiJson->addAlert('error', 'Error updating task ' .
-        $task->title . '. Please try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_taskUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -129,8 +126,8 @@ class Tasks extends BaseController {
     $board = R::load('board', $boardId);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success', 'Task ' .
-      $update->title . ' updated.');
+    $this->apiJson->addAlert('success', $this->strings->api_taskUpdated .
+      '(' .  $update->title . ').');
     $this->apiJson->addData(R::exportAll($update));
     $this->apiJson->addData(R::exportAll($board));
 
@@ -148,8 +145,8 @@ class Tasks extends BaseController {
 
     if ((int)$task->id !== $id || (int)$task->id === 0) {
       $this->logger->error('Remove Task: ', [$task]);
-      $this->apiJson->addAlert('error', 'Error removing task. ' .
-        'No task found for ID ' . $id . '.');
+      $this->apiJson->addAlert('error', $this->strings->api_taskRemoveError .
+        $id . '.');
 
       return $this->jsonResponse($response);
     }
@@ -171,8 +168,8 @@ class Tasks extends BaseController {
       json_encode($before), '', 'task', $id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success',
-      'Task ' . $before->title . ' removed.');
+    $this->apiJson->addAlert('success', $this->strings->api_taskRemoved .
+      '(' . $before->title . ').');
 
     $board = R::load('board', $boardId);
     $this->apiJson->addData(R::exportAll($board));
@@ -292,8 +289,7 @@ class Tasks extends BaseController {
     case ActionType::SET_COLOR():
       $task = R::load('task', $taskId);
       $task->color = $action->change_to;
-      $this->apiJson->addAlert('info',
-        'Task color changed by automatic action.');
+      $this->apiJson->addAlert('info', $this->strings->api_taskAutoColor);
       R::store($task);
       break;
 
@@ -307,8 +303,7 @@ class Tasks extends BaseController {
 
       $cat = R::load('category', $action->change_to);
       $task->sharedCategoryList[] = $cat;
-      $this->apiJson->addAlert('info',
-        'Task categories changed by automatic action.');
+      $this->apiJson->addAlert('info', $this->strings->api_taskAutoCategory);
       R::store($task);
       break;
 
@@ -322,8 +317,7 @@ class Tasks extends BaseController {
 
       $user = R::load('user', $action->change_to);
       $task->sharedUserList[] = $user;
-      $this->apiJson->addAlert('info',
-        'Task assignees changed by automatic action.');
+      $this->apiJson->addAlert('info', $this->strings->api_taskAutoAssignee);
       R::store($task);
       break;
 
@@ -335,8 +329,7 @@ class Tasks extends BaseController {
       }
 
       $task->due_date = '';
-      $this->apiJson->addAlert('info',
-        'Task due date cleared by automatic action.');
+      $this->apiJson->addAlert('info', $this->strings->api_taskAutoDate);
       R::store($task);
       break;
     }
@@ -374,8 +367,7 @@ class Tasks extends BaseController {
 
     $task->color = $newColor;
 
-    $this->apiJson->addAlert('info',
-      'Task color changed by automatic action.');
+    $this->apiJson->addAlert('info',$this->strings->api_taskAutoColor);
     R::store($task);
   }
 }

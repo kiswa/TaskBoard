@@ -12,7 +12,7 @@ class Boards extends BaseController {
     $boards = $this->loadAllBoards($request);
 
     if (!count($boards)) {
-      $this->apiJson->addAlert('info', 'No boards in database.');
+      $this->apiJson->addAlert('info', $this->strings->api_noBoards);
 
       return $this->jsonResponse($response);
     }
@@ -34,7 +34,7 @@ class Boards extends BaseController {
     if ($board->id === 0) {
       $this->logger->error('Attempt to load board ' . $args['id'] .
         ' failed.');
-      $this->apiJson->addAlert('error', 'No board found for ID ' .
+      $this->apiJson->addAlert('error', $this->strings->api_noBoardId .
         $args['id'] . '.');
 
       return $this->jsonResponse($response);
@@ -66,8 +66,7 @@ class Boards extends BaseController {
 
     if ($board->id === -1) {
       $this->logger->error('Add Board: ', [$board]);
-      $this->apiJson->addAlert('error', 'Error adding board. ' .
-        'Please check your entries and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_boardError);
 
       return $this->jsonResponse($response);
     }
@@ -80,8 +79,8 @@ class Boards extends BaseController {
       '', json_encode($board), 'board', $board->id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success',
-      'Board ' . $board->name . ' added.');
+    $this->apiJson->addAlert('success', $this->strings->api_boardAdded .
+      '(' . $board->name . ').');
     $this->apiJson->addData($this->loadAllBoards($request));
 
     return $this->jsonResponse($response);
@@ -98,8 +97,7 @@ class Boards extends BaseController {
 
     if (is_null($args) || !array_key_exists('id', $args)) {
       $this->logger->error('Update Board: ', [$data]);
-      $this->apiJson->addAlert('error', 'Error updating board. ' .
-        'Please check your entries and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_boardUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -116,8 +114,7 @@ class Boards extends BaseController {
 
     if ($update->id === 0 || ($board->id !== $update->id)) {
       $this->logger->error('Update Board: ', [$board, $update]);
-      $this->apiJson->addAlert('error', 'Error updating board. ' .
-        'Please check your entries and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_boardUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -132,8 +129,8 @@ class Boards extends BaseController {
       json_encode(R::exportAll($update)), 'board', $update->id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success',
-      'Board ' . $update->name . ' updated.');
+    $this->apiJson->addAlert('success', $this->strings->api_boardUpdated .
+      '(' . $update->name . ').');
     $this->apiJson->addData($this->loadAllBoards($request));
 
     return $this->jsonResponse($response);
@@ -150,8 +147,8 @@ class Boards extends BaseController {
 
     if ((int)$board->id !== $id) {
       $this->logger->error('Remove Board: ', [$board]);
-      $this->apiJson->addAlert('error', 'Error removing board. ' .
-        'No board found for ID ' . $id  . '.');
+      $this->apiJson->addAlert('error', $this->strings->api_boardRemoveError .
+        $id  . '.');
 
       return $this->jsonResponse($response);
     }
@@ -165,8 +162,8 @@ class Boards extends BaseController {
       json_encode($before), '', 'board', $id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success',
-      'Board ' . $before->name . ' removed.');
+    $this->apiJson->addAlert('success', $this->strings->api_boardRemoved .
+      '(' . $before->name . ').');
     $this->apiJson->addData($this->loadAllBoards($request));
 
     return $this->jsonResponse($response);

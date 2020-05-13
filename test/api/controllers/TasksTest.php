@@ -68,7 +68,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::getJwt(2)];
 
     $actual = $this->tasks->getTask($request, new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -117,7 +117,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::getJwt(2)];
 
     $actual = $this->tasks->addTask($request, new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -242,7 +242,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->tasks->updateTask($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -279,7 +279,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $actual = $this->tasks->removeTask($request,
       new ResponseMock(), $args);
 
-    $this->assertEquals('Task test removed.',
+    $this->assertEquals('Task removed (test).',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -294,7 +294,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->tasks->removeTask($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 

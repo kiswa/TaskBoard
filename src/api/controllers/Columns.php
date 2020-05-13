@@ -14,7 +14,7 @@ class Columns extends BaseController {
     if ((int)$column->id === 0) {
       $this->logger->error('Attempt to load column ' .
         $args['id'] . ' failed.');
-      $this->apiJson->addAlert('error', 'No column found for ID ' .
+      $this->apiJson->addAlert('error', $this->strings->api_noColumnId .
         $args['id'] . '.');
 
       return $this->jsonResponse($response);
@@ -45,8 +45,7 @@ class Columns extends BaseController {
 
     if ((int)$board->id === 0) {
       $this->logger->error('Add Column: ', [$column]);
-      $this->apiJson->addAlert('error', 'Error adding column. ' .
-        'Please try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_columnError);
 
       return $this->jsonResponse($response);
     }
@@ -63,8 +62,8 @@ class Columns extends BaseController {
       '', json_encode($column), 'column', $column->id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success', 'Column ' .
-      $column->name . ' added.');
+    $this->apiJson->addAlert('success', $this->strings->api_columnAdded .
+      '(' .  $column->name . ').');
 
     return $this->jsonResponse($response);
   }
@@ -78,8 +77,8 @@ class Columns extends BaseController {
     $data = json_decode($request->getBody());
 
     if (is_null($args) || !array_key_exists('id', $args)) {
-      $this->logger->error('Update Task: ', [$data]);
-      $this->apiJson->addAlert('error', 'Error updating task. Please try again.');
+      $this->logger->error('Update Column: ', [$data]);
+      $this->apiJson->addAlert('error', $this->strings->api_columnUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -93,8 +92,7 @@ class Columns extends BaseController {
 
     if ($column->id === 0 || (int)$column->id !== (int)$update->id) {
       $this->logger->error('Update Column: ', [$column, $update]);
-      $this->apiJson->addAlert('error', 'Error updating column ' .
-        $update->name . '. Please try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_columnUpdateError);
 
       return $this->jsonResponse($response);
     }
@@ -112,8 +110,8 @@ class Columns extends BaseController {
       'column', $update->id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success', 'Column ' .
-      $update->name . ' updated.');
+    $this->apiJson->addAlert('success', $this->strings->api_columnUpdated .
+      '(' .  $update->name . ').');
     $this->apiJson->addData(R::exportAll($update));
 
     return $this->jsonResponse($response);
@@ -130,8 +128,8 @@ class Columns extends BaseController {
 
     if ((int)$column->id !== $id) {
       $this->logger->error('Remove Column: ', [$column]);
-      $this->apiJson->addAlert('error', 'Error removing column. ' .
-        'No column found for ID ' . $id . '.');
+      $this->apiJson->addAlert('error', $this->strings->api_columnRemoveError .
+        $id . '.');
 
       return $this->jsonResponse($response);
     }
@@ -149,8 +147,8 @@ class Columns extends BaseController {
       json_encode($before), '', 'column', $id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success',
-      'Column ' . $before->name . ' removed.');
+    $this->apiJson->addAlert('success', $this->strings->api_columnRemoved .
+      '(' . $before->name . ').');
 
     return $this->jsonResponse($response);
   }

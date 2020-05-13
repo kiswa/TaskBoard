@@ -73,7 +73,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->getComment($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -100,7 +100,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->addComment($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -174,7 +174,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->updateComment($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -212,8 +212,8 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->updateComment($request,
       new ResponseMock(), $args);
 
-    $this->assertEquals('You do not have sufficient permissions to ' .
-      'update this comment.', $actual->body->data->alerts[0]['text']);
+    $this->assertEquals('Access restricted.',
+      $actual->body->data->alerts[0]['text']);
   }
 
   public function testRemoveComment() {
@@ -238,7 +238,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->removeComment($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -285,8 +285,8 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $actual = $this->comments->removeComment($request,
       new ResponseMock(), $args);
 
-    $this->assertEquals('You do not have sufficient permissions to ' .
-      'remove this comment.', $actual->body->data->alerts[0]['text']);
+    $this->assertEquals('Access restricted.',
+      $actual->body->data->alerts[0]['text']);
   }
 
 

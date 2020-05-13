@@ -14,7 +14,7 @@ class Attachments extends BaseController {
     if ($attachment->id === 0) {
       $this->logger->error('Attempt to load attachment ' .
         $args['id'] . ' failed.');
-      $this->apiJson->addAlert('error', 'No attachment found for ID ' .
+      $this->apiJson->addAlert('error', $this->strings->api_noAttachmentId .
         $args['id'] . '.');
 
       return $this->jsonResponse($response);
@@ -43,7 +43,7 @@ class Attachments extends BaseController {
     if (is_null($attachment)) {
       $this->logger->error('Attempt to load attachment ' .
         $args['hash'] . ' failed.');
-      $this->apiJson->addAlert('error', 'No attachment found for hash ' .
+      $this->apiJson->addAlert('error', $this->strings->api_noAttachmentHash .
         $args['hash'] . '.');
 
       return $this->jsonResponse($response);
@@ -81,8 +81,7 @@ class Attachments extends BaseController {
 
     if ($task->id === 0) {
       $this->logger->error('Add Attachment: ', [$attachment]);
-      $this->apiJson->addAlert('error', 'Error adding attachment. ' .
-        'Please try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_attachmentFailed);
 
       return $this->jsonResponse($response);
     }
@@ -97,7 +96,7 @@ class Attachments extends BaseController {
     R::store($attachment);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success', 'Attachment added.');
+    $this->apiJson->addAlert('success', $this->strings->api_attachmentSucceed);
     $this->apiJson->addData($attachment);
 
     return $this->jsonResponse($response);
@@ -113,8 +112,7 @@ class Attachments extends BaseController {
 
     if (is_null($attachment)) {
       $this->logger->error('Upload Attachment: ', [$attachment]);
-      $this->apiJson->addAlert('error', 'Error uploading attachment. ' .
-        'Please try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_uploadFailed);
 
       return $this->jsonResponse($response);
     }
@@ -141,7 +139,7 @@ class Attachments extends BaseController {
         8 => 'A PHP extension stopped the file upload.',
       );
 
-      $this->apiJson->addAlert('error', 'Failed to upload attachment. ' .
+      $this->apiJson->addAlert('error', $this->strings->api_uploadFailed .
         $phpFileUploadErrors[$err]);
       R::trash($attachment);
 
@@ -175,7 +173,7 @@ class Attachments extends BaseController {
     if ((int)$actor->security_level === SecurityLevel::USER) {
       if ($actor->id !== $attachment->user_id) {
         $this->apiJson->addAlert('error',
-          'You do not have sufficient permissions to remove this attachment.');
+          $this->strings->api_attachmentPermission);
 
         return $this->jsonResponse($response);
       }
@@ -183,8 +181,8 @@ class Attachments extends BaseController {
 
     if ((int)$attachment->id !== $id) {
       $this->logger->error('Remove Attachment: ', [$attachment]);
-      $this->apiJson->addAlert('error', 'Error removing attachment. ' .
-        'No attachment found for ID ' . $id . '.');
+      $this->apiJson->addAlert('error',
+        $this->strings->api_attachmentNoRemove . $id . '.');
 
       return $this->jsonResponse($response);
     }
@@ -208,8 +206,8 @@ class Attachments extends BaseController {
       json_encode($before), '', 'attachment', $before->task_id);
 
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success',
-      'Attachment ' . $before->name . ' removed.');
+    $this->apiJson->addAlert('success', $this->strings->api_attachmentRemoved .
+      '(' . $before->name . ').');
 
     return $this->jsonResponse($response);
   }

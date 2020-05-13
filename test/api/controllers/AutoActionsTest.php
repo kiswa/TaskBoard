@@ -54,7 +54,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->actions->getAllActions($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -81,7 +81,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->actions->addAction($request,
       new ResponseMock(), null);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 
@@ -157,7 +157,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->actions->removeAction($request,
       new ResponseMock(), $args);
-    $this->assertEquals('Insufficient privileges.',
+    $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
 

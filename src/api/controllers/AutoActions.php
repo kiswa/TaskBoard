@@ -12,8 +12,7 @@ class AutoActions extends BaseController {
     $autoActions = $this->getAll($request);
 
     if (!count($autoActions)) {
-      $this->apiJson->addAlert('info',
-        'No automatic actions in database.');
+      $this->apiJson->addAlert('info', $this->strings->api_noActions);
       $this->apiJson->addData([]);
 
       return $this->jsonResponse($response);
@@ -40,9 +39,7 @@ class AutoActions extends BaseController {
 
     if ($board->id === 0) {
       $this->logger->error('Add Action: ', [$action]);
-      $this->apiJson->addAlert('error',
-        'Error adding automatic action. ' .
-        'Please check your entries and try again.');
+      $this->apiJson->addAlert('error', $this->strings->api_actionError);
 
       return $this->jsonResponse($response);
     }
@@ -63,7 +60,7 @@ class AutoActions extends BaseController {
 
     $this->apiJson->setSuccess($actions);
     $this->apiJson->addData($actions);
-    $this->apiJson->addAlert('success', 'Automatic action added.');
+    $this->apiJson->addAlert('success', $this->strings->api_actionAdded);
 
     return $this->jsonResponse($response);
   }
@@ -80,8 +77,8 @@ class AutoActions extends BaseController {
 
     if ((int)$action->id !== $id) {
       $this->logger->error('Remove Action: ', [$action]);
-      $this->apiJson->addAlert('error', 'Error removing action. ' .
-        'No action found for ID ' . $id . '.');
+      $this->apiJson->addAlert('error', $this->strings->api_actionRemoveError .
+        $id . '.');
 
       return $this->jsonResponse($response);
     }
@@ -103,7 +100,7 @@ class AutoActions extends BaseController {
 
     $this->apiJson->setSuccess();
     $this->apiJson->addData($actions);
-    $this->apiJson->addAlert('success', 'Automatic action removed.');
+    $this->apiJson->addAlert('success', $this->strings->api_actionRemoved);
 
     return $this->jsonResponse($response);
   }

@@ -119,14 +119,14 @@ class Auth extends BaseController {
 
     if ($user === null) {
       $this->logger->error('Login: ', [$data]);
-      $this->apiJson->addAlert('error', 'Invalid username or password.');
+      $this->apiJson->addAlert('error', $this->strings->api_badLogin);
 
       return $this->jsonResponse($response, 401);
     }
 
     if (!password_verify($data->password, $user->password_hash)) {
       $this->logger->error('Login: ', [$data]);
-      $this->apiJson->addAlert('error', 'Invalid username or password.');
+      $this->apiJson->addAlert('error', $this->strings->api_badLogin);
 
       return $this->jsonResponse($response, 401);
     }
@@ -135,11 +135,8 @@ class Auth extends BaseController {
     $user = R::load('user', $user->id);
 
     if ($user->username === 'admin' && (int)$user->last_login === 0) {
-      $this->apiJson->addAlert('warn',
-        'This is your first login, go to Settings ' .
-        'to change your password.');
-      $this->apiJson->addAlert('success',
-        'Go to Settings to create your first board.');
+      $this->apiJson->addAlert('warn', $this->strings->api_firstLoginWarn);
+      $this->apiJson->addAlert('success', $this->strings->api_firstLogin);
     }
 
     $user->active_token = $jwt;
@@ -165,7 +162,7 @@ class Auth extends BaseController {
     $payload = self::getJwtPayload($jwt);
 
     if ($payload === null) {
-      $this->apiJson->addAlert('error', 'Invalid access token.');
+      $this->apiJson->addAlert('error', $this->strings->api_invalidToken);
 
       return $this->jsonResponse($response, 401);
     }
@@ -180,7 +177,7 @@ class Auth extends BaseController {
     $this->dbLogger->logChange($user->id, $user->username . ' logged out',
       null, null, 'user', $user->id);
     $this->apiJson->setSuccess();
-    $this->apiJson->addAlert('success', 'You have been logged out.');
+    $this->apiJson->addAlert('success', $this->strings->api_loggedOut);
 
     return $this->jsonResponse($response);
   }
