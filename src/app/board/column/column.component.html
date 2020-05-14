@@ -1,7 +1,7 @@
 <h3 [class.near-limit]="columnData && columnData.hasTaskLimit() &&
-                        columnData.task_limit - columnData.tasks.length === 0"
+                        columnData.task_limit - columnData.tasks.length === 1"
     [class.limit-reached]="columnData && columnData.hasTaskLimit() &&
-                           columnData.task_limit - columnData.tasks.length < 0">
+                           columnData.task_limit - columnData.tasks.length <= 0">
 
   <span class="icon icon-minus-squared-alt"
         [title]="strings['boards_collapseAllTasks']"
@@ -13,8 +13,11 @@
 
   {{ columnData ? columnData.name : '' }}
 
-  <span class="count" *ngIf="columnData && columnData.hasTaskLimit()">
-    {{ columnData.tasks.length + ' / ' + columnData.task_limit }}
+  <span class="count">
+    {{ columnData.tasks.length }}
+    <div *ngIf="columnData && columnData.hasTaskLimit()">
+      {{ ' / ' + columnData.task_limit }}
+    </div>
   </span>
 
   <span class="badge" [title]="strings['boards_tasksInColumn']">
@@ -74,9 +77,9 @@
   </button>
 </div>
 
-<div class="tasks" *ngIf="columnData" cdkDropList
+<div class="tasks" [id]="'col' + columnData.id" *ngIf="columnData" cdkDropList
      [cdkDropListData]="columnData.tasks"
-     (cdkDropListDropped)="drop($event, +columnData.id - 1)">
+     (cdkDropListDropped)="drop($event)">
 
   <tb-task class="task-container" [id]="task.id" cdkDrag
            *ngFor="let task of columnData.tasks"

@@ -86,6 +86,10 @@
 
       .count {
         cursor: default;
+
+          div {
+            display: inline;
+          }
       }
 
       .count-editor {
