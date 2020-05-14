@@ -1,10 +1,9 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 
-import { SharedModule } from '../../../../src/app/shared/shared.module';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 import {
   InlineEditComponent
-} from '../../../../src/app/shared/inline-edit/inline-edit.component';
+} from 'src/app/shared/inline-edit/inline-edit.component';
 
 describe('InlineEdit', () => {
   let component: InlineEditComponent;

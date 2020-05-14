@@ -3,13 +3,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { TopNavComponent } from '../../../../src/app/shared/top-nav/top-nav.component';
+import { TopNavComponent } from 'src/app/shared/top-nav/top-nav.component';
 import {
   Constants,
   AuthService,
   NotificationsService,
   StringsService
-} from '../../../../src/app/shared/services';
+} from 'src/app/shared/services';
 
 describe('TopNav', () => {
   let component: TopNavComponent;

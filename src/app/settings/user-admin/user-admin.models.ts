@@ -13,6 +13,7 @@ export class ModalUser extends UserDisplay {
   public password_verify: string = ''; // tslint:disable-line
   public boardAccess: Array<string> = [];
 
+  /* istanbul ignore next */
   constructor(user: User) {
     super(+user.default_board_id, user.email, +user.id,
           user.last_login, +user.security_level, +user.user_option_id,

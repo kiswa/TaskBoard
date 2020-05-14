@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { User, Board } from '../../src/app/shared/models';
+import { User, Board } from 'src/app/shared/models';
 
 export class RouterMock {
   public url = {

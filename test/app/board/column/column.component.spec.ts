@@ -4,17 +4,17 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { ColumnDisplayComponent } from '../../../../src/app/board/column/column.component';
-import { TaskDisplayComponent } from '../../../../src/app/board/task/task.component';
+import { ColumnDisplayComponent } from 'src/app/board/column/column.component';
+import { TaskDisplayComponent } from 'src/app/board/task/task.component';
 import {
   AuthService,
   StringsService,
   ModalService,
   NotificationsService
-} from '../../../../src/app/shared/services';
-import { BoardService } from '../../../../src/app/board/board.service';
-import { SharedModule } from '../../../../src/app/shared/shared.module';
-import { User } from '../../../../src/app/shared/models';
+} from 'src/app/shared/services';
+import { BoardService } from 'src/app/board/board.service';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { User } from 'src/app/shared/models';
 
 describe('ColumnDisplay', () => {
   let component: ColumnDisplayComponent;

@@ -1,14 +1,10 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { TestBed, getTestBed } from '@angular/core/testing'
-import {
-  HttpClientTestingModule,
-  HttpTestingController
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-import { SharedModule } from '../../../../src/app/shared/shared.module';
-import { AuthService } from '../../../../src/app/shared/services';
-
-import { ModalService } from '../../../../src/app/shared/modal/modal.service';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { AuthService } from 'src/app/shared/services';
+import { ModalService } from 'src/app/shared/modal/modal.service';
 
 describe('ModalService', () => {
   let injector: TestBed;

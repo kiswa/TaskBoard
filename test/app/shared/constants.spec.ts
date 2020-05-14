@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
-
-import { Constants } from '../../../src/app/shared/constants';
+import { Constants } from 'src/app/shared/constants';
 
 describe('Constants', () => {
-  let constants;
+  let constants: any;
 
   beforeEach(() => {
     constants = new Constants();

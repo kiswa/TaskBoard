@@ -13,7 +13,7 @@ import {
   Task,
   UserOptions,
   User
-} from '../../../../src/app/shared/models';
+} from 'src/app/shared/models';
 
 describe('Models', () => {
 

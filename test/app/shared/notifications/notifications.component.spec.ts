@@ -1,14 +1,14 @@
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 
-import { SharedModule } from '../../../../src/app/shared/shared.module';
-import { NotificationsServiceMock } from '../../mocks';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 import {
   NotificationsService
-} from '../../../../src/app/shared/notifications/notifications.service';
+} from 'src/app/shared/notifications/notifications.service';
 import {
   NotificationsComponent
-} from '../../../../src/app/shared/notifications/notifications.component';
+} from 'src/app/shared/notifications/notifications.component';
+
+import { NotificationsServiceMock } from '../../mocks';
 
 describe('Notifications', () => {
   let component: NotificationsComponent;

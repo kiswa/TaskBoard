@@ -3,13 +3,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { LoginComponent } from '../../../src/app/login/login.component';
-import { SharedModule } from '../../../src/app/shared/shared.module';
+import { LoginComponent } from 'src/app/login/login.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 import {
   Constants,
   AuthService,
   NotificationsService
-} from '../../../src/app/shared/services';
+} from 'src/app/shared/services';
 
 describe('Login', () => {
   let component: LoginComponent;

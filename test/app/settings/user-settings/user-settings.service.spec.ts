@@ -4,12 +4,12 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 
-import { AuthService } from '../../../../src/app/shared/services';
-import { AuthServiceMock } from '../../mocks';
-
+import { AuthService } from 'src/app/shared/services';
 import {
   UserSettingsService
-} from '../../../../src/app/settings/user-settings/user-settings.service';
+} from 'src/app/settings/user-settings/user-settings.service';
+
+import { AuthServiceMock } from '../../mocks';
 
 describe('UserSettingsService', () => {
   let injector: TestBed;

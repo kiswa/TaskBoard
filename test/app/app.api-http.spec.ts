@@ -10,8 +10,8 @@ import {
 } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { AuthService } from '../../src/app/shared/auth/auth.service';
-import { ApiInterceptor } from '../../src/app/app.api-http';
+import { AuthService } from 'src/app/shared/auth/auth.service';
+import { ApiInterceptor } from 'src/app/app.api-http';
 
 describe('ApiInterceptor', () => {
   const mockAuthService = { };
@@ -75,6 +75,15 @@ describe('ApiInterceptor', () => {
 
         req.flush({ data: ['newToken'] });
         expect(sessionStorage.getItem('taskboard.jwt')).toEqual('newToken');
+
+        sessionStorage.removeItem('taskboard.jwt');
+
+        http.post('', new FormData()).subscribe(response => {
+          expect(response).toBeTruthy();
+        });
+
+        const req2 = httpMock.expectOne(r => !r.headers.has('Authorization'));
+        expect(req2.request.method).toEqual('POST');
       }
     )
   );
@@ -97,7 +106,7 @@ describe('ApiInterceptor', () => {
         expect(req.request.method).toEqual('GET');
 
         const error = new HttpErrorResponse({ status: 401 });
-        req.flush(error);
+        req.flush(error, { status: 401, statusText: '' });
         expect(sessionStorage.getItem('Authorization')).toEqual(null);
       }
     )

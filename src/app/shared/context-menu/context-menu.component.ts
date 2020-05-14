@@ -15,10 +15,6 @@ export class ContextMenuComponent {
 
     const parentEl = el.nativeElement.parentElement;
 
-    if (!parentEl) {
-      return;
-    }
-
     parentEl.oncontextmenu = (event: MouseEvent) => {
       this.parentEventHandler(event);
 
@@ -31,13 +27,9 @@ export class ContextMenuComponent {
   private updatePosition(event: MouseEvent) {
     const edgeBuffer = 10;
 
-    // Adjust position if near an edge
     const target = this.el.nativeElement.firstElementChild;
 
-    if (!target) {
-      return;
-    }
-
+    // Adjust position if near an edge
     const rect = target.getBoundingClientRect();
     const offsetX = (event.pageX + rect.width + edgeBuffer) > window.innerWidth;
     const offsetY = (event.pageY + rect.height + edgeBuffer) > window.innerHeight;

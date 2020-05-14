@@ -3,22 +3,21 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { SharedModule } from '../../../../src/app/shared/shared.module';
-
+import { SharedModule } from 'src/app/shared/shared.module';
+import { SettingsService } from 'src/app/settings/settings.service';
 import {
   AuthService,
   NotificationsService,
   StringsService
-} from '../../../../src/app/shared/services';
-import { SettingsService } from '../../../../src/app/settings/settings.service';
+} from 'src/app/shared/services';
 import {
   UserSettingsService
-} from '../../../../src/app/settings/user-settings/user-settings.service';
-import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
-
+} from 'src/app/settings/user-settings/user-settings.service';
 import {
   UserSettingsComponent
-} from '../../../../src/app/settings/user-settings/user-settings.component';
+} from 'src/app/settings/user-settings/user-settings.component';
+
+import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
 
 describe('UserSettings', () => {
   let component: UserSettingsComponent;
@@ -127,6 +126,18 @@ describe('UserSettings', () => {
     component.changePassword = { current: 'test', newPass: 'tester', verPass: 'test' } as any;
     component.updatePassword();
     expect(called).toEqual(false);
+
+    component.changePassword = { current: 'test', newPass: 'tester', verPass: 'tester' } as any;
+    component.updatePassword();
+
+    expect(called).toEqual(true);
+
+    (component.users as any).changePassword = () => {
+      return { subscribe: (fn: any) => {
+        fn({ alerts: [], data: [{}, '{}'], status: 'success' });
+        called = true;
+      } };
+    };
 
     component.changePassword = { current: 'test', newPass: 'tester', verPass: 'tester' } as any;
     component.updatePassword();

@@ -4,7 +4,7 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 
-import { SettingsService } from '../../../src/app/settings/settings.service';
+import { SettingsService } from 'src/app/settings/settings.service';
 
 describe('SettingsService', () => {
   let injector: TestBed;

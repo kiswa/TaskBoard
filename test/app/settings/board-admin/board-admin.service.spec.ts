@@ -6,7 +6,7 @@ import {
 
 import {
   BoardAdminService
-} from '../../../../src/app/settings/board-admin/board-admin.service';
+} from 'src/app/settings/board-admin/board-admin.service';
 
 describe('BoardAdminService', () => {
   let injector: TestBed;

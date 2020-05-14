@@ -3,15 +3,15 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { TaskDisplayComponent } from '../../../../src/app/board/task/task.component';
+import { TaskDisplayComponent } from 'src/app/board/task/task.component';
 import {
   AuthService,
   StringsService,
   ModalService,
   NotificationsService
-} from '../../../../src/app/shared/services';
-import { BoardService } from '../../../../src/app/board/board.service';
-import { SharedModule } from '../../../../src/app/shared/shared.module';
+} from 'src/app/shared/services';
+import { BoardService } from 'src/app/board/board.service';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 describe('TaskDisplay', () => {
   let component: TaskDisplayComponent;

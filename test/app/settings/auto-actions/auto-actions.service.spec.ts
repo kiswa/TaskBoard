@@ -6,7 +6,7 @@ import {
 
 import {
   AutoActionsService
-} from '../../../../src/app/settings/auto-actions/auto-actions.service';
+} from 'src/app/settings/auto-actions/auto-actions.service';
 
 describe('AutoActionsService', () => {
   let injector: TestBed;

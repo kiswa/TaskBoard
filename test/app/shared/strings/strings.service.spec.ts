@@ -5,9 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import {
-  StringsService
-} from '../../../../src/app/shared/strings/strings.service';
+import { StringsService } from 'src/app/shared/strings/strings.service';
 
 describe('StringsService', () => {
   let injector: TestBed;

@@ -3,24 +3,24 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { SharedModule } from '../../../../src/app/shared/shared.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { SettingsService } from 'src/app/settings/settings.service';
+import { Board } from 'src/app/shared/models';
 
 import {
   AuthService,
   ModalService,
   NotificationsService,
   StringsService
-} from '../../../../src/app/shared/services';
-import { SettingsService } from '../../../../src/app/settings/settings.service';
+} from 'src/app/shared/services';
 import {
   BoardAdminService
-} from '../../../../src/app/settings/board-admin/board-admin.service';
-import { Board } from '../../../../src/app/shared/models';
-import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
-
+} from 'src/app/settings/board-admin/board-admin.service';
 import {
   BoardAdminComponent
-} from '../../../../src/app/settings/board-admin/board-admin.component';
+} from 'src/app/settings/board-admin/board-admin.component';
+
+import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
 
 describe('BoardAdmin', () => {
   let component: BoardAdminComponent;

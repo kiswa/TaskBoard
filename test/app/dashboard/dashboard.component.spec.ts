@@ -3,8 +3,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Title } from '@angular/platform-browser';
 
-import { DashboardComponent } from '../../../src/app/dashboard/dashboard.component';
-import { DashboardModule } from '../../../src/app/dashboard/dashboard.module';
+import { DashboardComponent } from 'src/app/dashboard/dashboard.component';
+import { DashboardModule } from 'src/app/dashboard/dashboard.module';
 
 describe('DashBoard', () => {
   let component: DashboardComponent;

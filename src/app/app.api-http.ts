@@ -49,7 +49,9 @@ export class ApiInterceptor implements HttpInterceptor {
           sessionStorage.setItem(this.JWT_KEY, response.data[0]);
         }
       }, error => {
-        if ((error.status === 401 || error.status === 400)) {
+        /* istanbul ignore else */
+        if ((error.status === 401 ||
+            /* istanbul ignore next */ error.status === 400)) {
           sessionStorage.removeItem(this.JWT_KEY);
           this.router.navigate(['/']);
         }

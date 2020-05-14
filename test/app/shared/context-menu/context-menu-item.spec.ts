@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 
 import {
   ContextMenuItemComponent
-} from '../../../../src/app/shared/context-menu/context-menu-item.component';
+} from 'src/app/shared/context-menu/context-menu-item.component';
 
 @Component({
   selector: 'tb-host-component',
@@ -51,6 +51,17 @@ describe('ContextMenuItem', () => {
 
     expect(pdCalled).toEqual(true);
     expect(spCalled).toEqual(true);
+
+    pdCalled = false;
+    spCalled = false;
+
+    hostComponent.menuItem.isSeparator = false;
+    hostComponent.menuItem.isCustomEvent = false;
+
+    hostComponent.menuItem.el.nativeElement.onclick(evt);
+
+    expect(pdCalled).toEqual(false);
+    expect(spCalled).toEqual(false);
   });
 
   it('handles context menu clicks on the element', () => {

@@ -1,6 +1,6 @@
 import {
   ContextMenuService
-} from '../../../../src/app/shared/context-menu/context-menu.service';
+} from 'src/app/shared/context-menu/context-menu.service';
 
 describe('ContextMenuService', () => {
   let service: ContextMenuService;
@@ -14,7 +14,9 @@ describe('ContextMenuService', () => {
   });
 
   it('can have a menu registered', () => {
-    service.registerMenu(<any>{});
+    const menu = {};
+    service.registerMenu(menu as any);
+    service.registerMenu(menu as any);
 
     expect(service['menus'].length).toEqual(1);
   });

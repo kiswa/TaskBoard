@@ -3,25 +3,21 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { SharedModule } from '../../../../src/app/shared/shared.module';
-
-import {
-  ActionTrigger,
-  ActionType
-} from '../../../../src/app/shared/models';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ActionTrigger, ActionType } from 'src/app/shared/models';
 import {
   AuthService,
   ModalService,
   NotificationsService,
   StringsService
-} from '../../../../src/app/shared/services';
-import { SettingsService } from '../../../../src/app/settings/settings.service';
+} from 'src/app/shared/services';
+import { SettingsService } from 'src/app/settings/settings.service';
 import {
   AutoActionsService
-} from '../../../../src/app/settings/auto-actions/auto-actions.service';
+} from 'src/app/settings/auto-actions/auto-actions.service';
 import {
   AutoActionsComponent
-} from '../../../../src/app/settings/auto-actions/auto-actions.component';
+} from 'src/app/settings/auto-actions/auto-actions.component';
 
 describe('AutoActions', () => {
   let component: AutoActionsComponent;

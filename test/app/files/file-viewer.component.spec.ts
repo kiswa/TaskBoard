@@ -42,10 +42,19 @@ describe('FileViewer', () => {
     (component.service.getAttachmentInfo as any) = () => {
       return { subscribe: (fn: any) => fn({
         alerts: [{}],
+        status: 'error'
+      }) }
+    };
+
+    component.ngOnInit();
+
+    (component.service.getAttachmentInfo as any) = () => {
+      return { subscribe: (fn: any) => fn({
+        alerts: [{}],
         data: [{}, { diskfilename: 'asdf' }],
         status: 'success'
       }) }
-    }
+    };
 
     component.ngOnInit();
 

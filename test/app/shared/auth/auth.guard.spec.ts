@@ -1,7 +1,8 @@
 import { TestBed, getTestBed } from '@angular/core/testing'
 
-import { AuthGuard } from '../../../../src/app/shared/auth/auth.guard';
-import { AuthService } from '../../../../src/app/shared/services';
+import { AuthGuard } from 'src/app/shared/auth/auth.guard';
+import { AuthService } from 'src/app/shared/services';
+
 import { AuthServiceMock } from '../../mocks';
 
 describe('AuthGuard', () => {

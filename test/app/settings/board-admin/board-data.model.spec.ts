@@ -1,4 +1,4 @@
-import { BoardData } from '../../../../src/app/settings/board-admin/board-data.model';
+import { BoardData } from 'src/app/settings/board-admin/board-data.model';
 
 describe('BoardData', () => {
   let model: BoardData;

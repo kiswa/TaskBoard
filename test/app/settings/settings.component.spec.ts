@@ -4,10 +4,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 
-import { SettingsComponent } from '../../../src/app/settings/settings.component';
-import { SettingsModule } from '../../../src/app/settings/settings.module';
-import { SettingsService } from '../../../src/app/settings/settings.service';
-import { StringsService } from '../../../src/app/shared/services';
+import { SettingsComponent } from 'src/app/settings/settings.component';
+import { SettingsModule } from 'src/app/settings/settings.module';
+import { SettingsService } from 'src/app/settings/settings.service';
+import { StringsService } from 'src/app/shared/services';
 
 describe('Settings', () => {
   let component: SettingsComponent;

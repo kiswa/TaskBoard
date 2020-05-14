@@ -3,27 +3,25 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { SharedModule } from '../../../../src/app/shared/shared.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { SettingsService } from 'src/app/settings/settings.service';
+import { User } from 'src/app/shared/models';
+import { UserDisplay } from 'src/app/settings/user-admin/user-admin.models';
 
 import {
   AuthService,
   ModalService,
   NotificationsService,
   StringsService
-} from '../../../../src/app/shared/services';
-import { SettingsService } from '../../../../src/app/settings/settings.service';
+} from 'src/app/shared/services';
 import {
   UserAdminService
-} from '../../../../src/app/settings/user-admin/user-admin.service';
-import { User } from '../../../../src/app/shared/models';
-import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
-
-import {
-  UserDisplay
-} from '../../../../src/app/settings/user-admin/user-admin.models';
+} from 'src/app/settings/user-admin/user-admin.service';
 import {
   UserAdminComponent
-} from '../../../../src/app/settings/user-admin/user-admin.component';
+} from 'src/app/settings/user-admin/user-admin.component';
+
+import { SettingsServiceMock, AuthServiceMock } from '../../mocks';
 
 describe('UserAdmin', () => {
   let component: UserAdminComponent;
@@ -155,7 +153,7 @@ describe('UserAdmin', () => {
     let called = false;
 
     (component.userService as any).addUser = () => {
-      return { subscribe: fn => {
+      return { subscribe: (fn: any) => {
         const user = new User();
         fn({ status: 'success', alerts: [{}], data: [{}, [user]] });
         called = true;

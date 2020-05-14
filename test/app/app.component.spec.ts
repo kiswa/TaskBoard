@@ -1,12 +1,12 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { AppComponent } from '../../src/app/app.component';
+import { AppComponent } from 'src/app/app.component';
 import {
   NotificationsService,
   StringsService
-} from '../../src/app/shared/services';
-import { SharedModule } from '../../src/app/shared/shared.module';
+} from 'src/app/shared/services';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {

@@ -6,7 +6,7 @@ import {
 
 import {
   UserAdminService
-} from '../../../../src/app/settings/user-admin/user-admin.service';
+} from 'src/app/settings/user-admin/user-admin.service';
 
 describe('UserAdminService', () => {
   let injector: TestBed;

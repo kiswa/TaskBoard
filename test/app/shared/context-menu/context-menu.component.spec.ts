@@ -1,14 +1,13 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
 
-import { SharedModule } from '../../../../src/app/shared/shared.module';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 import {
   ContextMenuService
-} from '../../../../src/app/shared/context-menu/context-menu.service';
+} from 'src/app/shared/context-menu/context-menu.service';
 import {
   ContextMenuComponent
-} from '../../../../src/app/shared/context-menu/context-menu.component';
+} from 'src/app/shared/context-menu/context-menu.component';
 
 class ElementRefMock {
   public nativeElement = { parentElement: {} };

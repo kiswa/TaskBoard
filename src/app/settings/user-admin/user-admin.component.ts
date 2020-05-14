@@ -157,6 +157,7 @@ export class UserAdminComponent {
   }
 
   private closeModal(status: string): void {
+    /* istanbul ignore else */
     if (status === 'success') {
       this.modal.close(this.MODAL_ID);
       this.saving = false;
@@ -171,6 +172,7 @@ export class UserAdminComponent {
       const boards = response.data[1];
       this.boards = [];
 
+      /* istanbul ignore else */
       if (boards) {
         boards.forEach((board: any) => {
           this.boards.push(new Board(+board.id, board.name,
@@ -194,6 +196,7 @@ export class UserAdminComponent {
     this.settings.getActions()
     .subscribe((response: ApiResponse) => {
       this.settings.updateActions(response.status === 'success'
+        /* istanbul ignore next */
         ? response.data[1]
         : []);
       this.loading = false;
@@ -217,6 +220,7 @@ export class UserAdminComponent {
   }
 
   private replaceUserList(response: ApiResponse): void {
+    /* istanbul ignore else */
     if (response.status === 'success') {
       this.users = [];
 

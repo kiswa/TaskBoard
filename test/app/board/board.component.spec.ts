@@ -15,15 +15,15 @@ import {
   Constants,
   ContextMenuService,
   NotificationsService
-} from '../../../src/app/shared/services';
-import { LoginComponent } from '../../../src/app/login/login.component';
-import { SettingsModule } from '../../../src/app/settings/settings.module';
-import { SharedModule } from '../../../src/app/shared/shared.module';
-import { DashboardModule } from '../../../src/app/dashboard/dashboard.module';
-import { BoardDisplayComponent } from '../../../src/app/board/board.component';
-import { BoardService } from '../../../src/app/board/board.service';
-import { ColumnDisplayComponent } from '../../../src/app/board/column/column.component';
-import { TaskDisplayComponent } from '../../../src/app/board/task/task.component';
+} from 'src/app/shared/services';
+import { LoginComponent } from 'src/app/login/login.component';
+import { SettingsModule } from 'src/app/settings/settings.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { DashboardModule } from 'src/app/dashboard/dashboard.module';
+import { BoardDisplayComponent } from 'src/app/board/board.component';
+import { BoardService } from 'src/app/board/board.service';
+import { ColumnDisplayComponent } from 'src/app/board/column/column.component';
+import { TaskDisplayComponent } from 'src/app/board/task/task.component';
 import { RouterMock, BoardServiceMock } from '../mocks';
 
 describe('BoardDisplay', () => {

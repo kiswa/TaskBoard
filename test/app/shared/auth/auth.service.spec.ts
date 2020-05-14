@@ -5,10 +5,9 @@ import {
 } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { Constants } from '../../../../src/app/shared/constants';
-import { StringsService } from '../../../../src/app/shared/services';
-
-import { AuthService } from '../../../../src/app/shared/auth/auth.service';
+import { Constants } from 'src/app/shared/constants';
+import { StringsService } from 'src/app/shared/services';
+import { AuthService } from 'src/app/shared/auth/auth.service';
 
 describe('AuthService', () => {
   let injector: TestBed;
@@ -53,6 +52,12 @@ describe('AuthService', () => {
 
   it('authenticates a user', () => {
     service.authenticate('').subscribe(response => {
+      expect(response).toEqual(true);
+    });
+
+    testCall('api/authenticate', 'POST');
+
+    service.authenticate('', true).subscribe(response => {
       expect(response).toEqual(true);
     });
 

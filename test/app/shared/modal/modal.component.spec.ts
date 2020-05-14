@@ -3,10 +3,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 
-import { SharedModule } from '../../../../src/app/shared/shared.module';
-
-import { ModalService } from '../../../../src/app/shared/services';
-import { ModalComponent } from '../../../../src/app/shared/modal/modal.component';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ModalService } from 'src/app/shared/services';
+import { ModalComponent } from 'src/app/shared/modal/modal.component';
 
 describe('Modal', () => {
   let component: ModalComponent;
