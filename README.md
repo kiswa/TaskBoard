@@ -197,11 +197,11 @@ Because I like seeing the numbers.
 
 Language   |   Files |    Blank |  Comment |    Code
 -----------|--------:|---------:|---------:|---------:
-TypeScript |    66   |    959   |    120   |   4060
-PHP        |    19   |    704   |     33   |   2133
+TypeScript |    66   |    957   |    126   |   4055
+PHP        |    19   |    705   |     33   |   2132
 HTML       |    21   |    257   |      0   |   1537
 SASS       |    14   |    296   |     10   |   1338
-**SUM:**   | **120** | **2216** |  **163** | **9068**
+**SUM:**   | **120** | **2215** |  **169** | **9062**
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
 
@@ -209,8 +209,8 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
 
 Language   |  Files |    Blank |  Comment |    Code
 -----------|-------:|---------:|---------:|---------:
-TypeScript |   38   |   1002   |      8   |   3481
+TypeScript |   38   |   1009   |      8   |   3505
 PHP        |   11   |    793   |     16   |   2338
-**SUM:**   | **49** | **1795** |   **24** | **5819**
+**SUM:**   | **49** | **1802** |   **24** | **5843**
 
 Command: `cloc --exclude-ext=xml test/`
