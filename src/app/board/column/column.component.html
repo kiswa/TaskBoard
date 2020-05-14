@@ -1,7 +1,7 @@
 <h3 [class.near-limit]="columnData && columnData.hasTaskLimit() &&
-                        columnData.task_limit - columnData.tasks.length === 1"
+                        columnData?.task_limit - columnData?.tasks.length === 1"
     [class.limit-reached]="columnData && columnData.hasTaskLimit() &&
-                           columnData.task_limit - columnData.tasks.length <= 0">
+                           columnData?.task_limit - columnData?.tasks.length <= 0">
 
   <span class="icon icon-minus-squared-alt"
         [title]="strings['boards_collapseAllTasks']"
@@ -14,7 +14,7 @@
   {{ columnData ? columnData.name : '' }}
 
   <span class="count">
-    {{ columnData.tasks.length }}
+    {{ columnData?.tasks.length }}
     <div *ngIf="columnData && columnData.hasTaskLimit()">
       {{ ' / ' + columnData.task_limit }}
     </div>

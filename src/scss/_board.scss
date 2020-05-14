@@ -177,6 +177,10 @@
         transform-origin: left bottom;
         white-space: nowrap;
 
+        .count {
+          display: none;
+        }
+
         &.near-limit {
           box-shadow: none;
         }
