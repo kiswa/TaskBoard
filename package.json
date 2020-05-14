@@ -44,16 +44,21 @@
     "lint": "ng lint",
     "postinstall": "cd src/api/ && composer update && composer install --optimize-autoloader && cd ../../"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm test"
+    }
+  },
   "dependencies": {
-    "@angular/animations": "^9.1.6",
+    "@angular/animations": "^9.1.7",
     "@angular/cdk": "^9.2.3",
-    "@angular/common": "^9.1.6",
-    "@angular/compiler": "^9.1.6",
-    "@angular/core": "^9.1.6",
-    "@angular/forms": "^9.1.6",
-    "@angular/platform-browser": "^9.1.6",
-    "@angular/platform-browser-dynamic": "^9.1.6",
-    "@angular/router": "^9.1.6",
+    "@angular/common": "^9.1.7",
+    "@angular/compiler": "^9.1.7",
+    "@angular/core": "^9.1.7",
+    "@angular/forms": "^9.1.7",
+    "@angular/platform-browser": "^9.1.7",
+    "@angular/platform-browser-dynamic": "^9.1.7",
+    "@angular/router": "^9.1.7",
     "ajv": "^6.12.2",
     "chartist": "^0.11.4",
     "chartist-plugin-tooltips": "^0.0.17",
@@ -67,10 +72,10 @@
     "zone.js": "^0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.901.5",
-    "@angular/cli": "^9.1.5",
-    "@angular/compiler-cli": "^9.1.6",
-    "@angular/language-service": "^9.1.6",
+    "@angular-devkit/build-angular": "^0.901.6",
+    "@angular/cli": "^9.1.6",
+    "@angular/compiler-cli": "^9.1.7",
+    "@angular/language-service": "^9.1.7",
     "@types/chartist": "^0.9.48",
     "@types/highlight.js": "^9.12.3",
     "@types/jasmine": "~3.5.10",
@@ -80,6 +85,7 @@
     "bourbon": "7.0.0",
     "bourbon-neat": "4.0.0",
     "codelyzer": "^5.2.2",
+    "husky": "^4.2.5",
     "jasmine": "^3.5.0",
     "jasmine-core": "^3.5.0",
     "jasmine-spec-reporter": "~5.0.2",
@@ -90,7 +96,7 @@
     "karma-jasmine-html-reporter": "^1.5.4",
     "npm-run-all": "^4.1.5",
     "npm-watch": "^0.6.0",
-    "protractor": "^5.4.4",
+    "protractor": "^7.0.0",
     "puppeteer": "^3.0.4",
     "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
