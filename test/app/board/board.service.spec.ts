@@ -59,10 +59,11 @@ describe('BoardService', () => {
     testCall('api/boards', 'GET');
   });
 
-  it('converts markdown', () => {
+  it('converts markdown', done => {
     service.convertMarkdown('# Test')
       .then(actual => {
         expect(actual.html).toEqual('<h1 id="test">Test</h1>\n');
+        done();
       });
   });
 

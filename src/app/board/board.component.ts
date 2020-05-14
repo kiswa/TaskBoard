@@ -172,8 +172,8 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updateBoardsList(boards: Array<any>): void {
-    const activeBoards: Array<Board> = [];
+  private updateBoardsList(boards: any[]): void {
+    const activeBoards: Board[] = [];
 
     if (boards) {
       boards.forEach((board: any) => {

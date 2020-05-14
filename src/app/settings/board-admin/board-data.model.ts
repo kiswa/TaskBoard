@@ -5,10 +5,10 @@ export class BoardData {
               public id = 0,
               public name = '',
               public is_active = true, // tslint:disable-line
-              public columns: Array<any> = [],
-              public categories: Array<any> = [],
-              public issue_trackers: Array<any> = [], // tslint:disable-line
-              public users: Array<User> = [],
+              public columns: any[] = [],
+              public categories: any[] = [],
+              public issue_trackers: any[] = [], // tslint:disable-line
+              public users: User[] = [],
               public categoryDefaultColor = '#ffffe0',
               public newColumnName = '',
               public newCategoryName = '',

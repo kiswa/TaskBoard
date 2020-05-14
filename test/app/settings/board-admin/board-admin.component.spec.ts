@@ -2,6 +2,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 import { SettingsService } from 'src/app/settings/settings.service';
@@ -11,7 +12,7 @@ import {
   AuthService,
   ModalService,
   NotificationsService,
-  StringsService
+  StringsService,
 } from 'src/app/shared/services';
 import {
   BoardAdminService
@@ -35,6 +36,7 @@ describe('BoardAdmin', () => {
         HttpClientTestingModule,
         FormsModule,
         SharedModule,
+        DragDropModule,
       ],
       declarations: [
         BoardAdminComponent

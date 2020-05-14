@@ -413,7 +413,7 @@ export class AutoActionsComponent implements OnDestroy {
     return foundBoard;
   }
 
-  private getNameFromArray(boardArray: Array<any>,
+  private getNameFromArray(boardArray: any[],
                            arrayItemId: number,
                            prop: string = 'name') {
     let name = '';

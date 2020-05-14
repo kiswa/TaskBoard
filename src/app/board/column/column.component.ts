@@ -257,7 +257,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
       });
   }
 
-  drop(event: CdkDragDrop<string[]>, colIndex: number) {
+  drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       this.moveItemInArray(event.container.data,
         event.previousIndex, event.currentIndex);
@@ -265,6 +265,9 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
       this.transferArrayItem(event.previousContainer.data,
         event.container.data, event.previousIndex, event.currentIndex);
     }
+
+    const colId = (event.container.element.nativeElement.id).substring(3);
+    const colIndex = this.activeBoard.columns.findIndex(col => +col.id === +colId);
 
     this.activeBoard.columns[colIndex].tasks.forEach((item, index) => {
       item.position = index + 1;

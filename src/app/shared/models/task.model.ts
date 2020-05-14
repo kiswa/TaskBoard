@@ -6,10 +6,10 @@ import { Comment } from './comment.model';
 import { User } from './user.model';
 
 export class Task {
-  public comments: Array<Comment>;
-  public attachments: Array<Attachment>;
-  public assignees: Array<User>;
-  public categories: Array<Category>;
+  public comments: Comment[];
+  public attachments: Attachment[];
+  public assignees: User[];
+  public categories: Category[];
   public html: SafeHtml;
 
   public filtered: boolean;
@@ -23,10 +23,10 @@ export class Task {
               public points: number = 0,
               public position: number = 0,
               public column_id: number = 0, // tslint:disable-line
-              commentArray: Array<any> = [],
-              attachmentArray: Array<any> = [],
-              assigneeArray: Array<any> = [],
-              categoryArray: Array<any> = []) {
+              commentArray: any[] = [],
+              attachmentArray: any[] = [],
+              assigneeArray: any[] = [],
+              categoryArray: any[] = []) {
     this.comments = [];
     this.attachments = [];
     this.assignees = [];

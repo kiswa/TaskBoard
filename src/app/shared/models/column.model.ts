@@ -1,14 +1,14 @@
 import { Task } from './task.model';
 
 export class Column {
-  public tasks: Array<Task>;
+  public tasks: Task[];
 
   constructor(public id: number = 0,
               public name: string = '',
               public position: number = 0,
               public board_id: number = 0, // tslint:disable-line
               public task_limit: number = 0, // tslint:disable-line
-              ownTask: Array<any> = []) {
+              ownTask: any[] = []) {
     this.tasks = [];
 
     ownTask.forEach((task: any) => {

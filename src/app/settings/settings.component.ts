@@ -10,7 +10,7 @@ import { SettingsService } from './settings.service';
 })
 export class SettingsComponent implements OnDestroy {
   public strings: any;
-  private subs: Array<any>;
+  private subs: any[];
 
   constructor(public stringsService: StringsService,
               public settings: SettingsService,

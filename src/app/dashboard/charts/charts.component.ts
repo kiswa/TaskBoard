@@ -7,9 +7,9 @@ import * as Chartist from 'chartist';
   templateUrl: './charts.component.html'
 })
 export class ChartsComponent implements AfterViewInit {
-  public percentages: Array<number>;
-  public data: Array<number>;
-  public words: Array<string>;
+  public percentages: number[];
+  public data: number[];
+  public words: string[];
 
   // tslint:disable-next-line
   @Input('chart-name') chartName = '';
@@ -86,8 +86,8 @@ export class ChartsComponent implements AfterViewInit {
     new Chartist.Line('#' + this.chartName, data, options);
   }
 
-  private convertToNumberArray(arr: Array<string>): Array<number> {
-    const nums: Array<number> = [];
+  private convertToNumberArray(arr: string[]): number[] {
+    const nums: number[] = [];
 
     for (let i = 0, len = arr.length; i < len; ++i) {
       nums.push(Number(arr[i]));

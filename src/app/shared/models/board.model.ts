@@ -5,20 +5,20 @@ import { IssueTracker } from './issue-tracker.model';
 import { User } from './user.model';
 
 export class Board {
-  public columns: Array<Column>;
-  public categories: Array<Category>;
-  public auto_actions: Array<AutoAction>; // tslint:disable-line
-  public issue_trackers: Array<IssueTracker>; // tslint:disable-line
-  public users: Array<User>;
+  public columns: Column[];
+  public categories: Category[];
+  public auto_actions: AutoAction[]; // tslint:disable-line
+  public issue_trackers: IssueTracker[]; // tslint:disable-line
+  public users: User[];
 
   constructor(public id: number = 0,
               public name: string = '',
               public is_active: boolean = true, // tslint:disable-line
-              columnArray: Array<any> = [],
-              categoryArray: Array<any> = [],
-              actionsArray: Array<any> = [],
-              trackerArray: Array<any> = [],
-              userArray: Array<any> = []) {
+              columnArray: any[] = [],
+              categoryArray: any[] = [],
+              actionsArray: any[] = [],
+              trackerArray: any[] = [],
+              userArray: any[] = []) {
     this.columns = [];
     this.categories = [];
     this.auto_actions = [];

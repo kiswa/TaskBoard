@@ -4,7 +4,7 @@ import { ContextMenuComponent } from './context-menu.component';
 
 @Injectable()
 export class ContextMenuService {
-  private menus: Array<ContextMenuComponent> = [];
+  private menus: ContextMenuComponent[] = [];
 
   constructor() {
     document.addEventListener('click', _ => { this.closeAllMenus(); });

@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { ColumnDisplayComponent } from 'src/app/board/column/column.component';
 import { TaskDisplayComponent } from 'src/app/board/task/task.component';
@@ -26,7 +27,9 @@ describe('ColumnDisplay', () => {
     ownComment: [{
       id: 1, text: '', user_id: 1, task_id: 1, timestamp: Date.now()
     }],
-    ownAttachment: [],
+    ownAttachment: [{
+      id: 1, filename: 'file.png', diskfilename: 'asdfasdfasdf'
+    }],
     sharedUser: [],
     sharedCategory: []
   };
@@ -38,6 +41,7 @@ describe('ColumnDisplay', () => {
         FormsModule,
         RouterTestingModule,
         SharedModule,
+        DragDropModule,
       ],
       declarations: [
         ColumnDisplayComponent,
@@ -168,7 +172,12 @@ describe('ColumnDisplay', () => {
   });
 
   it('handles drop events', () => {
-    const prev =  { data: {} };
+    const prev =  {
+      data: {},
+      element: {
+        nativeElement: { id: 'col1' }
+      }
+    };
     const evt = {
       currentIndex: 0,
       previousContainer: prev,
@@ -181,12 +190,17 @@ describe('ColumnDisplay', () => {
     component.moveItemInArray = () => true;
     component.transferArrayItem = () => true;
 
-    component.drop(evt as any, 0);
+    component.drop(evt as any);
     expect(component.activeBoard.columns[0].tasks[0].position).toEqual(1);
 
-    evt.previousContainer = { data: {} };
+    evt.previousContainer = {
+      data: {},
+      element: {
+        nativeElement: { id: 'col1' }
+      }
+    };
 
-    component.drop(evt as any, 0);
+    component.drop(evt as any);
     expect(component.activeBoard.columns[0].tasks[0].position).toEqual(1);
   });
 
@@ -386,7 +400,7 @@ describe('ColumnDisplay', () => {
     expect(component.viewModalProps.id).toEqual(1);
   });
 
-  it('calls aservice to remove a comment', () => {
+  it('calls a service to remove a comment', () => {
     component.viewModalProps = { comments: [{ id: 1 }] } as any;
     component.commentToRemove = { id: 1 } as any;
 
@@ -540,6 +554,7 @@ describe('ColumnDisplay', () => {
 
     expect(view).toEqual(jasmine.any(Function));
 
+    component.activeBoard = { issue_trackers: [] } as any;
     component.showActivity = true;
     component.columnData = { id: 1, tasks: [{
       id: 3, title: 'test', description: '', color: '#ffffe0', points: 1,

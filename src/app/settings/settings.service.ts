@@ -15,9 +15,9 @@ import {
   providedIn: 'root'
 })
 export class SettingsService {
-  private users = new BehaviorSubject<Array<User>>([]);
-  private boards = new BehaviorSubject<Array<Board>>([]);
-  private actions = new BehaviorSubject<Array<AutoAction>>([]);
+  private users = new BehaviorSubject<User[]>([]);
+  private boards = new BehaviorSubject<Board[]>([]);
+  private actions = new BehaviorSubject<AutoAction[]>([]);
 
   public usersChanged = this.users.asObservable();
   public boardsChanged = this.boards.asObservable();
@@ -26,7 +26,7 @@ export class SettingsService {
   constructor(private http: HttpClient) {
   }
 
-  updateUsers(users: Array<User>): void {
+  updateUsers(users: User[]): void {
     this.users.next(users);
   }
 
@@ -38,7 +38,7 @@ export class SettingsService {
     );
   }
 
-  updateBoards(boards: Array<Board>): void {
+  updateBoards(boards: Board[]): void {
     this.getActions().subscribe((response: ApiResponse) => {
       this.actions.next(response.data[1]);
       this.boards.next(boards);
@@ -53,7 +53,7 @@ export class SettingsService {
     );
   }
 
-  updateActions(actions: Array<AutoAction>): void {
+  updateActions(actions: AutoAction[]): void {
     this.actions.next(actions);
   }
 

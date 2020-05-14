@@ -6,7 +6,7 @@ import { ModalComponent } from './modal.component';
 
 @Injectable()
 export class ModalService {
-  private modals: Array<ModalComponent>;
+  private modals: ModalComponent[];
   private userOptions: UserOptions;
 
   constructor(public auth: AuthService) {

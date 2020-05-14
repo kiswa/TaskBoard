@@ -13,9 +13,10 @@ abstract class BaseController {
     $this->apiJson = new ApiJson();
     $this->logger = $container->get('logger');
     $this->dbLogger = new DbLogger();
-    $this->mailer = new Mailer('en');
 
-    $this->loadStrings('en'); // Default to English
+    // Default to English
+    $this->mailer = new Mailer('en');
+    $this->loadStrings('en');
   }
 
   public function setStrings($userOptionId) {

@@ -88,7 +88,7 @@ export class CalendarComponent {
     this.calendarDays = [];
 
     for (let i = 0; i < rows; ++i) {
-      const weekDays: Array<string> = [];
+      const weekDays: string[] = [];
 
       for (let j = 0; j < 7; ++j) {
         if (day <= monthLength && (j >= startingDay || i > 0)) {

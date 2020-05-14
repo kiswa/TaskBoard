@@ -8,7 +8,7 @@ import { NotificationsService } from './notifications.service';
   templateUrl: './notifications.component.html'
 })
 export class NotificationsComponent {
-  public notes: Array<Notification>;
+  public notes: Notification[];
 
   constructor(public notifications: NotificationsService) {
     this.notes = new Array<Notification>();

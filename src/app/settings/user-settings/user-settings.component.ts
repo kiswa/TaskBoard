@@ -22,7 +22,7 @@ import {
   providers: [ UserSettingsService ]
 })
 export class UserSettingsComponent implements OnInit {
-  public boards: Array<Board>;
+  public boards: Board[];
   public user: User;
   public userOptions: UserOptions;
   public changePassword: PassForm;
@@ -147,7 +147,7 @@ export class UserSettingsComponent implements OnInit {
         this.settings.getBoards()
           .subscribe((res: ApiResponse) => {
             const boardData = res.data[1];
-            const boards: Array<Board> = [];
+            const boards: Board[] = [];
 
             if (boardData) {
               boardData.forEach((board: any) => {
@@ -200,7 +200,7 @@ export class UserSettingsComponent implements OnInit {
     this.changeEmail = new EmailForm(this.user.email);
   }
 
-  private addAlerts(alerts: Array<Notification>) {
+  private addAlerts(alerts: Notification[]) {
     alerts.forEach(msg => {
       this.notes.add(msg);
     });
