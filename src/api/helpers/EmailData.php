@@ -1,22 +1,22 @@
 <?php
 class EmailData {
-  public string $hostUrl;
-  public string $boardId;
+  public $hostUrl;
+  public $boardId;
 
-  public string $type;
-  public string $username;
-  public string $boardName;
+  public $type;
+  public $username;
+  public $boardName;
 
-  public string $comment;
-  public string $taskName;
+  public $comment;
+  public $taskName;
 
-  public string $taskDescription;
-  public string $taskDueDate;
-  public string $taskAssignees;
-  public string $taskCategories;
-  public string $taskPoints;
-  public string $taskColumnName;
-  public string $taskPosition;
+  public $taskDescription;
+  public $taskDueDate;
+  public $taskAssignees;
+  public $taskCategories;
+  public $taskPoints;
+  public $taskColumnName;
+  public $taskPosition;
 
   public function __construct($boardId) {
     $this->hostUrl = $_SERVER['HTTP_REFERER'];
