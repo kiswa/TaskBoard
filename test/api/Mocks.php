@@ -82,7 +82,7 @@ class LoggerMock implements Psr\Container\ContainerInterface {
     return null;
   }
 
-  public function has($id) {}
+  public function has($id) { $id; }
 }
 
 class Logger {
@@ -155,6 +155,7 @@ class ResponseMock {
   }
 
   public function withHeader($name, $value) {
+    $name; $value;
     return $this;
   }
 
