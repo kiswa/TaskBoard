@@ -8,8 +8,7 @@ class AutoActionsTest extends PHPUnit\Framework\TestCase {
   public static function setUpBeforeClass(): void {
     try {
       R::setup('sqlite:tests.db');
-    } catch (Exception $ex) {
-    }
+    } catch (Exception $ex) { }
   }
 
   public function setUp(): void {

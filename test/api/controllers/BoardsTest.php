@@ -2,19 +2,24 @@
 require_once __DIR__ . '/../Mocks.php';
 use RedBeanPHP\R;
 
+$_SERVER['HTTP_REFERER'] = 'tests';
+
 class BoardsTest extends PHPUnit\Framework\TestCase {
   private $boards;
 
   public static function setUpBeforeClass(): void {
     try {
       R::setup('sqlite:tests.db');
-    } catch (Exception $ex) {
-    }
+    } catch (Exception $ex) { }
   }
 
   public function setUp(): void {
     R::nuke();
     Auth::CreateInitialAdmin(new LoggerMock());
+
+    $admin = R::load('user', 1);
+    $admin->email = 'test@test.com';
+    R::store($admin);
 
     $this->boards = new Boards(new LoggerMock());
   }
@@ -25,8 +30,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt()];
 
-    $boards = $this->boards->getAllBoards($request,
-      new ResponseMock, null);
+    $boards = $this->boards->getAllBoards($request, new ResponseMock, null);
     $this->assertEquals(2, count($boards->body->data->data));
     $this->assertEquals('success', $boards->body->data->status);
   }
@@ -35,8 +39,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt()];
 
-    $actual = $this->boards->getAllBoards($request,
-      new ResponseMock(), null);
+    $actual = $this->boards->getAllBoards($request, new ResponseMock(), null);
     $this->assertEquals('No boards in database.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -47,8 +50,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $actual = $this->boards->getAllBoards($request,
-      new ResponseMock(), null);
+    $actual = $this->boards->getAllBoards($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -62,8 +64,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt()];
 
-    $actual = $this->boards->getBoard($request,
-      new ResponseMock(), $args);
+    $actual = $this->boards->getBoard($request, new ResponseMock(), $args);
     $this->assertEquals('success', $actual->body->data->status);
     $this->assertEquals(2, count($actual->body->data->data));
   }
@@ -74,8 +75,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $actual = $this->boards->getBoard($request,
-      new ResponseMock(), null);
+    $actual = $this->boards->getBoard($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -87,8 +87,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt()];
 
-    $actual = $this->boards->getBoard($request,
-      new ResponseMock(), $args);
+    $actual = $this->boards->getBoard($request, new ResponseMock(), $args);
     $this->assertEquals('No board found for ID 1.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -103,8 +102,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $actual = $this->boards->getBoard($request,
-      new ResponseMock(), $args);
+    $actual = $this->boards->getBoard($request, new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -116,8 +114,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt()];
     $request->payload = $data;
 
-    $actual = $this->boards->addBoard($request,
-      new ResponseMock(), null);
+    $actual = $this->boards->addBoard($request, new ResponseMock(), null);
 
     $this->assertEquals('Board added (test).',
       $actual->body->data->alerts[0]['text']);
@@ -129,8 +126,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $actual = $this->boards->addBoard($request,
-      new ResponseMock(), null);
+    $actual = $this->boards->addBoard($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -140,8 +136,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt()];
     $request->invalidPayload = true;
 
-    $response = $this->boards->addBoard($request,
-      new ResponseMock(), null);
+    $response = $this->boards->addBoard($request, new ResponseMock(), null);
 
     $this->assertEquals('failure', $response->body->data->status);
     $this->assertEquals('error', $response->body->data->alerts[0]['type']);
@@ -157,8 +152,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt()];
     $request->payload = $board;
 
-    $response = $this->boards->updateBoard($request,
-      new ResponseMock(), $args);
+    $response = $this->boards->updateBoard($request, new ResponseMock(), $args);
     $this->assertEquals('success', $response->body->data->status);
   }
 
@@ -168,8 +162,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $actual = $this->boards->updateBoard($request,
-      new ResponseMock(), null);
+    $actual = $this->boards->updateBoard($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -181,8 +174,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt()];
     $request->invalidPayload = true;
 
-    $response = $this->boards->updateBoard($request,
-      new ResponseMock(), null);
+    $response = $this->boards->updateBoard($request, new ResponseMock(), null);
     $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
@@ -197,8 +189,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt()];
     $request->payload = $board;
 
-    $response = $this->boards->updateBoard($request,
-      new ResponseMock(), $args);
+    $response = $this->boards->updateBoard($request, new ResponseMock(), $args);
 
     $cols = $response->body->data->data[1][0]['ownColumn'];
     $this->assertEquals('success', $response->body->data->status);
@@ -221,8 +212,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt()];
     $request->payload = $board;
 
-    $response = $this->boards->updateBoard($request,
-      new ResponseMock(), $args);
+    $response = $this->boards->updateBoard($request, new ResponseMock(), $args);
     $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
@@ -235,8 +225,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $actual = $this->boards->updateBoard($request,
-      new ResponseMock(), $args);
+    $actual = $this->boards->updateBoard($request, new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -254,8 +243,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt()];
 
-    $actual = $this->boards->removeBoard($request,
-      new ResponseMock(), $args);
+    $actual = $this->boards->removeBoard($request, new ResponseMock(), $args);
     $this->assertEquals('Board removed (test).',
       $actual->body->data->alerts[0]['text']);
   }
@@ -266,8 +254,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $actual = $this->boards->removeBoard($request,
-      new ResponseMock(), null);
+    $actual = $this->boards->removeBoard($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -281,8 +268,7 @@ class BoardsTest extends PHPUnit\Framework\TestCase {
 
     $this->boards = new Boards(new LoggerMock());
 
-    $response = $this->boards->removeBoard($request,
-      new ResponseMock(), $args);
+    $response = $this->boards->removeBoard($request, new ResponseMock(), $args);
     $this->assertEquals('failure', $response->body->data->status);
   }
 

@@ -26,18 +26,19 @@ class Mailer {
 
   /**
    * Send email to one or more users in the provided list.
-   * @param $users List of users to email (must have at least one).
+   *
+   * @param $emails List of email addresses (must have at least one).
    * @param $data  Object containing template type and replacements for template.
    */
-  public function sendMail($users, $data) {
+  public function sendMail($emails, $data) {
     $this->initMail();
 
-    if (count($users) < 1) {
-      return $this->strings->mail_error;
+    if (count($emails) < 1) {
+      return '';
     }
 
-    foreach($users as $user) {
-      $this->mail->addAddress($user->email);
+    foreach($emails as $user) {
+      $this->mail->addAddress($user);
     }
 
     $this->mail->Subject = $this->strings->mail_subject;
@@ -47,33 +48,53 @@ class Mailer {
       return $this->strings->mail_error;
     }
 
-    return $this->strings->mail_sent;
+    return $this->strings->mail_sent; // @codeCoverageIgnore
   }
 
-  private function parseTemplate($data) {
+  private function parseTemplate(EmailData $data) {
     $template = $this->getTemplate($data->type);
 
-    str_replace('%username%', $data->username, $template);
-    str_replace('%boardName%', $data->boardName, $template);
-    str_replace('%taskName%', $data->taskName, $template);
-    str_replace('%comment%', $data->comment, $template);
-    str_replace('%taskDescription%', $data->taskDescription, $template);
-    str_replace('%taskDueDate%', $data->taskDueDate, $template);
-    str_replace('%taskAssignees%', $data->taskAssignees, $template);
-    str_replace('%taskCategories%', $data->taskCategories, $template);
-    str_replace('%taskPoints%', $data->taskPoints, $template);
-    str_replace('%taskColumnName%', $data->taskColumnName, $template);
-    str_replace('%taskPosition%', $data->taskPosition, $template);
-    str_replace('%hostUrl%', $data->hostUrl, $template);
-    str_replace('%boardId%', $data->boardId, $template);
+    $template = str_replace('%hostUrl%', $data->hostUrl, $template);
+    $template = str_replace('%boardId%', $data->boardId, $template);
+
+    $template = str_replace('%username%', $data->username, $template);
+    $template = str_replace('%boardName%', $data->boardName, $template);
+
+    $template = str_replace('%comment%', $data->comment, $template);
+    $template = str_replace('%taskName%', $data->taskName, $template);
+
+    $template =
+      str_replace('%taskDescription%', $data->taskDescription, $template);
+    $template = str_replace('%taskDueDate%', $data->taskDueDate, $template);
+    $template = str_replace('%taskAssignees%', $data->taskAssignees, $template);
+    $template =
+      str_replace('%taskCategories%', $data->taskCategories, $template);
+    $template = str_replace('%taskPoints%', $data->taskPoints, $template);
+    $template =
+      str_replace('%taskColumnName%', $data->taskColumnName, $template);
+    $template = str_replace('%taskPosition%', $data->taskPosition, $template);
 
     return $template;
   }
 
+  /**
+   * @codeCoverageIgnore
+   */
   private function getTemplate($type) {
     $template = '';
 
     switch($type) {
+    case 'newBoard':
+      $template = $this->strings->mail_template_newBoard;
+      break;
+
+    case 'newComment':
+      $template = $this->strings->mail_template_newComment;
+      break;
+
+    case 'newTask':
+      $template = $this->strings->mail_template_newTask;
+
     case 'editBoard':
       $template = $this->strings->mail_template_editBoard;
       break;
@@ -86,16 +107,17 @@ class Mailer {
       $template = $this->strings->mail_template_editTask;
       break;
 
-    case 'newBoard':
-      $template = $this->strings->mail_template_newBoard;
+    case 'removeBoard':
+      $template = $this->strings->mail_template_removeBoard;
       break;
 
-    case 'newComment':
-      $template = $this->strings->mail_template_newComment;
+    case 'removeComment':
+      $template = $this->strings->mail_template_removeComment;
       break;
 
-    case 'newTask':
-      $template = $this->strings->mail_template_newTask;
+    case 'removeTask':
+      $template = $this->strings->mail_template_removeTask;
+      break;
     }
 
     $template .= $this->strings->mail_template_openBoardLink;
@@ -107,27 +129,25 @@ class Mailer {
     $this->mail = new PHPMailer();
     $this->mail->isSendmail();
 
-    $this->mail->setFrom($this->FROM_EMAIL, $this->FROM_NAME);
+    $this->mail->setFrom(Mailer::FROM_EMAIL, Mailer::FROM_NAME);
 
-    if (!$this->USE_SENDMAIL) {
+    // @codeCoverageIgnoreStart
+    if (!Mailer::USE_SENDMAIL) {
       $this->mail->isSMTP();
 
-      $this->mail->Host = $this->SMTP_HOST;
-      $this->mail->Port = $this->SMTP_PORT;
-      $this->mail->Username = $this->SMTP_USER;
-      $this->mail->Password = $this->SMTP_PASS;
+      $this->mail->Host = Mailer::SMTP_HOST;
+      $this->mail->Port = Mailer::SMTP_PORT;
+      $this->mail->Username = Mailer::SMTP_USER;
+      $this->mail->Password = Mailer::SMTP_PASS;
 
       $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
       $this->mail->SMTPAuth = true;
     }
+    // @codeCoverageIgnoreEnd
   }
 
   private function loadStrings($lang) {
     $json = '{}';
-
-    if (!$lang) {
-      $lang = 'en';
-    }
 
     try {
       $json =

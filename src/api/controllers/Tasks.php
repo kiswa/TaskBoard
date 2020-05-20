@@ -70,6 +70,8 @@ class Tasks extends BaseController {
     $board = R::load('board', $column->board_id);
     $this->apiJson->addData(R::exportAll($board));
 
+    $this->sendEmail($board, $task, $actor, 'newTask');
+
     return $this->jsonResponse($response);
   }
 
@@ -119,8 +121,7 @@ class Tasks extends BaseController {
 
     $this->dbLogger->logChange($actor->id,
       $actor->username . ' updated task ' . $task->title,
-      json_encode($task), json_encode($update),
-      'task', $update->id);
+      json_encode($task), json_encode($update), 'task', $update->id);
 
     $boardId = $this->getBoardId($task->column_id);
     $board = R::load('board', $boardId);
@@ -130,6 +131,8 @@ class Tasks extends BaseController {
       '(' .  $update->title . ').');
     $this->apiJson->addData(R::exportAll($update));
     $this->apiJson->addData(R::exportAll($board));
+
+    $this->sendEmail($board, $update, $actor, 'editTask');
 
     return $this->jsonResponse($response);
   }
@@ -173,6 +176,8 @@ class Tasks extends BaseController {
 
     $board = R::load('board', $boardId);
     $this->apiJson->addData(R::exportAll($board));
+
+    $this->sendEmail($board, $before, $actor, 'removeTask');
 
     return $this->jsonResponse($response);
   }
@@ -227,9 +232,10 @@ class Tasks extends BaseController {
 
       case ActionTrigger::ASSIGNED_TO_USER():
         $prevAssigned = $this->isInList($action->source_id,
-          isset($before[0]['sharedUser']) ?
-          $before[0]['sharedUser'] :
-          []);
+          isset($before[0]['sharedUser'])
+            ? $before[0]['sharedUser']
+            : []
+          );
 
         if ($prevAssigned) {
           break;
@@ -244,9 +250,10 @@ class Tasks extends BaseController {
 
       case ActionTrigger::ADDED_TO_CATEGORY():
         $prevAssigned = $this->isInList($action->source_id,
-          isset($before[0]['sharedCategory']) ?
-          $before[0]['sharedCategory'] :
-          []);
+          isset($before[0]['sharedCategory'])
+            ? $before[0]['sharedCategory']
+            : []
+          );
         if ($prevAssigned) {
           break;
         }
@@ -264,9 +271,7 @@ class Tasks extends BaseController {
           0;
 
         if ($points !== (int)$after[0]['points']) {
-          $this->updateTaskColor($after[0]['id'],
-            $points,
-            $after[0]['points']);
+          $this->updateTaskColor($after[0]['id'], $points, $after[0]['points']);
         }
         break;
 
@@ -369,6 +374,43 @@ class Tasks extends BaseController {
 
     $this->apiJson->addAlert('info',$this->strings->api_taskAutoColor);
     R::store($task);
+  }
+
+  private function sendEmail($board, $task, $actor, $type) {
+    $data = new EmailData($board->id);
+    $column = R::load('column', $task->column_id ?: '');
+
+    $data->username = $actor->username ?: '';
+    $data->boardName = $board->name ?: '';
+    $data->type = $type;
+
+    $data->taskName = $task->title ?: '';
+    $data->taskDescription = $task->description ?: '';
+    $data->taskDueDate = date('F j, Y, g:i:s A', (int)$task->due_date * 1000);
+
+    $data->taskAssignees = '';
+    foreach($task->sharedUserList as $assignee) {
+      $data->taskAssignees .= $assignee->username . ' ';
+    }
+
+    $data->taskCategories = '';
+    foreach($task->sharedCategoryList as $category) {
+      $data->taskCategories .= $category->name . ' ';
+    }
+
+    $data->taskPoints = $task->points ?: '';
+    $data->taskColumnName = $column->name ?: '';
+    $data->taskPosition = $task->position ?: '';
+
+    $emails = $this->getAdminEmailAddresses($board->id);
+    if($actor->email !== '' && !in_array($actor->email, $emails)) {
+      $emails[] = $actor->email; // @codeCoverageIgnore
+    }
+
+    $result = $this->mailer->sendMail($emails, $data);
+    if ($result !== '') {
+      $this->apiJson->addAlert('info', $result); // @codeCoverageIgnore
+    }
   }
 }
 

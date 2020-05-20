@@ -30,7 +30,7 @@ Installing TaskBoard is as easy as 1, 2, 3!
 2. Extract it to your webserver
 3. Verify the `api` directory is writable
 
-Optionally, you will want to edit `api/helpers/mailer.php` if you intend to use email features.
+If you intend to use email features, you will need to edit `api/helpers/mailer.php`.
 
 ### Server Config
 
@@ -197,11 +197,11 @@ Because I like seeing the numbers.
 
 Language   |   Files |    Blank |  Comment |    Code
 -----------|--------:|---------:|---------:|---------:
-TypeScript |    66   |    957   |    126   |   4055
-PHP        |    19   |    705   |     33   |   2132
-HTML       |    21   |    257   |      0   |   1537
-SASS       |    14   |    296   |     10   |   1338
-**SUM:**   | **120** | **2215** |  **169** | **9062**
+TypeScript |    66   |    958   |    126   |   4057
+PHP        |    20   |    752   |     40   |   2265
+HTML       |    21   |    257   |      0   |   1540
+SASS       |    14   |    298   |     10   |   1344
+**SUM:**   | **121** | **2265** |  **176** | **9206**
 
 Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
 
@@ -209,8 +209,8 @@ Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
 
 Language   |  Files |    Blank |  Comment |    Code
 -----------|-------:|---------:|---------:|---------:
-TypeScript |   38   |   1009   |      8   |   3505
-PHP        |   11   |    793   |     16   |   2338
-**SUM:**   | **49** | **1802** |   **24** | **5843**
+TypeScript |   38   |   1009   |      8   |   3523
+PHP        |   11   |    795   |     19   |   2300
+**SUM:**   | **49** | **1804** |   **27** | **5823**
 
 Command: `cloc --exclude-ext=xml test/`

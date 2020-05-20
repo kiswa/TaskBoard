@@ -8,8 +8,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
   public static function setUpBeforeClass(): void {
     try {
       R::setup('sqlite:tests.db');
-    } catch (Exception $ex) {
-    }
+    } catch (Exception $ex) { }
   }
 
   public function setUp(): void {
@@ -126,8 +125,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->invalidPayload = true;
     $request->header = [DataMock::getJwt()];
 
-    $response = $this->tasks->addTask($request,
-      new ResponseMock(), null);
+    $response = $this->tasks->addTask($request, new ResponseMock(), null);
 
     $this->assertEquals('failure', $response->body->data->status);
     $this->assertEquals('error', $response->body->data->alerts[0]['type']);
@@ -163,8 +161,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::getJwt()];
     $request->payload = $task;
 
-    $response = $this->tasks->updateTask($request,
-      new ResponseMock(), $args);
+    $response = $this->tasks->updateTask($request, new ResponseMock(), $args);
     $this->assertEquals('success', $response->body->data->status);
   }
 
@@ -192,8 +189,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::getJwt()];
     $request->payload = $task;
 
-    $response = $this->tasks->updateTask($request,
-      new ResponseMock(), $args);
+    $response = $this->tasks->updateTask($request, new ResponseMock(), $args);
     $this->assertEquals('success', $response->body->data->status);
 
     $updated = $response->body->data->data[1][0];
@@ -212,8 +208,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::getJwt()];
     $request->payload = $task;
 
-    $response = $this->tasks->updateTask($request,
-      new ResponseMock(), $args);
+    $response = $this->tasks->updateTask($request, new ResponseMock(), $args);
     $this->assertEquals('success', $response->body->data->status);
   }
 
@@ -225,12 +220,10 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $args = [];
     $args['id'] = 1;
 
-    $response = $this->tasks->updateTask($request,
-      new ResponseMock(), $args);
+    $response = $this->tasks->updateTask($request, new ResponseMock(), $args);
     $this->assertEquals('error', $response->body->data->alerts[0]['type']);
 
-    $response = $this->tasks->updateTask($request,
-      new ResponseMock(), null);
+    $response = $this->tasks->updateTask($request, new ResponseMock(), null);
     $this->assertEquals('error', $response->body->data->alerts[0]['type']);
   }
 
@@ -240,8 +233,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::getJwt(2)];
 
-    $actual = $this->tasks->updateTask($request,
-      new ResponseMock(), null);
+    $actual = $this->tasks->updateTask($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -261,8 +253,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::getJwt(2)];
     $request->payload = $task;
 
-    $actual = $this->tasks->updateTask($request,
-      new ResponseMock(), $args);
+    $actual = $this->tasks->updateTask($request, new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -276,8 +267,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::getJwt()];
 
-    $actual = $this->tasks->removeTask($request,
-      new ResponseMock(), $args);
+    $actual = $this->tasks->removeTask($request, new ResponseMock(), $args);
 
     $this->assertEquals('Task removed (test).',
       $actual->body->data->alerts[0]['text']);
@@ -292,8 +282,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::getJwt(2)];
 
-    $actual = $this->tasks->removeTask($request,
-      new ResponseMock(), $args);
+    $actual = $this->tasks->removeTask($request, new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -305,8 +294,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $args = [];
     $args['id'] = 2; // No such task
 
-    $response = $this->tasks->removeTask($request,
-      new ResponseMock(), $args);
+    $response = $this->tasks->removeTask($request, new ResponseMock(), $args);
     $this->assertEquals('failure', $response->body->data->status);
   }
 
@@ -320,8 +308,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $args = [];
     $args['id'] = 1;
 
-    $actual = $this->tasks->removeTask($request,
-      new ResponseMock(), $args);
+    $actual = $this->tasks->removeTask($request, new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -431,6 +418,8 @@ class TasksTest extends PHPUnit\Framework\TestCase {
 
     $category = R::dispense('category');
     $category2 = R::dispense('category');
+
+    $task->sharedCategoryList[] = $category;
 
     $board = R::dispense('board');
     $board->xownColumnList[] = $column;

@@ -2,14 +2,16 @@
 require_once __DIR__ . '/../Mocks.php';
 use RedBeanPHP\R;
 
+/**
+ * @group single
+ */
 class CommentsTest extends PHPUnit\Framework\TestCase {
   private $comments;
 
   public static function setUpBeforeClass(): void {
     try {
       R::setup('sqlite:tests.db');
-    } catch (Exception $ex) {
-    }
+    } catch (Exception $ex) { }
   }
 
   public function setUp(): void {
@@ -28,8 +30,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $args = [];
     $args['id'] = 1;
 
-    $actual = $this->comments->getComment($request,
-      new ResponseMock(), $args);
+    $actual = $this->comments->getComment($request, new ResponseMock(), $args);
     $this->assertEquals('success', $actual->body->data->status);
     $this->assertEquals(2, count($actual->body->data->data));
   }
@@ -41,8 +42,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $args = [];
     $args['id'] = 1;
 
-    $actual = $this->comments->getComment($request,
-      new ResponseMock(), $args);
+    $actual = $this->comments->getComment($request, new ResponseMock(), $args);
     $this->assertEquals('No comment found for ID 1.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -59,8 +59,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $this->comments = new Comments(new LoggerMock());
 
-    $actual = $this->comments->getComment($request,
-      new ResponseMock(), $args);
+    $actual = $this->comments->getComment($request, new ResponseMock(), $args);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -71,8 +70,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $request = new RequestMock();
     $request->header = [DataMock::GetJwt(2)];
 
-    $actual = $this->comments->getComment($request,
-      new ResponseMock(), null);
+    $actual = $this->comments->getComment($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -85,8 +83,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt()];
     $request->payload = $data;
 
-    $actual = $this->comments->addComment($request,
-      new ResponseMock(), null);
+    $actual = $this->comments->addComment($request, new ResponseMock(), null);
     $this->assertEquals('success', $actual->body->data->status);
   }
 
@@ -98,8 +95,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt(2)];
     $request->payload = $comment;
 
-    $actual = $this->comments->addComment($request,
-      new ResponseMock(), null);
+    $actual = $this->comments->addComment($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -109,8 +105,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $request->invalidPayload = true;
     $request->header = [DataMock::GetJwt()];
 
-    $actual = $this->comments->addComment($request,
-      new ResponseMock(), null);
+    $actual = $this->comments->addComment($request, new ResponseMock(), null);
     $this->assertEquals('failure', $actual->body->data->status);
     $this->assertEquals('error', $actual->body->data->alerts[0]['type']);
   }
@@ -124,8 +119,7 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
     $request->header = [DataMock::GetJwt(2)];
     $request->payload = $comment;
 
-    $actual = $this->comments->addComment($request,
-      new ResponseMock(), null);
+    $actual = $this->comments->addComment($request, new ResponseMock(), null);
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -211,7 +205,6 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->updateComment($request,
       new ResponseMock(), $args);
-
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
@@ -284,11 +277,9 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
 
     $actual = $this->comments->removeComment($request,
       new ResponseMock(), $args);
-
     $this->assertEquals('Access restricted.',
       $actual->body->data->alerts[0]['text']);
   }
-
 
   private function getCommentData() {
     $data = new stdClass();
@@ -302,16 +293,23 @@ class CommentsTest extends PHPUnit\Framework\TestCase {
   }
 
   private function createComment() {
+    $admin = R::load('user', 1);
+
     $comment = R::dispense('comment');
     R::store($comment);
 
+    $category = R::dispense('category');
+    $category->name = 'cat';
+    R::store($category);
+
     $task = R::dispense('task');
     $task->xownCommentList[] = $comment;
+    $task->sharedUserList[] = $admin;
+    $task->sharedCategoryList[] = $category;
 
     $column = R::dispense('column');
     $column->xownTaskList[] = $task;
 
-    $admin = R::load('user', 1);
     $board = R::dispense('board');
     $board->xownColumnList[] = $column;
     $board->sharedUserList[] = $admin;

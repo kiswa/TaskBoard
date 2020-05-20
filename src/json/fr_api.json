@@ -68,10 +68,16 @@
   "mail_subject":"Notification TaskBoard",
 
   "mail_template_openBoardLink": "<br><br><a href=\"%hostUrl%/boards/%boardId%\">Ouvrir TaskBoard</a>",
-  "mail_template_editBoard": "%username% a modifié la carte %boardName%",
+
+  "mail_template_newBoard": "%username% a ajouté la carte %boardName%.",
+  "mail_template_newComment": "%username% a ajouté un commentaire dans le tableau %boardName%.<br>Tâche: %taskName%<br>Commentaire: %comment%",
+  "mail_template_newTask": "%username% a ajouté une tâche dans la carte %boardName%.<br>Tâche: %taskName%<br>Description: %taskDescription%<br>Date d'échéance: %taskDueDate%<br>Destinataires: %taskAssignees%<br>Catégories: %taskCategories%<br>Points: %taskPoints%<br>Colonne: %taskColumnName%<br>Position: %taskPosition%",
+
+  "mail_template_editBoard": "%username% a modifié la carte %boardName%.",
   "mail_template_editComment": "%username% commentaire modifié dans le tableau %boardName%.<br>Tâche: %taskName%<br>Commentaire: %comment%",
   "mail_template_editTask": "%username% tâche modifiée dans la carte %boardName%.<br>Tâche: %taskName%<br>Description: %taskDescription%<br>Date d'échéance: %taskDueDate%<br>Destinataires: %taskAssignees%<br>Catégories: %taskCategories%<br>Points: %taskPoints%<br>Colonne: %taskColumnName%<br>Position: %taskPosition%",
-  "mail_template_newBoard": "%username% a ajouté la carte %boardName%",
-  "mail_template_newComment": "%username% a ajouté un commentaire dans le tableau %boardName%.<br>Tâche: %taskName%<br>Commentaire: %comment%",
-  "mail_template_newTask": "%username% a ajouté une tâche dans la carte %boardName%.<br>Tâche: %taskName%<br>Description: %taskDescription%<br>Date d'échéance: %taskDueDate%<br>Destinataires: %taskAssignees%<br>Catégories: %taskCategories%<br>Points: %taskPoints%<br>Colonne: %taskColumnName%<br>Position: %taskPosition%"
+
+  "mail_template_removeBoard": "%username% a supprimé le tableau %boardName%.",
+  "mail_template_removeComment": "%username% a supprimé un commentaire du tableau %boardName%.<br>Tâche: %taskName%",
+  "mail_template_removeTask": "%username% a supprimé un tâche du tableau %boardName%<br>Tâche: %taskName%"
 }

@@ -83,6 +83,8 @@ class Boards extends BaseController {
       '(' . $board->name . ').');
     $this->apiJson->addData($this->loadAllBoards($request));
 
+    $this->sendEmail($board, $actor, 'newBoard');
+
     return $this->jsonResponse($response);
   }
 
@@ -133,6 +135,8 @@ class Boards extends BaseController {
       '(' . $update->name . ').');
     $this->apiJson->addData($this->loadAllBoards($request));
 
+    $this->sendEmail($update, $actor, 'editBoard');
+
     return $this->jsonResponse($response);
   }
 
@@ -165,6 +169,8 @@ class Boards extends BaseController {
     $this->apiJson->addAlert('success', $this->strings->api_boardRemoved .
       '(' . $before->name . ').');
     $this->apiJson->addData($this->loadAllBoards($request));
+
+    $this->sendEmail($before, $actor, 'removeBoard');
 
     return $this->jsonResponse($response);
   }
@@ -214,6 +220,24 @@ class Boards extends BaseController {
     unset($user->active_token);
 
     return $user;
+  }
+
+  private function sendEmail($board, $actor, $type) {
+    $data = new EmailData($board->id);
+
+    $data->username = $actor->username;
+    $data->boardName = $board->name;
+    $data->type = $type;
+
+    $emails = $this->getAdminEmailAddresses($board->id);
+    if($actor->email !== '' && !in_array($actor->email, $emails)) {
+      $emails[] = $actor->email;
+    }
+
+    $result = $this->mailer->sendMail($emails, $data);
+    if ($result !== '') {
+      $this->apiJson->addAlert('info', $result);
+    }
   }
 }
 

@@ -328,7 +328,7 @@
     </select>
   </label>
 
-  <label *ngIf="modalProps.categories.length">
+  <label *ngIf="activeBoard.categories.length">
     {{ strings['boards_taskCategories'] }}
 
     <select name="categories" multiple [ngModel]="modalProps.categories"

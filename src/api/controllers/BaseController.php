@@ -15,7 +15,6 @@ abstract class BaseController {
     $this->dbLogger = new DbLogger();
 
     // Default to English
-    $this->mailer = new Mailer('en');
     $this->loadStrings('en');
   }
 
@@ -72,6 +71,15 @@ abstract class BaseController {
     $this->apiJson->addData($request->getHeader('Authorization'));
 
     return $status;
+  }
+
+  protected function getAdminEmailAddresses($boardId) {
+    $emails = R::getAll('SELECT email FROM user u ' .
+      'JOIN board_user bu ON u.id = bu.user_id ' .
+      'WHERE u.security_level < 3 AND u.email <> "" AND board_id = ?',
+      [$boardId]);
+
+    return count($emails) > 0 ? $emails[0] : [];
   }
 
   private function loadStrings($lang) {

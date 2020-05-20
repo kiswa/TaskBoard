@@ -52,7 +52,9 @@ class Comments extends BaseController {
       return $this->jsonResponse($response);
     }
 
-    if (!$this->checkBoardAccess($this->getBoardId($task->id), $request)) {
+    $boardId = $this->getBoardId($task->id);
+
+    if (!$this->checkBoardAccess($boardId, $request)) {
       return $this->jsonResponse($response, 403);
     }
 
@@ -66,6 +68,9 @@ class Comments extends BaseController {
     $this->apiJson->setSuccess();
     $this->apiJson->addData(R::exportAll($task));
     $this->apiJson->addAlert('success', $this->strings->api_commentAdded);
+
+    $board = R::load('board', $boardId);
+    $this->sendEmail($board, $task, $comment->text, $actor, 'newComment');
 
     return $this->jsonResponse($response);
   }
@@ -110,8 +115,9 @@ class Comments extends BaseController {
       return $this->jsonResponse($response);
     }
 
-    if (!$this->checkBoardAccess(
-      $this->getBoardId($comment->task_id), $request)) {
+    $boardId = $this->getBoardId($comment->task_id);
+
+    if (!$this->checkBoardAccess($boardId, $request)) {
       return $this->jsonResponse($response, 403);
     }
 
@@ -126,6 +132,9 @@ class Comments extends BaseController {
 
     $task = R::load('task', $comment->task_id);
     $this->apiJson->addData(R::exportAll($task));
+
+    $board = R::load('board', $boardId);
+    $this->sendEmail($board, $task, $comment->text, $actor, 'editComment');
 
     return $this->jsonResponse($response);
   }
@@ -159,8 +168,9 @@ class Comments extends BaseController {
       return $this->jsonResponse($response);
     }
 
-    if (!$this->checkBoardAccess(
-      $this->getBoardId($comment->task_id), $request)) {
+    $boardId = $this->getBoardId($comment->task_id);
+
+    if (!$this->checkBoardAccess($boardId, $request)) {
       return $this->jsonResponse($response, 403);
     }
 
@@ -177,6 +187,9 @@ class Comments extends BaseController {
     $task = R::load('task', $comment->task_id);
     $this->apiJson->addData(R::exportAll($task));
 
+    $board = R::load('board', $boardId);
+    $this->sendEmail($board, $task, $comment->text, $actor, 'editComment');
+
     return $this->jsonResponse($response);
   }
 
@@ -185,6 +198,45 @@ class Comments extends BaseController {
     $column = R::load('column', $task->column_id);
 
     return $column->board_id;
+  }
+
+  private function sendEmail($board, $task, $comment, $actor, $type) {
+    $data = new EmailData($board->id);
+    $column = R::load('column', $task->column_id);
+
+    $data->comment = $comment ?: '';
+
+    $data->username = $actor->username ?: '';
+    $data->boardName = $board->name ?: '';
+    $data->type = $type;
+
+    $data->taskName = $task->title ?: '';
+    $data->taskDescription = $task->description ?: '';
+    $data->taskDueDate = date('F j, Y, g:i:s A', (int)$task->due_date * 1000);
+
+    $data->taskAssignees = '';
+    foreach($task->sharedUserList as $assignee) {
+      $data->taskAssignees .= $assignee->username ?: '' . ' ';
+    }
+
+    $data->taskCategories = '';
+    foreach($task->sharedCategoryList as $category) {
+      $data->taskCategories .= $category->name ?: '' . ' ';
+    }
+
+    $data->taskPoints = $task->points ?: '';
+    $data->taskColumnName = $column->name ?: '';
+    $data->taskPosition = $task->position ?: '';
+
+    $emails = $this->getAdminEmailAddresses($board->id);
+    if($actor->email !== '' && !in_array($actor->email, $emails)) {
+      $emails[] = $actor->email; // @codeCoverageIgnore
+    }
+
+    $result = $this->mailer->sendMail($emails, $data);
+    if ($result !== '') {
+      $this->apiJson->addAlert('info', $result); // @codeCoverageIgnore
+    }
   }
 }
 
