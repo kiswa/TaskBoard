@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import * as marked from 'marked';
-import * as hljs from 'highlight.js';
+import hljs from 'node_modules/highlight.js/lib/core.js';
+import javascript from 'node_modules/highlight.js/lib/languages/javascript.js';
+import bash from 'node_modules/highlight.js/lib/languages/bash.js';
+import css from 'node_modules/highlight.js/lib/languages/css.js';
+import csharp from 'node_modules/highlight.js/lib/languages/csharp.js';
+import php from 'node_modules/highlight.js/lib/languages/php.js';
+
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -32,6 +38,12 @@ export class BoardService {
 
   constructor(private http: HttpClient) {
     this.initMarked();
+
+    hljs.registerLanguage('javascript', javascript);
+    hljs.registerLanguage('bash', bash);
+    hljs.registerLanguage('css', css);
+    hljs.registerLanguage('csharp', csharp);
+    hljs.registerLanguage('php', php);
   }
 
   async convertMarkdown(markdown: string, callback = this.defaultCallback,
@@ -55,8 +67,9 @@ export class BoardService {
       return;
     }
 
-    const newBoard = this.convertBoardData(board);
-    this.activeBoard.next(newBoard);
+    this.convertBoardData(board).then(newBoard => {
+      this.activeBoard.next(newBoard);
+    });
   }
 
   getBoards(): Observable<ApiResponse> {
@@ -175,7 +188,7 @@ export class BoardService {
     this.http.post('api/refresh', {}).subscribe();
   }
 
-  private convertBoardData(boardData: any): Board {
+  private async convertBoardData(boardData: any): Promise<Board> {
     if (boardData instanceof Board) {
       return boardData;
     }

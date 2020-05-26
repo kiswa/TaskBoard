@@ -3,9 +3,9 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnInit,
   OnDestroy,
-  Output
+  OnInit,
+  Output,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -37,7 +37,7 @@ import { BoardService } from '../board.service';
 
 @Component({
   selector: 'tb-column',
-  templateUrl: './column.component.html'
+  templateUrl: './column.component.html',
 })
 export class ColumnDisplayComponent implements OnInit, OnDestroy {
   public moveItemInArray: any;
@@ -119,8 +119,8 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     });
     this.subs.push(sub);
 
-    sub = boardService.activeBoardChanged.subscribe((board: Board) => {
-      this.activeBoard = board;
+    sub = boardService.activeBoardChanged.subscribe(newBoard => {
+      this.activeBoard = newBoard;
     });
     this.subs.push(sub);
 

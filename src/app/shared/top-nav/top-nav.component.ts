@@ -3,10 +3,7 @@ import { Router } from '@angular/router';
 
 import { Notification } from '../models';
 import { Constants } from '../constants';
-import {
-  AuthService,
-  NotificationsService,
-} from '../services';
+import { AuthService, NotificationsService } from '../services';
 import { StringsService } from '../strings/strings.service';
 
 @Component({

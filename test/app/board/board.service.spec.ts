@@ -46,10 +46,10 @@ describe('BoardService', () => {
 
     service.activeBoardChanged.subscribe(() => (changed = true));
 
-    service.updateActiveBoard(<any>{});
+    service.updateActiveBoard({} as any);
 
     expect(changed).toEqual(true);
-  });
+  })
 
   it('gets all boards', () => {
     service.getBoards().subscribe(response => {

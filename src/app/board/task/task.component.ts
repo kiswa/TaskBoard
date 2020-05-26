@@ -1,9 +1,12 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
-  Output
+  Output,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -24,9 +27,12 @@ import { BoardService } from '../board.service';
 
 @Component({
   selector: 'tb-task',
-  templateUrl: './task.component.html'
+  templateUrl: './task.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TaskDisplayComponent implements OnInit {
+export class TaskDisplayComponent implements OnInit, OnDestroy {
+  private subs: any[];
+
   public isOverdue: boolean;
   public isNearlyDue: boolean;
   public strings: any;
@@ -56,26 +62,35 @@ export class TaskDisplayComponent implements OnInit {
               public boardService: BoardService,
               public modal: ModalService,
               private notes: NotificationsService,
-              public stringsService: StringsService) {
+              public stringsService: StringsService,
+              private cdref: ChangeDetectorRef) {
     this.onUpdateBoards = new EventEmitter<any>();
     this.percentComplete = 0;
+    this.subs = [];
 
-    stringsService.stringsChanged.subscribe(newStrings => {
+    let sub = stringsService.stringsChanged.subscribe(newStrings => {
       this.strings = newStrings;
     });
+    this.subs.push(sub);
 
-    auth.userChanged.subscribe(() => {
+    sub = auth.userChanged.subscribe(() => {
       this.userOptions = auth.userOptions;
     });
+    this.subs.push(sub);
 
-    boardService.activeBoardChanged.subscribe((board: Board) => {
-      this.activeBoard = board;
+    sub = boardService.activeBoardChanged.subscribe(newBoard => {
+      this.activeBoard = newBoard;
     });
+    this.subs.push(sub);
   }
 
   ngOnInit() {
     this.checkDueDate();
     this.convertTaskDescription();
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   getPercentStyle() {

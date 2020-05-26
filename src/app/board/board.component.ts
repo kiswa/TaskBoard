@@ -74,18 +74,6 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
 
     this.updateBoards();
 
-    sub = boardService.activeBoardChanged.subscribe((board: Board) => {
-      if (!board) {
-        return;
-      }
-
-      this.activeBoard = board;
-      title.setTitle('TaskBoard - ' + board.name);
-      this.userFilter = null;
-      this.categoryFilter = null;
-    });
-    this.subs.push(sub);
-
     sub = auth.userChanged.subscribe((user: User) => {
       this.updateActiveUser(user);
     });
@@ -94,6 +82,7 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
     sub = active.params.subscribe(params => {
       const id = +params.id;
 
+      this.loading = true;
       this.boardNavId = id ? id : null;
       this.updateActiveBoard();
     });
@@ -167,38 +156,38 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
       if (response.data.length > 1) {
         this.updateBoardsList(response.data[1]);
       }
-
-      this.loading = false;
     });
   }
 
   private updateBoardsList(boards: any[]): void {
     const activeBoards: Board[] = [];
 
-    if (boards) {
-      boards.forEach((board: any) => {
-        const currentBoard = new Board(+board.id, board.name,
-                                       board.is_active === '1',
-                                       board.ownColumn,
-                                       board.ownCategory,
-                                       board.ownAutoAction,
-                                       board.ownIssuetracker,
-                                       board.sharedUser);
-        if (currentBoard.is_active) {
-          activeBoards.push(currentBoard);
-        }
-      });
-    }
+    boards.forEach((board: any) => {
+      if (board.is_active !== '1') {
+        return;
+      }
+
+      const currentBoard = new Board(+board.id, board.name, true,
+                                     board.ownColumn,
+                                     board.ownCategory,
+                                     board.ownAutoAction,
+                                     board.ownIssuetracker,
+                                     board.sharedUser);
+      activeBoards.push(currentBoard);
+    });
 
     this.boards = activeBoards;
+    this.loading = false;
 
+    this.sortColumns().then(() => { this.updateActiveBoard(); })
+  }
+
+  private async sortColumns() {
     this.boards.forEach(board => {
       board.columns.sort((a: Column, b: Column) => {
         return +a.position - +b.position;
       });
     });
-
-    this.updateActiveBoard();
   }
 
   private updateActiveBoard(): void {
@@ -213,9 +202,16 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.userFilter = null;
+    this.categoryFilter = null;
+
     this.activeBoard = board;
-    this.boardService.updateActiveBoard(board);
     this.pageName = board.name;
+
+    this.boardService.updateActiveBoard(board);
+    this.title.setTitle('TaskBoard - ' + this.activeBoard.name);
+
+    this.loading = false;
   }
 
   private updateActiveUser(activeUser: User) {

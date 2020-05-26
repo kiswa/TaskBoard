@@ -4,7 +4,7 @@ import { BoardDisplayComponent } from './board/board.component';
 import { FileViewerComponent } from './files/file-viewer.component';
 import { LoginComponent } from './login/login.component';
 import { SettingsComponent } from './settings/settings.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+// import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './shared/auth/auth.guard';
 
 export const ROUTES: Routes = [
@@ -27,11 +27,11 @@ export const ROUTES: Routes = [
     component: SettingsComponent,
     canActivate: [ AuthGuard ]
   },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [ AuthGuard ]
-  },
+  // {
+  //   path: 'dashboard',
+  //   component: DashboardComponent,
+  //   canActivate: [ AuthGuard ]
+  // },
   {
     path: 'files/:hash',
     component: FileViewerComponent,

@@ -2,7 +2,6 @@ import { Component, OnDestroy } from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
-  transferArrayItem
 } from '@angular/cdk/drag-drop';
 
 import {
