@@ -48,4 +48,5 @@ Thumbs.db
 /src/api/vendor
 *.db
 *.sqlite
+*.zip
 

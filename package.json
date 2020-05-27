@@ -29,7 +29,7 @@
   },
   "scripts": {
     "build": "ng b --output-hashing=none",
-    "build:prod": "npm-run-all -s \"build -- --prod\" api-changed",
+    "build:prod": "npm-run-all -s \"build -- --prod\" api-changed package",
     "build:dev": "npm-run-all -s build api-changed",
     "watch": "npm-run-all -p \"build -- --watch\" dist-watch",
     "dist-watch": "npm-watch api-changed",
@@ -42,7 +42,8 @@
     "test:api-single": "./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml --group single",
     "test:watch": "ng test --code-coverage --watch",
     "lint": "ng lint",
-    "postinstall": "cd src/api/ && composer update && composer install --optimize-autoloader && cd ../../"
+    "postinstall": "cd src/api/ && composer update && composer install --optimize-autoloader && cd ../../",
+    "package": "zip -qr TaskBoard_v$npm_package_version.zip dist/"
   },
   "husky": {
     "hooks": {
