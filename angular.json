@@ -29,6 +29,11 @@
                 "input": "src/json",
                 "output": "/strings"
               },
+              {
+                "glob": "*.*",
+                "input": "src/favicons",
+                "output": "favicons"
+              },
               "src/.htaccess",
               "src/images",
               "src/fonts"
