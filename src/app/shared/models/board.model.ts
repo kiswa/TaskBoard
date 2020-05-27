@@ -26,15 +26,13 @@ export class Board {
     this.users = [];
 
     columnArray.forEach((column: any) => {
-      this.convertColumn(column).then(col => {
-        this.columns.push(col);
-      })
+      this.columns.push(this.convertColumn(column));
     });
 
+    this.columns.sort((a, b) => a.position - b.position);
+
     categoryArray.forEach((category: any) => {
-      this.convertCategory(category).then(cat => {
-        this.categories.push(cat);
-      });
+      this.categories.push(this.convertCategory(category));
     });
 
     actionsArray.forEach((action: any) => {
@@ -78,7 +76,7 @@ export class Board {
     this.issue_trackers.push(new IssueTracker(0, url, regex));
   }
 
-  private async convertColumn(column: any): Promise<Column> {
+  private convertColumn(column: any): Column {
     const col = new Column(+column.id, column.name, +column.position,
                            +column.board_id, +column.task_limit,
                            column.ownTask);
@@ -86,7 +84,7 @@ export class Board {
     return col;
   }
 
-  private async convertCategory(category: any): Promise<Category> {
+  private convertCategory(category: any): Category {
 
     const cat = new Category(+category.id, category.name,
                              category.default_task_color, +category.board_id);

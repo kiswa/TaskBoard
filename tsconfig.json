@@ -14,9 +14,6 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "paths": {
-      "dragula": ["../node_modules/dragula/dist/dragula.min.js"]
-    },
     "lib": [
       "es2018",
       "dom"

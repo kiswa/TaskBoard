@@ -3,17 +3,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 import {
-  ApiResponse,
-  Board,
-  Column,
-  User
-} from '../shared/models';
-import {
   AuthService,
   ContextMenuService,
   NotificationsService,
   StringsService
 } from '../shared/services';
+import { ApiResponse, Board, User } from '../shared/models';
 import { BoardService } from './board.service';
 
 @Component({
@@ -178,16 +173,7 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
 
     this.boards = activeBoards;
     this.loading = false;
-
-    this.sortColumns().then(() => { this.updateActiveBoard(); })
-  }
-
-  private async sortColumns() {
-    this.boards.forEach(board => {
-      board.columns.sort((a: Column, b: Column) => {
-        return +a.position - +b.position;
-      });
-    });
+    this.updateActiveBoard();
   }
 
   private updateActiveBoard(): void {
