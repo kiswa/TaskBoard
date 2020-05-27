@@ -1,0 +1,32 @@
+<h3>Tasks Due by Month</h3>
+
+<table class="calendar">
+  <thead>
+    <tr>
+      <th><i class="icon icon-angle-double-left"
+          (click)="previousMonth()"></i></th>
+      <th colspan="5">{{ monthLabels[month] }} {{ year }}</th>
+      <th><i class="icon icon-angle-double-right"
+          (click)="nextMonth()"></i></th>
+    </tr>
+    <tr class="days">
+      <th *ngFor="let day of dayLabels">{{ day }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let week of calendarDays">
+      <td *ngFor="let day of week" class="day"
+        [ngClass]="{ today: today.getMonth() === month && today.getDate() === day }">
+        <span class="date">{{ day }}</span>
+        <span *ngIf="tasks[day]" class="tasks-wrapper">
+          <span class="task" *ngFor="let task of tasks[day]"
+            [style.background-color]="getColor(task)">
+            <span class="points">{{ task.points }}</span>
+            {{ task.title }}
+          </span>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+

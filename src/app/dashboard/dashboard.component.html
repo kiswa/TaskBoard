@@ -1,0 +1,178 @@
+<tb-top-nav page-name="Dashboard"></tb-top-nav>
+
+<div class="dashboard">
+  <section>
+    <h2>Boards and Tasks</h2>
+
+    <div class="row">
+      <h3>My Boards</h3>
+
+      <table class="alternating">
+        <thead>
+          <tr>
+            <th>Board</th>
+            <th>Columns</th>
+            <th>Categories</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#">Personal Projects</a></td>
+            <td>
+              To Do <span class="badge" title="Tasks in Column">8</span>
+              Doing <span class="badge" title="Tasks in Column">3</span>
+              Done <span class="badge" title="Tasks in Column">0</span>
+            </td>
+            <td>
+              List <span class="badge" title="Tasks in Category">3</span>
+              Thing 1 <span class="badge" title="Tasks in Category">4</span>
+              Thing 2 <span class="badge" title="Tasks in Category">4</span>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#">TaskBoard</a></td>
+            <td>
+              Backlog <span class="badge" title="Tasks in Column">23</span>
+              Ready <span class="badge" title="Tasks in Column">5</span>
+              In Work <span class="badge" title="Tasks in Column">3</span>
+              Test <span class="badge" title="Tasks in Column">2</span>
+              Done <span class="badge" title="Tasks in Column">18</span>
+            </td>
+            <td>
+              Front-End <span class="badge" title="Tasks in Category">19</span>
+              Back-End <span class="badge" title="Tasks in Category">28</span>
+              Test <span class="badge" title="Tasks in Category">2</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row">
+      <h3>My Tasks</h3>
+
+      <table class="alternating">
+        <thead>
+          <tr>
+            <th>Board</th>
+            <th>Task</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#">TaskBoard</a></td>
+            <td>
+              <a href="#">An Important Task</a>
+              <span class="badge" title="Task Color"
+                style="background-color:#debee8">&nbsp;</span>
+            </td>
+            <td>
+              <span class="details">Column: <em>In Work</em></span>
+              <span class="details">Due: <em>12/31/2016</em></span>
+              <span class="details">Points: <em>8</em></span>
+              <span class="details">Attachments: <em>2</em></span>
+              <span class="details">Comments: <em>5</em></span>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#">Personal Projects</a></td>
+            <td>
+              <a href="#">Make a List</a>
+              <span class="badge" title="Task Color"
+                style="background-color:#bee7f4">&nbsp;</span>
+            </td>
+            <td>
+              <span class="details">Column: <em>To Do</em></span>
+              <span class="details">Comments: <em>2</em></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Analytics</h2>
+
+    <div class="row">
+      <select>
+        <option>Select Board...</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <h3>Task Burndown</h3>
+
+      <label class="inline">Start Date: <input type="date"></label>
+      <label class="inline">End Date: <input type="date"></label>
+
+      <tb-charts chart-name="chartBurndown" chart-type="line"
+        series="29,26,21,18,13,8,3"
+        labels="12/31/2015,1/1/2016,1/2/2016,1/3/2016,1/4/2016,1/5/2016,1/6/2016"
+        table-head="Date"></tb-charts>
+    </div>
+
+    <div class="row">
+      <div class="half-page">
+        <h3>Task Distribution by User</h3>
+        <tb-charts chart-name="chartByUser" series="7,13,8,5"
+          labels="admin,tester,user,another"
+          table-head="User"></tb-charts>
+      </div>
+      <div class="half-page">
+        <h3>Task Distribution by Column</h3>
+        <tb-charts chart-name="chartByColumn" series="18,3,7"
+          labels="To Do,Doing,Done"
+          table-head="Column"></tb-charts>
+      </div>
+    </div>
+
+    <div class="row">
+      <tb-calendar board-id="1"></tb-calendar>
+    </div>
+  </section>
+
+  <section>
+    <h2>Activity Log</h2>
+
+    <div class="row">
+      <table class="alternating">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Action</th>
+            <th>Timestamp</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>admin</td>
+            <td>admin added task Mockup Dashboard.</td>
+            <td>5/22/2016 1:31:53 PM</td>
+            <td><a href="#">View Task</a></td>
+          </tr>
+          <tr>
+            <td>admin</td>
+            <td>admin added board Test.</td>
+            <td>5/13/2016 4:16:46 PM</td>
+            <td><a href="#">View Board</a></td>
+          </tr>
+          <tr>
+            <td>admin</td>
+            <td>admin removed board Demo.</td>
+            <td>5/11/2016 9:21:39 AM</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>admin</td>
+            <td>admin added board Demo.</td>
+            <td>5/11/2016 9:18:26 AM</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

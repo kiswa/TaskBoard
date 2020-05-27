@@ -1,0 +1,95 @@
+<tb-top-nav page-name="{{ pageName }}"></tb-top-nav>
+
+<div class="board-nav">
+  <label *ngIf="boards && boards.length">
+    {{ strings['boards_selectBoard'] }}:
+
+    <select [(ngModel)]="boardNavId" (change)="goToBoard()">
+      <option [ngValue]="null">
+        {{ strings['boards_selectBoard'] }}...
+      </option>
+
+      <option *ngFor="let board of boards" [ngValue]="board.id">
+        {{ board.name }}
+      </option>
+    </select>
+  </label>
+
+  <div class="right" *ngIf="activeBoard">
+    <label>
+      {{ strings['boards_hideFiltered'] }}:
+
+      <input type="checkbox" [(ngModel)]="hideFiltered"
+             (change)="toggleFiltered()">
+    </label>
+
+    <label>
+      {{ strings['boards_userFilter'] }}:
+
+      <select [(ngModel)]="userFilter" (change)="filterTasks()">
+        <option [ngValue]="null">
+          {{ strings['boards_filterByAny'] }}
+        </option>
+
+        <option [ngValue]="-1">
+         {{ strings['boards_filterByUnassigned'] }}
+        </option>
+
+        <option *ngFor="let user of activeBoard.users" [ngValue]="user.id">
+         {{ user.username }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      {{ strings['boards_categoryFilter'] }}:
+
+      <select [(ngModel)]="categoryFilter" (change)="filterTasks()">
+        <option [ngValue]="null">
+          {{ strings['boards_filterByAny'] }}
+        </option>
+
+        <option [ngValue]="-1">
+          {{ strings['boards_filterByUncategorized'] }}
+        </option>
+
+        <option *ngFor="let category of activeBoard.categories"
+                [ngValue]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </label>
+
+  </div>
+</div>
+
+<div class="no-boards center" *ngIf="!loading && boards.length === 0">
+  <h1>{{ strings['boards_noBoards'] }}</h1>
+
+  <p>{{ noBoardsMessage }}</p>
+</div>
+
+<div class="no-boards center"
+     *ngIf="!loading && !activeBoard && this.boards.length > 0 &&
+     !activeUser.default_board_id">
+  <h1>{{ strings['boards_noDefault'] }}</h1>
+
+  <p>{{ strings['boards_noDefaultMessage'] }}
+    <a href="javascript:" [routerLink]="['/settings']">
+      {{ strings['settings'] }}
+    </a>.
+  </p>
+
+  <p></p>
+</div>
+
+<div class="board" *ngIf="loading">
+  <div class="loading">{{ strings['loading'] }}...</div>
+</div>
+
+<div class="board" cdkDropListGroup *ngIf="activeBoard">
+  <tb-column class="column" [id]="column.id" [column]="column"
+             *ngFor="let column of activeBoard.columns"
+             (on-update-boards)="updateBoards()"></tb-column>
+</div>
+

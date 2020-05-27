@@ -1,0 +1,142 @@
+<div class="task"
+     [ngClass]="{ 'filtered': taskData.filtered,
+                  'hide': taskData.hideFiltered }"
+     [style.backgroundColor]="taskData.color"
+     [style.color]="getTextColor(taskData.color)">
+  <h4 class="drag-handle">
+    <span class="icon"
+          [style.color]="getTextColor(taskData.color)"
+          [ngClass]="{ 'icon-minus-squared-alt': !isCollapsed,
+                        'icon-plus-squared-alt': isCollapsed }"
+          [title]="isCollapsed ? strings['boards_expandTask']
+                               : strings['boards_collapseTask']"
+          (click)="isCollapsed = !isCollapsed"></span>
+
+    {{ taskData.title }}
+
+    <span *ngIf="taskData.points > 0" class="badge right"
+          [title]="strings['boards_taskPoints'] ">{{ taskData.points }}</span>
+  </h4>
+
+  <div class="description" *ngIf="!isCollapsed" [innerHtml]="taskData.html">
+  </div>
+
+  <div class="stats">
+    <span *ngIf="userOptions.show_assignee">
+      {{ strings['boards_taskAssignedTo'] }}:
+
+      <span *ngFor="let assignee of taskData.assignees">
+        {{ assignee.username }}
+      </span>
+
+      <span *ngIf="!taskData.assignees || !taskData.assignees.length">
+        {{ strings['boards_taskUnassigned'] }}
+      </span>
+    </span>
+
+    <span class="right">
+      <span *ngIf="taskData.due_date" [class.overdue]="isOverdue"
+            [class.near-due]="isNearlyDue">
+        {{ strings['boards_taskDue'] }}: {{ taskData.due_date | date }}
+      </span>
+
+      <span *ngIf="taskData.comments.length" class="icon icon-chat-empty"
+            [title]="taskData.comments.length + ' ' +
+                      strings['boards_taskComments']"></span>
+
+      <span *ngIf="taskData.attachments.length" class="icon icon-attach"
+            [title]="taskData.attachments.length + ' ' +
+                      strings['boards_taskAttachments']"></span>
+
+      <span *ngFor="let category of taskData.categories" class="category"
+            [title]="strings['boards_taskCategory']">
+        {{ category.name }}
+      </span>
+    </span>
+
+    <div *ngIf="percentComplete" [style]="getPercentStyle()"
+         [title]="getPercentTitle()"></div>
+  </div>
+
+  <tb-context-menu>
+    <tb-context-menu-item (click)="viewTask()">
+      {{ strings['boards_viewTask'] }}
+    </tb-context-menu-item>
+
+    <tb-context-menu-item (click)="editTask()">
+      {{ strings['boards_editTask'] }}
+    </tb-context-menu-item>
+
+    <tb-context-menu-item (click)="removeTask()">
+      {{ strings['boards_removeTask'] }}
+    </tb-context-menu-item>
+
+    <div *ngIf="boardsList && boardsList.length > 1">
+      <tb-context-menu-item isSeparator="true"></tb-context-menu-item>
+
+      <tb-context-menu-item isCustomEvent="true">
+        {{ strings['boards_copyTaskTo'] }}:
+
+        <i class="icon icon-help-circled"
+           attr.data-help="{{ strings['boards_copyMoveHelp'] }}"></i>
+
+        <select id="boardsList{{ taskData.id }}{{
+                    strings['boards_copyTaskTo'].split(' ')[0] }}"
+                (change)="copyTaskToBoard($event)">
+          <option value="0">{{ strings['boards_selectBoard'] }}</option>
+
+          <ng-container *ngFor="let board of boardsList">
+            <option *ngIf="board.id !== activeBoard.id" [value]="board.id">
+              {{ board.name }}
+            </option>
+          </ng-container>
+
+        </select>
+      </tb-context-menu-item>
+
+      <tb-context-menu-item isCustomEvent="true">
+        {{ strings['boards_moveTaskTo'] }}:
+
+        <i class="icon icon-help-circled"
+           attr.data-help="{{ strings['boards_copyMoveHelp'] }}"></i>
+
+        <select id="boardsList{{ taskData.id }}{{
+                    strings['boards_moveTaskTo'].split(' ')[0] }}"
+                (change)="moveTaskToBoard($event)">
+          <option value="0">{{ strings['boards_selectBoard'] }}</option>
+
+          <ng-container *ngFor="let board of boardsList">
+            <option *ngIf="board.id !== activeBoard.id" [value]="board.id">
+              {{ board.name }}
+            </option>
+          </ng-container>
+
+        </select>
+      </tb-context-menu-item>
+    </div>
+
+    <div *ngIf="activeBoard.columns.length > 1">
+      <tb-context-menu-item isSeparator="true"></tb-context-menu-item>
+
+      <tb-context-menu-item isCustomEvent="true">
+        {{ strings['boards_moveTask'] }}:
+
+        <select id="columnsList{{ taskData.id }}" (change)="changeTaskColumn($event)">
+          <option value="0">{{ strings['boards_selectColumn'] }}</option>
+
+          <option *ngFor="let col of activeBoard.columns" [value]="col.id">
+          {{ col.name }}
+          </option>
+        </select>
+      </tb-context-menu-item>
+    </div>
+
+    <tb-context-menu-item isSeparator="true"></tb-context-menu-item>
+
+    <tb-context-menu-item (click)="addTask()">
+      {{ strings['boards_addTask'] }}
+    </tb-context-menu-item>
+
+  </tb-context-menu>
+</div>
+
