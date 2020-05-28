@@ -331,7 +331,7 @@ class UsersTest extends PHPUnit\Framework\TestCase {
 
     $response = $this->users->updateUser($request,
       new ResponseMock(), $args);
-    $this->assertEquals('failure', $response->body->data->status);
+    $this->assertEquals('success', $response->body->data->status);
   }
 
   public function testUpdateUserOptions() {
