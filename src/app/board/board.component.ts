@@ -150,7 +150,10 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
 
       if (response.data.length > 1) {
         this.updateBoardsList(response.data[1]);
+        return;
       }
+
+      this.loading = false;
     });
   }
 
