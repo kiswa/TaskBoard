@@ -197,20 +197,20 @@ Because I like seeing the numbers.
 
 Language   |   Files |    Blank |  Comment |    Code
 -----------|--------:|---------:|---------:|---------:
-TypeScript |    66   |    958   |    126   |   4057
+TypeScript |    66   |    971   |    134   |   4059
 PHP        |    20   |    752   |     40   |   2265
-HTML       |    21   |    257   |      0   |   1540
+HTML       |    21   |    260   |      2   |   1550
 SASS       |    14   |    298   |     10   |   1344
-**SUM:**   | **121** | **2265** |  **176** | **9206**
+**SUM:**   | **121** | **2281** |  **186** | **9218**
 
-Command: `cloc --exclude-dir=vendor --exclude-ext=json,svg,ini src/`
+Command: `cloc --exclude-dir=vendor,favicons --exclude-ext=json,svg,ini src/`
 
 ### `test`
 
 Language   |  Files |    Blank |  Comment |    Code
 -----------|-------:|---------:|---------:|---------:
-TypeScript |   38   |   1009   |      8   |   3523
-PHP        |   11   |    795   |     19   |   2300
-**SUM:**   | **49** | **1804** |   **27** | **5823**
+TypeScript |   38   |   1009   |      8   |   3526
+PHP        |   11   |    795   |     19   |   2301
+**SUM:**   | **49** | **1804** |   **27** | **5827**
 
 Command: `cloc --exclude-ext=xml test/`
