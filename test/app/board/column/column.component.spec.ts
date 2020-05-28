@@ -321,6 +321,7 @@ describe('ColumnDisplay', () => {
       return { subscribe: (fn: any) => fn({ status: 'error', alerts: [] }) };
     };
 
+    component.activeUser = { id: 1, security_level: 3 } as any;
     component.attachmentToRemove = { id: 0 } as any;
     component.removeAttachment();
 
@@ -404,6 +405,7 @@ describe('ColumnDisplay', () => {
     component.viewModalProps = { comments: [{ id: 1 }] } as any;
     component.commentToRemove = { id: 1 } as any;
 
+    component.activeUser = { id: 1, security_level: 2 } as any;
     component.activeBoard = {
       columns: [
         { id: 1, tasks: [{ id: 1, text: 'test' }, { id: 2 }] },
@@ -554,6 +556,7 @@ describe('ColumnDisplay', () => {
 
     expect(view).toEqual(jasmine.any(Function));
 
+    component.activeUser = { id: 1, security_level: 1 } as any;
     component.activeBoard = { issue_trackers: [] } as any;
     component.showActivity = true;
     component.columnData = { id: 1, tasks: [{
