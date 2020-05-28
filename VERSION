@@ -1,9 +1,0 @@
-v0.3.1
-
-Changelog
-
- * Fix automatic action color change bug.
- * Fix new user default board bug.
- * Fix boards button bug.
- * Fix modal display bug.
- * Allow email to be reset to nothing.

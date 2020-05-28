@@ -1,0 +1,20 @@
+<div id="{{ chartName }}" class="ct-chart"
+  [ngClass]="{'ct-golden-section': chartType === 'pie', 'white-labels': chartType === 'pie'}"></div>
+
+<table class="alternating" *ngIf="chartType !== 'line'">
+  <thead>
+    <tr>
+      <th>{{ tableHead }}</th>
+      <th>Task Count</th>
+      <th>Percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let percent of percentages; let i = index;">
+      <td>{{ words[i] }}</td>
+      <td>{{ data[i] }}</td>
+      <td>{{ percent }}%</td>
+    </tr>
+  </tbody>
+</table>
+

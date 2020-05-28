@@ -1,0 +1,35 @@
+.collapsed {
+  .context-menu-container {
+    display: none;
+  }
+}
+
+.context-menu-container {
+  @include shadow-high;
+
+  background-color: $white;
+  border-radius: 3px;
+  color: $color-text;
+  padding: 5px 0;
+  position: fixed;
+  width: 200px;
+  z-index: 100;
+}
+
+tb-context-menu-item {
+  cursor: pointer;
+}
+
+tb-context-menu-item:hover {
+  background-color: darken($white, 5%);
+}
+
+tb-context-menu-item[isseparator] {
+  cursor: default;
+  height: 1em;
+}
+
+tb-context-menu-item[isseparator] {
+  background-color: $white;
+}
+

@@ -1,0 +1,17 @@
+<tb-top-nav page-name="{{ pageName }}" [show-buttons]="false"></tb-top-nav>
+
+<div class="file-viewer">
+  <div class="header">
+    {{ strings['attachment'] }}: {{ attachment?.filename }}
+
+    <span class="right">
+      <a [href]="fileUrl" download="{{ attachment?.filename }}">
+        {{strings['boards_taskDownload']}}
+      </a>
+    </span>
+  </div>
+
+  <div class="content" *ngIf="isLoaded">
+    <iframe seamless [src]="fileUrl"></iframe>
+  </div>
+</div>
