@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-# **N O T I C E**
-
-TaskBoard is currently being re-written from scratch. The `master` and `dev` branches are still maintained, but are not getting new features at this time.
-
-If you'd like to see how it's progressing, take a look at [the `re-write` branch](https://github.com/kiswa/TaskBoard/tree/re-write) (keeping in mind it's still a work in progress at this point) or the [GitHub Project](https://github.com/kiswa/TaskBoard/projects/1?fullscreen=true).
-
-=======
->>>>>>> re-write
 # TaskBoard
 
 **N O T I C E - This branch is in active development! Not all items in this README are final or guaranteed to be accurate until it is merged to `master`!**
@@ -16,13 +7,9 @@ If you'd like to see how it's progressing, take a look at [the `re-write` branch
 A [Kanban](http://en.wikipedia.org/wiki/Kanban_board)-inspired app for keeping
 track of things that need to get done.
 
-<<<<<<< HEAD
-### How It's Made
-=======
 The goal of TaskBoard is to provide a simple and clean interface to a
 functional and minimal application for keeping track of tasks.
 **It's not trying to be the next Trello or LeanKit.**
->>>>>>> re-write
 
 ## Installation
 
@@ -45,16 +32,9 @@ Installing TaskBoard is as easy as 1, 2, 3!
 
 If you intend to use email features, you will need to edit `api/helpers/mailer.php`.
 
-<<<<<<< HEAD
-## Installation
-
-### Requirements
-A web server running PHP with sqlite enabled. Developed and tested under Apache2 running PHP 5.5+.
-=======
 ### Server Config
 
 #### Apache
->>>>>>> re-write
 
 The directory you create for TaskBoard must have `AllowOverride` set so the
 `.htaccess` files work.
@@ -63,11 +43,7 @@ You also have to have `mod_rewrite` installed and enabled.
 
 #### NGINX
 
-<<<<<<< HEAD
-### Install
-=======
 TODO
->>>>>>> re-write
 
 #### IIS
 
@@ -100,11 +76,6 @@ added to.
 Each board may have as many columns as needed. For example, a software project
 might have columns like:
 
-<<<<<<< HEAD
-## Features
-
-### Email
-=======
 * Proposed
 * Backlog
 * In Work
@@ -113,7 +84,6 @@ might have columns like:
 * Archived
 
 Or maybe you want to track a simple todo list with just:
->>>>>>> re-write
 
 * Todo
 * Doing
@@ -123,27 +93,17 @@ It's all up to you! However many columns you have, each column may have tasks
 added to it, and tasks can be dragged to other columns as they progress
 (or edited and assigned to a new column).
 
-<<<<<<< HEAD
-### Settings
-The settings page allows normal users to see what boards they have access to and edit their user settings.
-=======
 Boards may also have categories for additional organization, *e.g.* `Bug`,
 `Enhancement`, `New Feature`.
->>>>>>> re-write
 
 ![Boards Page](./.github/boards.png)
 
 ### Tasks
 
-<<<<<<< HEAD
-### Boards
-Each board may have as many columns as needed. For example, a software project might have columns like:
-=======
 A task only has to have a Title to be added to a board, but there is much more
 available. Tasks may be assigned to any user on the board (or left Unassigned),
 and include options for Due Date, Color, Points (an optional difficulty
 rating), and Category.
->>>>>>> re-write
 
 TaskBoard uses a [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#table-of-contents)
 parser for the Description, allowing for better display of details
@@ -190,13 +150,8 @@ If you want to run a single App test, change the test from
 `it('should do something', ...);` to `fit('should do something', ...);` and
 only that test will run.
 
-<<<<<<< HEAD
-### Items
-An item (task) only has to have a Title to be added to a board, but there is much more than that available. Items may be assigned to any user on the board (or left Unassigned), and include options for Due Date, Color, Points (an optional difficulty rating), and Category.
-=======
 These tests are run by [Travis CI](https://travis-ci.org/) on PRs and commits.
 A PR with failing or missing tests will not be merged.
->>>>>>> re-write
 
 ## Contributing
 
@@ -205,11 +160,7 @@ Fork the repository and make your changes on the `dev` branch.
 Create a pull request against the `dev` branch to merge your changes with the
 main repository.
 
-<<<<<<< HEAD
-## Feedback
-=======
 Make sure to include/update unit tests.
->>>>>>> re-write
 
 ## Feedback
 
@@ -219,9 +170,6 @@ submit a pull request.
 
 If you find a bug, please post it on the [Issue Tracker](https://github.com/kiswa/TaskBoard/issues).
 
-<<<<<<< HEAD
-## Lines of Code
-=======
 ## How It's Made
 
 ### Front End
@@ -254,7 +202,6 @@ PHP        |    20   |    752   |     40   |   2265
 HTML       |    21   |    260   |      2   |   1550
 SASS       |    14   |    298   |     10   |   1344
 **SUM:**   | **121** | **2281** |  **186** | **9218**
->>>>>>> re-write
 
 Command: `cloc --exclude-dir=vendor,favicons --exclude-ext=json,svg,ini src/`
 
