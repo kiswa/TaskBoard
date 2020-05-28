@@ -56,7 +56,7 @@ export class BoardService {
     retVal.html = callback(false, marked(markdown));
 
     if (doCount) {
-      retVal.counts = this.checkCounts;
+      retVal.counts = Object.assign({}, this.checkCounts);
     }
 
     return retVal;

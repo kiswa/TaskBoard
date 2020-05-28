@@ -6,7 +6,6 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -62,8 +61,7 @@ export class TaskDisplayComponent implements OnInit, OnDestroy {
               public boardService: BoardService,
               public modal: ModalService,
               private notes: NotificationsService,
-              public stringsService: StringsService,
-              private cdref: ChangeDetectorRef) {
+              public stringsService: StringsService) {
     this.onUpdateBoards = new EventEmitter<any>();
     this.percentComplete = 0;
     this.subs = [];

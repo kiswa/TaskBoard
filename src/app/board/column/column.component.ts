@@ -669,8 +669,16 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   private updateTaskActivity(id: number) {
     this.viewTaskActivities = [];
 
+    if (this.activeUser.security_level > 2) {
+      return;
+    }
+
     this.boardService.getTaskActivity(id)
       .subscribe(response => {
+        if (response.data.length === 0) {
+          return;
+        }
+
         response.data[1].forEach((item: any) => {
           this.viewTaskActivities.push(
             new ActivitySimple(item.text, item.timestamp));
@@ -691,23 +699,24 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
                           updatedTask.ownAttachment,
                           updatedTask.sharedUser,
                           updatedTask.sharedCategory);
+
+    task.html = updatedTask.html;
+    task.comments.forEach(comment => {
+      this.boardService.convertMarkdown(comment.text, this.markedCallback)
+        .then(data => { comment.html = data.html; });
+    });
+
     return task;
   }
 
   private replaceUpdatedTask(updatedTask: any) {
-    this.activeBoard.columns.forEach(column => {
-      if (+column.id !== +updatedTask.column_id) {
-        return;
-      }
+    const oldTask = this.activeBoard.columns
+      .find(column => +column.id === +updatedTask.column_id)
+      .tasks.find(task => +task.id === +updatedTask.id);
 
-      column.tasks.forEach(task => {
-        if (+task.id !== +updatedTask.id) {
-          return;
-        }
+    updatedTask.html = oldTask.html;
 
-        this.updateTaskComments(task, updatedTask.ownComment);
-      });
-    });
+    this.updateTaskComments(oldTask, updatedTask.ownComment);
   }
 
   private updateTaskComments(task: Task, newComments: any[]) {
