@@ -144,19 +144,21 @@ class Users extends BaseController {
         return $this->jsonResponse($response);
       }
 
-      $data->password_hash =
-        password_hash($data->new_password, PASSWORD_BCRYPT);
+      // $data->password_hash =
+      //   password_hash($data->new_password, PASSWORD_BCRYPT);
       unset($data->new_password);
       unset($data->old_password);
     }
 
     $data->active_token = $user->active_token;
 
-    if (isset($data->password) && $data->password !== '') {
-      $data->password_hash =
-        password_hash($data->password, PASSWORD_BCRYPT);
-      unset($data->password);
-    }
+    // if (isset($data->password) && $data->password !== '') {
+    //   $data->password_hash =
+    //     password_hash($data->password, PASSWORD_BCRYPT);
+    //   unset($data->password);
+    // }
+
+    $data->username = $user->username; // Prevent changing username
 
     BeanLoader::LoadUser($update, json_encode($data));
 
