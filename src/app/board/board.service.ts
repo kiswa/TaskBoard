@@ -184,8 +184,8 @@ export class BoardService {
     )
   }
 
-  refreshToken(): void {
-    this.http.post('api/refresh', {}).subscribe();
+  refreshToken(callback: any): void {
+    this.http.post('api/refresh', {}).subscribe(() => callback());
   }
 
   private async convertBoardData(boardData: any): Promise<Board> {

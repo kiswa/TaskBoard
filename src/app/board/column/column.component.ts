@@ -61,6 +61,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   public taskToRemove: number;
 
   public newComment: string;
+  public commentOrder: string;
   public sortOption: string;
 
   public templateElement: any;
@@ -98,6 +99,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
               private sanitizer: DomSanitizer) {
     this.templateElement = elRef.nativeElement;
     this.collapseTasks = false;
+    this.commentOrder = "oldest";
     this.sortOption = 'pos';
 
     this.MODAL_ID = 'add-task-form-';
@@ -139,7 +141,6 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
                                  user.board_access,
                                  user.collapsed);
       this.userOptions = auth.userOptions;
-      this.showActivity = this.activeUser.isAnyAdmin();
     });
     this.subs.push(sub);
   }
@@ -204,6 +205,16 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     }
   }
 
+  sortComments() {
+    this.viewModalProps.comments.sort((a, b) => {
+      if (this.commentOrder === 'oldest') {
+        return a.timestamp - b.timestamp;
+      }
+
+      return b.timestamp - a.timestamp;
+    })
+  }
+
   toggleCollapsed() {
     this.templateElement.classList.toggle('collapsed');
 
@@ -250,7 +261,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
         });
 
         this.boardService.updateActiveBoard(boardData);
-        this.boardService.refreshToken();
+        this.onUpdateBoards.next();
         this.saving = false;
       }, err => {
         this.notes.add({ type: 'error', text: err.toString() });
@@ -296,9 +307,9 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
         }
 
         this.boardService.updateActiveBoard(response.data[2][0]);
+        this.onUpdateBoards.next();
         this.modal.close(this.MODAL_ID + this.columnData?.id + '');
 
-        this.boardService.refreshToken();
         this.saving = false;
       });
   }
@@ -313,7 +324,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
         }
 
         this.boardService.updateActiveBoard(response.data[1][0]);
-        this.boardService.refreshToken();
+        this.onUpdateBoards.next();
       });
   }
 
@@ -624,10 +635,8 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     this.viewModalProps = Object.assign({}, viewTask);
     this.checkDueDate();
 
-    if (this.showActivity) {
-      this.showActivity = false;
-      setTimeout(() => (this.showActivity = true), 500);
-    }
+    this.showActivity = false;
+    setTimeout(() => (this.showActivity = true), 500);
 
     this.modal.open(this.MODAL_VIEW_ID + this.columnData.id);
   }
@@ -732,6 +741,8 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
                     comment.task_id, comment.timestamp)
       );
     });
+
+    this.sortComments();
   }
 
   // Needs anonymous function for proper `this` context.

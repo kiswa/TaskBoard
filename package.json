@@ -29,7 +29,7 @@
   },
   "scripts": {
     "build": "ng b --output-hashing=none",
-    "build:prod": "npm-run-all -s \"build -- --prod\" api-changed package",
+    "build:prod": "npm-run-all -s \"build -- --prod\" api-writeable package",
     "build:dev": "npm-run-all -s build api-changed",
     "watch": "npm-run-all -p \"build -- --watch\" dist-watch",
     "dist-watch": "npm-watch api-changed",

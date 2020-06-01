@@ -41,7 +41,7 @@
       </select>
     </label>
 
-    <label>
+    <label *ngIf="activeBoard.categories.length">
       {{ strings['boards_categoryFilter'] }}:
 
       <select [(ngModel)]="categoryFilter" (change)="filterTasks()">
