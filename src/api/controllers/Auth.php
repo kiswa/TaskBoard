@@ -85,12 +85,12 @@ class Auth extends BaseController {
 
     $user = R::load('user', $payload->uid);
 
-    if ($user->active_token !== $jwt) {
-      $user->active_token = '';
-      R::store($user);
-
-      return $response->withStatus(401);
-    }
+    // if ($user->active_token !== $jwt) {
+    //   $user->active_token = '';
+    //   R::store($user);
+    //
+    //   return $response->withStatus(401);
+    // }
 
     return $response;
   }
