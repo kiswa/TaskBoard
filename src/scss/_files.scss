@@ -1,0 +1,47 @@
+.file-viewer {
+  @include shadow-low;
+
+  background-color: $white;
+  bottom: 2rem;
+  left: 2rem;
+  position: absolute;
+  right: 2rem;
+  top: 5rem;
+
+  .header {
+    background-color: $color-heading-bg;
+    border-bottom: 1px solid lighten($color-border, 18%);
+    font-family: Raleway;
+    font-size: 24px;
+    font-weight: 500;
+    padding: 7px;
+
+    .right {
+      font-size: 1rem;
+    }
+
+    a {
+      background: none;
+      color: $color-primary;
+      text-shadow: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .content {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 2.45rem;
+
+    iframe {
+      border: none;
+      border-radius: 0;
+      height: 100%;
+    }
+  }
+}

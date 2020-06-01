@@ -1,0 +1,78 @@
+.dashboard {
+  @include clearfix();
+
+  margin: 7px 1em;
+
+  .details {
+    margin-right: 1em;
+  }
+
+  .half-page {
+    @include grid-column(9 of 18);
+  }
+
+  .calendar {
+    td {
+      width: 100px;
+    }
+
+    th {
+      text-align: center;
+
+      .icon {
+        cursor: pointer;
+      }
+    }
+
+    .days {
+      background-color: $color-table-row;
+      border-left: 1px solid lighten($color-border, 15%);
+      border-right: 1px solid lighten($color-border, 15%);
+    }
+
+    .today {
+      background-color: $color-table-row;
+    }
+
+    .day {
+      border-left: 1px solid lighten($color-border, 15%);
+      height: 9em;
+      padding-top: 2em;
+      position: relative;
+
+      &:last-of-type {
+        border-right: 1px solid lighten($color-border, 15%);
+      }
+    }
+
+    .date {
+      left: 5px;
+      position: absolute;
+      top: 2px;
+    }
+
+    .tasks-wrapper {
+      display: inline-block;
+      height: 6em;
+      overflow: auto;
+      width: 100%;
+    }
+
+    .task {
+      border: 1px solid lighten($color-border, 20%);
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: .3em;
+      padding-left: 5px;
+      padding-right: 1.2em;
+      width: 100%;
+
+      .points {
+        float: right;
+        font-weight: 700;
+        margin-right: -1em;
+      }
+    }
+  }
+}
+

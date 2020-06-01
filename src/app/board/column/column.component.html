@@ -1,0 +1,479 @@
+<h3 [class.near-limit]="columnData && columnData.hasTaskLimit() &&
+                        columnData?.task_limit - columnData?.tasks.length === 1"
+    [class.limit-reached]="columnData && columnData.hasTaskLimit() &&
+                           columnData?.task_limit - columnData?.tasks.length <= 0">
+
+  <span class="icon icon-minus-squared-alt"
+        [title]="strings['boards_collapseAllTasks']"
+        *ngIf="!collapseTasks" (click)="toggleTaskCollapse()"></span>
+
+  <span class="icon icon-plus-squared-alt"
+        [title]="strings['boards_expandAllTasks']"
+        *ngIf="collapseTasks" (click)="toggleTaskCollapse()"></span>
+
+  {{ columnData ? columnData.name : '' }}
+
+  <span class="count">
+    {{ columnData?.tasks.length }}
+    <div *ngIf="columnData && columnData.hasTaskLimit()">
+      {{ ' / ' + columnData.task_limit }}
+    </div>
+  </span>
+
+  <span class="badge" [title]="strings['boards_tasksInColumn']">
+    {{ columnData && columnData.tasks && columnData.tasks.length || 0 }}
+  </span>
+
+  <span class="icon icon-angle-double-up"
+        [title]="strings['boards_expandColumn']"
+        (click)="toggleCollapsed()"></span>
+
+  <span class="right icon icon-angle-double-down"
+        [title]="strings['boards_collapseColumn']"
+        (click)="toggleCollapsed()"></span>
+
+  <span class="count-editor" *ngIf="activeUser && activeUser.isAnyAdmin()">
+    <i class="icon icon-hashtag" [title]="strings['boards_editTaskLimit']"
+       (click)="beginLimitEdit()"></i>
+
+    <div class="limit-editor" *ngIf="showLimitEditor">
+      <input type="number" min="0" [title]="'0 = ' + strings['boards_noLimit']"
+             [(ngModel)]="taskLimit">
+
+      <i class="icon icon-cancel right" [title]="strings['boards_limitCancel']"
+         (click)="cancelLimitChanges()"></i>
+
+      <i class="icon icon-floppy primary right"
+         [title]="strings['boards_limitSave']" (click)="saveLimitChanges()"></i>
+    </div>
+  </span>
+
+  <span class="sort-by">
+    {{ strings['sortBy'] }}:
+
+    <select [(ngModel)]="sortOption" (change)="sortTasks()">
+      <option value="pos">
+      {{ strings['boards_sortByPosition'] }}
+      </option>
+
+      <option value="due">
+      {{ strings['boards_sortByDueDate'] }}
+      </option>
+
+      <option value="pnt">
+      {{ strings['boards_sortByPoints'] }}
+      </option>
+    </select>
+  </span>
+</h3>
+
+<div class="quick-add">
+  <input type="text" [placeholder]="strings['boards_quickAdd']"
+         [(ngModel)]="quickAdd.title" (keyup.enter)="quickAddClicked($event)">
+
+  <button class="flat" [title] = "strings['boards_addTask']"
+          (click)="quickAddClicked($event)">
+    <i class="icon icon-plus"></i>
+  </button>
+</div>
+
+<div class="tasks" [id]="'col' + columnData.id" *ngIf="columnData" cdkDropList
+     [cdkDropListData]="columnData.tasks"
+     (cdkDropListDropped)="drop($event)">
+
+  <tb-task class="task-container" [id]="task.id" cdkDrag
+           *ngFor="let task of columnData.tasks"
+           [task]="task" [add-task]="getShowModalFunction()"
+           [edit-task]="getShowModalFunction(task.id)"
+           [view-task]="getShowViewModalFunction(task.id)"
+           [remove-task]="getRemoveTaskFunction(task.id)"
+           [collapse]="collapseTasks"
+           (on-update-boards)="callBoardUpdate();"
+           (dblclick)="$event.preventDefault();showViewModal(task.id)">
+  </tb-task>
+</div>
+
+<tb-context-menu>
+  <tb-context-menu-item (click)="showModal()">
+    {{ strings['boards_addTask'] }}
+  </tb-context-menu-item>
+</tb-context-menu>
+
+<tb-modal class="view-modal" *ngIf="activeBoard && columnData" wide="true"
+          modal-title="{{ strings['boards_viewTask'] }} -
+                       {{ viewModalProps.title }}"
+          modal-id="{{ MODAL_VIEW_ID + (columnData ? columnData.id : '') }}">
+  <div *ngIf="viewModalProps.points">
+    <span class="badge">{{ viewModalProps.points }}</span>
+  </div>
+
+  <div class="details" [style.background-color]="viewModalProps.color">
+    <div class="date" *ngIf="viewModalProps.due_date"
+         [class.overdue]="isOverdue" [class.near-due]="isNearlyDue">
+      {{ strings['boards_taskDue'] }} {{ viewModalProps.due_date | date }}
+    </div>
+
+    <div class="description" *ngIf="viewModalProps.description.length"
+         [innerHtml]="viewModalProps.html">
+    </div>
+
+    <div class="stats">
+      <div>
+        <strong>{{ strings['boards_taskAssignees'] }}</strong>
+
+        <span *ngFor="let user of viewModalProps.assignees">
+          {{ user.username }}
+        </span>
+
+        <span *ngIf="viewModalProps.assignees.length === 0">
+          {{ strings['boards_filterByUnassigned'] }}
+        </span>
+      </div>
+
+      <div>
+        <strong>{{ strings['boards_taskCategories'] }}</strong>
+
+        <span *ngFor="let cat of viewModalProps.categories">
+          {{ cat.name }}
+        </span>
+
+        <span *ngIf="viewModalProps.categories.length === 0">
+          {{ strings['boards_filterByUncategorized'] }}
+        </span>
+      </div>
+
+      <div>
+        <strong>{{ strings['boards_taskCurrentColumn'] }}</strong>
+
+        {{ columnData.name }}
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <button class="flat" (click)="this.modal.close(MODAL_VIEW_ID +
+                                    (columnData ? columnData.id : ''));
+                                  showModal(viewModalProps.id)">
+      {{ strings['boards_editTask'] }}
+    </button>
+
+    <button class="flat" (click)="getRemoveTaskFunction(viewModalProps.id)()">
+      {{ strings['boards_removeTask'] }}
+    </button>
+  </div>
+
+  <div *ngIf="viewModalProps.attachments.length">
+    <h3>{{ strings['boards_taskAttachments'] }}</h3>
+
+    <div class="list-group">
+      <div class="list-group-item"
+           *ngFor="let item of viewModalProps.attachments">
+        {{ item.filename }}
+
+        <div class="detail small">
+          {{ strings['boards_taskUploadedBy'] }}:
+          {{ userName(item.user_id) }}
+
+          {{ strings['boards_taskUploadedOn'] }}
+          {{ item.timestamp * 1000 | date:'medium' }}
+        </div>
+
+        <div class="pull-right">
+          <i class="icon icon-eye" (click)="viewFile(item.diskfilename)"
+             [title]="strings['boards_taskView'] + ' ' + item.filename"></i>
+
+          <a [href]="getUrl(item.diskfilename)" download="{{ item.filename }}">
+            <i class="icon icon-download"
+               [title]="strings['boards_taskDownload'] + ' ' +
+                        item.filename"></i>
+          </a>
+
+          <i class="icon icon-trash-empty color-secondary"
+             [title]="strings['settings_remove'] + ' ' + item.filename"
+             (click)="attachmentToRemove = item;
+                      modal.open(MODAL_CONFIRM_ATTACHMENT_ID +
+                         (columnData ? columnData.id : ''))"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="file-upload">
+    <h3>{{ strings['boards_taskAddAttachment'] }}</h3>
+
+    <input type="file" class="fileuploadinput" #fileupload
+           (change)="fileChange(fileupload.files[0])">
+
+    <button (click)="addFile()"
+            [disabled]="!fileupload.files[0] || fileUploading">
+      <i class="icon icon-upload"></i>
+
+      {{ strings['boards_taskUpload'] }}
+    </button>
+  </div>
+
+  <div *ngIf="viewModalProps.comments.length">
+    <h3>
+      {{ strings['boards_taskComments'] }}
+
+      <div class="right">
+        <select [(ngModel)]="commentOrder" (change)="sortComments()">
+          <option value="oldest">Oldest First</option>
+          <option value="newest">Newest First</option>
+        </select>
+      </div>
+    </h3>
+
+    <div class="comment" *ngFor="let comment of viewModalProps.comments">
+      <div [innerHTML]="comment.html" *ngIf="!comment.isEdit"></div>
+
+      <textarea *ngIf="comment.isEdit" [(ngModel)]="commentEdit.text"
+                (keyup.control.enter)="comment.isEdit = false;editComment()"
+                (keyup.enter)="preventEnter($event)"></textarea>
+
+      <div class="byline">
+        {{ comment.is_edited ? strings['boards_editedBy']
+           : strings['boards_postedBy'] }}
+
+        {{ getUserName(comment.user_id) }} &mdash;
+
+        {{ comment.timestamp | date:'medium' }}
+      </div>
+
+      <div class="actions" *ngIf="canAdminComment(comment)">
+        <i class="icon icon-cancel" [title]="strings['cancel']"
+           *ngIf="comment.isEdit" (click)="comment.isEdit = false"></i>
+        <i class="icon icon-floppy color-primary" [title]="strings['save']"
+           *ngIf="comment.isEdit" (click)="comment.isEdit = false;editComment()"
+        ></i>
+
+        <i class="icon icon-edit color-primary"
+           [title]="strings['boards_taskEditComment']" *ngIf="!comment.isEdit"
+           (click)="comment.isEdit = true;beginEditComment(comment)"></i>
+        <i class="icon icon-trash-empty color-secondary"
+           [title]="strings['boards_taskRemoveComment']"
+           (click)="commentToRemove=comment;
+                    modal.open(MODAL_CONFIRM_COMMENT_ID +
+                    (columnData ? columnData.id : ''))"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix">
+    <h3>{{ strings['boards_taskAddComment'] }}</h3>
+
+    <textarea rows="5" [(ngModel)]="newComment"
+              (keyup.control.enter)="addComment()"
+              (keyup.enter)="preventEnter($event)"></textarea>
+
+    <button class="right" (click)="addComment()"
+            [disabled]="newComment?.length === 0">
+      <i class="icon icon-comment-empty"></i>
+
+      {{ strings['boards_taskAddComment'] }}
+    </button>
+  </div>
+
+  <div class="activity" [class.collapsed]="collapseActivity"
+       *ngIf="showActivity">
+    <div class="title">
+      <h2>
+        {{ strings['boards_taskActivity'] }}
+
+        <span class="right">
+          <i class="icon icon-angle-double-down"
+             *ngIf="!collapseActivity"
+             (click)="collapseActivity = true"></i>
+
+          <i class="icon icon-angle-double-up"
+             *ngIf="collapseActivity"
+             (click)="collapseActivity = false"></i>
+        </span>
+      </h2>
+    </div>
+
+    <div class="log-items" *ngIf="!collapseActivity">
+      <div *ngFor="let item of viewTaskActivities" class="log-item">
+        {{ item.text }}
+
+        <span>{{ item.timestamp * 1000 | date:'medium' }}</span>
+      </div>
+    </div>
+
+  </div>
+</tb-modal>
+
+<tb-modal *ngIf="activeBoard && columnData"
+          modal-title="{{ modalProps.id === 0 ? strings['boards_addTask']
+                          : strings['boards_editTask'] }}"
+          modal-id="{{ MODAL_ID + (columnData ? columnData.id : '') }}">
+  <label>
+    {{ strings['boards_taskTitle'] }}
+
+    <input type="text" name="title" #focusMe [(ngModel)]="modalProps.title"
+           [placeholder]="strings['boards_taskTitlePlaceholder']"
+           (keyup.control.enter)="modalProps.id === 0 ? addTask()
+                                  : updateTask()"
+           (keyup.enter)="preventEnter($event)">
+  </label>
+
+  <label>
+    {{ strings['boards_taskDescription'] }}
+
+    <textarea name="description" rows="5" [(ngModel)]="modalProps.description"
+              [placeholder]="strings['boards_taskDescriptionPlaceholder']"
+              (keyup.control.enter)="modalProps.id === 0 ? addTask()
+                                     : updateTask()"
+              (keyup.enter)="preventEnter($event)"></textarea>
+  </label>
+
+  <label>
+    {{ strings['boards_taskAssignees'] }}
+
+    <select name="assignees" multiple [(ngModel)]="modalProps.assignees">
+      <option *ngFor="let user of activeBoard.users" [ngValue]="user">
+        {{ user.username }}
+      </option>
+    </select>
+  </label>
+
+  <label *ngIf="activeBoard.categories.length">
+    {{ strings['boards_taskCategories'] }}
+
+    <select name="categories" multiple [ngModel]="modalProps.categories"
+            (ngModelChange)="updateTaskColorByCategory($event)">
+      <option *ngFor="let category of activeBoard.categories"
+              [ngValue]="category">
+        {{ category.name }}
+      </option>
+    </select>
+  </label>
+
+  <div class="half">
+    <label>
+      {{ strings['boards_taskColumn'] }}
+
+      <select name="column" [(ngModel)]="modalProps.column_id">
+        <option *ngFor="let column of activeBoard.columns"
+                [ngValue]="column.id">
+          {{ column.name }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      {{ strings['boards_taskColor'] }}
+
+      <input type="color" [(ngModel)]="modalProps.color">
+    </label>
+  </div>
+
+  <div class="half">
+    <label>
+      {{ strings['boards_taskDateDue'] }}
+
+      <input type="date" [(ngModel)]="modalProps.due_date">
+    </label>
+
+    <label>
+      {{ strings['boards_taskPoints'] }}
+
+      <input type="number" [(ngModel)]="modalProps.points">
+    </label>
+  </div>
+
+  <div class="buttons">
+    <button #defaultAction *ngIf="modalProps.id === 0" (click)="addTask()"
+            [disabled]="saving">
+      <i class="icon icon-plus"></i>
+
+      {{ strings['boards_addTask'] }}
+    </button>
+
+    <button #defaultAction *ngIf="modalProps.id !== 0" (click)="updateTask()"
+            [disabled]="saving">
+      <i class="icon icon-floppy"></i>
+
+      {{ strings['boards_saveTask'] }}
+    </button>
+
+    <button class="flat" (click)="modal.close(MODAL_ID + (columnData
+                                    ? columnData.id : ''))">
+      {{ strings['cancel'] }}
+    </button>
+  </div>
+</tb-modal>
+
+<tb-modal modal-title="{{ strings['boards_confirmRemoveTask'] }}"
+          blocking="true"
+          modal-id="{{ MODAL_CONFIRM_ID + (columnData ? columnData.id : '') }}">
+  <div class="center">
+    {{ strings['boards_confirmWarning'] }}<br>
+
+    {{ strings['boards_confirmContinue'] }}
+  </div>
+
+  <div class="buttons">
+    <button class="flat" (click)="modal.close(MODAL_CONFIRM_ID +(columnData
+                                    ? columnData.id : ''));removeTask()">
+      {{ strings['yes'] }}
+    </button>
+
+    <button #defaultAction #focusMe
+            (click)="modal.close(MODAL_CONFIRM_ID + (columnData
+                        ? columnData.id : ''))">
+      {{ strings['no'] }}
+    </button>
+  </div>
+</tb-modal>
+
+<tb-modal modal-title="{{ strings['boards_confirmRemoveAttachment'] }}"
+          blocking="true"
+          modal-id="{{ MODAL_CONFIRM_ATTACHMENT_ID + (columnData
+                          ? columnData.id : '') }}">
+  <div class="center">
+    {{ strings['boards_confirmWarningAttachment'] }}<br>
+
+    {{ strings['boards_confirmContinue'] }}
+  </div>
+
+  <div class="buttons">
+    <button class="flat" (click)="modal.close(MODAL_CONFIRM_ATTACHMENT_ID +
+                                    (columnData ? columnData.id : ''));
+                                  removeAttachment()">
+      {{ strings['yes'] }}
+    </button>
+
+    <button #defaultAction #focusMe
+            (click)="modal.close(MODAL_CONFIRM_ATTACHMENT_ID + (columnData
+                  ? columnData.id : ''))">
+      {{ strings['no'] }}
+    </button>
+  </div>
+</tb-modal>
+
+<tb-modal modal-title="{{ strings['boards_confirmRemoveComment'] }}"
+          blocking="true"
+          modal-id="{{ MODAL_CONFIRM_COMMENT_ID + (columnData
+                          ? columnData.id : '') }}">
+  <div class="center">
+    {{ strings['boards_confirmWarningComment'] }}<br>
+
+    {{ strings['boards_confirmContinue'] }}
+  </div>
+
+  <div class="buttons">
+    <button class="flat" (click)="modal.close(MODAL_CONFIRM_COMMENT_ID +
+                                    (columnData ? columnData.id : ''));
+                                  removeComment()">
+      {{ strings['yes'] }}
+    </button>
+
+    <button #defaultAction #focusMe
+            (click)="modal.close(MODAL_CONFIRM_COMMENT_ID + (columnData
+                        ? columnData.id : ''))">
+      {{ strings['no'] }}
+    </button>
+  </div>
+</tb-modal>
+

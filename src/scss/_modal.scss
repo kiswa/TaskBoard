@@ -1,0 +1,102 @@
+.no-scroll {
+  overflow: hidden;
+}
+
+.modal-container {
+  background-color: rgba(0, 0, 0, .4);
+  bottom: 0;
+  display: flex;
+  left: 0;
+  overflow-y: auto;
+  padding: 10vh 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  visibility: hidden;
+  z-index: 1000;
+
+  &.animated {
+    transition: all .3s;
+  }
+
+  &.modal-closed {
+    opacity: 0;
+  }
+
+  &.modal-open {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.modal {
+  @include shadow-float();
+
+  background-color: $white;
+  margin: auto;
+  max-width: 100%;
+  width: 450px;
+
+  &.animated {
+    transition: all .3s;
+  }
+
+  &.wide {
+    width: 650px;
+  }
+
+  &.modal-closed {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  .title {
+    background-color: $color-heading-bg;
+
+    .right {
+      color: $color-text;
+      cursor: pointer;
+    }
+
+    .right:hover {
+      color: lighten($color-text, 10%);
+    }
+  }
+
+  .title,
+  .body {
+    padding: .75em;
+  }
+
+  input,
+  select {
+    margin-bottom: 7px;
+  }
+
+  [multiple] {
+    height: 4em;
+  }
+
+  .half {
+    display: flex;
+    justify-content: space-between;
+
+    label {
+      display: block;
+      width: 49%;
+    }
+  }
+
+  .buttons {
+    float: right;
+    margin: 1em;
+    margin-right: 0;
+
+    .flat {
+      background-color: $white;
+      color: $color-text;
+      line-height: 1.1em;
+    }
+  }
+}
+

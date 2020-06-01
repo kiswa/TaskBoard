@@ -1,0 +1,106 @@
+{
+  "name": "taskboard",
+  "version": "1.0.0",
+  "description": "A Kanban-inspired app for keeping track of things that need to get done.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://kiswa@github.com/kiswa/TaskBoard.git"
+  },
+  "keywords": [
+    "kanban",
+    "board",
+    "task",
+    "taskboard",
+    "track",
+    "todo"
+  ],
+  "author": "Matthew Ross <root@matthewross.me> (https://matthewross.me)",
+  "bugs": {
+    "url": "https://github.com/kiswa/TaskBoard/issues"
+  },
+  "homepage": "https://github.com/kiswa/TaskBoard#readme",
+  "license": "MIT",
+  "watch": {
+    "api-changed": {
+      "patterns": "index.php",
+      "runOnChangeOnly": true
+    }
+  },
+  "scripts": {
+    "build": "ng b --output-hashing=none",
+    "build:prod": "npm-run-all -s \"build -- --prod\" api-writeable package",
+    "build:dev": "npm-run-all -s build api-changed",
+    "watch": "npm-run-all -p \"build -- --watch\" dist-watch",
+    "dist-watch": "npm-watch api-changed",
+    "api-changed": "npm-run-all -s api-writeable api-db-writeable",
+    "api-writeable": "[ -d \"dist/api\" ] && chmod a+w dist/api",
+    "api-db-writeable": "[ -f \"dist/api/taskboard.sqlite\" ] && chmod a+w dist/api/taskboard.sqlite",
+    "test": "npm-run-all test:app test:api",
+    "test:app": "ng test --code-coverage --watch=false",
+    "test:api": "./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml",
+    "test:api-single": "./src/api/vendor/phpunit/phpunit/phpunit -c test/api/phpunit.xml --group single",
+    "test:watch": "ng test --code-coverage --watch",
+    "lint": "ng lint",
+    "postinstall": "cd src/api/ && composer update && composer install --optimize-autoloader && cd ../../",
+    "package": "7z a TaskBoard_v$npm_package_version.zip ./dist/{*,.[!.]*}"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm test"
+    }
+  },
+  "dependencies": {
+    "@angular/animations": "^9.1.9",
+    "@angular/cdk": "^9.2.4",
+    "@angular/common": "^9.1.9",
+    "@angular/compiler": "^9.1.9",
+    "@angular/core": "^9.1.9",
+    "@angular/forms": "^9.1.9",
+    "@angular/platform-browser": "^9.1.9",
+    "@angular/platform-browser-dynamic": "^9.1.9",
+    "@angular/router": "^9.1.9",
+    "ajv": "^6.12.2",
+    "chartist": "^0.11.4",
+    "chartist-plugin-tooltips": "^0.0.17",
+    "classlist.js": "^1.1.20150312",
+    "core-js": "^3.6.5",
+    "highlight.js": "^10.0.3",
+    "marked": "^1.1.0",
+    "node-sass": "^4.14.1",
+    "rxjs": "^6.5.5",
+    "scss-base": "^1.4.0",
+    "zone.js": "^0.10.3"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^0.901.7",
+    "@angular/cli": "^9.1.7",
+    "@angular/compiler-cli": "^9.1.9",
+    "@angular/language-service": "^9.1.9",
+    "@types/chartist": "^0.9.48",
+    "@types/highlight.js": "^9.12.4",
+    "@types/jasmine": "~3.5.10",
+    "@types/jasminewd2": "~2.0.8",
+    "@types/marked": "^0.7.4",
+    "@types/node": "^14.0.5",
+    "bourbon": "7.0.0",
+    "bourbon-neat": "4.0.0",
+    "codelyzer": "^5.2.2",
+    "husky": "^4.2.5",
+    "jasmine": "^3.5.0",
+    "jasmine-core": "^3.5.0",
+    "jasmine-spec-reporter": "~5.0.2",
+    "karma": "^5.0.9",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-coverage-istanbul-reporter": "^3.0.2",
+    "karma-jasmine": "^3.2.0",
+    "karma-jasmine-html-reporter": "^1.5.4",
+    "npm-run-all": "^4.1.5",
+    "npm-watch": "^0.6.0",
+    "protractor": "^7.0.0",
+    "puppeteer": "^3.1.0",
+    "ts-node": "^8.10.1",
+    "tslint": "^6.1.2",
+    "typescript": "^3.8.3"
+  }
+}

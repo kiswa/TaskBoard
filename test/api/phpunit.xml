@@ -1,0 +1,18 @@
+<phpunit>
+    <testsuites>
+        <testsuite name="api">
+            <directory>./</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory>../../src/api/controllers</directory>
+            <directory>../../src/api/helpers</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="../../coverage/api/"
+            lowUpperBound="40" highLowerBound="80" />
+    </logging>
+</phpunit>
+
