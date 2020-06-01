@@ -32,6 +32,10 @@ export class BoardServiceMock {
   updateColumn(_: any) {
     return new BehaviorSubject({});
   }
+
+  refreshToken(fn: any) {
+    fn();
+  }
 }
 
 export class SettingsServiceMock {
