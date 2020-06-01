@@ -18,15 +18,15 @@ functional and minimal application for keeping track of tasks.
 A web server running PHP 7.x with sqlite enabled (it may work on PHP 5.6, but
 is not supported). See [PHP Supported Versions](https://www.php.net/supported-versions.php).
 
-The server must have `sqlite3` and `php7-sqlite` installed.  
-**- OR -**  
+The server must have `sqlite3` and `php7-sqlite` installed.
+**- OR -**
 If you're comfortable changing code, you can use any database [supported by RedBeanPHP](https://redbeanphp.com/index.php?p=/connection).
 
 ### Install
 
 Installing TaskBoard is as easy as 1, 2, 3!
 
-1. Download [the latest release](#) since v1.0.0
+1. Download [the latest release](https://github.com/kiswa/TaskBoard/releases) since v1.0.0
 2. Extract it to your webserver
 3. Verify the `api` directory is writable
 

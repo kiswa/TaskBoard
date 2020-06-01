@@ -188,7 +188,7 @@
                         item.filename"></i>
           </a>
 
-          <i class="icon icon-trash-empty"
+          <i class="icon icon-trash-empty color-secondary"
              [title]="strings['settings_remove'] + ' ' + item.filename"
              (click)="attachmentToRemove = item;
                       modal.open(MODAL_CONFIRM_ATTACHMENT_ID +
@@ -213,7 +213,16 @@
   </div>
 
   <div *ngIf="viewModalProps.comments.length">
-    <h3>{{ strings['boards_taskComments'] }}</h3>
+    <h3>
+      {{ strings['boards_taskComments'] }}
+
+      <div class="right">
+        <select [(ngModel)]="commentOrder" (change)="sortComments()">
+          <option value="oldest">Oldest First</option>
+          <option value="newest">Newest First</option>
+        </select>
+      </div>
+    </h3>
 
     <div class="comment" *ngFor="let comment of viewModalProps.comments">
       <div [innerHTML]="comment.html" *ngIf="!comment.isEdit"></div>

@@ -284,7 +284,7 @@ describe('BoardService', () => {
   });
 
   it('refreshes the API token', () => {
-    service.refreshToken();
+    service.refreshToken(() => {});
     testCall('api/refresh', 'POST');
   });
 

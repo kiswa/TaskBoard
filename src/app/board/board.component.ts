@@ -145,12 +145,17 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
   }
 
   updateBoards(): void {
-    this.boardService.getBoards().subscribe((response: ApiResponse) => {
-      this.boards = [];
+    this.boardService.refreshToken(() => {
+      this.boardService.getBoards().subscribe((response: ApiResponse) => {
+        this.boards = [];
 
-      if (response.data.length > 1) {
-        this.updateBoardsList(response.data[1]);
-      }
+        if (response.data.length > 1) {
+          this.updateBoardsList(response.data[1]);
+          return;
+        }
+
+        this.loading = false;
+      });
     });
   }
 
