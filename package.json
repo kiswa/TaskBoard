@@ -43,7 +43,7 @@
     "test:watch": "ng test --code-coverage --watch",
     "lint": "ng lint",
     "postinstall": "cd src/api/ && composer update && composer install --optimize-autoloader && cd ../../",
-    "package": "zip -qr TaskBoard_v$npm_package_version.zip dist/"
+    "package": "7z a TaskBoard_v$npm_package_version.zip ./dist/{*,.[!.]*}"
   },
   "husky": {
     "hooks": {
