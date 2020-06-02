@@ -17,6 +17,16 @@ import { FileModule } from './files/file-viewer.module';
 import { SettingsModule } from './settings/settings.module';
 import { SharedModule } from './shared/shared.module';
 
+function getBasePath() {
+  let path = window.location.pathname;
+
+  ['/boards', '/settings', '/dashboard'].forEach(p => {
+    path = path.replace(p, '');
+  });
+
+  return path;
+}
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -39,7 +49,7 @@ import { SharedModule } from './shared/shared.module';
   },
     {
       provide: APP_BASE_HREF,
-      useValue: window['base-href']
+      useFactory: getBasePath
     }
   ],
 
