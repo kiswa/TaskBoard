@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -30,11 +31,17 @@ import { SharedModule } from './shared/shared.module';
     RouterModule.forRoot(ROUTES)
   ],
 
-  providers: [{
+  providers: [
+    {
     provide: HTTP_INTERCEPTORS,
     useClass: ApiInterceptor,
     multi: true
-  }],
+  },
+    {
+      provide: APP_BASE_HREF,
+      useValue: window['base-href']
+    }
+  ],
 
   declarations: [
     AppComponent,
