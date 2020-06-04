@@ -746,6 +746,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   }
 
   // Needs anonymous function for proper `this` context.
+  // istanbul ignore next
   private markedCallback = (_: any, text: string) => {
     this.activeBoard.issue_trackers?.forEach(tracker => {
       const re = new RegExp(tracker.regex, 'ig');

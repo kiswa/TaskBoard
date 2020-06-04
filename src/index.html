@@ -1,10 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>TaskBoard - Kanban App</title>
-  <base href="">
-
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta http-equiv="cleartype" content="on">
@@ -23,7 +19,33 @@
   <meta name="msapplication-TileColor" content="#e6e6e6">
   <meta name="msapplication-config" content="favicons/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
+
+  <title>TaskBoard - Kanban App</title>
+
+  <script type="text/javascript">
+    (function () {
+      var path = window.location.pathname;
+
+      ['/boards', '/settings', '/dashboard'].forEach(p => {
+        const i = path.indexOf(p)
+
+        if (i > 0) {
+          path = path.substring(0, i);
+        }
+      });
+
+      if (path[path.length - 1] !== '/') {
+        path += '/';
+      }
+
+      var base = document.createElement('base');
+      base.href = path;
+
+      document.head.append(base);
+    })();
+  </script>
 </head>
+
 <body>
   <tb-app-component>
     <div class="loading">TaskBoard is Loading...</div>

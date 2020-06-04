@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { LocationStrategy } from '@angular/common';
 
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -9,7 +10,7 @@ import {
   UserOptions,
   ApiResponse
 } from '../../shared/models';
-import { AuthService } from '../../shared/services';
+import { AuthService, ApiService } from '../../shared/services';
 
 interface UpdateUser extends User {
   new_password?: string;
@@ -17,17 +18,19 @@ interface UpdateUser extends User {
 }
 
 @Injectable()
-export class UserSettingsService {
+export class UserSettingsService extends ApiService {
   activeUser: User = null;
 
-  constructor(private auth: AuthService, private http: HttpClient) {
+  constructor(private auth: AuthService, private http: HttpClient, strat: LocationStrategy) {
+    super(strat);
+
     auth.userChanged.subscribe(user => this.activeUser = user);
   }
 
   changeDefaultBoard(user: User): Observable<ApiResponse> {
     const json = JSON.stringify(user);
 
-    return this.http.post('api/users/' + this.activeUser.id, json)
+    return this.http.post(this.apiBase + 'users/' + this.activeUser.id, json)
     .pipe(
       map((response: ApiResponse) =>  response),
       catchError((err) =>  of(err.error as ApiResponse))
@@ -41,7 +44,7 @@ export class UserSettingsService {
 
     const json = JSON.stringify(updateUser);
 
-    return this.http.post('api/users/' + this.activeUser.id, json)
+    return this.http.post(this.apiBase + 'users/' + this.activeUser.id, json)
     .pipe(
       map((response: ApiResponse) =>  response),
       catchError((err) =>  of(err.error as ApiResponse))
@@ -54,7 +57,7 @@ export class UserSettingsService {
 
     const json = JSON.stringify(updateUser);
 
-    return this.http.post('api/users/' + this.activeUser.id, json)
+    return this.http.post(this.apiBase + 'users/' + this.activeUser.id, json)
     .pipe(
       map((response: ApiResponse) => {
         this.auth.updateUser(JSON.parse(response.data[1]));
@@ -70,7 +73,7 @@ export class UserSettingsService {
 
     const json = JSON.stringify(updateUser);
 
-    return this.http.post('api/users/' + this.activeUser.id, json)
+    return this.http.post(this.apiBase + 'users/' + this.activeUser.id, json)
     .pipe(
       map((response: ApiResponse) => {
         this.auth.updateUser(JSON.parse(response.data[1]));
@@ -83,7 +86,7 @@ export class UserSettingsService {
   changeUserOptions(newOptions: UserOptions): Observable<ApiResponse> {
     const json = JSON.stringify(newOptions);
 
-    return this.http.post('api/users/' + this.activeUser.id + '/opts', json)
+    return this.http.post(this.apiBase + 'users/' + this.activeUser.id + '/opts', json)
     .pipe(
       map((response: ApiResponse) => {
         this.auth.updateUser(JSON.parse(response.data[2]),

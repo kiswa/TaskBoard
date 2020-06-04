@@ -12,9 +12,11 @@ import {
 } from '../models';
 import { Constants } from '../constants';
 import { StringsService } from '../strings/strings.service';
+import { LocationStrategy } from '@angular/common';
+import { ApiService } from '../api-service.service';
 
 @Injectable()
-export class AuthService {
+export class AuthService extends ApiService {
   private activeUser = new BehaviorSubject<User>(null);
 
   public userOptions: UserOptions = null;
@@ -22,8 +24,9 @@ export class AuthService {
 
   public attemptedRoute: string;
 
-  constructor(public constants: Constants, private http: HttpClient,
-              public router: Router, private strings: StringsService) {
+  constructor(public constants: Constants, private http: HttpClient, public router: Router,
+              private strings: StringsService, strat: LocationStrategy) {
+    super(strat);
   }
 
   updateUser(user: User, userOpts?: UserOptions): void {
@@ -40,7 +43,7 @@ export class AuthService {
       this.attemptedRoute = url;
     }
 
-    return this.http.post('api/authenticate', null)
+    return this.http.post(this.apiBase + 'authenticate', null)
     .pipe(
       map((response: ApiResponse) => {
         this.updateUser(response.data[1], response.data[2]);
@@ -54,7 +57,7 @@ export class AuthService {
         remember: boolean): Observable<ApiResponse> {
     const json = JSON.stringify({ username, password, remember });
 
-    return this.http.post('api/login', json)
+    return this.http.post(this.apiBase + 'login', json)
     .pipe(
       map((response: ApiResponse) => {
         this.updateUser(response.data[1], response.data[2]);
@@ -68,7 +71,7 @@ export class AuthService {
   }
 
   logout(): Observable<ApiResponse> {
-    return this.http.post('api/logout', null)
+    return this.http.post(this.apiBase + 'logout', null)
     .pipe(
       map((response: ApiResponse) => {
         return response;

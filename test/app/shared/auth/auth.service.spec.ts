@@ -97,7 +97,7 @@ describe('AuthService', () => {
   });
 
   const testCall = (url: string, method: string, isError = false) => {
-    const req = httpMock.expectOne({ method, url });
+    const req = httpMock.expectOne('/' + url);
     expect(req.request.method).toEqual(method);
 
     if (isError) {

@@ -12,7 +12,7 @@ describe('BoardService', () => {
   let httpMock: HttpTestingController;
 
   const testCall = (url: string, method: string, isError = false) => {
-    const req = httpMock.expectOne(url);
+    const req = httpMock.expectOne('http://localhost:9876' + url);
     expect(req.request.method).toEqual(method);
 
     if (isError) {
@@ -47,8 +47,12 @@ describe('BoardService', () => {
     service.activeBoardChanged.subscribe(() => (changed = true));
 
     service.updateActiveBoard({} as any);
-
     expect(changed).toEqual(true);
+
+    changed = false;
+
+    service.updateActiveBoard(null);
+    expect(changed).toEqual(false);
   })
 
   it('gets all boards', () => {
