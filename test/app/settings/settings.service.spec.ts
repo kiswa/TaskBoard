@@ -115,8 +115,8 @@ describe('SettingsService', () => {
     testCall('api/autoactions', 'GET', true);
   });
 
-  const testCall = (url, method, isError = false) => {
-    const req = httpMock.expectOne(url);
+  const testCall = (url: string, method: string, isError = false) => {
+    const req = httpMock.expectOne('http://localhost:9876' + url);
     expect(req.request.method).toEqual(method);
 
     if (isError) {

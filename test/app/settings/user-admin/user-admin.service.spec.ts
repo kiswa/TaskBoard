@@ -81,7 +81,7 @@ describe('UserAdminService', () => {
   });
 
   const testCall = (url, method, isError = false) => {
-    const req = httpMock.expectOne(url);
+    const req = httpMock.expectOne('http://localhost:9876' + url);
     expect(req.request.method).toEqual(method);
 
     if (isError) {

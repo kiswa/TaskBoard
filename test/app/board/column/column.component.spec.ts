@@ -90,6 +90,11 @@ describe('ColumnDisplay', () => {
     const username = component.userName(1);
 
     expect(username).toEqual('hi');
+
+    component.strings = { none: '' } as any;
+    const noUser = component.userName(3);
+
+    expect(noUser).toEqual('');
   });
 
   it('sorts tasks', () => {
@@ -110,6 +115,20 @@ describe('ColumnDisplay', () => {
     component.sortTasks();
     expect(component.columnData.tasks[0].points).toEqual(3);
   });
+
+  it('sorts comments', () => {
+    (component.viewModalProps.comments as any[]) =
+      [{ timestamp: 123 }, { timestamp: 12 }];
+
+    component.sortComments();
+
+    expect(component.viewModalProps.comments[0].timestamp).toEqual(12);
+
+    component.commentOrder = 'newest';
+    component.sortComments();
+
+    expect(component.viewModalProps.comments[0].timestamp).toEqual(123);
+  })
 
   it('calls a service to toggle collapsed state', () => {
     (component.boardService.toggleCollapsed as any) = () => {
@@ -561,7 +580,7 @@ describe('ColumnDisplay', () => {
     component.showActivity = true;
     component.columnData = { id: 1, tasks: [{
       id: 3, title: 'test', description: '', color: '#ffffe0', points: 1,
-      position: 1, column_id: 1, comments: [], attachments: [],
+      position: 1, column_id: 1, comments: [{ text: '' } as any], attachments: [],
       assignees: [{}], categories: [{}]
     }] } as any;
 
