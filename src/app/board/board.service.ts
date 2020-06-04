@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { LocationStrategy } from '@angular/common';
 
 import * as marked from 'marked';
 import hljs from 'node_modules/highlight.js/lib/core.js';
@@ -12,14 +13,8 @@ import php from 'node_modules/highlight.js/lib/languages/php.js';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import {
-  ApiResponse,
-  Board,
-  Column,
-  Attachment,
-  Comment,
-  Task,
-} from '../shared/models';
+import { ApiResponse, Board, Column, Attachment, Comment, Task } from '../shared/models';
+import { ApiService } from '../shared/services';
 
 interface MarkedReturn {
   html: string;
@@ -27,7 +22,7 @@ interface MarkedReturn {
 }
 
 @Injectable()
-export class BoardService {
+export class BoardService extends ApiService {
   private checkCounts = {
     total: 0,
     complete: 0
@@ -36,7 +31,8 @@ export class BoardService {
 
   public activeBoardChanged = this.activeBoard.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, strat: LocationStrategy) {
+    super(strat);
     this.initMarked();
 
     hljs.registerLanguage('javascript', javascript);
@@ -73,7 +69,7 @@ export class BoardService {
   }
 
   getBoards(): Observable<ApiResponse> {
-    return this.http.get('api/boards')
+    return this.http.get(this.apiBase + 'boards')
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -81,7 +77,7 @@ export class BoardService {
   }
 
   toggleCollapsed(userId: number, columnId: number): Observable<ApiResponse> {
-    return this.http.post('api/users/' + userId + '/cols', { id: columnId })
+    return this.http.post(this.apiBase + 'users/' + userId + '/cols', { id: columnId })
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -89,7 +85,7 @@ export class BoardService {
   }
 
   updateBoard(board: Board): Observable<ApiResponse> {
-    return this.http.post('api/boards/' + board.id, board)
+    return this.http.post(this.apiBase + 'boards/' + board.id, board)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -97,7 +93,7 @@ export class BoardService {
   }
 
   updateColumn(column: Column): Observable<ApiResponse> {
-    return this.http.post('api/columns/' + column.id, column)
+    return this.http.post(this.apiBase + 'columns/' + column.id, column)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -105,7 +101,7 @@ export class BoardService {
   }
 
   addTask(task: Task): Observable<ApiResponse> {
-    return this.http.post('api/tasks', task)
+    return this.http.post(this.apiBase + 'tasks', task)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -113,7 +109,7 @@ export class BoardService {
   }
 
   updateTask(task: Task): Observable<ApiResponse> {
-    return this.http.post('api/tasks/' + task.id, task)
+    return this.http.post(this.apiBase + 'tasks/' + task.id, task)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -121,7 +117,7 @@ export class BoardService {
   }
 
   removeTask(taskId: number): Observable<ApiResponse> {
-    return this.http.delete('api/tasks/' + taskId)
+    return this.http.delete(this.apiBase + 'tasks/' + taskId)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -129,7 +125,7 @@ export class BoardService {
   }
 
   getTaskActivity(taskId: number): Observable<ApiResponse> {
-    return this.http.get('api/activity/task/' + taskId)
+    return this.http.get(this.apiBase + 'activity/task/' + taskId)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -137,7 +133,7 @@ export class BoardService {
   }
 
   addComment(comment: Comment): Observable<ApiResponse> {
-    return this.http.post('api/comments', comment)
+    return this.http.post(this.apiBase + 'comments', comment)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -145,7 +141,7 @@ export class BoardService {
   }
 
   updateComment(comment: Comment): Observable<ApiResponse> {
-    return this.http.post('api/comments/' + comment.id, comment)
+    return this.http.post(this.apiBase + 'comments/' + comment.id, comment)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -153,7 +149,7 @@ export class BoardService {
   }
 
   removeComment(commentId: number): Observable<ApiResponse> {
-    return this.http.delete('api/comments/' + commentId)
+    return this.http.delete(this.apiBase + 'comments/' + commentId)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -161,7 +157,7 @@ export class BoardService {
   }
 
   addAttachment(attachment: Attachment): Observable<ApiResponse> {
-    return this.http.post('api/attachments', attachment)
+    return this.http.post(this.apiBase + 'attachments', attachment)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -169,7 +165,7 @@ export class BoardService {
   }
 
   uploadAttachment(data: FormData, hash: string): Observable<ApiResponse> {
-    return this.http.post('api/upload/' + hash, data)
+    return this.http.post(this.apiBase + 'upload/' + hash, data)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -177,7 +173,7 @@ export class BoardService {
   }
 
   removeAttachment(id: number): Observable<ApiResponse> {
-    return this.http.delete('api/attachments/' + id)
+    return this.http.delete(this.apiBase + 'attachments/' + id)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
@@ -185,7 +181,7 @@ export class BoardService {
   }
 
   refreshToken(callback: any): void {
-    this.http.post('api/refresh', {}).subscribe(() => callback());
+    this.http.post(this.apiBase + 'refresh', {}).subscribe(() => callback());
   }
 
   private async convertBoardData(boardData: any): Promise<Board> {

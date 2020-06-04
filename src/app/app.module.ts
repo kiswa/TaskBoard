@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -17,16 +16,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { SettingsModule } from './settings/settings.module';
 import { SharedModule } from './shared/shared.module';
 
-function getBasePath() {
-  let path = window.location.pathname;
-
-  ['/boards', '/settings', '/dashboard'].forEach(p => {
-    path = path.replace(p, '');
-  });
-
-  return path;
-}
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -41,17 +30,11 @@ function getBasePath() {
     RouterModule.forRoot(ROUTES)
   ],
 
-  providers: [
-    {
+  providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: ApiInterceptor,
     multi: true
-  },
-    {
-      provide: APP_BASE_HREF,
-      useFactory: getBasePath
-    }
-  ],
+  }],
 
   declarations: [
     AppComponent,
