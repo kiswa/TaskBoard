@@ -23,4 +23,4 @@ import { FileViewerService } from './file-viewer.service';
     FileViewerComponent
   ]
 })
-export class FileModule {  }
+export class FileModule { }

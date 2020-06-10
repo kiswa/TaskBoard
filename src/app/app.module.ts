@@ -12,7 +12,7 @@ import { ApiInterceptor } from './app.api-http';
 import { LoginComponent } from './login/login.component';
 import { BoardModule } from './board/board.module';
 import { FileModule } from './files/file-viewer.module';
-// import { DashboardModule } from './dashboard/dashboard.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { SettingsModule } from './settings/settings.module';
 import { SharedModule } from './shared/shared.module';
 
@@ -23,7 +23,7 @@ import { SharedModule } from './shared/shared.module';
     HttpClientModule,
     BoardModule,
     FileModule,
-    // DashboardModule,
+    DashboardModule,
     DragDropModule,
     SettingsModule,
     SharedModule,

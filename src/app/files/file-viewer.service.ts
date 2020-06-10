@@ -16,7 +16,7 @@ export class FileViewerService extends ApiService {
   }
 
   getAttachmentInfo(hash: string): Observable<ApiResponse> {
-    return this.http.get(this.apiBase +'attachments/hash/' + hash)
+    return this.http.get(this.apiBase + 'attachments/hash/' + hash)
     .pipe(
       map((response: ApiResponse) => response),
       catchError((err) => of(err.error as ApiResponse))
