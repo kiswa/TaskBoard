@@ -39,6 +39,65 @@ The directory you create for TaskBoard must have `AllowOverride` set so the
 
 You also have to have `mod_rewrite` installed and enabled.
 
+**#### Start - Probably better to add this part in the Wiki + correct spelling ####**
+
+Here are a few steps to remember when installing TaskBoard on an server with Ubuntu/Apache.
+I assume Apache2 and PHP are already installed. Example is done here with PHP7.2
+
+1. Install required packages
+
+`sudo apt install unzip php7.2-sqlite3`
+
+2. Activate apache modules
+
+`a2enmod rewrite`
+
+3. Go into your website directory (e.g.: /var/www/yourdomain/)
+
+`cd /var/www/yourdomain/`
+
+4. Download the [latest release](https://github.com/kiswa/TaskBoard/releases)
+
+`wget https://github.com/kiswa/TaskBoard/releases/download/vx.x.x/TaskBoard_vx.x.x.zip`
+
+5. Extract it on your webserver
+
+`unzip TaskBoard_vx.x.x.zip -d ./taskboard`
+
+6. Go into this directory 
+
+`cd taskboard`
+
+7. Make api directory writable
+
+`chmod 777 ./api`
+
+8. In your virtualhost, add "AllowOverride All" to support .htaccess files
+
+```
+<VirtualHost *:80>
+        ServerName kanban.yourdomain.com
+
+        ServerAdmin webmaster@yourdomain.com
+        DocumentRoot /var/www/yourdomain/taskboard
+
+        <Directory "/var/www/yourdomain/taskboard">
+            Options Indexes FollowSymLinks
+            AllowOverride All
+            Require all granted
+        </Directory>
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+
+9. Restart Apache
+
+`service apache2 restart`
+
+**#### End ####**
+
 #### NGINX
 
 TODO
