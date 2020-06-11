@@ -195,11 +195,11 @@ Because I like seeing the numbers.
 
 Language   |   Files |    Blank |  Comment |    Code
 -----------|--------:|---------:|---------:|---------:
-TypeScript |    67   |    977   |    129   |   4104
-PHP        |    20   |    752   |     40   |   2265
-HTML       |    21   |    268   |      2   |   1573
-SASS       |    14   |    299   |     10   |   1347
-**SUM:**   | **122** | **2296** |  **181** | **9289**
+TypeScript |    69   |   1019   |    124   |   4250
+PHP        |    21   |    790   |     40   |   2396
+HTML       |    22   |    287   |      2   |   1604
+SASS       |    14   |    302   |     10   |   1365
+**SUM:**   | **126** | **2398** |  **176** | **9615**
 
 Command: `cloc --exclude-dir=vendor,favicons --exclude-ext=json,svg,ini src/`
 
