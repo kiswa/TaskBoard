@@ -94,7 +94,7 @@
   "settings_issueTrackerRegExp": "BUGID RegExp",
   "settings_addIssueTracker": "Add Issue Tracker",
   "settings_selectUsers": "Select Users",
-  "settings_boardAdminMessage": "Including a Board Admin, makes them an admin of this board.",
+  "settings_boardAdminMessage": "Including a Board Admin makes them an admin of this board.",
   "settings_adminAccessMessage": "Administrators have access to all boards and are not listed here.",
   "settings_saveBoard": "Save Board",
   "settings_noBoards": "You are not assigned to any boards. Contact an admin user to be added to a board.",
@@ -223,6 +223,13 @@
   "boards_sortByPosition": "Position",
   "boards_sortByDueDate": "Due Date",
   "boards_sortByLastModified": "Last Modifed",
-  "boards_sortByPoints": "Points"
+  "boards_sortByPoints": "Points",
+
+  "dashboard_boardsAndTasks": "Boards and Tasks",
+  "dashboard_myBoards": "My Boards",
+  "dashboard_myTasks": "My Tasks",
+  "dashboard_tasksInCategory": "Tasks In Category",
+  "dashboard_details": "Details",
+  "dashboard_analytics": "Analytics"
 }
 

@@ -223,6 +223,12 @@
   "boards_sortByPosition": "Posición",
   "boards_sortByDueDate": "Fecha de Vencimiento",
   "boards_sortByLastModified": "Última Modificación",
-  "boards_sortByPoints": "Puntos"
+  "boards_sortByPoints": "Puntos",
+
+  "dashboard_boardsAndTasks": "Tableros y Tareas",
+  "dashboard_myBoards": "Mis Tableros",
+  "dashboard_myTasks": "Mis Tareas",
+  "dashboard_tasksInCategory": "Tareas En Categoría",
+  "dashboard_details": "Detalles"
 }
 

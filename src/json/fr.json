@@ -223,5 +223,11 @@
   "boards_sortByPosition": "position",
   "boards_sortByDueDate": "date d'échéance",
   "boards_sortByLastModified": "dernière modification",
-  "boards_sortByPoints": "points"
+  "boards_sortByPoints": "points",
+
+  "dashboard_boardsAndTasks": "Tableaux et Tâches",
+  "dashboard_myBoards": "Mes Tableaux",
+  "dashboard_myTasks": "Mes Tâches",
+  "dashboard_tasksInCategory": "Tâches dans la Catégorie",
+  "dashboard_details": "Détails"
 }

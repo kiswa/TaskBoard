@@ -1,0 +1,112 @@
+<section class="boards-and-tasks">
+  <h2>{{ strings['dashboard_boardsAndTasks'] }}</h2>
+
+  <div class="row">
+    <h3>{{ strings['dashboard_myBoards'] }}</h3>
+
+    <table class="alternating scrollable">
+      <thead>
+        <tr>
+          <th>{{ strings['settings_board'] }}</th>
+          <th>{{ strings['settings_columns'] }}</th>
+          <th>{{ strings['settings_categories'] }}</th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="boardsLoading">
+        <tr>
+          <td colspan="3">
+            Loading ...
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="!boardsLoading && !boards">
+        <tr>
+          <td colspan="3">
+            {{ boardsMessage }}
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="boards && !boardsLoading">
+        <tr *ngFor="let board of boards">
+          <td><a href="./boards/{{ board.id }}">{{ board.name }}</a></td>
+
+          <td>
+            <span *ngFor="let col of board.columns">
+              {{ col.name }}
+              <span class="badge" title="{{ strings['boards_tasksInColumn'] }}">
+                {{ col.tasks }}</span>
+            </span>
+          </td>
+
+          <td>
+            <!-- Ugly here, so it looks good in the browser -->
+            <span *ngFor="let cat of board.categories">{{ cat.name }}
+              <span class="badge"
+                    title="{{ strings['dashboard_tasksInCategory'] }}">{{ cat.tasks }}</span></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <h3>{{ strings['dashboard_myTasks'] }}</h3>
+
+    <table class="alternating scrollable">
+      <thead>
+        <tr>
+          <th>{{ strings['settings_board'] }}</th>
+          <th>{{ strings['boards_task'] }}</th>
+          <th>{{ strings['dashboard_details'] }}</th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="tasksLoading">
+        <tr>
+          <td colspan="3">
+            Loading ...
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="!tasksLoading && !tasks">
+        <tr>
+          <td colspan="3">
+            {{ tasksMessage }}
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="tasks && !tasksLoading">
+        <tr *ngFor="let task of tasks">
+          <td><a href="./boards/{{ task.board_id }}">{{ task.board }}</a></td>
+
+          <td>
+            <!-- <a href="#">An Important Task</a> -->
+            {{ task.title }}
+            <span class="badge" title="Task Color"
+                  style="background-color:{{ task.color }}">&nbsp;</span>
+          </td>
+
+          <td>
+            <span class="details">{{ strings['boards_taskColumn'] }}:
+              <em>{{ task.column }}</em></span>
+            <span class="details" *ngIf="task.date_due">{{ strings['boards_taskDateDue'] }}:
+              <em>{{ task.date_due | date }}</em></span>
+            <span class="details" *ngIf="task.points">{{ strings['boards_taskPoints'] }}:
+              <em>{{ task.points }}</em></span>
+            <span class="details" *ngIf="task.attachments.length">{{ strings['boards_taskAttachments'] }}:
+              <em>{{ task.attachments }}</em></span>
+            <span class="details" *ngIf="task.comments.length">{{ strings['boards_taskComments'] }}:
+              <em>{{ task.comments }}</em></span>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+</section>
