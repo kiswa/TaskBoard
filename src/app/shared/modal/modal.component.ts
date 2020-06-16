@@ -4,6 +4,7 @@ import {
   OnInit,
   ContentChild
 } from '@angular/core';
+import { Location } from '@angular/common';
 
 import { ModalService } from './modal.service';
 
@@ -30,7 +31,7 @@ export class ModalComponent implements OnInit {
   isOpen = false;
   animate = true;
 
-  constructor(public modalService: ModalService) {
+  constructor(public modalService: ModalService, private location: Location) {
   }
 
   ngOnInit() {
@@ -39,6 +40,11 @@ export class ModalComponent implements OnInit {
 
   close(checkBlocking = false): void {
     this.modalService.close(this.modalId, checkBlocking);
+
+    const path = this.location.path().split('/');
+    path.length -= 1;
+
+    this.location.go(path.join('/'))
   }
 
   filterClick(event: Event): void {
@@ -52,13 +58,11 @@ export class ModalComponent implements OnInit {
   }
 
   keyup(event: KeyboardEvent): void {
-    // tslint:disable-next-line
-    if (event.keyCode === 27) {
-      this.modalService.close(this.modalId, true);
+    if (event.key === 'Escape' && this.isOpen) {
+      this.close(true);
     }
 
-    // tslint:disable-next-line
-    if (event.keyCode === 13) {
+    if (event.key === 'Enter') {
       this.clickDefaultAction();
     }
   }

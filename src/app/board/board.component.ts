@@ -80,6 +80,13 @@ export class BoardDisplayComponent implements OnInit, OnDestroy {
       this.loading = true;
       this.boardNavId = id ? id : null;
       this.updateActiveBoard();
+
+      if (!params.taskId) {
+        boardService.showTask(null);
+        return;
+      }
+
+      boardService.showTask(params.taskId);
     });
     this.subs.push(sub);
   }

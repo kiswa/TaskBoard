@@ -89,7 +89,7 @@
            [remove-task]="getRemoveTaskFunction(task.id)"
            [collapse]="collapseTasks"
            (on-update-boards)="callBoardUpdate();"
-           (dblclick)="$event.preventDefault();showViewModal(task.id)">
+           (dblclick)="$event.preventDefault();getShowViewModalFunction(task.id)()">
   </tb-task>
 </div>
 

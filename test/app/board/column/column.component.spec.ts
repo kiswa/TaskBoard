@@ -513,7 +513,7 @@ describe('ColumnDisplay', () => {
     expect(called).toEqual(true);
   });
 
-  it('opens a model to add a task', () => {
+  it('opens a modal to add a task', () => {
     component.quickAdd = { title: '' } as any;
     component.columnData = { id: 1 } as any;
 

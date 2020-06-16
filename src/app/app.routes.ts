@@ -23,6 +23,11 @@ export const ROUTES: Routes = [
     canActivate: [ AuthGuard ]
   },
   {
+    path: 'boards/:id/:taskId',
+    component: BoardDisplayComponent,
+    canActivate: [ AuthGuard ]
+  },
+  {
     path: 'settings',
     component: SettingsComponent,
     canActivate: [ AuthGuard ]
