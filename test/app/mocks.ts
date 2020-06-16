@@ -19,6 +19,12 @@ export class BoardServiceMock {
   public activeBoardChanged =
     new BehaviorSubject({ id: 0, name: 'Test', columns: [] });
 
+  public showTaskIdChanged = new BehaviorSubject(null);
+
+  showTask(id: number) {
+    this.showTaskIdChanged.next(id);
+  }
+
   getBoards() {
     return new BehaviorSubject({
       data: [{}, [{ id: 1, name: 'Test', is_active: '1' }]]

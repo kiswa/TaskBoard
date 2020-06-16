@@ -73,7 +73,7 @@ describe('Modal', () => {
         expect(checkBlocking).toEqual(true);
       };
 
-    keyUp({ keyCode: 27 } as any);
+    keyUp({ key: 'Escape' } as any);
   });
 
   it('handles the Enter key', () => {
@@ -85,7 +85,7 @@ describe('Modal', () => {
       click: () => called = true
     } };
 
-    keyUp({ keyCode: 13 } as any);
+    keyUp({ key: 'Enter' } as any);
     expect(called).toEqual(true);
   });
 

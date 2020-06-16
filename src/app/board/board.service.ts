@@ -28,8 +28,10 @@ export class BoardService extends ApiService {
     complete: 0
   };
   private activeBoard = new BehaviorSubject<Board>(null);
+  private showTaskId = new BehaviorSubject<number>(null);
 
   public activeBoardChanged = this.activeBoard.asObservable();
+  public showTaskIdChanged = this.showTaskId.asObservable();
 
   constructor(private http: HttpClient, strat: LocationStrategy) {
     super(strat);
@@ -40,6 +42,10 @@ export class BoardService extends ApiService {
     hljs.registerLanguage('css', css);
     hljs.registerLanguage('csharp', csharp);
     hljs.registerLanguage('php', php);
+  }
+
+  showTask(id: number) {
+    this.showTaskId.next(id);
   }
 
   async convertMarkdown(markdown: string, callback = this.defaultCallback,

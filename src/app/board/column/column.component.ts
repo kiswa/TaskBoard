@@ -8,6 +8,7 @@ import {
   Output,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -92,6 +93,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
   constructor(public elRef: ElementRef,
               private auth: AuthService,
+              private location: Location,
               public notes: NotificationsService,
               public modal: ModalService,
               public stringsService: StringsService,
@@ -99,7 +101,7 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
               private sanitizer: DomSanitizer) {
     this.templateElement = elRef.nativeElement;
     this.collapseTasks = false;
-    this.commentOrder = "oldest";
+    this.commentOrder = 'oldest';
     this.sortOption = 'pos';
 
     this.MODAL_ID = 'add-task-form-';
@@ -123,6 +125,17 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
     sub = boardService.activeBoardChanged.subscribe(newBoard => {
       this.activeBoard = newBoard;
+    });
+    this.subs.push(sub);
+
+    sub = boardService.showTaskIdChanged.subscribe(taskId => {
+      setTimeout(() => {
+        this.columnData?.tasks?.forEach(task => {
+          if (+task.id === +taskId) {
+            this.showViewModal(+taskId);
+          }
+        });
+      }, 0);
     });
     this.subs.push(sub);
 
@@ -559,7 +572,11 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
   }
 
   getShowViewModalFunction(taskId: number): () => void {
-    return () => { this.showViewModal(taskId); };
+    return () => {
+      const url = 'boards/' + this.activeBoard.id + '/' + taskId;
+      this.location.go(url);
+      this.showViewModal(taskId);
+    };
   }
 
   showModal(taskId: number = 0) {
