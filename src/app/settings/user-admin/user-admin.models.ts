@@ -19,6 +19,10 @@ export class ModalUser extends UserDisplay {
           user.last_login, +user.security_level, +user.user_option_id,
           user.username, user.board_access);
 
+    if (+user.id === 0) {
+      this.security_level = 3;
+    }
+
     user.board_access.forEach(id => {
       this.boardAccess.push('' + id);
     });

@@ -1,6 +1,6 @@
 {
   "name": "taskboard",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Kanban-inspired app for keeping track of things that need to get done.",
   "private": true,
   "repository": {
