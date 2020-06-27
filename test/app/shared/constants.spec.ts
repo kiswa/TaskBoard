@@ -8,7 +8,7 @@ describe('Constants', () => {
   });
 
   it('has a VERSION', () => {
-    expect(constants.VERSION).toEqual('1.0.1');
+    expect(constants.VERSION).toEqual('1.0.2');
   });
 
   it('has a TOKEN', () => {
