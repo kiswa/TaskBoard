@@ -244,6 +244,11 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
 
   updateTaskColorByCategory(event: Category[]) {
     this.modalProps.categories = event;
+
+    if (!event.length) {
+      return;
+    }
+
     this.modalProps.color = event[event.length - 1].default_task_color;
   }
 
@@ -299,7 +304,27 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
     });
 
     const task = this.activeBoard.columns[colIndex].tasks[event.currentIndex];
-    this.boardService.updateTask(task).subscribe(() => {});
+    this.boardService.updateTask(task).subscribe((response: ApiResponse) => {
+      response.alerts.forEach(alert => {
+        if (alert.type === 'success') {
+          return; // No need to show "task updated" for drag and drop
+        }
+
+        this.notes.add(alert);
+      });
+
+      if (response.status !== 'success') {
+        return;
+      }
+
+      const newTask = response.data[1][0];
+      const updatedTask = new Task(newTask.id, newTask.title, newTask.description,
+                      newTask.color, newTask.due_date, newTask.points,
+                      newTask.position, newTask.column_id, newTask.ownComment,
+                      newTask.ownAttachment, newTask.sharedUser, newTask.sharedCategory);
+
+      this.activeBoard.columns[colIndex].tasks[event.currentIndex] = updatedTask;
+    });
   }
 
   updateTask() {
