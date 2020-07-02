@@ -29,7 +29,7 @@
       ['/boards', '/settings', '/dashboard'].forEach(p => {
         const i = path.indexOf(p)
 
-        if (i > 0) {
+        if (i >= 0) {
           path = path.substring(0, i);
         }
       });
