@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  taskboard:
+    image: "taskboard"
+    build:
+      context: .
+    ports:
+      - "8081:80"
