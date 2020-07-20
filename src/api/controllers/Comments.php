@@ -212,7 +212,7 @@ class Comments extends BaseController {
 
     $data->taskName = $task->title ?: '';
     $data->taskDescription = $task->description ?: '';
-    $data->taskDueDate = date('F j, Y, g:i:s A', strtotime($task->due_date));
+    $data->taskDueDate = date('F j, Y', strtotime($task->due_date));
 
     $data->taskAssignees = '';
     foreach($task->sharedUserList as $assignee) {
