@@ -130,6 +130,7 @@ class Mailer {
     $this->mail->isSendmail();
 
     $this->mail->setFrom(Mailer::FROM_EMAIL, Mailer::FROM_NAME);
+    $this->mail->CharSet = PHPMailer::CHARSET_UTF8;
 
     // @codeCoverageIgnoreStart
     if (!Mailer::USE_SENDMAIL) {
