@@ -287,10 +287,5 @@ describe('BoardService', () => {
     testCall('api/upload/asdf', 'POST', true);
   });
 
-  it('refreshes the API token', () => {
-    service.refreshToken(() => {});
-    testCall('api/refresh', 'POST');
-  });
-
 });
 
