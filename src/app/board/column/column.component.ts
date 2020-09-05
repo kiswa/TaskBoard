@@ -277,16 +277,21 @@ export class ColumnDisplayComponent implements OnInit, OnDestroy {
         event.container.data, event.previousIndex, event.currentIndex);
     }
 
-    const colId = (event.container.element.nativeElement.id).substring(3);
-    const colIndex = this.activeBoard.columns.findIndex(col => +col.id === +colId);
+    const colId = event.container.id.substr(3) as unknown as number - 1;
+    const column = this.activeBoard.columns[colId];
 
-    this.activeBoard.columns[colIndex].tasks.forEach((item, index) => {
-      item.position = index + 1;
-      item.column_id = this.activeBoard.columns[colIndex].id;
+    column.tasks.forEach((task, index) => {
+      task.position = index + 1;
     });
 
-    const task = this.activeBoard.columns[colIndex].tasks[event.currentIndex];
-    this.boardService.updateTask(task).subscribe(() => {});
+    this.boardService.updateColumn(column).subscribe((response: ApiResponse) => {
+      if (response.status !== 'success') {
+        response.alerts.forEach(note => this.notes.add(note));
+        return;
+      }
+
+      this.boardService.updateActiveBoard(response.data[2][0]);
+    });
   }
 
   updateTask() {
