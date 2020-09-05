@@ -115,7 +115,6 @@ class Tasks extends BaseController {
 
     $actor = R::load('user', Auth::GetUserId($request));
 
-    $this->updateTaskOrder($update, $actor, false);
     $this->checkAutomaticActions($before, $after);
     $update = R::load('task', $update->id);
 
@@ -129,7 +128,7 @@ class Tasks extends BaseController {
     $this->apiJson->setSuccess();
     $this->apiJson->addAlert('success', $this->strings->api_taskUpdated .
       '(' .  $update->title . ').');
-    $this->apiJson->addData($after);
+    $this->apiJson->addData(R::exportAll($update));
     $this->apiJson->addData(R::exportAll($board));
 
     $this->sendEmail($board, $update, $actor, 'editTask');
