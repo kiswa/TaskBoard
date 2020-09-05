@@ -217,48 +217,15 @@ class Auth extends BaseController {
     return $this->jsonResponse($response);
   }
 
-  public function refreshToken($request, $response) {
-    $response = self::ValidateToken($request, $response);
-    $status = $response->getStatusCode();
-
-    if ($status !== 200) {
-      if ($status === 400) {
-        $this->apiJson->addAlert('error',
-          'Authorization header missing.');
-        return $this->jsonResponse($response, $status);
-      }
-
-      $this->apiJson->addAlert('error', 'Invalid API token.');
-      return $this->jsonResponse($response, $status);
-    }
-
-    $jwt = $request->getHeader('Authorization')[0];
-    $payload = self::getJwtPayload($jwt);
-
-    $user = R::load('user', $payload->uid);
-    $jwt = self::createJwt($user->id, (int)$payload->mul);
-
-    $user->active_token = $jwt;
-    R::store($user);
-
-    $opts = R::load('useroption', $user->user_option_id);
-
-    $this->apiJson->setSuccess();
-    $this->apiJson->addData($jwt);
-    $this->apiJson->addData($this->sanitizeUser($user));
-    $this->apiJson->addData($opts);
-
-    return $this->jsonResponse($response);
+  public static function createJwt($userId, $mult = 1) {
+    return JWT::encode(array(
+      'exp' => time() + (60 * 30) * $mult, // 30 minutes * $mult
+      'uid' => (int)$userId,
+      'mul' => $mult
+    ), Auth::getJwtKey());
   }
 
-  private function sanitizeUser($user) {
-    unset($user->password_hash);
-    unset($user->active_token);
-
-    return $user;
-  }
-
-  private static function getJwtPayload($jwt) {
+  public static function getJwtPayload($jwt) {
     try {
       $payload = JWT::decode($jwt, self::getJwtKey(), ['HS256']);
     } catch (Exception $ex) {
@@ -268,16 +235,11 @@ class Auth extends BaseController {
     return $payload;
   }
 
-  private static function createJwt($userId, $mult = 1) {
-    // If 'remember me' feature is desired, set the multiplier higher.
-    // By default, a token will expire after half an hour, but can be
-    // refreshed by a call to /api/refresh.
+  private function sanitizeUser($user) {
+    unset($user->password_hash);
+    unset($user->active_token);
 
-    return JWT::encode(array(
-      'exp' => time() + (60 * 30) * $mult, // 30 minutes * $mult
-      'uid' => (int)$userId,
-      'mul' => $mult
-    ), Auth::getJwtKey());
+    return $user;
   }
 
   private static function getJwtKey() {

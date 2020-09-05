@@ -67,8 +67,13 @@ abstract class BaseController {
       return 403;
     }
 
+    $payload = Auth::getJwtPayload($request->getHeader('Authorization')[0]);
+    $user->active_token = Auth::createJwt($user->id, $payload->mul);
+
+    R::store($user);
+
     $this->setStrings($user->userOptionId);
-    $this->apiJson->addData($request->getHeader('Authorization'));
+    $this->apiJson->addData($user->active_token);
 
     return $status;
   }

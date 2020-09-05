@@ -111,11 +111,10 @@ class Tasks extends BaseController {
 
     $before = R::exportAll($task);
     R::store($update);
-    $after= R::exportAll($update);
+    $after = R::exportAll($update);
 
     $actor = R::load('user', Auth::GetUserId($request));
 
-    $this->updateTaskOrder($update, $actor, false);
     $this->checkAutomaticActions($before, $after);
     $update = R::load('task', $update->id);
 
@@ -189,7 +188,7 @@ class Tasks extends BaseController {
   }
 
   private function sortTasks($a, $b) {
-    return strcmp($a->position, $b->position);
+    return (int)$a->position - (int)$b->position;
   }
 
   private function updateTaskOrder($task, $user, $isNew) {
@@ -199,8 +198,8 @@ class Tasks extends BaseController {
     usort($column->xownTaskList, array($this, 'sortTasks'));
 
     $counter = 1;
-    foreach ($column->xownTaskList as $task) {
-      $task->position = $counter;
+    foreach ($column->xownTaskList as $taskP) {
+      $taskP->position = $counter;
       $counter++;
     }
 

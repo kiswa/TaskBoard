@@ -232,45 +232,5 @@ class AuthTest extends PHPUnit\Framework\TestCase {
     $this->assertEquals('failure', $actual->body->data->status);
   }
 
-  public function testRefreshToken() {
-    $data = new stdClass();
-    $data->username = 'admin';
-    $data->password = 'admin';
-    $data->remember = false;
-
-    $request = new RequestMock();
-    $request->payload = $data;
-
-    Auth::CreateInitialAdmin(new LoggerMock());
-    Auth::CreateJwtSigningKey();
-
-    $actual = $this->auth->login($request, new ResponseMock(), null);
-    $this->assertEquals('success', $actual->body->data->status);
-
-    $jwt = $actual->body->data->data[0];
-
-    $this->auth = new Auth(new LoggerMock());
-    $request = new RequestMock();
-    $request->header = [$jwt];
-
-    $actual = $this->auth->refreshToken($request, new ResponseMock(), null);
-    $user = R::load('user', 1);
-
-    $this->assertEquals('success', $actual->body->data->status);
-    $this->assertEquals($user->active_token, $actual->body->data->data[0]);
-
-    $this->auth = new Auth(new LoggerMock());
-    $request->hasHeader = false;
-
-    $actual = $this->auth->refreshToken($request, new ResponseMock(), null);
-    $this->assertEquals('failure', $actual->body->data->status);
-
-    $this->auth = new Auth(new LoggerMock());
-    $request = new RequestMock();
-    $request->header = ['not a valid JWT'];
-
-    $actual = $this->auth->refreshToken($request, new ResponseMock(), null);
-    $this->assertEquals('failure', $actual->body->data->status);
-  }
 }
 

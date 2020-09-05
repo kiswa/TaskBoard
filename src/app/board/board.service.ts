@@ -186,10 +186,6 @@ export class BoardService extends ApiService {
     )
   }
 
-  refreshToken(callback: any): void {
-    this.http.post(this.apiBase + 'refresh', {}).subscribe(() => callback());
-  }
-
   private async convertBoardData(boardData: any): Promise<Board> {
     if (boardData instanceof Board) {
       return boardData;

@@ -113,6 +113,7 @@ class Columns extends BaseController {
     $this->apiJson->addAlert('success', $this->strings->api_columnUpdated .
       '(' .  $update->name . ').');
     $this->apiJson->addData(R::exportAll($update));
+    $this->apiJson->addData(R::exportAll(R::load('board', $update->board_id)));
 
     return $this->jsonResponse($response);
   }

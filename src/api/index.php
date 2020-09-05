@@ -104,7 +104,6 @@ $app->get('/activity[/{type}[/{id}]]', 'Activity:getActivity'); // BoardAdmin (w
 $app->post('/login', 'Auth:login'); // Unsecured (creates JWT)
 $app->post('/logout', 'Auth:logout'); // Unsecured (clears JWT)
 $app->post('/authenticate', 'Auth:authenticate'); // Unsecured (checks JWT)
-$app->post('/refresh', 'Auth:refreshToken'); // Unsecured (checks and updates JWT)
 
 $app->get('/dashboard/boards', 'Dashboard:getMyBoardInfo'); // User (by board access)
 $app->get('/dashboard/tasks', 'Dashboard:getMyTaskInfo'); // User (by board access)
