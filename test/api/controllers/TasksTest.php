@@ -371,7 +371,7 @@ class TasksTest extends PHPUnit\Framework\TestCase {
     $action = R::dispense('autoaction');
     $action->board_id = 1;
     $action->trigger = 1; // Moved to column
-    $action->source_id = 1; // Category ID
+    $action->source_id = 1; // Column ID
     $action->type = 6; // Clear due date
     $action->change_to = 0;
 

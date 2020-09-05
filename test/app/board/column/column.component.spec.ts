@@ -193,9 +193,7 @@ describe('ColumnDisplay', () => {
   it('handles drop events', () => {
     const prev =  {
       data: {},
-      element: {
-        nativeElement: { id: 'col1' }
-      }
+      id: 'col1'
     };
     const evt = {
       currentIndex: 0,
@@ -214,9 +212,7 @@ describe('ColumnDisplay', () => {
 
     evt.previousContainer = {
       data: {},
-      element: {
-        nativeElement: { id: 'col1' }
-      }
+      id: 'col1'
     };
 
     component.drop(evt as any);
