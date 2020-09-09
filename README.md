@@ -20,6 +20,11 @@ The server must have `sqlite3` and `php7-sqlite` installed.
 **- OR -**
 If you're comfortable changing code, you can use any database [supported by RedBeanPHP](https://redbeanphp.com/index.php?p=/connection).
 
+#### Using PHP-FPM
+You are able to use PHP-FPM if you remove (or comment out) the php_value items in the api/.htaccess file, then set them in a `.user.ini` [See Documentation](https://www.php.net/manual/en/configuration.file.per-user.php)
+
+I'll make sure to update the README to include mention of this.
+
 ### Install
 
 Installing TaskBoard is as easy as 1, 2, 3!
