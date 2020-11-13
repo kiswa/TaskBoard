@@ -44,7 +44,56 @@ You also have to have `mod_rewrite` installed and enabled.
 
 #### NGINX
 
-TODO
+
+Example Nginx configuration:
+
+```
+server {
+        listen 80;
+        listen [::]:80;
+        listen 443 ssl;
+
+	root /var/www/taskboard/;
+        index index.php index.html index.htm;
+
+	client_max_body_size 100M;
+	client_body_buffer_size 128k;
+
+  server_name taskboard.your.url;
+
+
+  location / {
+    if (!-e $request_filename){
+        rewrite ^(.*)$ /index.html break;
+     }
+  }
+
+
+  location /api {
+      if (!-e $request_filename) {
+          rewrite ^(.*)$ /api/index.php last; break;
+      }
+  }
+
+    location /api/taskboard.db {
+        rewrite ^(.*)$ /api/index.php last; break;
+    }
+	
+	location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+}
+```
+
+You might need to replace `php7.2-fpm.sock` with your PHP version.
+
 
 #### IIS
 
