@@ -51,7 +51,9 @@ RUN a2enmod rewrite expires
 
 WORKDIR $PROJECT
 COPY --from=appbuild /usr/src/app/dist ./
-RUN chown 33:33 ./api && \
+RUN chown 33:33 ./api && chown 33:33 ./api/db && \
     mkdir ./api/logs && chown 33:33 ./api/logs
 
 EXPOSE 80
+
+VOLUME $PROJECT/api/db
