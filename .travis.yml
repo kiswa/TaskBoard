@@ -13,6 +13,7 @@ before_script:
   - touch tests.db
   - chmod a+w tests.db
   - cd src/api/ && composer update && cd ../../
+if: fork = false
 after_success:
   - echo -e "<?php\n  print phpversion();" > version.php
   - curl "https://raw.githubusercontent.com/andreafabrizi/Dropbox-Uploader/master/dropbox_uploader.sh" -o dropbox_uploader.sh
