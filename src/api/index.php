@@ -11,7 +11,7 @@ use RedBeanPHP\R;
 
 require './vendor/autoload.php';
 
-R::setup('sqlite:taskboard.sqlite');
+R::setup('sqlite:db/taskboard.sqlite');
 
 $container = new DI\Container();
 AppFactory::setContainer($container);
