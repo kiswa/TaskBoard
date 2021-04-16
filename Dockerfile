@@ -3,31 +3,39 @@
 # -------------------
 FROM node:alpine AS appbuild
 
-RUN apk add --update --no-cache p7zip
+RUN apk add --update --no-cache \
+            p7zip               \
+            python2             \
+            build-base          \
+            curl                \
+            php7                \
+            php7-json           \
+            php7-phar           \
+            php7-iconv          \
+            php7-openssl        \
+            php7-dom            \
+            php7-mbstring       \
+            php7-xml            \
+            php7-xmlwriter      \
+            php7-ctype          \
+            php7-tokenizer
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /usr/src/app
 
 COPY ./package.json ./
-RUN npm install
 
 COPY . ./
-RUN npm run build:prod
-# RUN npm run build
 
+RUN npm install
 
-# ------------------------
-# Build Stage 2 (composer)
-# ------------------------
-FROM composer AS apibuild
-
-WORKDIR /app
-
-COPY ./src/api ./
-RUN composer install
-
+# RUN npm run build:prod
+RUN npm run build
 
 # --------------------------
-# Build Stage 3 (php-apache)
+# Build Stage 2 (php-apache)
 # This build takes the production build from staging builds
 # --------------------------
 FROM php:7.3-apache
@@ -43,7 +51,9 @@ RUN a2enmod rewrite expires
 
 WORKDIR $PROJECT
 COPY --from=appbuild /usr/src/app/dist ./
-RUN rm -rf ./api/*
-COPY --from=apibuild /app ./api/
-RUN chmod 777 ./api
+RUN mkdir ./api/db && chown 33:33 ./api && chown 33:33 ./api/db && \
+    mkdir ./api/logs && chown 33:33 ./api/logs
+
 EXPOSE 80
+
+VOLUME $PROJECT/api/db
