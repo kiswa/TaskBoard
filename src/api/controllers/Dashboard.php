@@ -71,7 +71,7 @@ class Dashboard extends BaseController {
       foreach($board["ownCategory"] as $category) {
         $retVal[$index]->categories[] = (object)array(
           "name" => $category["name"],
-          "tasks" => count($category["sharedTask"])
+          "tasks" => count($category["sharedTask"] ?? [])
         );
       }
     }
@@ -137,7 +137,6 @@ class Dashboard extends BaseController {
         }
       }
     }
-
     return R::exportAll($boards);
   }
 
