@@ -11,7 +11,13 @@ use RedBeanPHP\R;
 
 require './vendor/autoload.php';
 
-R::setup('sqlite:taskboard.sqlite');
+$CONFIG = require('../config.default.php');
+if (file_exists('../config.php')) {
+  $CONFIG = array_merge($CONFIG, require('../config.php'));
+}
+
+
+R::setup($CONFIG['database'], $CONFIG['database_user'], $CONFIG['database_password']);
 
 $container = new DI\Container();
 AppFactory::setContainer($container);

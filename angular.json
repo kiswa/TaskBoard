@@ -25,6 +25,11 @@
                 "output": "/api"
               },
               {
+                "glob": "config*.php",
+                "input": "src",
+                "output": "/"
+              },
+              {
                 "glob": "*.json",
                 "input": "src/json",
                 "output": "/strings"
