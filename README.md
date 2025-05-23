@@ -1,5 +1,6 @@
-# MAINTAINERS WANTED
-I haven't had time to work on TaskBoard for several months now, and rather than let it fall to the wayside I'd like to bring in some maintainers. If you're interested, create an issue.
+# UNMAINTAINED
+
+Maybe I'll come back to this one day, but it's much too far behind on PHP versions to be useful these days (2025). I'll probably switch to some other language for the API if I do a rewrite.
 
 # TaskBoard
 
